@@ -10,6 +10,7 @@
   body{overflow:auto}
   .canvas{position:relative;width:100%;min-height:100vh;background-color:#f8f8f6;background-image:radial-gradient(#d7d9dc 1px,transparent 1px);background-size:24px 24px}
   .title{position:absolute;left:28px;top:22px;font-size:13px;color:#8a8f98;letter-spacing:.04em}
+  .build-badge{position:absolute;right:28px;top:20px;padding:3px 7px;border:1px solid #e0e1e3;border-radius:999px;background:rgba(255,255,255,.82);font-size:10px;color:#777c83}
   .avatar-home{position:absolute;left:50%;top:39%;transform:translate(-50%,-50%);width:118px;height:118px;display:grid;place-items:center;z-index:5}
   agent-robot-avatar{filter:drop-shadow(0 12px 24px rgba(0,0,0,.08));transition:filter .2s ease}
   agent-robot-avatar:hover{filter:drop-shadow(0 15px 30px rgba(0,0,0,.13))}
@@ -64,7 +65,7 @@
   .send{background:#666b72;color:#fff;padding:8px 15px;border-radius:11px}.send:hover{background:#585d63}.send:disabled{opacity:.45;cursor:default}
 
   @media(max-width:600px){
-    .title{left:18px;top:16px}.status-pill{left:18px;bottom:72px}.follow-control{right:18px;bottom:72px}
+    .title{left:18px;top:16px}.build-badge{right:18px;top:14px}.status-pill{left:18px;bottom:72px}.follow-control{right:18px;bottom:72px}
     .controls{max-width:calc(100% - 20px);overflow:auto;flex-wrap:nowrap;justify-content:flex-start}
     .support-link{bottom:18px}
     .agent-overlay{padding:10px}.agent-phone{max-width:calc(100vw - 20px);max-height:calc(100vh - 20px);border-radius:26px}
@@ -74,6 +75,7 @@
 <body>
 <div class="canvas" id="canvas">
   <div class="title">Agent Robot Avatar / SVG + Vanilla JS / Web Component</div>
+  <div class="build-badge" id="agent-demo-build">Demo</div>
   <div class="avatar-home" id="home">
     <agent-robot-avatar id="face" size="118" auto-sleep="18000"></agent-robot-avatar>
   </div>
@@ -126,8 +128,10 @@
 </div>
 
 <script type="module">
-  const demoVersion = new URLSearchParams(location.search).get('v') || '0.1.0';
-  await import(`../agent-robot-avatar.js?v=${encodeURIComponent(demoVersion)}`);
+  const { VERSION } = await import('../agent-robot-avatar.js');
+  window.AgentRobotAvatarDemoBuild = VERSION;
+  const buildBadge = document.getElementById('agent-demo-build');
+  if (buildBadge) buildBadge.textContent = `Demo ${VERSION}`;
 
   const face = document.getElementById('face');
   const home = document.getElementById('home');
@@ -289,6 +293,14 @@
     }
   });
   sendButton.addEventListener('click',sendMessage);
+
+  await import('./agent-robot-avatar-demo-controls.js');
+  await import('./agent-robot-avatar-demo-extras.js');
+  await import('./agent-robot-avatar-demo-roundness.js');
+  await import('./agent-robot-avatar-demo-layout.js');
+  await import('./agent-robot-avatar-demo-dialog-i18n.js');
+  await import('./agent-robot-avatar-demo-chat-avatar-mode.js');
+  await import('./agent-robot-avatar-demo-reply-loop.js');
 </script>
 </body>
 </html>

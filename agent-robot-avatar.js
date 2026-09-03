@@ -1,25 +1,16 @@
-import AgentRobotAvatar from './src/agent-robot-avatar-head-roundness.js?v=0.1.0';
+import AgentRobotAvatar from './src/agent-robot-avatar-extension-host.js';
+import './src/agent-robot-avatar-actions.js';
+import './src/agent-robot-avatar-antenna.js';
+import './src/agent-robot-avatar-waiting.js';
+import './src/agent-robot-avatar-antenna-flash.js';
+import './src/agent-robot-avatar-inspect.js';
+import './src/agent-robot-avatar-failure.js';
+import './src/agent-robot-avatar-head-roundness.js';
+import { VERSION } from './src/agent-robot-avatar-version.js';
 
-const VERSION = '0.1.0';
-
-function syncDemoBuild() {
-  window.AgentRobotAvatarDemoBuild = VERSION;
-  const badge = document.getElementById('agent-demo-build');
-  if (badge) badge.textContent = `Demo v${VERSION}`;
+if (typeof window !== 'undefined') {
+  window.AgentRobotAvatarVersion = VERSION;
 }
-
-if (typeof window !== 'undefined' && typeof document !== 'undefined' && document.title.includes('Interactive Demo')) {
-  import('./demo/agent-robot-avatar-demo-controls.js?v=0.1.0')
-    .then(() => import('./demo/agent-robot-avatar-demo-extras.js?v=0.1.0'))
-    .then(() => import('./demo/agent-robot-avatar-demo-roundness.js?v=0.1.0'))
-    .then(() => import('./demo/agent-robot-avatar-demo-layout.js?v=0.1.0'))
-    .then(() => import('./demo/agent-robot-avatar-demo-dialog-i18n.js?v=0.1.0'))
-    .then(() => import('./demo/agent-robot-avatar-demo-chat-avatar-mode.js?v=0.1.0'))
-    .then(() => import('./demo/agent-robot-avatar-demo-reply-loop.js?v=0.1.0'))
-    .then(syncDemoBuild);
-}
-
-if (typeof window !== 'undefined') window.AgentRobotAvatarVersion = VERSION;
 
 export { AgentRobotAvatar, VERSION };
 export default AgentRobotAvatar;

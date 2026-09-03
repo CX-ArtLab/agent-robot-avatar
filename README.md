@@ -1,8 +1,12 @@
 # Agent Robot Avatar
 
-[English](./README.md) | [简体中文](./docs/README.zh-CN.md) | [繁體中文](./docs/README.zh-TW.md) | [日本語](./docs/README.ja.md) | [한국어](./docs/README.ko.md) | [Español](./docs/README.es.md) | [Português](./docs/README.pt.md) | [Deutsch](./docs/README.de.md) | [Français](./docs/README.fr.md)
+<p align="center">
+  <img src="./assets/readme/agent-robot-avatar-header.jpg" alt="Agent Robot Avatar">
+</p>
 
-![Version](https://img.shields.io/badge/version-v0.1.0-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](./LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
+[English](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/README.md) | [简体中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-CN.md) | [繁體中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-TW.md) | [日本語](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ja.md) | [한국어](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ko.md) | [Español](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.es.md) | [Português](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.pt.md) | [Deutsch](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.de.md) | [Français](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.fr.md)
+
+![Version](https://img.shields.io/badge/version-v0.2.0-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](./LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
 ![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square) ![14 Agent States](https://img.shields.io/badge/Agent%20states-14-8B5CF6?style=flat-square) ![Pointer Following](https://img.shields.io/badge/Pointer-following-00A67E?style=flat-square) ![Jelly Drag](https://img.shields.io/badge/Drag-jelly%20physics-FF69B4?style=flat-square)
 
@@ -10,10 +14,10 @@ A lightweight, expressive robot avatar Web Component for AI agents and other int
 
 Agent Robot Avatar is built with SVG and vanilla JavaScript. It has no third-party animation framework dependency, works as a native custom element, and exposes a compact API for expressions, interaction states, pointer behavior, waiting feedback, and head-shape customization.
 
-**Current public version: v0.1.0**
+**Current public version: v0.2.0**
 
 <p align="center">
-  <img src="./assets/demo/agent-robot-avatar-demo.gif" alt="Agent Robot Avatar animated demo" width="560">
+  <img src="./assets/demo/agent-robot-avatar-demo.gif" alt="Agent Robot Avatar interactive animation demo" width="560">
 </p>
 
 ## Highlights
@@ -47,6 +51,18 @@ Add the custom element:
 The avatar enters its default idle behavior automatically. No initialization code is required.
 
 A minimal runnable example is available at [`examples/basic.html`](./examples/basic.html).
+
+Bundler-based projects can install and use the component from npm with:
+
+```bash
+npm install agent-robot-avatar
+```
+
+```js
+import 'agent-robot-avatar';
+```
+
+The package includes TypeScript declarations for actions, events, and public methods. No TypeScript setup is required beyond normal package installation.
 
 ## Basic API
 
@@ -123,6 +139,15 @@ Pointer following is enabled by default and can be controlled programmatically:
 ```js
 avatar.setPointerFollow(false);
 avatar.setPointerFollow(true);
+```
+
+## Antenna flashing
+
+Antenna status flashing is disabled by default and can be enabled per avatar:
+
+```js
+avatar.setAntennaFlash(true);
+avatar.setAntennaFlash(false);
 ```
 
 ## Head roundness
@@ -230,9 +255,9 @@ LICENSE                   MIT License
 
 ## Distribution
 
-The repository contains npm-compatible package metadata, but the npm package is not published yet. The source repository is the canonical distribution for v0.1.0 until package publication is announced.
+The package is published on npm as `agent-robot-avatar`. It includes the public entry, TypeScript declarations, runtime modules, documentation, and support assets.
 
-The npm package intentionally includes only the public entry, `src/` runtime, documentation, and support assets; Demo-only files are excluded.
+The npm package intentionally includes only the public entry, TypeScript declarations, `src/` runtime, documentation, and support assets; Demo-only files are excluded.
 
 ## Compatibility
 

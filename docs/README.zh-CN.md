@@ -1,8 +1,12 @@
 # Agent Robot Avatar
 
-[English](../README.md) | [简体中文](./README.zh-CN.md) | [繁體中文](./README.zh-TW.md) | [日本語](./README.ja.md) | [한국어](./README.ko.md) | [Español](./README.es.md) | [Português](./README.pt.md) | [Deutsch](./README.de.md) | [Français](./README.fr.md)
+<p align="center">
+  <img src="../assets/readme/agent-robot-avatar-header.jpg" alt="Agent Robot Avatar">
+</p>
 
-![Version](https://img.shields.io/badge/version-v0.1.0-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
+[English](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/README.md) | [简体中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-CN.md) | [繁體中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-TW.md) | [日本語](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ja.md) | [한국어](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ko.md) | [Español](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.es.md) | [Português](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.pt.md) | [Deutsch](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.de.md) | [Français](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.fr.md)
+
+![Version](https://img.shields.io/badge/version-v0.2.0-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
 ![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square) ![14 Agent States](https://img.shields.io/badge/Agent%20states-14-8B5CF6?style=flat-square) ![Pointer Following](https://img.shields.io/badge/Pointer-following-00A67E?style=flat-square) ![Jelly Drag](https://img.shields.io/badge/Drag-jelly%20physics-FF69B4?style=flat-square)
 
@@ -10,10 +14,10 @@
 
 Agent Robot Avatar 基于 SVG 与原生 JavaScript 构建，不依赖第三方动画框架。它作为原生自定义元素工作，并提供一组尽量精简的 API，用于控制表情、交互状态、鼠标跟随、等待反馈和头部造型。
 
-**当前公开版本：v0.1.0**
+**当前公开版本：v0.2.0**
 
 <p align="center">
-  <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Agent Robot Avatar animated demo" width="560">
+  <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Agent Robot Avatar 交互动画演示" width="560">
 </p>
 
 ## 主要特点
@@ -47,6 +51,18 @@ Agent Robot Avatar 基于 SVG 与原生 JavaScript 构建，不依赖第三方�
 组件加载后会自动进入默认待机状态，不需要额外初始化。
 
 最小可运行示例位于 [`examples/basic.html`](../examples/basic.html)。
+
+使用打包工具的项目可以通过 npm 安装和引入：
+
+```bash
+npm install agent-robot-avatar
+```
+
+```js
+import 'agent-robot-avatar';
+```
+
+npm 包内置 TypeScript 类型声明，覆盖动作名称、事件和公开方法，无需另外安装类型包。
 
 ## 基本 API
 
@@ -123,6 +139,15 @@ avatar.stopWaiting();
 ```js
 avatar.setPointerFollow(false);
 avatar.setPointerFollow(true);
+```
+
+## 天线闪动
+
+天线状态闪动默认关闭，可以为每个头像单独开启：
+
+```js
+avatar.setAntennaFlash(true);
+avatar.setAntennaFlash(false);
 ```
 
 ## 头部圆角
@@ -230,9 +255,9 @@ LICENSE                   MIT License
 
 ## 分发
 
-仓库已经包含兼容 npm 的包元数据，但 npm 包目前尚未正式发布。在 npm 发布公告出现之前，v0.1.0 以本 GitHub 源码仓库作为正式来源。
+软件包已以 `agent-robot-avatar` 名称发布到 npm，包含公开入口、TypeScript 类型声明、运行时模块、文档和支持项目素材。
 
-未来的 npm 包只会包含公开入口、`src/` 运行时、文档和支持项目素材，不会把 Demo 专用文件一起发布。
+npm 包只包含公开入口、TypeScript 类型声明、`src/` 运行时、文档和支持项目素材，不会把 Demo 专用文件一起发布。
 
 ## 兼容性
 

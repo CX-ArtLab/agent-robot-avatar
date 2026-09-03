@@ -1,5 +1,3 @@
-const DEMO_BUILD = '0.1.0';
-
 const INSPECT_LABELS = Object.freeze({
   'zh-CN': { action: '审视', state: '审视 / 核对' },
   'zh-TW': { action: '審視', state: '審視 / 核對' },
@@ -69,8 +67,9 @@ function applyDefaultAntennaFlashOff() {
   const toggle = document.getElementById('demoAntennaFlash');
   if (!toggle) return;
   toggle.checked = false;
-  window.AgentRobotAvatarAntennaFlashEnabled = false;
-  const dot = document.getElementById('face')?.shadowRoot?.getElementById('antennaDot');
+  const face = document.getElementById('face');
+  face?.setAntennaFlash?.(false);
+  const dot = face?.shadowRoot?.getElementById('antennaDot');
   if (dot) dot.style.opacity = '1';
 }
 
@@ -131,7 +130,6 @@ function mountExtras() {
     bodyObserver.observe(document.body, { childList: true, subtree: true });
   }
 
-  window.AgentRobotAvatarDemoBuild = DEMO_BUILD;
 }
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mountExtras, { once: true });

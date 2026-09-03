@@ -1,16 +1,10 @@
-import './agent-robot-avatar-core.js';
-
-const AgentRobotAvatar = window.AgentRobotAvatar;
-const DEMO_BUILD = '0.1.1-R36';
+import AgentRobotAvatar, { registerAvatarExtension } from './agent-robot-avatar-extension-host.js';
 
 if (!AgentRobotAvatar) {
   throw new Error('Agent Robot Avatar core failed to load.');
 }
 
 const proto = AgentRobotAvatar.prototype;
-const basePlay = proto.play;
-const baseReset = proto.reset;
-const baseDraw = proto._draw;
 const baseUpdateLook = proto._updateLook;
 const baseOnPointerMove = proto._onPointerMove;
 
@@ -64,7 +58,7 @@ function errorEyeSweep(t) {
 }
 
 function dispatchActionState(instance, state) {
-  instance.dispatchEvent(new CustomEvent('face-state', { detail: { state, version: DEMO_BUILD } }));
+  instance.dispatchEvent(new CustomEvent('face-state', { detail: { state } }));
 }
 
 function centerHeadTransform(instance) {
@@ -96,9 +90,7 @@ function interruptRunningAction(instance) {
   if (instance._headMotion) instance._headMotion.style.transform = '';
 }
 
-proto.play = function(name) {
-  const action = String(name || '').trim().toLowerCase();
-
+function playBuiltInAction(action) {
   if (action === 'idle') return this.reset();
   if (action === 'input' && (this._inputWanted || this._state === 'input')) return this;
   if (action === 'wake' && !this._sleeping && this._state !== 'sleep') return this;
@@ -109,13 +101,31 @@ proto.play = function(name) {
   if (action === 'warning') return this.warning();
   if (action === 'system-error' || action === 'connection-error') return this.error();
   if (action === 'blocked' || action === 'policy-blocked') return this.angry();
-  return basePlay.call(this, action);
-};
+  return this[action]();
+}
 
-proto.reset = function() {
-  interruptRunningAction(this);
-  return baseReset.call(this);
-};
+const BUILT_IN_ACTIONS = [
+  'idle',
+  'bored',
+  'input',
+  'send',
+  'success',
+  'warning',
+  'error',
+  'system-error',
+  'connection-error',
+  'angry',
+  'blocked',
+  'policy-blocked',
+  'surprise',
+  'sleep',
+  'wake',
+];
+
+const actionHandlers = Object.fromEntries(BUILT_IN_ACTIONS.map(action => [
+  action,
+  function() { return playBuiltInAction.call(this, action); },
+]));
 
 proto.setPointerFollow = function(enabled = true) {
   this._pointerFollowEnabled = enabled !== false;
@@ -160,6 +170,7 @@ proto.send = async function() {
 
 proto.wake = async function() {
   if (!this._sleeping && this._state !== 'sleep') return;
+  this._resumeFrames?.();
   const token = ++this._transitionToken;
   this._expressionLock = true;
   this._sleeping = false;
@@ -269,9 +280,7 @@ proto._updateLook = function(now, dt) {
   }
 };
 
-proto._draw = function(now) {
-  baseDraw.call(this, now);
-
+function drawWarning(now) {
   const fx = this._warningFx;
   if (!fx) return;
 
@@ -370,21 +379,16 @@ proto._draw = function(now) {
   this._rightBottom.setAttribute('y', farBottomY.toFixed(2));
   this._rightBottom.setAttribute('height', '90');
   this._rightBottom.setAttribute('transform', `rotate(0 0 ${farBottomY.toFixed(2)})`);
-};
-
-window.AgentRobotAvatarDemoBuild = DEMO_BUILD;
-if (typeof document !== 'undefined' && document.title.includes('Interactive Demo')) {
-  const showBuild = () => {
-    if (document.getElementById('agent-demo-build')) return;
-    const badge = document.createElement('div');
-    badge.id = 'agent-demo-build';
-    badge.textContent = `Demo ${DEMO_BUILD}`;
-    badge.style.cssText = 'position:fixed;right:18px;top:16px;z-index:9999;padding:5px 9px;border:1px solid #e1e3e5;border-radius:999px;background:rgba(255,255,255,.88);color:#91959b;font:600 10px/1.2 Inter,system-ui,sans-serif;letter-spacing:.03em;pointer-events:none;backdrop-filter:blur(8px)';
-    document.body.appendChild(badge);
-  };
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', showBuild, { once: true });
-  else showBuild();
 }
 
-export { AgentRobotAvatar, DEMO_BUILD };
+registerAvatarExtension({
+  name: 'actions',
+  actions: actionHandlers,
+  reset() {
+    interruptRunningAction(this);
+  },
+  draw: drawWarning,
+});
+
+export { AgentRobotAvatar };
 export default AgentRobotAvatar;

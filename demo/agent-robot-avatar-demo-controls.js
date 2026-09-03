@@ -110,6 +110,7 @@ function injectStyles() {
     .demo-panel-toggle:hover{background:#e9eaec!important}
     .demo-panel-toggle.demo-panel-open{background:#dfe1e4!important;color:#25282c!important}
     .demo-panel-toggle svg{width:18px;height:18px;display:block;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+    .demo-panel-toggle svg .demo-palette-dot{fill:currentColor}
     .demo-options-group{display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap;width:max-content;max-width:100%;padding:7px 9px;border:1px solid rgba(0,0,0,.055);border-radius:14px;background:rgba(255,255,255,.82);box-shadow:0 6px 22px rgba(0,0,0,.055);backdrop-filter:blur(14px)}
     .demo-options-group[hidden]{display:none!important}
     .demo-option{min-height:30px;display:inline-flex;align-items:center;gap:7px;padding:4px 8px;border-radius:9px;background:#f4f5f6;white-space:nowrap;user-select:none;width:auto!important;flex:0 0 auto!important}
@@ -186,7 +187,7 @@ function mountDemoControls() {
   options.innerHTML = `
     <div class="demo-panel-toolbar" id="demoPanelToolbar">
       <button class="demo-panel-toggle" id="demoColorPanelToggle" type="button" aria-expanded="false" aria-controls="demoColorPanel">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18h1.2a1.8 1.8 0 0 0 0-3.6h-1.4a1.7 1.7 0 0 1 0-3.4H15a6 6 0 0 0 0-12h-3Z"/><circle cx="7.5" cy="10" r=".7"/><circle cx="9" cy="6.8" r=".7"/><circle cx="13" cy="6.2" r=".7"/></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"/><circle class="demo-palette-dot" cx="13.5" cy="6.5" r=".5"/><circle class="demo-palette-dot" cx="17.5" cy="10.5" r=".5"/><circle class="demo-palette-dot" cx="6.5" cy="12.5" r=".5"/><circle class="demo-palette-dot" cx="8.5" cy="7.5" r=".5"/></svg>
       </button>
       <button class="demo-panel-toggle" id="demoSettingsPanelToggle" type="button" aria-expanded="false" aria-controls="demoSettingsPanel">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h3M11 12h9M4 18h8M16 18h4"/><circle cx="16" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="14" cy="18" r="2"/></svg>
@@ -345,7 +346,7 @@ function mountDemoControls() {
   }
 
   function applyAntennaFlashSetting() {
-    window.AgentRobotAvatarAntennaFlashEnabled = antennaFlashToggle.checked;
+    face.setAntennaFlash(antennaFlashToggle.checked);
     if (!antennaFlashToggle.checked) {
       const dot = face.shadowRoot?.getElementById('antennaDot');
       if (dot) dot.style.opacity = '1';
@@ -372,17 +373,22 @@ function mountDemoControls() {
   let loopEnabled = false;
   let loopToken = 0;
   let activeAction = null;
-  window.AgentRobotAvatarDemoLoopEnabled = loopEnabled;
 
   loopToggle.addEventListener('change', () => {
     loopEnabled = loopToggle.checked;
-    window.AgentRobotAvatarDemoLoopEnabled = loopEnabled;
-    if (!loopEnabled) loopToken += 1;
+    if (!loopEnabled) {
+      loopToken += 1;
+      if (activeAction === 'waiting') face.stopWaiting();
+    }
   });
 
   const extraLoopDelay = Object.freeze({ idle:900, bored:3350, waiting:0, input:900, sleep:800, wake:500 });
 
   async function playOneCycle(action, token) {
+    if (action === 'waiting' && loopEnabled) {
+      await face.startWaiting();
+      return;
+    }
     if (action === 'wake' && loopEnabled) {
       if (!face._sleeping && face._state !== 'sleep') {
         await Promise.resolve(face.play('sleep'));
@@ -404,6 +410,7 @@ function mountDemoControls() {
     do {
       if (token !== loopToken) return;
       await playOneCycle(action, token);
+      if (action === 'waiting' && loopEnabled) return;
       if (token !== loopToken || !loopEnabled) return;
       const delay = extraLoopDelay[action] ?? 140;
       if (delay > 0) await wait(delay);

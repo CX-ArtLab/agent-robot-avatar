@@ -1,8 +1,12 @@
 # Agent Robot Avatar
 
-[English](../README.md) | [简体中文](./README.zh-CN.md) | [繁體中文](./README.zh-TW.md) | [日本語](./README.ja.md) | [한국어](./README.ko.md) | [Español](./README.es.md) | [Português](./README.pt.md) | [Deutsch](./README.de.md) | [Français](./README.fr.md)
+<p align="center">
+  <img src="../assets/readme/agent-robot-avatar-header.jpg" alt="Agent Robot Avatar">
+</p>
 
-![Version](https://img.shields.io/badge/version-v0.1.0-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
+[English](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/README.md) | [简体中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-CN.md) | [繁體中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-TW.md) | [日本語](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ja.md) | [한국어](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ko.md) | [Español](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.es.md) | [Português](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.pt.md) | [Deutsch](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.de.md) | [Français](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.fr.md)
+
+![Versión de desarrollo](https://img.shields.io/badge/version-v0.2.0-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
 ![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square) ![14 Agent States](https://img.shields.io/badge/Agent%20states-14-8B5CF6?style=flat-square) ![Pointer Following](https://img.shields.io/badge/Pointer-following-00A67E?style=flat-square) ![Jelly Drag](https://img.shields.io/badge/Drag-jelly%20physics-FF69B4?style=flat-square)
 
@@ -10,10 +14,10 @@ Un Web Component ligero y expresivo de avatar robótico para agentes de IA y otr
 
 Agent Robot Avatar está construido con SVG y JavaScript nativo, sin depender de frameworks de animación de terceros. Funciona como un Custom Element nativo y ofrece una API compacta para expresiones, estados de interacción, seguimiento del puntero, espera y forma de la cabeza.
 
-**Versión pública actual: v0.1.0**
+**Versión pública actual: v0.2.0**
 
 <p align="center">
-  <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Agent Robot Avatar animated demo" width="560">
+  <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Demostración animada interactiva de Agent Robot Avatar" width="560">
 </p>
 
 ## Características principales
@@ -188,7 +192,7 @@ LICENSE                   Licencia MIT
 
 ## Distribución y compatibilidad
 
-El repositorio contiene metadatos compatibles con npm, pero el paquete npm aún no se ha publicado. Hasta que se anuncie, el repositorio de GitHub es la fuente canónica de v0.1.0. Está pensado para navegadores modernos compatibles con ES Modules, Custom Elements, SVG, Pointer Events y Web Animations API.
+El paquete está publicado en npm como `agent-robot-avatar` e incluye declaraciones TypeScript para acciones, eventos y métodos públicos. Está pensado para navegadores modernos compatibles con ES Modules, Custom Elements, SVG, Pointer Events y Web Animations API.
 
 ## Contribuir
 

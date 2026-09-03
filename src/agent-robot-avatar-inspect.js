@@ -1,10 +1,6 @@
-import AgentRobotAvatar from './agent-robot-avatar-antenna-flash.js?v=R62';
+import AgentRobotAvatar, { registerAvatarExtension } from './agent-robot-avatar-extension-host.js';
 
-const DEMO_BUILD = '0.1.1-R62';
 const proto = AgentRobotAvatar.prototype;
-const basePlay = proto.play;
-const baseReset = proto.reset;
-const baseDraw = proto._draw;
 
 const clamp01 = value => Math.max(0, Math.min(1, value));
 const lerp = (a, b, t) => a + (b - a) * t;
@@ -35,14 +31,17 @@ const INSPECT_DEFAULTS = Object.freeze({
   open: 260,
 });
 
-const inspectConfig = (window.AgentRobotAvatarInspectConfig && typeof window.AgentRobotAvatarInspectConfig === 'object')
-  ? window.AgentRobotAvatarInspectConfig
+const runtimeWindow = typeof window !== 'undefined' ? window : null;
+const inspectConfig = (runtimeWindow?.AgentRobotAvatarInspectConfig && typeof runtimeWindow.AgentRobotAvatarInspectConfig === 'object')
+  ? runtimeWindow.AgentRobotAvatarInspectConfig
   : {};
 for (const [key, value] of Object.entries(INSPECT_DEFAULTS)) {
   inspectConfig[key] = value;
 }
-window.AgentRobotAvatarInspectConfig = inspectConfig;
-window.AgentRobotAvatarInspectDefaults = INSPECT_DEFAULTS;
+if (runtimeWindow) {
+  runtimeWindow.AgentRobotAvatarInspectConfig = inspectConfig;
+  runtimeWindow.AgentRobotAvatarInspectDefaults = INSPECT_DEFAULTS;
+}
 
 function configNumber(key, fallback, min, max) {
   const value = Number(inspectConfig[key]);
@@ -76,7 +75,7 @@ function currentInspectConfig() {
 
 function dispatchInspectState(instance, state) {
   instance.dispatchEvent(new CustomEvent('face-state', {
-    detail: { state, version: DEMO_BUILD }
+    detail: { state }
   }));
 }
 
@@ -146,24 +145,12 @@ function animateInspectHead(instance, phases) {
   anim.onfinish = () => { instance._headMotion.style.transform = 'translateY(0px)'; };
 }
 
-proto.play = function(name) {
-  const action = String(name || '').trim().toLowerCase();
-  if (action === 'inspect' || action === 'verify' || action === 'review') return this.inspect();
-  this._inspectFx = null;
-  return basePlay.call(this, name);
-};
-
-proto.reset = function() {
-  this._inspectFx = null;
-  return baseReset.call(this);
-};
-
 proto.inspect = async function() {
   this.noteActivity();
   this._inputWanted = false;
 
   const config = currentInspectConfig();
-  baseReset.call(this);
+  this.reset();
   if (!(await this._prepareExpression({ normalizePose: true, duration: 160, pause: config.prepPause }))) return;
 
   const token = this._transitionToken;
@@ -186,9 +173,7 @@ proto.inspect = async function() {
   dispatchInspectState(this, 'idle');
 };
 
-proto._draw = function(now) {
-  baseDraw.call(this, now);
-
+function drawInspect(now) {
   const fx = this._inspectFx;
   if (!fx) return;
 
@@ -223,7 +208,24 @@ proto._draw = function(now) {
     bottom.setAttribute('height', '90');
     bottom.setAttribute('transform', `rotate(0 0 ${bottomEdge.toFixed(2)})`);
   }
-};
+}
 
-export { AgentRobotAvatar, DEMO_BUILD, INSPECT_DEFAULTS };
+registerAvatarExtension({
+  name: 'inspect',
+  actions: {
+    inspect() { return this.inspect(); },
+    verify() { return this.inspect(); },
+    review() { return this.inspect(); },
+  },
+  beforePlay(action) {
+    if (action === 'inspect' || action === 'verify' || action === 'review') return;
+    this._inspectFx = null;
+  },
+  reset() {
+    this._inspectFx = null;
+  },
+  draw: drawInspect,
+});
+
+export { AgentRobotAvatar, INSPECT_DEFAULTS };
 export default AgentRobotAvatar;

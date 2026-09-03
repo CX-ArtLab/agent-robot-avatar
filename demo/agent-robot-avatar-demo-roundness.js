@@ -1,4 +1,3 @@
-const DEMO_BUILD = '0.1.1-R68';
 const DEFAULT_VALUE = 50;
 const PRESET_VALUES = Object.freeze([0, 50, 100]);
 
@@ -125,9 +124,6 @@ function mountRoundnessControl() {
   syncLanguage();
   apply();
 
-  window.AgentRobotAvatarDemoBuild = DEMO_BUILD;
-  const badge = document.getElementById('agent-demo-build');
-  if (badge) badge.textContent = `Demo ${DEMO_BUILD}`;
 }
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mountRoundnessControl, { once: true });

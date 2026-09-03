@@ -1,17 +1,13 @@
-import AgentRobotAvatar from './agent-robot-avatar-antenna.js?v=R58';
+import AgentRobotAvatar, { registerAvatarExtension } from './agent-robot-avatar-extension-host.js';
 
-const DEMO_BUILD = '0.1.1-R58';
 const WAITING_CYCLE = 3200;
 const proto = AgentRobotAvatar.prototype;
-const basePlay = proto.play;
-const baseReset = proto.reset;
-const baseDraw = proto._draw;
 
 const clamp01 = value => Math.max(0, Math.min(1, value));
 
 function dispatchWaitingState(instance, state) {
   instance.dispatchEvent(new CustomEvent('face-state', {
-    detail: { state, version: DEMO_BUILD }
+    detail: { state }
   }));
 }
 
@@ -33,9 +29,9 @@ function setEyeOrbitTransform(eye, x, scaleX, scaleY) {
 async function enterWaiting(instance, continuous, source) {
   instance.noteActivity();
   instance._inputWanted = false;
-  instance._waitingRequested = true;
 
-  baseReset.call(instance);
+  instance.reset();
+  instance._waitingRequested = true;
   if (!(await instance._prepareExpression({ normalizePose: true, duration: 120, pause: 0 }))) return null;
   if (!instance._waitingRequested) return null;
 
@@ -53,32 +49,9 @@ async function enterWaiting(instance, continuous, source) {
   return token;
 }
 
-proto.play = function(name) {
-  const action = String(name || '').trim().toLowerCase();
-  if (action === 'waiting' || action === 'wait') return this.waiting();
-  this._waitingRequested = false;
-  this._waitingFx = null;
-  return basePlay.call(this, action);
-};
-
-proto.reset = function() {
-  this._waitingRequested = false;
-  this._waitingFx = null;
-  return baseReset.call(this);
-};
-
-// Demo behavior: Loop off = one 3.2 s / two-orbit sample, Loop on = seamless continuous motion.
 proto.waiting = async function() {
-  const continuous = typeof window !== 'undefined' && window.AgentRobotAvatarDemoLoopEnabled === true;
-  const token = await enterWaiting(this, continuous, 'demo');
+  const token = await enterWaiting(this, false, 'play');
   if (token == null) return;
-
-  if (continuous) {
-    while (this._waitingRequested && this._waitingFx && token === this._transitionToken) {
-      await this._wait(120);
-    }
-    return;
-  }
 
   await this._wait(WAITING_CYCLE);
   if (token !== this._transitionToken || !this._waitingRequested) return;
@@ -89,21 +62,17 @@ proto.waiting = async function() {
 };
 
 // Runtime/Agent behavior: call when a request has been sent and the reply has not arrived yet.
-// This ignores the Demo Loop toggle and stays seamless until another action or stopWaiting() occurs.
+// It stays seamless until another action or stopWaiting() occurs.
 proto.startWaiting = async function() {
   await enterWaiting(this, true, 'runtime');
   return this;
 };
 
 proto.stopWaiting = function() {
-  this._waitingRequested = false;
-  this._waitingFx = null;
-  return baseReset.call(this);
+  return this.reset();
 };
 
-proto._draw = function(now) {
-  baseDraw.call(this, now);
-
+function drawWaiting(now) {
   const fx = this._waitingFx;
   if (!fx) return;
 
@@ -128,20 +97,25 @@ proto._draw = function(now) {
 
   setEyeOrbitTransform(this._leftEye, leftX, foreshorten * leftDepth, leftDepth);
   setEyeOrbitTransform(this._rightEye, rightX, foreshorten * rightDepth, rightDepth);
-};
-
-window.AgentRobotAvatarDemoBuild = DEMO_BUILD;
-if (typeof document !== 'undefined') {
-  const syncBuildBadge = () => {
-    window.AgentRobotAvatarDemoBuild = DEMO_BUILD;
-    const badge = document.getElementById('agent-demo-build');
-    if (badge) badge.textContent = `Demo ${DEMO_BUILD}`;
-  };
-  syncBuildBadge();
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', syncBuildBadge, { once: true });
-  queueMicrotask(syncBuildBadge);
-  setTimeout(syncBuildBadge, 0);
 }
 
-export { AgentRobotAvatar, DEMO_BUILD, WAITING_CYCLE };
+registerAvatarExtension({
+  name: 'waiting',
+  actions: {
+    waiting() { return this.waiting(); },
+    wait() { return this.waiting(); },
+  },
+  beforePlay(action) {
+    if (action === 'waiting' || action === 'wait') return;
+    this._waitingRequested = false;
+    this._waitingFx = null;
+  },
+  reset() {
+    this._waitingRequested = false;
+    this._waitingFx = null;
+  },
+  draw: drawWaiting,
+});
+
+export { AgentRobotAvatar, WAITING_CYCLE };
 export default AgentRobotAvatar;

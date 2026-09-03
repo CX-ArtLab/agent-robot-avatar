@@ -1,15 +1,21 @@
 # Agent Robot Avatar
 
-[English](../README.md) | [简体中文](./README.zh-CN.md) | [繁體中文](./README.zh-TW.md) | [日本語](./README.ja.md) | [한국어](./README.ko.md) | [Español](./README.es.md) | [Português](./README.pt.md) | [Deutsch](./README.de.md) | [Français](./README.fr.md)
+<p align="center">
+  <img src="../assets/readme/agent-robot-avatar-header.jpg" alt="Agent Robot Avatar">
+</p>
+
+[English](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/README.md) | [简体中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-CN.md) | [繁體中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-TW.md) | [日本語](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ja.md) | [한국어](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ko.md) | [Español](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.es.md) | [Português](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.pt.md) | [Deutsch](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.de.md) | [Français](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.fr.md)
+
+![Version](https://img.shields.io/badge/version-v0.2.0-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
 Un Web Component léger et expressif d’avatar robot pour les agents IA et d’autres applications interactives.
 
 Agent Robot Avatar est construit avec SVG et JavaScript natif, sans framework d’animation tiers. Il fonctionne comme un Custom Element natif et propose une API compacte pour les expressions, les états d’interaction, le suivi du pointeur, l’attente et la forme de la tête.
 
-**Version publique actuelle : v0.1.0**
+**Version publique actuelle : v0.2.0**
 
 <p align="center">
-  <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Agent Robot Avatar animated demo" width="560">
+  <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Démonstration animée interactive d’Agent Robot Avatar" width="560">
 </p>
 
 ## Points forts
@@ -184,7 +190,7 @@ LICENSE                   Licence MIT
 
 ## Distribution et compatibilité
 
-Le dépôt contient des métadonnées compatibles npm, mais le paquet npm n’est pas encore publié. Jusqu’à nouvelle annonce, le dépôt GitHub est la source canonique de v0.1.0. Le composant cible les navigateurs modernes prenant en charge ES Modules, Custom Elements, SVG, Pointer Events et Web Animations API.
+Le paquet est publié sur npm sous le nom `agent-robot-avatar` et inclut des déclarations TypeScript pour les actions, les événements et les méthodes publiques. Le composant cible les navigateurs modernes prenant en charge ES Modules, Custom Elements, SVG, Pointer Events et Web Animations API.
 
 ## Contribuer
 
