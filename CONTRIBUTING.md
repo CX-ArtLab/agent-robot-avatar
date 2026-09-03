@@ -21,7 +21,7 @@ Before submitting a PR:
 - Preserve the dependency-free SVG + vanilla JavaScript approach unless a dependency is clearly justified
 - Avoid changing unrelated animation behavior in the same PR
 - Use the public component API in demos and examples instead of relying on internal fields
-- Verify `index.html` and `examples/basic.html`
+- Verify `demo/index.html` and `examples/basic.html`
 - Update documentation when the public API changes
 - Update `CHANGELOG.md` for user-visible changes
 

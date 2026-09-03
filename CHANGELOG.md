@@ -4,6 +4,12 @@ All notable user-facing changes to Agent Robot Avatar are documented here.
 
 The project follows Semantic Versioning for public releases. Internal development build numbers are not part of the public version history.
 
+## [Unreleased]
+
+### Changed
+
+- Moved the interactive Demo and Windows launcher into the `demo/` directory.
+
 ## [0.1.0] - 2026-09-02
 
 First public release.

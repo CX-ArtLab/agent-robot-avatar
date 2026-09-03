@@ -127,7 +127,7 @@
 
 <script type="module">
   const demoVersion = new URLSearchParams(location.search).get('v') || '0.1.0';
-  await import(`./agent-robot-avatar.js?v=${encodeURIComponent(demoVersion)}`);
+  await import(`../agent-robot-avatar.js?v=${encodeURIComponent(demoVersion)}`);
 
   const face = document.getElementById('face');
   const home = document.getElementById('home');

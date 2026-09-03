@@ -196,7 +196,7 @@ avatar.addEventListener('face-state', (event) => {
 
 ## 交互 Demo
 
-`index.html` 是完整交互 Demo，包含：
+`demo/index.html` 是完整交互 Demo，包含：
 
 - 全部公开表情状态
 - 鼠标跟随
@@ -206,18 +206,18 @@ avatar.addEventListener('face-state', (event) => {
 - 颜色与行为控制
 - 模拟 Agent 对话状态
 
-所有仅供 Demo 使用的 JavaScript 已集中放入 `demo/`，不会进入可复用组件的 npm 运行时包。
+完整交互 Demo 与所有 Demo 专用 JavaScript 已集中放入 `demo/`，不会进入可复用组件的 npm 运行时包。
 
 ## 项目结构
 
 ```text
 agent-robot-avatar.js     正式组件入口
 src/                      可复用组件运行时与表情模块
-demo/                     仅供交互 Demo 使用的辅助脚本
+demo/                     完整交互 Demo 与 Demo 专用辅助脚本
+  index.html              完整交互 Demo
+  preview-demo.bat        Windows 本地 Demo 启动器
 examples/                 最小集成示例
 assets/support/           支持项目 / 支付二维码素材
-index.html                完整交互 Demo
-preview-demo.bat          Windows 本地 Demo 启动器
 README.md                 英文说明
 README.zh-CN.md           简体中文说明
 CHANGELOG.md              正式版本记录

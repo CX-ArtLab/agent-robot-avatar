@@ -196,7 +196,7 @@ When released, the shape returns with an elastic rebound.
 
 ## Interactive Demo
 
-`index.html` contains the full interactive Demo, including:
+`demo/index.html` contains the full interactive Demo, including:
 
 - All public expression states
 - Pointer following
@@ -206,18 +206,18 @@ When released, the shape returns with an elastic rebound.
 - Color and behavior controls
 - Simulated Agent conversation states
 
-Demo-only JavaScript is isolated in `demo/` and is not included in the reusable package runtime.
+The interactive Demo and Demo-only JavaScript are isolated in `demo/` and are not included in the reusable package runtime.
 
 ## Project structure
 
 ```text
 agent-robot-avatar.js     Public component entry
 src/                      Reusable component runtime and expression modules
-demo/                     Interactive Demo-only helpers
+demo/                     Interactive Demo and Demo-only helpers
+  index.html              Full interactive Demo
+  preview-demo.bat        Local Windows Demo launcher
 examples/                 Minimal integration examples
 assets/support/           Support / payment QR assets
-index.html                Full interactive Demo
-preview-demo.bat          Local Windows Demo launcher
 README.md                 English documentation
 README.zh-CN.md           Simplified Chinese documentation
 CHANGELOG.md              Public release history
