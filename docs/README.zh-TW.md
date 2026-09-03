@@ -12,6 +12,10 @@ Agent Robot Avatar 以 SVG 與原生 JavaScript 建構，不依賴第三方動�
 
 **目前公開版本：v0.1.0**
 
+<p align="center">
+  <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Agent Robot Avatar animated demo" width="560">
+</p>
+
 ## 主要特色
 
 - 純 SVG + 原生 JavaScript

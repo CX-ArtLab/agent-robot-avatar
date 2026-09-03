@@ -12,6 +12,10 @@ Agent Robot Avatar é construído com SVG e JavaScript puro, sem dependência de
 
 **Versão pública atual: v0.1.0**
 
+<p align="center">
+  <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Agent Robot Avatar animated demo" width="560">
+</p>
+
 ## Principais recursos
 
 - SVG + JavaScript puro

@@ -12,6 +12,7 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ### Changed
 
+- Added a lightweight animated GIF preview for the README documentation.
 - Moved localized README files into the `docs/` directory and added a unified language selector.
 - Moved the interactive Demo and Windows launcher into the `demo/` directory.
 

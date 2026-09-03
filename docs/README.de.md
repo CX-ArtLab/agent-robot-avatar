@@ -8,6 +8,10 @@ Agent Robot Avatar basiert auf SVG und Vanilla JavaScript und benötigt kein ext
 
 **Aktuelle öffentliche Version: v0.1.0**
 
+<p align="center">
+  <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Agent Robot Avatar animated demo" width="560">
+</p>
+
 ## Highlights
 
 - SVG + Vanilla JavaScript
