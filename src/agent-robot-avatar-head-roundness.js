@@ -1,6 +1,6 @@
-import AgentRobotAvatar from './agent-robot-avatar-failure.js?v=0.1.0';
+import AgentRobotAvatar from './agent-robot-avatar-extension-host.js';
+import { VERSION } from './agent-robot-avatar-version.js';
 
-const VERSION = '0.1.0';
 const proto = AgentRobotAvatar.prototype;
 const HEAD_HEIGHT_SCALE = 0.9;
 const DEFAULT_ROUNDNESS = 50;

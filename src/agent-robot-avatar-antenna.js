@@ -1,8 +1,5 @@
-import AgentRobotAvatar from './agent-robot-avatar-actions.js?v=R44';
+import AgentRobotAvatar, { registerAvatarExtension } from './agent-robot-avatar-extension-host.js';
 
-const DEMO_BUILD = '0.1.1-R44';
-const proto = AgentRobotAvatar.prototype;
-const baseDraw = proto._draw;
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const HEAD_HEIGHT_SCALE = 0.9;
 const ANTENNA_DEFAULTS = Object.freeze({
@@ -13,14 +10,17 @@ const ANTENNA_DEFAULTS = Object.freeze({
   damping: 5.6,
 });
 
-const antennaConfig = (window.AgentRobotAvatarAntennaConfig && typeof window.AgentRobotAvatarAntennaConfig === 'object')
-  ? window.AgentRobotAvatarAntennaConfig
+const runtimeWindow = typeof window !== 'undefined' ? window : null;
+const antennaConfig = (runtimeWindow?.AgentRobotAvatarAntennaConfig && typeof runtimeWindow.AgentRobotAvatarAntennaConfig === 'object')
+  ? runtimeWindow.AgentRobotAvatarAntennaConfig
   : {};
 for (const [key, value] of Object.entries(ANTENNA_DEFAULTS)) {
   if (!Number.isFinite(Number(antennaConfig[key]))) antennaConfig[key] = value;
 }
-window.AgentRobotAvatarAntennaConfig = antennaConfig;
-window.AgentRobotAvatarAntennaDefaults = ANTENNA_DEFAULTS;
+if (runtimeWindow) {
+  runtimeWindow.AgentRobotAvatarAntennaConfig = antennaConfig;
+  runtimeWindow.AgentRobotAvatarAntennaDefaults = ANTENNA_DEFAULTS;
+}
 
 function configNumber(key, fallback, min, max) {
   const value = Number(antennaConfig[key]);
@@ -160,23 +160,14 @@ function updateAntenna(instance, now) {
   dot.setAttribute('fill', instance._head?.getAttribute('fill') || '#08090b');
 }
 
-proto._draw = function(now) {
-  baseDraw.call(this, now);
+function drawAntenna(now) {
   updateAntenna(this, now);
-};
-
-window.AgentRobotAvatarDemoBuild = DEMO_BUILD;
-if (typeof document !== 'undefined') {
-  const syncBuildBadge = () => {
-    window.AgentRobotAvatarDemoBuild = DEMO_BUILD;
-    const badge = document.getElementById('agent-demo-build');
-    if (badge) badge.textContent = `Demo ${DEMO_BUILD}`;
-  };
-  syncBuildBadge();
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', syncBuildBadge, { once: true });
-  queueMicrotask(syncBuildBadge);
-  setTimeout(syncBuildBadge, 0);
 }
 
-export { AgentRobotAvatar, DEMO_BUILD, ANTENNA_DEFAULTS };
+registerAvatarExtension({
+  name: 'antenna',
+  draw: drawAntenna,
+});
+
+export { AgentRobotAvatar, ANTENNA_DEFAULTS };
 export default AgentRobotAvatar;

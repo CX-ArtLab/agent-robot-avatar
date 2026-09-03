@@ -1,5 +1,4 @@
 const STYLE_ID = 'agent-demo-layout-style-r58';
-const DEMO_BUILD = '0.1.1-R58';
 
 function mountDemoLayout() {
   if (document.getElementById(STYLE_ID)) return;
@@ -76,9 +75,6 @@ function mountDemoLayout() {
   document.head.appendChild(style);
 
   window.AgentRobotAvatarApplyDemoLanguage?.();
-  window.AgentRobotAvatarDemoBuild = DEMO_BUILD;
-  const badge = document.getElementById('agent-demo-build');
-  if (badge) badge.textContent = `Demo ${DEMO_BUILD}`;
 }
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mountDemoLayout, { once: true });

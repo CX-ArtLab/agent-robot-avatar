@@ -1,5 +1,3 @@
-const DEMO_BUILD = '0.1.1-R64';
-
 const face = document.getElementById('face');
 const chat = document.getElementById('chat');
 const input = document.getElementById('input');
@@ -226,6 +224,4 @@ window.AgentRobotAvatarDemoReplyLoop = {
   get state() { return loopState; },
   stop: () => stopReplyLoop(true),
 };
-window.AgentRobotAvatarDemoBuild = DEMO_BUILD;
-
 export { startReplyLoop, stopReplyLoop };

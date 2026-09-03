@@ -1,8 +1,12 @@
 # Agent Robot Avatar
 
-[English](../README.md) | [简体中文](./README.zh-CN.md) | [繁體中文](./README.zh-TW.md) | [日本語](./README.ja.md) | [한국어](./README.ko.md) | [Español](./README.es.md) | [Português](./README.pt.md) | [Deutsch](./README.de.md) | [Français](./README.fr.md)
+<p align="center">
+  <img src="../assets/readme/agent-robot-avatar-header.jpg" alt="Agent Robot Avatar">
+</p>
 
-![Version](https://img.shields.io/badge/version-v0.1.0-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
+[English](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/README.md) | [简体中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-CN.md) | [繁體中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-TW.md) | [日本語](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ja.md) | [한국어](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ko.md) | [Español](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.es.md) | [Português](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.pt.md) | [Deutsch](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.de.md) | [Français](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.fr.md)
+
+![개발 버전](https://img.shields.io/badge/version-v0.2.0-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
 ![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square) ![14 Agent States](https://img.shields.io/badge/Agent%20states-14-8B5CF6?style=flat-square) ![Pointer Following](https://img.shields.io/badge/Pointer-following-00A67E?style=flat-square) ![Jelly Drag](https://img.shields.io/badge/Drag-jelly%20physics-FF69B4?style=flat-square)
 
@@ -10,10 +14,10 @@ AI 에이전트와 다양한 인터랙티브 애플리케이션에서 사용할 
 
 Agent Robot Avatar는 SVG와 Vanilla JavaScript로만 구성되어 있으며 타사 애니메이션 프레임워크에 의존하지 않습니다. 네이티브 Custom Element로 동작하고 표정, 상호작용 상태, 포인터 추적, 대기 피드백, 머리 형태를 제어하는 간결한 API를 제공합니다.
 
-**현재 공개 버전: v0.1.0**
+**현재 공개 버전: v0.2.0**
 
 <p align="center">
-  <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Agent Robot Avatar animated demo" width="560">
+  <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Agent Robot Avatar 인터랙티브 애니메이션 데모" width="560">
 </p>
 
 ## 주요 특징
@@ -188,7 +192,7 @@ LICENSE                   MIT License
 
 ## 배포 및 호환성
 
-저장소에는 npm 호환 패키지 메타데이터가 포함되어 있지만 npm 패키지는 아직 공개되지 않았습니다. 별도 공지가 있기 전까지 GitHub 소스 저장소가 v0.1.0의 공식 배포 소스입니다. ES Modules, Custom Elements, SVG, Pointer Events, Web Animations API를 지원하는 최신 브라우저를 대상으로 합니다.
+패키지는 `agent-robot-avatar` 이름으로 npm에 공개되며 액션, 이벤트 및 공개 메서드에 대한 TypeScript 타입 선언을 포함합니다. ES Modules, Custom Elements, SVG, Pointer Events, Web Animations API를 지원하는 최신 브라우저를 대상으로 합니다.
 
 ## 기여
 

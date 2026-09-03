@@ -1,4 +1,5 @@
-(() => {
+const AgentRobotAvatar = (() => {
+  const HTMLElementBase = typeof HTMLElement === 'undefined' ? class {} : HTMLElement;
   const EASE = {
     outQuint: t => 1 - Math.pow(1 - t, 5),
     inOutCubic: t => t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2,
@@ -58,8 +59,56 @@
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const lerp = (a, b, t) => a + (b - a) * t;
   const clonePose = p => ({...p});
+  const connectedFaces = new Set();
 
-  class AgentFace extends HTMLElement {
+  const forEachConnectedFace = callback => {
+    for (const face of connectedFaces) {
+      if (face.isConnected) callback(face);
+    }
+  };
+
+  const handleGlobalPointerMove = event => {
+    forEachConnectedFace(face => {
+      face._onPointerMove(event);
+      if (face._dragJelly.active) face._onDragMove(event);
+    });
+  };
+  const handleGlobalPointerDown = () => forEachConnectedFace(face => face.noteActivity());
+  const handleGlobalKeyDown = () => forEachConnectedFace(face => face.noteActivity());
+  const handleGlobalPointerEnd = event => {
+    forEachConnectedFace(face => {
+      if (face._dragJelly.active) face._onDragEnd(event);
+    });
+  };
+  const handleGlobalVisibility = () => forEachConnectedFace(face => face._onVisibility());
+
+  function registerConnectedFace(face) {
+    if (connectedFaces.has(face)) return;
+    const first = connectedFaces.size === 0;
+    connectedFaces.add(face);
+    if (!first) return;
+
+    window.addEventListener('pointermove', handleGlobalPointerMove, {passive:true});
+    window.addEventListener('pointerdown', handleGlobalPointerDown, {passive:true});
+    window.addEventListener('keydown', handleGlobalKeyDown, {passive:true});
+    window.addEventListener('pointerup', handleGlobalPointerEnd, {passive:true});
+    window.addEventListener('pointercancel', handleGlobalPointerEnd, {passive:true});
+    document.addEventListener('visibilitychange', handleGlobalVisibility);
+  }
+
+  function unregisterConnectedFace(face) {
+    connectedFaces.delete(face);
+    if (connectedFaces.size > 0) return;
+
+    window.removeEventListener('pointermove', handleGlobalPointerMove);
+    window.removeEventListener('pointerdown', handleGlobalPointerDown);
+    window.removeEventListener('keydown', handleGlobalKeyDown);
+    window.removeEventListener('pointerup', handleGlobalPointerEnd);
+    window.removeEventListener('pointercancel', handleGlobalPointerEnd);
+    document.removeEventListener('visibilitychange', handleGlobalVisibility);
+  }
+
+  class AgentFace extends HTMLElementBase {
     constructor() {
       super();
       this.attachShadow({mode: 'open'});
@@ -98,6 +147,7 @@
       this._autoSleepMs = Number(this.getAttribute('auto-sleep')) || 0;
       this._lastActivity = performance.now();
       this._running = true;
+      this._framePaused = false;
       this._lastFrame = 0;
       this._raf = 0;
       this._dragJelly = {
@@ -109,41 +159,26 @@
         maxDist:0, angryThreshold:32, pendingReaction:null, intent:'angry'
       };
       this._suppressClick = false;
-      this._boundPointer = e => this._onPointerMove(e);
       this._boundDragStart = e => this._onDragStart(e);
-      this._boundDragMove = e => this._onDragMove(e);
-      this._boundDragEnd = e => this._onDragEnd(e);
       this._boundClickCapture = e => this._onClickCapture(e);
-      this._boundVisibility = () => this._onVisibility();
-      this._boundActivity = () => this.noteActivity();
       this._renderShell();
     }
 
     connectedCallback() {
-      window.addEventListener('pointermove', this._boundPointer, {passive:true});
-      window.addEventListener('pointerdown', this._boundActivity, {passive:true});
-      window.addEventListener('keydown', this._boundActivity, {passive:true});
-      window.addEventListener('pointermove', this._boundDragMove, {passive:true});
-      window.addEventListener('pointerup', this._boundDragEnd, {passive:true});
-      window.addEventListener('pointercancel', this._boundDragEnd, {passive:true});
+      registerConnectedFace(this);
       this.addEventListener('pointerdown', this._boundDragStart);
       this.addEventListener('click', this._boundClickCapture, true);
-      document.addEventListener('visibilitychange', this._boundVisibility);
       this._running = !document.hidden;
-      this._loop();
+      this._resumeFrames();
     }
 
     disconnectedCallback() {
-      window.removeEventListener('pointermove', this._boundPointer);
-      window.removeEventListener('pointerdown', this._boundActivity);
-      window.removeEventListener('keydown', this._boundActivity);
-      window.removeEventListener('pointermove', this._boundDragMove);
-      window.removeEventListener('pointerup', this._boundDragEnd);
-      window.removeEventListener('pointercancel', this._boundDragEnd);
+      unregisterConnectedFace(this);
       this.removeEventListener('pointerdown', this._boundDragStart);
       this.removeEventListener('click', this._boundClickCapture, true);
-      document.removeEventListener('visibilitychange', this._boundVisibility);
+      this._running = false;
       cancelAnimationFrame(this._raf);
+      this._raf = 0;
     }
 
     static get observedAttributes() { return ['color','size','auto-sleep']; }
@@ -261,10 +296,10 @@
 
     _onVisibility() {
       this._running = !document.hidden;
-      if (this._running) {
-        this._lastFrame = performance.now();
+      if (this._running) this._resumeFrames();
+      else {
         cancelAnimationFrame(this._raf);
-        this._loop();
+        this._raf = 0;
       }
     }
 
@@ -454,6 +489,7 @@
 
     noteActivity(wake=true) {
       this._lastActivity = performance.now();
+      this._resumeFrames();
       if (wake && this._sleeping) this.wake();
     }
 
@@ -490,6 +526,7 @@
 
     setState(name, opts={}) {
       if (!POSES[name]) throw new Error(`Unknown AgentFace state: ${name}`);
+      this._resumeFrames();
       this._state = name;
       this._sleeping = name === 'sleep';
       if (name === 'idle' && !opts.keepGazeLock) this._releaseExpressionLock();
@@ -966,8 +1003,28 @@
       this._rightEye.setAttribute('transform', setEye(this._rightBase,this._rightInputBase,this._rightTop,this._rightBottom,'R',rightCX,this._eyeMicro.rX,this._eyeMicro.rY,inputPulseR));
     }
 
+    _resumeFrames() {
+      if (!this.isConnected || document.hidden || this._raf) return;
+      this._running = true;
+      this._framePaused = false;
+      this._lastFrame = performance.now();
+      this._raf = requestAnimationFrame(this._loop);
+    }
+
+    _canPauseFrames(now) {
+      if (!this._sleeping || this._state !== 'sleep') return false;
+      if (now - this._morphStart < this._morphDuration) return false;
+      if (this._dragJelly.active || this._dragJelly.returning) return false;
+      if (this._waitingFx || this._inspectFx || this._failureFx || this._warningFx || this._systemErrorShake) return false;
+      const animations = this._headMotion?.getAnimations?.() || [];
+      return !animations.some(animation => animation.playState === 'running' || animation.playState === 'pending');
+    }
+
     _loop = (ts=performance.now()) => {
-      if (!this._running || !this.isConnected) return;
+      if (!this._running || !this.isConnected) {
+        this._raf = 0;
+        return;
+      }
       if (ts - this._lastFrame >= 33) {
         const dt = Math.min(66, ts - (this._lastFrame || ts-33));
         this._lastFrame = ts;
@@ -979,10 +1036,21 @@
         this._autoSleep(ts);
         this._draw(ts);
       }
+      if (this._canPauseFrames(ts)) {
+        this._framePaused = true;
+        this._raf = 0;
+        return;
+      }
       this._raf = requestAnimationFrame(this._loop);
     };
   }
 
-  if (!customElements.get('agent-robot-avatar')) customElements.define('agent-robot-avatar', AgentFace);
-  window.AgentRobotAvatar = AgentFace;
+  if (typeof customElements !== 'undefined' && !customElements.get('agent-robot-avatar')) {
+    customElements.define('agent-robot-avatar', AgentFace);
+  }
+  if (typeof window !== 'undefined') window.AgentRobotAvatar = AgentFace;
+  return AgentFace;
 })();
+
+export { AgentRobotAvatar };
+export default AgentRobotAvatar;

@@ -1,18 +1,36 @@
 {
   "name": "agent-robot-avatar",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A lightweight expressive robot avatar Web Component for AI agents and interactive applications.",
   "type": "module",
   "main": "./agent-robot-avatar.js",
   "module": "./agent-robot-avatar.js",
+  "types": "./index.d.ts",
   "browser": "./agent-robot-avatar.js",
   "unpkg": "./agent-robot-avatar.js",
   "jsdelivr": "./agent-robot-avatar.js",
   "exports": {
-    ".": "./agent-robot-avatar.js"
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./agent-robot-avatar.js",
+      "default": "./agent-robot-avatar.js"
+    }
+  },
+  "sideEffects": true,
+  "scripts": {
+    "dev": "node scripts/serve.mjs",
+    "check": "node scripts/check-source.mjs",
+    "test": "npm run check && npm run test:types && npm run test:release && npm run test:package && npm run test:browser",
+    "release:check": "npm test && npm publish --dry-run --ignore-scripts --tag latest",
+    "prepublishOnly": "npm test && node scripts/check-publish-tag.mjs",
+    "test:types": "tsc -p tsconfig.types.json",
+    "test:release": "node --test tests/release.test.mjs",
+    "test:package": "node --test tests/package.test.mjs",
+    "test:browser": "playwright test"
   },
   "files": [
     "agent-robot-avatar.js",
+    "index.d.ts",
     "src/",
     "assets/support/",
     "docs/",
@@ -48,6 +66,11 @@
     "url": "https://ko-fi.com/P0E625WIOI"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.62.1",
+    "typescript": "7.0.2"
   }
 }

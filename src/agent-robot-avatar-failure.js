@@ -1,17 +1,13 @@
-import AgentRobotAvatar from './agent-robot-avatar-inspect.js?v=R62';
+import AgentRobotAvatar, { registerAvatarExtension } from './agent-robot-avatar-extension-host.js';
 
-const DEMO_BUILD = '0.1.1-R62';
 const proto = AgentRobotAvatar.prototype;
-const basePlay = proto.play;
-const baseReset = proto.reset;
-const baseDraw = proto._draw;
 
 const FAILURE_HEAD_DROP = 5.5;
 const FAILURE_EYE_DROP = 4.8;
 
 function dispatchFailureState(instance, state) {
   instance.dispatchEvent(new CustomEvent('face-state', {
-    detail: { state, version: DEMO_BUILD }
+    detail: { state }
   }));
 }
 
@@ -54,25 +50,13 @@ function addEyeDrop(eye, amount) {
   eye.setAttribute('transform', `${current} translate(0 ${amount.toFixed(2)})`);
 }
 
-proto.play = function(name) {
-  const action = String(name || '').trim().toLowerCase();
-  if (action === 'failure' || action === 'failed' || action === 'fail') return this.failure();
-  this._failureFx = null;
-  return basePlay.call(this, name);
-};
-
-proto.reset = function() {
-  this._failureFx = null;
-  return baseReset.call(this);
-};
-
 proto.failure = async function() {
   this.noteActivity();
   this._inputWanted = false;
   this._failureFx = null;
 
   // Clear waiting/inspect/flash or any other active extension before entering failure.
-  baseReset.call(this);
+  this.reset();
   if (!(await this._prepareExpression({ normalizePose: true, duration: 180, pause: 260 }))) return;
   const token = this._transitionToken;
 
@@ -114,14 +98,30 @@ proto.failure = async function() {
   this._failureFx = null;
 };
 
-proto._draw = function(now) {
-  baseDraw.call(this, now);
+function drawFailure(now) {
   const fx = this._failureFx;
   if (!fx) return;
   const drop = failureEyeDrop(fx, now);
   addEyeDrop(this._leftEye, drop);
   addEyeDrop(this._rightEye, drop);
-};
+}
 
-export { AgentRobotAvatar, DEMO_BUILD };
+registerAvatarExtension({
+  name: 'failure',
+  actions: {
+    failure() { return this.failure(); },
+    failed() { return this.failure(); },
+    fail() { return this.failure(); },
+  },
+  beforePlay(action) {
+    if (action === 'failure' || action === 'failed' || action === 'fail') return;
+    this._failureFx = null;
+  },
+  reset() {
+    this._failureFx = null;
+  },
+  draw: drawFailure,
+});
+
+export { AgentRobotAvatar };
 export default AgentRobotAvatar;

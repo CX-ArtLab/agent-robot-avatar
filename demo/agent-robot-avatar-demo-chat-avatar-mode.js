@@ -1,5 +1,3 @@
-const DEMO_BUILD = '0.1.1-R63';
-
 const LABELS = Object.freeze({
   'zh-CN': { top: '顶部', chat: '对话', title: '头像位置' },
   'zh-TW': { top: '頂部', chat: '對話', title: '頭像位置' },
@@ -248,6 +246,4 @@ window.AgentRobotAvatarDemoAvatarMode = {
   get mode() { return mode; },
   setMode,
 };
-window.AgentRobotAvatarDemoBuild = DEMO_BUILD;
-
 export { setMode };

@@ -16,9 +16,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
 
-      - name: Check component syntax
-        run: node --check agent-robot-avatar.js
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Validate package metadata
-        run: node -e "JSON.parse(require('fs').readFileSync('package.json','utf8')); console.log('package.json OK')"
+      - name: Install browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Run validation suite
+        run: npm test

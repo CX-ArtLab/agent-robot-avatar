@@ -1,4 +1,3 @@
-const DEMO_BUILD = '0.1.1-R52';
 const STYLE_ID = 'agent-demo-dialog-i18n-style-r52';
 
 const DIALOG_I18N = Object.freeze({
@@ -239,9 +238,6 @@ function mountDialogI18n() {
   });
   langObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
 
-  window.AgentRobotAvatarDemoBuild = DEMO_BUILD;
-  const badge = document.getElementById('agent-demo-build');
-  if (badge) badge.textContent = `Demo ${DEMO_BUILD}`;
 }
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mountDialogI18n, { once: true });
