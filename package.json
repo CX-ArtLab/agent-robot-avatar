@@ -15,8 +15,8 @@
     "agent-robot-avatar.js",
     "src/",
     "assets/support/",
+    "docs/",
     "README.md",
-    "README.zh-CN.md",
     "CHANGELOG.md",
     "LICENSE"
   ],

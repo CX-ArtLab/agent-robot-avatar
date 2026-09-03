@@ -1,8 +1,8 @@
 # Agent Robot Avatar
 
-[English](./README.md) | [简体中文](./README.zh-CN.md)
+[English](../README.md) | [简体中文](./README.zh-CN.md) | [繁體中文](./README.zh-TW.md) | [日本語](./README.ja.md) | [한국어](./README.ko.md) | [Español](./README.es.md) | [Português](./README.pt.md) | [Deutsch](./README.de.md) | [Français](./README.fr.md)
 
-![Version](https://img.shields.io/badge/version-v0.1.0-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](./LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
+![Version](https://img.shields.io/badge/version-v0.1.0-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
 ![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square) ![14 Agent States](https://img.shields.io/badge/Agent%20states-14-8B5CF6?style=flat-square) ![Pointer Following](https://img.shields.io/badge/Pointer-following-00A67E?style=flat-square) ![Jelly Drag](https://img.shields.io/badge/Drag-jelly%20physics-FF69B4?style=flat-square)
 
@@ -42,7 +42,7 @@ Agent Robot Avatar 基于 SVG 与原生 JavaScript 构建，不依赖第三方�
 
 组件加载后会自动进入默认待机状态，不需要额外初始化。
 
-最小可运行示例位于 [`examples/basic.html`](./examples/basic.html)。
+最小可运行示例位于 [`examples/basic.html`](../examples/basic.html)。
 
 ## 基本 API
 
@@ -214,12 +214,10 @@ avatar.addEventListener('face-state', (event) => {
 agent-robot-avatar.js     正式组件入口
 src/                      可复用组件运行时与表情模块
 demo/                     完整交互 Demo 与 Demo 专用辅助脚本
-  index.html              完整交互 Demo
-  preview-demo.bat        Windows 本地 Demo 启动器
 examples/                 最小集成示例
 assets/support/           支持项目 / 支付二维码素材
-README.md                 英文说明
-README.zh-CN.md           简体中文说明
+docs/                     多语言文档
+README.md                 英文主文档
 CHANGELOG.md              正式版本记录
 CONTRIBUTING.md           贡献指南
 package.json              包与分发元数据
@@ -238,7 +236,7 @@ Agent Robot Avatar 面向支持 ES Modules、Custom Elements、SVG、Pointer Eve
 
 ## 参与贡献
 
-欢迎提交 Issue 和 Pull Request。提交修改前请先阅读 [`CONTRIBUTING.md`](./CONTRIBUTING.md)。
+欢迎提交 Issue 和 Pull Request。提交修改前请先阅读 [`CONTRIBUTING.md`](../CONTRIBUTING.md)。
 
 ## 项目状态
 
@@ -248,7 +246,7 @@ Agent Robot Avatar 为独立开发的开源项目，不隶属于、代表或获�
 
 ## License
 
-MIT License。详见 [`LICENSE`](./LICENSE)。
+MIT License。详见 [`LICENSE`](../LICENSE)。
 
 ## 请我喝杯咖啡
 
@@ -256,4 +254,4 @@ MIT License。详见 [`LICENSE`](./LICENSE)。
 
 | Ko-fi | 支付宝 | 微信支付 |
 | --- | --- | --- |
-| <a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a> | <img src="./assets/support/alipay.png" alt="支付宝收款码" width="160"> | <img src="./assets/support/wechat-pay.png" alt="微信支付收款码" width="160"> |
+| <a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a> | <img src="../assets/support/alipay.png" alt="支付宝收款码" width="160"> | <img src="../assets/support/wechat-pay.png" alt="微信支付收款码" width="160"> |

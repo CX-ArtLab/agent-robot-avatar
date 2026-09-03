@@ -6,8 +6,13 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ## [Unreleased]
 
+### Added
+
+- Added Traditional Chinese, Japanese, Korean, Spanish, Portuguese, German, and French documentation.
+
 ### Changed
 
+- Moved localized README files into the `docs/` directory and added a unified language selector.
 - Moved the interactive Demo and Windows launcher into the `demo/` directory.
 
 ## [0.1.0] - 2026-09-02

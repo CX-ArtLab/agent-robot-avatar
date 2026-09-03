@@ -1,6 +1,6 @@
 # Agent Robot Avatar
 
-[English](./README.md) | [简体中文](./README.zh-CN.md)
+[English](./README.md) | [简体中文](./docs/README.zh-CN.md) | [繁體中文](./docs/README.zh-TW.md) | [日本語](./docs/README.ja.md) | [한국어](./docs/README.ko.md) | [Español](./docs/README.es.md) | [Português](./docs/README.pt.md) | [Deutsch](./docs/README.de.md) | [Français](./docs/README.fr.md)
 
 ![Version](https://img.shields.io/badge/version-v0.1.0-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](./LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
@@ -214,12 +214,10 @@ The interactive Demo and Demo-only JavaScript are isolated in `demo/` and are no
 agent-robot-avatar.js     Public component entry
 src/                      Reusable component runtime and expression modules
 demo/                     Interactive Demo and Demo-only helpers
-  index.html              Full interactive Demo
-  preview-demo.bat        Local Windows Demo launcher
 examples/                 Minimal integration examples
 assets/support/           Support / payment QR assets
-README.md                 English documentation
-README.zh-CN.md           Simplified Chinese documentation
+docs/                     Localized documentation
+README.md                 English main documentation
 CHANGELOG.md              Public release history
 CONTRIBUTING.md           Contribution guide
 package.json              Package metadata
