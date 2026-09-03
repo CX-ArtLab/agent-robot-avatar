@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Agent Robot Avatar — Basic Example</title>
+  <style>
+    html,body{height:100%;margin:0}
+    body{display:grid;place-items:center;background:#f7f7f5;font-family:system-ui,sans-serif}
+    .example{display:grid;gap:24px;justify-items:center}
+    .actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+    button{border:0;border-radius:10px;padding:8px 12px;cursor:pointer}
+  </style>
+</head>
+<body>
+  <div class="example">
+    <agent-robot-avatar id="avatar" size="140"></agent-robot-avatar>
+    <div class="actions">
+      <button type="button" data-action="idle">Idle</button>
+      <button type="button" data-action="success">Success</button>
+      <button type="button" data-action="error">Error</button>
+      <button type="button" data-action="surprise">Surprise</button>
+      <button type="button" data-action="sleep">Sleep</button>
+      <button type="button" data-action="wake">Wake</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import '../agent-robot-avatar.js';
+
+    const avatar = document.querySelector('#avatar');
+
+    document.querySelector('.actions').addEventListener('click', (event) => {
+      const action = event.target.dataset.action;
+      if (action) avatar.play(action);
+    });
+  </script>
+</body>
+</html>

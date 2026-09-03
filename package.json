@@ -1,0 +1,53 @@
+{
+  "name": "agent-robot-avatar",
+  "version": "0.1.0",
+  "description": "A lightweight expressive robot avatar Web Component for AI agents and interactive applications.",
+  "type": "module",
+  "main": "./agent-robot-avatar.js",
+  "module": "./agent-robot-avatar.js",
+  "browser": "./agent-robot-avatar.js",
+  "unpkg": "./agent-robot-avatar.js",
+  "jsdelivr": "./agent-robot-avatar.js",
+  "exports": {
+    ".": "./agent-robot-avatar.js"
+  },
+  "files": [
+    "agent-robot-avatar.js",
+    "src/",
+    "assets/support/",
+    "README.md",
+    "README.zh-CN.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "ai",
+    "agent",
+    "robot",
+    "avatar",
+    "web-component",
+    "svg",
+    "svg-animation",
+    "animation",
+    "interactive",
+    "vanilla-javascript",
+    "ui"
+  ],
+  "author": "CX ArtLab",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CX-ARTLab/agent-robot-avatar.git"
+  },
+  "homepage": "https://github.com/CX-ARTLab/agent-robot-avatar#readme",
+  "bugs": {
+    "url": "https://github.com/CX-ARTLab/agent-robot-avatar/issues"
+  },
+  "funding": {
+    "type": "individual",
+    "url": "https://ko-fi.com/P0E625WIOI"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

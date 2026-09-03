@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Agent Robot Avatar — Interactive Demo</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;min-height:100%;font-family:Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:#15171a;background:#f7f7f5}
+  body{overflow:auto}
+  .canvas{position:relative;width:100%;min-height:100vh;background-color:#f8f8f6;background-image:radial-gradient(#d7d9dc 1px,transparent 1px);background-size:24px 24px}
+  .title{position:absolute;left:28px;top:22px;font-size:13px;color:#8a8f98;letter-spacing:.04em}
+  .avatar-home{position:absolute;left:50%;top:39%;transform:translate(-50%,-50%);width:118px;height:118px;display:grid;place-items:center;z-index:5}
+  agent-robot-avatar{filter:drop-shadow(0 12px 24px rgba(0,0,0,.08));transition:filter .2s ease}
+  agent-robot-avatar:hover{filter:drop-shadow(0 15px 30px rgba(0,0,0,.13))}
+  .controls{position:absolute;left:50%;top:calc(39% + 102px);transform:translateX(-50%);padding:8px;border-radius:16px;background:rgba(255,255,255,.88);box-shadow:0 7px 30px rgba(0,0,0,.08);backdrop-filter:blur(14px);display:flex;gap:6px;z-index:20;flex-wrap:wrap;justify-content:center;max-width:min(900px,calc(100% - 56px))}
+  button{border:0;background:#f1f2f3;padding:8px 11px;border-radius:10px;font-size:12px;color:#333;cursor:pointer;white-space:nowrap}
+  button:hover{background:#e7e8ea} button:active{transform:translateY(1px)}
+  .status-pill{position:absolute;left:28px;bottom:25px;font-size:11px;color:#858990;background:#fff;border:1px solid #ececec;border-radius:999px;padding:6px 10px}
+  .follow-control{position:absolute;right:28px;bottom:24px;display:inline-flex;align-items:center;gap:9px;padding:6px 9px 6px 11px;border:1px solid #e2e3e5;border-radius:999px;background:rgba(255,255,255,.92);color:#777c83;font-size:11px;font-weight:600;white-space:nowrap;user-select:none}
+  .follow-control input{position:absolute;opacity:0;pointer-events:none}
+  .follow-switch{position:relative;width:30px;height:18px;border-radius:999px;background:#d4d6d9;transition:background .18s ease;cursor:pointer}
+  .follow-switch::after{content:'';position:absolute;left:2px;top:2px;width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.18);transition:transform .18s ease}
+  .follow-control input:checked + .follow-switch{background:#666b72}
+  .follow-control input:checked + .follow-switch::after{transform:translateX(12px)}
+  .follow-control input:focus-visible + .follow-switch{outline:2px solid #aeb2b8;outline-offset:2px}
+
+  .support-link{position:absolute;left:50%;bottom:24px;transform:translateX(-50%);display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border:1px solid #dedfe1;border-radius:999px;background:rgba(255,255,255,.92);box-shadow:0 6px 24px rgba(0,0,0,.05);color:#656a70;text-decoration:none;font-size:12px;font-weight:650;white-space:nowrap;transition:background .18s ease,border-color .18s ease,transform .18s ease}
+  .support-link:hover{background:#fff;border-color:#d1d3d6;transform:translateX(-50%) translateY(-1px)}
+  .support-cup{font-size:14px;line-height:1}
+
+  .agent-overlay{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:16px;background:rgba(239,240,238,.72);backdrop-filter:blur(10px);opacity:0;visibility:hidden;transition:opacity .22s ease,visibility .22s ease}
+  .agent-overlay.open{opacity:1;visibility:visible}
+  .agent-phone{width:420px;height:720px;max-width:calc(100vw - 32px);max-height:calc(100vh - 32px);background:rgba(255,255,255,.98);border:1px solid rgba(0,0,0,.06);border-radius:32px;box-shadow:0 30px 90px rgba(0,0,0,.16);overflow:hidden;display:flex;flex-direction:column;transform:translateY(14px) scale(.985);transition:transform .32s cubic-bezier(.16,1,.3,1)}
+  .agent-overlay.open .agent-phone{transform:translateY(0) scale(1)}
+  .panel-head{height:96px;flex:0 0 96px;display:flex;align-items:center;gap:13px;padding:0 68px 0 20px;border-bottom:1px solid #ededed;position:relative}
+  .panel-face-slot{width:56px;height:56px;flex:0 0 56px;display:grid;place-items:center}
+  .panel-copy{min-width:0}
+  .panel-title{font-weight:700;font-size:18px;letter-spacing:-.01em}
+  .panel-sub{font-size:12px;color:#999da4;margin-top:4px}
+  .close{position:absolute;right:20px;top:31px;width:34px;height:34px;padding:0;border-radius:11px;font-size:18px;background:#f1f2f3}
+  .chat{flex:1;overflow-y:auto;padding:22px 22px 14px;scroll-behavior:smooth;background:#fff}
+  .message{display:flex;margin-bottom:14px}
+  .message.agent{justify-content:flex-start}.message.user{justify-content:flex-end}
+  .bubble{max-width:82%;padding:12px 14px;border-radius:18px;font-size:13px;line-height:1.55;white-space:pre-wrap;word-break:break-word}
+  .message.agent .bubble{background:#f1f2f3;color:#565b62;border-bottom-left-radius:7px}
+  .message.user .bubble{background:#666b72;color:#fff;border-bottom-right-radius:7px}
+  .reply-text{white-space:pre-wrap}
+  .expression-tag{display:inline-flex;align-items:center;gap:5px;margin:9px 0 0;padding:4px 8px;border-radius:999px;font-size:10px;line-height:1.1;font-weight:650;letter-spacing:.01em;border:1px solid transparent}
+  .expression-tag::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.62}
+  .expression-tag.success{background:#e9f5ec;border-color:#d4ead9;color:#6e9277}
+  .expression-tag.warning{background:#fff5dc;border-color:#efe0b6;color:#9a7c38}
+  .expression-tag.angry{background:#faecef;border-color:#f1d7dd;color:#a36f78}
+  .expression-tag.error{background:#eaf1f6;border-color:#d8e3ea;color:#718897}
+  .expression-tag.surprise{background:#eaf2fa;border-color:#d5e3f0;color:#6f89a2}
+  .expression-tag.bored{background:#f0edf7;border-color:#e2dced;color:#86799a}
+  .typing .bubble{color:#9a9da2;letter-spacing:.14em;min-width:52px;text-align:center}
+  .composer-wrap{padding:14px 18px 18px;border-top:1px solid #f0f0f0;background:#fff}
+  .composer{border:1px solid #e2e4e7;border-radius:20px;padding:12px;background:#fff;box-shadow:0 8px 30px rgba(0,0,0,.035)}
+  textarea{width:100%;height:68px;border:0;resize:none;outline:0;font:inherit;font-size:13px;line-height:1.5;color:#555a60;background:transparent}
+  textarea::placeholder{color:#a6a9ae}
+  .sendrow{display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .hint{font-size:10px;color:#aaaeb4;padding-left:2px}
+  .send{background:#666b72;color:#fff;padding:8px 15px;border-radius:11px}.send:hover{background:#585d63}.send:disabled{opacity:.45;cursor:default}
+
+  @media(max-width:600px){
+    .title{left:18px;top:16px}.status-pill{left:18px;bottom:72px}.follow-control{right:18px;bottom:72px}
+    .controls{max-width:calc(100% - 20px);overflow:auto;flex-wrap:nowrap;justify-content:flex-start}
+    .support-link{bottom:18px}
+    .agent-overlay{padding:10px}.agent-phone{max-width:calc(100vw - 20px);max-height:calc(100vh - 20px);border-radius:26px}
+  }
+</style>
+</head>
+<body>
+<div class="canvas" id="canvas">
+  <div class="title">Agent Robot Avatar / SVG + Vanilla JS / Web Component</div>
+  <div class="avatar-home" id="home">
+    <agent-robot-avatar id="face" size="118" auto-sleep="18000"></agent-robot-avatar>
+  </div>
+  <div class="status-pill" id="status">idle · 默认待机</div>
+  <label class="follow-control" title="控制眼睛和头部是否跟随鼠标">
+    <span>鼠标跟随</span>
+    <input id="pointerFollow" type="checkbox" checked />
+    <span class="follow-switch" aria-hidden="true"></span>
+  </label>
+
+  <div class="controls" aria-label="Avatar states">
+    <button type="button" data-action="idle">正常</button>
+    <button type="button" data-action="bored">发呆</button>
+    <button type="button" data-action="input">输入</button>
+    <button type="button" data-action="send">发送/点头</button>
+    <button type="button" data-action="success">成功</button>
+    <button type="button" data-action="warning">警告</button>
+    <button type="button" data-action="angry">内容阻止</button>
+    <button type="button" data-action="error">系统错误</button>
+    <button type="button" data-action="surprise">惊讶</button>
+    <button type="button" data-action="sleep">睡着</button>
+    <button type="button" data-action="wake">醒来</button>
+  </div>
+
+  <a class="support-link" href="https://ko-fi.com/P0E625WIOI" target="_blank" rel="noopener noreferrer" aria-label="Buy me a coffee on Ko-fi">
+    <span class="support-cup">☕</span><span>Buy me a coffee</span>
+  </a>
+</div>
+
+<div class="agent-overlay" id="agentOverlay" aria-hidden="true">
+  <section class="agent-phone" role="dialog" aria-modal="true" aria-label="Agent 对话演示">
+    <div class="panel-head">
+      <div class="panel-face-slot" id="slot"></div>
+      <div class="panel-copy"><div class="panel-title">Agent</div><div class="panel-sub">随机状态回复演示</div></div>
+      <button type="button" class="close" id="close" aria-label="关闭">×</button>
+    </div>
+    <div class="chat" id="chat">
+      <div class="message agent"><div class="bubble">这是一个模拟 Agent。输入任意内容后，会随机模拟成功、风险确认、内容阻止、系统错误等回复，并在正文下方标注对应表情。</div></div>
+    </div>
+    <div class="composer-wrap">
+      <div class="composer">
+        <textarea id="input" placeholder="输入内容……"></textarea>
+        <div class="sendrow">
+          <span class="hint">Enter 发送 · Shift+Enter 换行</span>
+          <button type="button" class="send" id="send">发送</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script type="module">
+  const demoVersion = new URLSearchParams(location.search).get('v') || '0.1.0';
+  await import(`./agent-robot-avatar.js?v=${encodeURIComponent(demoVersion)}`);
+
+  const face = document.getElementById('face');
+  const home = document.getElementById('home');
+  const overlay = document.getElementById('agentOverlay');
+  const slot = document.getElementById('slot');
+  const status = document.getElementById('status');
+  const chat = document.getElementById('chat');
+  const input = document.getElementById('input');
+  const sendButton = document.getElementById('send');
+  const pointerFollow = document.getElementById('pointerFollow');
+  let inPanel = false;
+  let busy = false;
+  let replyToken = 0;
+
+  const stateNames = {
+    idle: '默认待机', bored: '发呆', input: '输入中', happy: '成功',
+    warning: '警告确认', angry: '内容阻止', error: '系统错误',
+    surprise: '惊讶', sleepy: '困倦', sleep: '睡眠'
+  };
+
+  const replies = [
+    {state:'success', label:'演示表情 · 成功 / success', texts:['任务已经完成，结果看起来不错。','处理完成，没有发现需要你继续操作的问题。','完成了。这次执行很顺利。']},
+    {state:'warning', label:'演示表情 · 警告确认 / warning', texts:['这个操作会覆盖现有内容。确认要继续吗？','这一步可能造成不可逆的修改，你确定要执行吗？','即将进行高影响操作，请再次确认是否继续。']},
+    {state:'angry', label:'演示表情 · 内容阻止 / angry', texts:['这条内容不允许继续发送，操作已被阻止。','当前请求违反了允许范围，我不能执行。','这个操作不符合当前规则，已停止继续处理。']},
+    {state:'error', label:'演示表情 · 系统错误 / error', texts:['连接服务失败，请检查网络后重试。','系统暂时无法完成请求，稍后再试一次。','与服务端的连接中断了，这次操作没有完成。']},
+    {state:'surprise', label:'演示表情 · 意外 / surprise', texts:['有点意外，我发现了一个和预期不同的结果。','这个结果比预想中更特别，我需要重新判断一下。','发现了一个意外情况，不过信息已经保留下来了。']},
+    {state:'bored', label:'演示表情 · 等待 / bored', texts:['还在等外部结果返回，这一步比平时慢一点。','暂时没有新的变化，我还在等待。','任务还没有结束，目前处于等待状态。']}
+  ];
+
+  face.setPointerFollow(pointerFollow.checked);
+  pointerFollow.addEventListener('change', () => {
+    face.setPointerFollow(pointerFollow.checked);
+  });
+
+  face.addEventListener('face-state', (event) => {
+    const state = event.detail.state;
+    status.textContent = `${state} · ${stateNames[state] || '状态切换'}`;
+  });
+
+  function flipMove(el, destination, newSize){
+    const first = el.getBoundingClientRect();
+    destination.appendChild(el);
+    el.setAttribute('size', newSize);
+    const last = el.getBoundingClientRect();
+    const dx = first.left-last.left, dy=first.top-last.top;
+    const sx = first.width/last.width, sy=first.height/last.height;
+    const animation = el.animate([
+      {transform:`translate(${dx}px,${dy}px) scale(${sx},${sy})`},
+      {transform:'translate(0,0) scale(1)'}
+    ],{duration:520,easing:'cubic-bezier(.16,1,.3,1)'});
+    return animation.finished.catch(()=>{});
+  }
+
+  async function openAgent(){
+    if(inPanel) return;
+    inPanel = true;
+    face.play('send');
+    overlay.classList.add('open');
+    overlay.setAttribute('aria-hidden','false');
+    await new Promise(resolve => setTimeout(resolve,70));
+    await flipMove(face,slot,56);
+    input.focus();
+  }
+
+  function closeAgent(){
+    if(!inPanel) return;
+    replyToken++;
+    busy = false;
+    sendButton.disabled = false;
+    inPanel = false;
+    const first = face.getBoundingClientRect();
+    home.insertBefore(face,home.firstChild);
+    face.setAttribute('size',118);
+    const last = face.getBoundingClientRect();
+    const dx=first.left-last.left, dy=first.top-last.top, sx=first.width/last.width, sy=first.height/last.height;
+    face.animate([
+      {transform:`translate(${dx}px,${dy}px) scale(${sx},${sy})`},
+      {transform:'translate(0,0) scale(1)'}
+    ],{duration:520,easing:'cubic-bezier(.16,1,.3,1)'});
+    overlay.classList.remove('open');
+    overlay.setAttribute('aria-hidden','true');
+    face.reset();
+  }
+
+  function addMessage(role,text,className='',label='',state=''){
+    const row = document.createElement('div');
+    row.className = `message ${role}${className ? ` ${className}` : ''}`;
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    if(label){
+      const replyText = document.createElement('div');
+      replyText.className = 'reply-text';
+      replyText.textContent = text;
+      bubble.appendChild(replyText);
+      const tag = document.createElement('div');
+      tag.className = `expression-tag ${state}`;
+      tag.textContent = label;
+      bubble.appendChild(tag);
+    }else{
+      bubble.textContent = text;
+    }
+    row.appendChild(bubble);
+    chat.appendChild(row);
+    chat.scrollTop = chat.scrollHeight;
+    return row;
+  }
+
+  function chooseReply(){
+    const group = replies[Math.floor(Math.random()*replies.length)];
+    return {state:group.state,label:group.label,text:group.texts[Math.floor(Math.random()*group.texts.length)]};
+  }
+
+  async function sendMessage(){
+    const text = input.value.trim();
+    if(!text || busy) return;
+    const token = ++replyToken;
+    busy = true;
+    sendButton.disabled = true;
+    addMessage('user',text);
+    input.value='';
+    face.reset();
+    await face.play('send');
+    if(token !== replyToken || !inPanel) return;
+
+    const typing = addMessage('agent','•••','typing');
+    const wait = 700 + Math.random()*900;
+    await new Promise(resolve => setTimeout(resolve,wait));
+    if(token !== replyToken || !inPanel) return;
+    typing.remove();
+    const reply = chooseReply();
+    face.play(reply.state);
+    addMessage('agent',reply.text,'',reply.label,reply.state);
+    busy = false;
+    sendButton.disabled = false;
+    input.focus({preventScroll:true});
+  }
+
+  face.addEventListener('dblclick',openAgent);
+  document.getElementById('close').addEventListener('click',closeAgent);
+  overlay.addEventListener('click',(event)=>{ if(event.target === overlay) closeAgent(); });
+  document.addEventListener('keydown',(event)=>{ if(event.key === 'Escape' && inPanel) closeAgent(); });
+
+  document.querySelector('.controls').addEventListener('click',(event)=>{
+    const action = event.target.dataset.action;
+    if(!action) return;
+    face.play(action);
+  });
+
+  input.addEventListener('input',()=>{
+    if(!busy && input.value.length) face.play('input');
+  });
+  input.addEventListener('focus',()=>{
+    if(!busy && input.value.length) face.play('input');
+  });
+  input.addEventListener('keydown',(event)=>{
+    if(event.key === 'Enter' && !event.shiftKey){
+      event.preventDefault();
+      sendMessage();
+    }
+  });
+  sendButton.addEventListener('click',sendMessage);
+</script>
+</body>
+</html>

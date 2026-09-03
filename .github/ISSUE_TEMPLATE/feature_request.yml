@@ -1,0 +1,36 @@
+name: Feature request
+description: Suggest an improvement, new interaction, or integration feature
+title: "[Feature] "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Use case
+      description: What problem or workflow would this improve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: Describe the expected interaction or API at a high level.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Animation / expression
+        - Interaction
+        - Public API
+        - Demo / documentation
+        - Packaging / integration
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: References, sketches, code examples, or compatibility considerations.
