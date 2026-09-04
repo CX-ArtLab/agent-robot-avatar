@@ -22,7 +22,7 @@ Agent Robot Avatar é construído com SVG e JavaScript puro, sem dependência de
 
 ## Demo ao vivo
 
-Experimente a demo interativa: [Abrir Agent Robot Avatar](https://cx-artlab.github.io/agent-robot-avatar/)
+Experimente a demo interativa: [Abrir Agent Robot Avatar](https://cx-artlab.github.io/agent-robot-avatar/?lang=pt)
 
 ## Principais recursos
 

@@ -21,6 +21,37 @@ const LANGUAGES = Object.freeze([
   ['fr', 'Français'],
 ]);
 
+const LANGUAGE_STORAGE_KEY = 'agentRobotAvatarDemoLanguage';
+
+function normalizeLanguage(value) {
+  if (typeof value !== 'string' || !value.trim()) return null;
+  const normalized = value.trim().toLowerCase();
+  const exact = LANGUAGES.find(([code]) => code.toLowerCase() === normalized);
+  if (exact) return exact[0];
+  if (normalized.startsWith('zh')) {
+    return /(^|[-_])(tw|hk|mo|hant)([-_]|$)/.test(normalized) ? 'zh-TW' : 'zh-CN';
+  }
+  const base = normalized.split(/[-_]/)[0];
+  return LANGUAGES.find(([code]) => code.toLowerCase() === base)?.[0] || null;
+}
+
+function initialLanguage() {
+  const linked = normalizeLanguage(new URLSearchParams(window.location.search).get('lang'));
+  if (linked) return linked;
+
+  try {
+    const saved = normalizeLanguage(localStorage.getItem(LANGUAGE_STORAGE_KEY));
+    if (saved) return saved;
+  } catch (_) {}
+
+  const browserLanguages = navigator.languages?.length ? navigator.languages : [navigator.language];
+  for (const language of browserLanguages) {
+    const supported = normalizeLanguage(language);
+    if (supported) return supported;
+  }
+  return 'en';
+}
+
 const I18N = Object.freeze({
   'zh-CN': {
     webComponent: 'Web 组件', color: '颜色', settings: '设定', language: '语言',
@@ -229,7 +260,7 @@ function mountDemoControls() {
   const pointerToggle = options.querySelector('#demoPointerFollow');
   const resetButton = options.querySelector('#demoReset');
 
-  let currentLanguage = I18N[document.documentElement.lang] ? document.documentElement.lang : 'zh-CN';
+  let currentLanguage = initialLanguage();
   let currentState = 'idle';
 
   function setPanel(openPanel) {
@@ -253,10 +284,19 @@ function mountDemoControls() {
     status.textContent = `${currentState} · ${t.states[currentState] || currentState}`;
   }
 
-  function applyLanguage(language = currentLanguage) {
+  function applyLanguage(language = currentLanguage, { remember = false, updateUrl = false } = {}) {
     currentLanguage = I18N[language] ? language : 'en';
     const t = I18N[currentLanguage];
     document.documentElement.lang = currentLanguage;
+
+    if (remember) {
+      try { localStorage.setItem(LANGUAGE_STORAGE_KEY, currentLanguage); } catch (_) {}
+    }
+    if (updateUrl) {
+      const url = new URL(window.location.href);
+      url.searchParams.set('lang', currentLanguage);
+      history.replaceState(history.state, '', url);
+    }
 
     if (title) title.innerHTML = `<span>Agent Robot Avatar</span><span>SVG + Vanilla JS</span><span>${t.webComponent}</span>`;
 
@@ -300,7 +340,7 @@ function mountDemoControls() {
   languagePanel.addEventListener('click', event => {
     const button = event.target.closest('button[data-lang]');
     if (!button) return;
-    applyLanguage(button.dataset.lang);
+    applyLanguage(button.dataset.lang, { remember: true, updateUrl: true });
   });
 
   function applyEyeColor() {

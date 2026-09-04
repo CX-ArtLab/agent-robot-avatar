@@ -67,6 +67,28 @@ test('interactive demo loads without runtime errors', async ({ page }) => {
   expect(pageErrors).toEqual([]);
 });
 
+test('demo follows the linked language and remembers a manual choice', async ({ page }) => {
+  await page.goto('/demo/?lang=ja');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'ja');
+  await expect(page.locator('#demoLanguagePanelToggle')).toHaveAttribute('title', '言語');
+
+  await page.locator('[data-lang="zh-TW"]').evaluate(button => button.click());
+  await expect(page.locator('html')).toHaveAttribute('lang', 'zh-TW');
+  await expect(page).toHaveURL(/lang=zh-TW/);
+  await expect.poll(() => page.evaluate(() => localStorage.getItem('agentRobotAvatarDemoLanguage'))).toBe('zh-TW');
+
+  await page.goto('/demo/');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'zh-TW');
+});
+
+test('demo falls back to the browser language', async ({ browser }) => {
+  const context = await browser.newContext({ locale: 'fr-FR' });
+  const page = await context.newPage();
+  await page.goto('http://127.0.0.1:4173/demo/');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'fr');
+  await context.close();
+});
+
 test('looping waiting starts once and continues smoothly', async ({ page }) => {
   await page.goto('/demo/');
   await page.locator('#demoLoop').evaluate(input => {

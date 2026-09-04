@@ -22,7 +22,7 @@ Agent Robot Avatar 基于 SVG 与原生 JavaScript 构建，不依赖第三方�
 
 ## 在线演示
 
-直接体验交互效果：[打开 Agent Robot Avatar 在线演示](https://cx-artlab.github.io/agent-robot-avatar/)
+直接体验交互效果：[打开 Agent Robot Avatar 在线演示](https://cx-artlab.github.io/agent-robot-avatar/?lang=zh-CN)
 
 ## 主要特点
 
