@@ -1,0 +1,47 @@
+name: Deploy Live Demo
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - agent-robot-avatar.js
+      - src/**
+      - demo/**
+      - scripts/build-pages.mjs
+      - .github/workflows/pages.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    if: github.repository == 'CX-ArtLab/agent-robot-avatar'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Build demo
+        run: node scripts/build-pages.mjs
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: .pages-site
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

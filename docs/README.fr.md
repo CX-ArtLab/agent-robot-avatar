@@ -18,6 +18,10 @@ Agent Robot Avatar est construit avec SVG et JavaScript natif, sans framework d�
   <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Démonstration animée interactive d’Agent Robot Avatar" width="560">
 </p>
 
+## Démo en ligne
+
+Essayez la démo interactive : [Ouvrir Agent Robot Avatar](https://cx-artlab.github.io/agent-robot-avatar/)
+
 ## Points forts
 
 - SVG + JavaScript natif
@@ -55,7 +59,7 @@ avatar.play('success');
 avatar.play('failure');
 avatar.play('warning');
 avatar.play('inspect');
-avatar.play('angry');
+avatar.play('blocked');
 avatar.play('error');
 
 avatar.reset();
@@ -74,7 +78,7 @@ avatar.reset();
 | Failure | `failure` | Tâche terminée sans succès |
 | Warning | `warning` | Action importante nécessitant confirmation |
 | Inspect | `inspect` | Examiner, contrôler ou vérifier un résultat |
-| Blocked | `angry` | Requête bloquée ou impossible à poursuivre |
+| Blocked | `blocked` | Requête bloquée ou impossible à poursuivre |
 | System error | `error` | Erreur de connexion, de service ou système |
 | Surprise | `surprise` | Événement ou résultat inattendu |
 | Sleep | `sleep` | Entrer en veille |
@@ -89,7 +93,7 @@ avatar.play('failed');
 avatar.play('fail');
 avatar.play('verify');
 avatar.play('review');
-avatar.play('blocked');
+avatar.play('angry'); // même expression visuelle que blocked
 avatar.play('policy-blocked');
 avatar.play('system-error');
 avatar.play('connection-error');
@@ -198,7 +202,7 @@ Issues et Pull Requests sont les bienvenus. Consultez [`CONTRIBUTING.md`](../CON
 
 ## État du projet
 
-v0.1.0 est la première ligne de version publique. L’API publique reste volontairement limitée afin d’évoluer avec prudence avant un futur engagement de stabilité `1.0.0`.
+v0.2.0 est la version publique actuelle. v0.1.0 reste disponible comme première version publique. L’API publique reste volontairement limitée afin d’évoluer avec prudence avant un futur engagement de stabilité `1.0.0`.
 
 Agent Robot Avatar est un projet open source développé indépendamment ; il n’est affilié, approuvé ni représentatif d’aucune plateforme ou marque d’IA.
 

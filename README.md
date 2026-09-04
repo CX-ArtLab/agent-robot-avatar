@@ -20,6 +20,10 @@ Agent Robot Avatar is built with SVG and vanilla JavaScript. It has no third-par
   <img src="./assets/demo/agent-robot-avatar-demo.gif" alt="Agent Robot Avatar interactive animation demo" width="560">
 </p>
 
+## Live Demo
+
+Try the interactive demo: [Open Agent Robot Avatar](https://cx-artlab.github.io/agent-robot-avatar/)
+
 ## Highlights
 
 - Pure SVG + vanilla JavaScript
@@ -75,7 +79,7 @@ avatar.play('success');
 avatar.play('failure');
 avatar.play('warning');
 avatar.play('inspect');
-avatar.play('angry');
+avatar.play('blocked');
 avatar.play('error');
 ```
 
@@ -98,7 +102,7 @@ avatar.reset();
 | Failure | `failure` | A task completed unsuccessfully |
 | Warning | `warning` | A risky or destructive action needs confirmation |
 | Inspect | `inspect` | Reviewing, checking, or verifying a result |
-| Blocked | `angry` | A request is blocked, disallowed, or cannot proceed |
+| Blocked | `blocked` | A request is blocked, disallowed, or cannot proceed |
 | System error | `error` | Connection, service, or system failure |
 | Surprise | `surprise` | An unexpected event or result |
 | Sleep | `sleep` | Enter the sleep state |
@@ -113,8 +117,8 @@ avatar.play('failed');           // same as failure
 avatar.play('fail');             // same as failure
 avatar.play('verify');           // same as inspect
 avatar.play('review');           // same as inspect
-avatar.play('blocked');          // same as angry
-avatar.play('policy-blocked');   // same as angry
+avatar.play('angry');            // same visual expression as blocked
+avatar.play('policy-blocked');   // same as blocked
 avatar.play('system-error');     // same as error
 avatar.play('connection-error'); // same as error
 ```
@@ -269,7 +273,7 @@ Issues and pull requests are welcome. See [`CONTRIBUTING.md`](./CONTRIBUTING.md)
 
 ## Project status
 
-v0.1.0 is the first public release line. The public API is intentionally small so it can evolve carefully before a future `1.0.0` stability commitment.
+v0.2.0 is the current public release. v0.1.0 remains available as the first public version. The public API is intentionally small so it can evolve carefully before a future `1.0.0` stability commitment.
 
 Agent Robot Avatar is independently developed and is not affiliated with, endorsed by, or representative of any AI platform or brand.
 

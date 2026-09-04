@@ -20,6 +20,10 @@ Agent Robot Avatar 基于 SVG 与原生 JavaScript 构建，不依赖第三方�
   <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Agent Robot Avatar 交互动画演示" width="560">
 </p>
 
+## 在线演示
+
+直接体验交互效果：[打开 Agent Robot Avatar 在线演示](https://cx-artlab.github.io/agent-robot-avatar/)
+
 ## 主要特点
 
 - 纯 SVG + 原生 JavaScript
@@ -75,7 +79,7 @@ avatar.play('success');
 avatar.play('failure');
 avatar.play('warning');
 avatar.play('inspect');
-avatar.play('angry');
+avatar.play('blocked');
 avatar.play('error');
 ```
 
@@ -98,7 +102,7 @@ avatar.reset();
 | 失败 | `failure` | 任务执行完成，但结果失败 |
 | 警告确认 | `warning` | 高风险、覆盖、删除等操作需要再次确认 |
 | 审视 | `inspect` | 检查、核对或验证结果 |
-| 内容阻止 | `angry` | 请求被阻止、不允许执行或无法继续 |
+| 内容阻止 | `blocked` | 请求被阻止、不允许执行或无法继续 |
 | 系统错误 | `error` | 网络、服务或系统本身发生错误 |
 | 惊讶 | `surprise` | 出现意外事件或结果 |
 | 睡眠 | `sleep` | 进入睡眠状态 |
@@ -113,8 +117,8 @@ avatar.play('failed');           // 等同 failure
 avatar.play('fail');             // 等同 failure
 avatar.play('verify');           // 等同 inspect
 avatar.play('review');           // 等同 inspect
-avatar.play('blocked');          // 等同 angry
-avatar.play('policy-blocked');   // 等同 angry
+avatar.play('angry');            // 与 blocked 使用相同表情
+avatar.play('policy-blocked');   // 等同 blocked
 avatar.play('system-error');     // 等同 error
 avatar.play('connection-error'); // 等同 error
 ```
@@ -269,7 +273,7 @@ Agent Robot Avatar 面向支持 ES Modules、Custom Elements、SVG、Pointer Eve
 
 ## 项目状态
 
-v0.1.0 是首个公开版本线。当前刻意保持较小的公开 API，以便在未来 `1.0.0` 稳定性承诺之前继续谨慎演进。
+v0.2.0 是当前公开版本。v0.1.0 作为首个公开版本继续保留。当前刻意保持较小的公开 API，以便在未来 `1.0.0` 稳定性承诺之前继续谨慎演进。
 
 Agent Robot Avatar 为独立开发的开源项目，不隶属于、代表或获得任何 AI 平台或品牌的官方背书。
 
