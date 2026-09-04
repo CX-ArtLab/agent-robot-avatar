@@ -6,7 +6,7 @@
 
 [English](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/README.md) | [简体中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-CN.md) | [繁體中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-TW.md) | [日本語](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ja.md) | [한국어](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ko.md) | [Español](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.es.md) | [Português](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.pt.md) | [Deutsch](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.de.md) | [Français](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.fr.md)
 
-![개발 버전](https://img.shields.io/badge/version-v0.2.0-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
+![버전](https://img.shields.io/badge/version-v0.2.0-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
 ![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square) ![14 Agent States](https://img.shields.io/badge/Agent%20states-14-8B5CF6?style=flat-square) ![Pointer Following](https://img.shields.io/badge/Pointer-following-00A67E?style=flat-square) ![Jelly Drag](https://img.shields.io/badge/Drag-jelly%20physics-FF69B4?style=flat-square)
 
@@ -19,6 +19,10 @@ Agent Robot Avatar는 SVG와 Vanilla JavaScript로만 구성되어 있으며 타
 <p align="center">
   <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Agent Robot Avatar 인터랙티브 애니메이션 데모" width="560">
 </p>
+
+## 라이브 데모
+
+인터랙티브 데모 체험: [Agent Robot Avatar 열기](https://cx-artlab.github.io/agent-robot-avatar/)
 
 ## 주요 특징
 
@@ -57,7 +61,7 @@ avatar.play('success');
 avatar.play('failure');
 avatar.play('warning');
 avatar.play('inspect');
-avatar.play('angry');
+avatar.play('blocked');
 avatar.play('error');
 
 avatar.reset();
@@ -76,7 +80,7 @@ avatar.reset();
 | Failure | `failure` | 작업 결과 실패 |
 | Warning | `warning` | 위험하거나 파괴적인 동작 확인 |
 | Inspect | `inspect` | 결과 검토 / 확인 / 검증 |
-| Blocked | `angry` | 요청이 차단되거나 진행 불가 |
+| Blocked | `blocked` | 요청이 차단되거나 진행 불가 |
 | System error | `error` | 연결, 서비스 또는 시스템 오류 |
 | Surprise | `surprise` | 예상하지 못한 결과 |
 | Sleep | `sleep` | 수면 상태 진입 |
@@ -91,7 +95,7 @@ avatar.play('failed');
 avatar.play('fail');
 avatar.play('verify');
 avatar.play('review');
-avatar.play('blocked');
+avatar.play('angry'); // blocked와 동일한 표정
 avatar.play('policy-blocked');
 avatar.play('system-error');
 avatar.play('connection-error');
@@ -200,7 +204,7 @@ Issue와 Pull Request를 환영합니다. 제출 전 [`CONTRIBUTING.md`](../CONT
 
 ## 프로젝트 상태
 
-v0.1.0은 첫 공개 릴리스 라인입니다. 향후 `1.0.0` 안정성 약속 이전에 신중하게 발전시킬 수 있도록 공개 API를 의도적으로 작게 유지하고 있습니다.
+v0.2.0은 현재 공개 버전입니다. v0.1.0은 첫 공개 버전으로 계속 제공됩니다. 향후 `1.0.0` 안정성 약속 이전에 신중하게 발전시킬 수 있도록 공개 API를 의도적으로 작게 유지하고 있습니다.
 
 Agent Robot Avatar는 독립적으로 개발된 오픈 소스 프로젝트이며 특정 AI 플랫폼이나 브랜드와 제휴하거나 공식 승인을 받은 프로젝트가 아닙니다.
 

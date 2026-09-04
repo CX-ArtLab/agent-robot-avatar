@@ -6,7 +6,7 @@
 
 [English](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/README.md) | [简体中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-CN.md) | [繁體中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-TW.md) | [日本語](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ja.md) | [한국어](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ko.md) | [Español](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.es.md) | [Português](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.pt.md) | [Deutsch](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.de.md) | [Français](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.fr.md)
 
-![Entwicklungsversion](https://img.shields.io/badge/version-v0.2.0-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
+![Version](https://img.shields.io/badge/version-v0.2.0-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
 Eine leichte, ausdrucksstarke Roboter-Avatar-Web-Component für KI-Agenten und andere interaktive Anwendungen.
 
@@ -17,6 +17,10 @@ Agent Robot Avatar basiert auf SVG und Vanilla JavaScript und benötigt kein ext
 <p align="center">
   <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Interaktive animierte Demo von Agent Robot Avatar" width="560">
 </p>
+
+## Live-Demo
+
+Interaktive Demo ausprobieren: [Agent Robot Avatar öffnen](https://cx-artlab.github.io/agent-robot-avatar/)
 
 ## Highlights
 
@@ -49,7 +53,7 @@ avatar.play('success');
 avatar.play('failure');
 avatar.play('warning');
 avatar.play('inspect');
-avatar.play('angry');
+avatar.play('blocked');
 avatar.play('error');
 avatar.reset();
 ```
@@ -67,13 +71,15 @@ avatar.reset();
 | Failure | `failure` | Aufgabe wurde erfolglos abgeschlossen |
 | Warning | `warning` | Eine wichtige Aktion benötigt Bestätigung |
 | Inspect | `inspect` | Ergebnis prüfen oder verifizieren |
-| Blocked | `angry` | Anfrage blockiert oder kann nicht fortgesetzt werden |
+| Blocked | `blocked` | Anfrage blockiert oder kann nicht fortgesetzt werden |
 | System error | `error` | Verbindungs-, Dienst- oder Systemfehler |
 | Surprise | `surprise` | Unerwartetes Ereignis oder Ergebnis |
 | Sleep | `sleep` | Schlafzustand aktivieren |
 | Wake | `wake` | Aus dem Schlafzustand zurückkehren |
 
 `failure` beschreibt einen Fehlschlag der Aufgabe selbst; `error` ist für Verbindungs-, Dienst- oder Systemprobleme reserviert. `waiting` bezeichnet eine laufende Anfrage, `bored` dagegen Inaktivität.
+
+`angry` bleibt als kompatibler Name für denselben visuellen Ausdruck wie `blocked` verfügbar.
 
 ```js
 avatar.startWaiting();
@@ -137,7 +143,7 @@ Issues und Pull Requests sind willkommen. Bitte vor Änderungen [`CONTRIBUTING.m
 
 ## Projektstatus
 
-v0.1.0 ist die erste öffentliche Release-Linie. Die öffentliche API bleibt bewusst klein, damit sie vor einer späteren Stabilitätszusage mit `1.0.0` sorgfältig weiterentwickelt werden kann.
+v0.2.0 ist die aktuelle öffentliche Version. v0.1.0 bleibt als erste öffentliche Version verfügbar. Die öffentliche API bleibt bewusst klein, damit sie vor einer späteren Stabilitätszusage mit `1.0.0` sorgfältig weiterentwickelt werden kann.
 
 Agent Robot Avatar ist ein unabhängig entwickeltes Open-Source-Projekt und steht in keiner offiziellen Verbindung zu einer KI-Plattform oder Marke.
 

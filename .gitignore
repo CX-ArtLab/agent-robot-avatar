@@ -5,3 +5,4 @@ Thumbs.db
 *.log
 playwright-report/
 test-results/
+.pages-site/

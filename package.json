@@ -19,8 +19,9 @@
   "sideEffects": true,
   "scripts": {
     "dev": "node scripts/serve.mjs",
+    "build:pages": "node scripts/build-pages.mjs",
     "check": "node scripts/check-source.mjs",
-    "test": "npm run check && npm run test:types && npm run test:release && npm run test:package && npm run test:browser",
+    "test": "npm run check && npm run test:types && npm run test:release && npm run test:package && npm run test:browser && npm run build:pages",
     "release:check": "npm test && npm publish --dry-run --ignore-scripts --tag latest",
     "prepublishOnly": "npm test && node scripts/check-publish-tag.mjs",
     "test:types": "tsc -p tsconfig.types.json",

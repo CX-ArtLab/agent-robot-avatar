@@ -20,6 +20,10 @@ Agent Robot Avatar は SVG と Vanilla JavaScript だけで構築され、サー
   <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Agent Robot Avatar インタラクティブアニメーションデモ" width="560">
 </p>
 
+## ライブデモ
+
+インタラクティブデモを試す：[Agent Robot Avatar を開く](https://cx-artlab.github.io/agent-robot-avatar/)
+
 ## 特長
 
 - SVG + Vanilla JavaScript
@@ -57,7 +61,7 @@ avatar.play('success');
 avatar.play('failure');
 avatar.play('warning');
 avatar.play('inspect');
-avatar.play('angry');
+avatar.play('blocked');
 avatar.play('error');
 
 avatar.reset();
@@ -76,7 +80,7 @@ avatar.reset();
 | Failure | `failure` | タスク自体が失敗 |
 | Warning | `warning` | 危険・破壊的な操作の確認 |
 | Inspect | `inspect` | 結果の確認・検証 |
-| Blocked | `angry` | リクエストが拒否・停止された状態 |
+| Blocked | `blocked` | リクエストが拒否・停止された状態 |
 | System error | `error` | 接続・サービス・システム障害 |
 | Surprise | `surprise` | 予期しない結果 |
 | Sleep | `sleep` | スリープへ移行 |
@@ -91,7 +95,7 @@ avatar.play('failed');
 avatar.play('fail');
 avatar.play('verify');
 avatar.play('review');
-avatar.play('blocked');
+avatar.play('angry'); // blocked と同じ表情
 avatar.play('policy-blocked');
 avatar.play('system-error');
 avatar.play('connection-error');
@@ -200,7 +204,7 @@ Issue と Pull Request を歓迎します。提出前に [`CONTRIBUTING.md`](../
 
 ## プロジェクトの状態
 
-v0.1.0 は最初の公開リリースラインです。将来の `1.0.0` に向けて慎重に進化できるよう、公開 API は意図的に小さく保っています。
+v0.2.0 は現在の公開バージョンです。v0.1.0 は最初の公開バージョンとして引き続き利用できます。将来の `1.0.0` に向けて慎重に進化できるよう、公開 API は意図的に小さく保っています。
 
 Agent Robot Avatar は独立して開発されたオープンソースプロジェクトであり、特定の AI プラットフォームやブランドとは提携・公式承認関係にありません。
 

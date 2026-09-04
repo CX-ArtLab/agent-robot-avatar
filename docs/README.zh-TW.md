@@ -20,6 +20,10 @@ Agent Robot Avatar 以 SVG 與原生 JavaScript 建構，不依賴第三方動�
   <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Agent Robot Avatar 互動動畫展示" width="560">
 </p>
 
+## 線上展示
+
+直接體驗互動效果：[開啟 Agent Robot Avatar 線上展示](https://cx-artlab.github.io/agent-robot-avatar/)
+
 ## 主要特色
 
 - 純 SVG + 原生 JavaScript
@@ -59,7 +63,7 @@ avatar.play('success');
 avatar.play('failure');
 avatar.play('warning');
 avatar.play('inspect');
-avatar.play('angry');
+avatar.play('blocked');
 avatar.play('error');
 
 avatar.reset();
@@ -78,7 +82,7 @@ avatar.reset();
 | 失敗 | `failure` | 任務完成，但結果失敗 |
 | 警告確認 | `warning` | 高風險或破壞性操作需要確認 |
 | 審視 | `inspect` | 檢查、核對或驗證結果 |
-| 內容阻止 | `angry` | 請求被阻止、不允許或無法繼續 |
+| 內容阻止 | `blocked` | 請求被阻止、不允許或無法繼續 |
 | 系統錯誤 | `error` | 連線、服務或系統錯誤 |
 | 驚訝 | `surprise` | 意外事件或結果 |
 | 睡眠 | `sleep` | 進入睡眠 |
@@ -93,7 +97,7 @@ avatar.play('failed');
 avatar.play('fail');
 avatar.play('verify');
 avatar.play('review');
-avatar.play('blocked');
+avatar.play('angry'); // 與 blocked 使用相同表情
 avatar.play('policy-blocked');
 avatar.play('system-error');
 avatar.play('connection-error');
@@ -202,7 +206,7 @@ LICENSE                   MIT License
 
 ## 專案狀態
 
-v0.1.0 是第一個公開版本線。公開 API 目前刻意保持精簡，讓專案能在未來 `1.0.0` 穩定性承諾前持續謹慎演進。
+v0.2.0 是目前的公開版本。v0.1.0 作為第一個公開版本繼續保留。公開 API 目前刻意保持精簡，讓專案能在未來 `1.0.0` 穩定性承諾前持續謹慎演進。
 
 Agent Robot Avatar 是獨立開發的開源專案，不隸屬、代表或獲得任何 AI 平台或品牌的官方背書。
 
