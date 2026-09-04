@@ -20,7 +20,7 @@ Agent Robot Avatar basiert auf SVG und Vanilla JavaScript und benötigt kein ext
 
 ## Live-Demo
 
-Interaktive Demo ausprobieren: [Agent Robot Avatar öffnen](https://cx-artlab.github.io/agent-robot-avatar/)
+Interaktive Demo ausprobieren: [Agent Robot Avatar öffnen](https://cx-artlab.github.io/agent-robot-avatar/?lang=de)
 
 ## Highlights
 

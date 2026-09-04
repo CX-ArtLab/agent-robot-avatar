@@ -22,7 +22,7 @@ Agent Robot Avatar는 SVG와 Vanilla JavaScript로만 구성되어 있으며 타
 
 ## 라이브 데모
 
-인터랙티브 데모 체험: [Agent Robot Avatar 열기](https://cx-artlab.github.io/agent-robot-avatar/)
+인터랙티브 데모 체험: [Agent Robot Avatar 열기](https://cx-artlab.github.io/agent-robot-avatar/?lang=ko)
 
 ## 주요 특징
 
