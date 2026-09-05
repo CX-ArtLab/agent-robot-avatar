@@ -142,6 +142,7 @@ const AgentRobotAvatar = (() => {
       this._inputWanted = false;
       this._sleeping = false;
       this._idleTimer = null;
+      this._pendingWaits = new Map();
       this._boredRoutine = null;
       this._boredLookSpeed = null;
       this._autoSleepMs = Number(this.getAttribute('auto-sleep')) || 0;
@@ -169,6 +170,7 @@ const AgentRobotAvatar = (() => {
       this.addEventListener('pointerdown', this._boundDragStart);
       this.addEventListener('click', this._boundClickCapture, true);
       this._running = !document.hidden;
+      this._lastActivity = performance.now();
       this._resumeFrames();
     }
 
@@ -176,6 +178,20 @@ const AgentRobotAvatar = (() => {
       unregisterConnectedFace(this);
       this.removeEventListener('pointerdown', this._boundDragStart);
       this.removeEventListener('click', this._boundClickCapture, true);
+      // Removal cancels work; reattachment starts idle with appearance settings intact.
+      this._resetToIdle(false);
+      this._blinkAnim = null;
+      this._blink = 1;
+      this._pointer.active = false;
+      this._pointer.influence = 0;
+      const drag = this._dragJelly;
+      if (drag.pointerId != null) {
+        try { this.releasePointerCapture(drag.pointerId); } catch (_) {}
+      }
+      drag.active = false;
+      drag.pointerId = null;
+      this._finishDragReturn(null);
+      this._suppressClick = false;
       this._running = false;
       cancelAnimationFrame(this._raf);
       this._raf = 0;
@@ -184,9 +200,16 @@ const AgentRobotAvatar = (() => {
     static get observedAttributes() { return ['color','size','auto-sleep']; }
     attributeChangedCallback(name, oldV, newV) {
       if (oldV === newV) return;
-      if (name === 'color' && this._head) this._head.setAttribute('fill', newV || '#08090b');
+      if (name === 'color') this._applyColor(newV);
       if (name === 'size') this.style.setProperty('--face-size', `${Number(newV)||112}px`);
       if (name === 'auto-sleep') this._autoSleepMs = Number(newV) || 0;
+    }
+
+    _applyColor(value) {
+      const color = value || '#08090b';
+      for (const part of [this._head, this._leftTop, this._rightTop, this._leftBottom, this._rightBottom, this._antennaDot]) {
+        if (part) part.setAttribute('fill', color);
+      }
     }
 
     _renderShell() {
@@ -246,10 +269,7 @@ const AgentRobotAvatar = (() => {
       this._rightTop = this.shadowRoot.getElementById('rightTop');
       this._leftBottom = this.shadowRoot.getElementById('leftBottom');
       this._rightBottom = this.shadowRoot.getElementById('rightBottom');
-      const c = this.getAttribute('color') || '#08090b';
-      this._head.setAttribute('fill', c);
-      [this._leftTop,this._rightTop,this._leftBottom,this._rightBottom].forEach(el=>el.setAttribute('fill',c));
-      this.style.setProperty('--face-size', `${Number(this.getAttribute('size'))||112}px`);
+      this._applyColor(this.getAttribute('color'));
       this._baseHeadPathD = this._headShape.getAttribute('d');
       this._baseHeadPoints = this._parseHeadPoints(this._baseHeadPathD);
     }
@@ -511,8 +531,14 @@ const AgentRobotAvatar = (() => {
     }
 
     reset() {
+      return this._resetToIdle();
+    }
+
+    _resetToIdle(notify = true) {
+      this._resetExtensionEffects?.();
       this._inputWanted = false;
       ++this._transitionToken;
+      this._cancelPendingWaits();
       this._boredRoutine = null;
       this._boredLookSpeed = null;
       this._sleeping = false;
@@ -520,7 +546,7 @@ const AgentRobotAvatar = (() => {
       this._eyeBob = null;
       this._angryEyeDrop = null;
       this._surpriseShake = null;
-      this.setState('idle');
+      this.setState('idle', { notify, duration: notify ? 320 : 0 });
       return this;
     }
 
@@ -531,7 +557,7 @@ const AgentRobotAvatar = (() => {
       this._sleeping = name === 'sleep';
       if (name === 'idle' && !opts.keepGazeLock) this._releaseExpressionLock();
       this._startMorph(POSES[name], opts.duration ?? (name==='surprise'?170:320), opts.ease || EASE.outQuint);
-      this.dispatchEvent(new CustomEvent('face-state', {detail:{state:name}}));
+      if (opts.notify !== false) this.dispatchEvent(new CustomEvent('face-state', {detail:{state:name}}));
       return this;
     }
 
@@ -559,6 +585,7 @@ const AgentRobotAvatar = (() => {
       } else {
         if (!(await this._prepareExpression({normalizePose:true, duration:180, pause:320}))) return;
       }
+      const token = this._transitionToken;
       this.setState('happy', {duration: fromDrag ? 180 : 220, keepGazeLock:true});
       this._eyeBob = {start: performance.now(), duration: 620, amp: 8};
       this._animateHead([
@@ -567,6 +594,7 @@ const AgentRobotAvatar = (() => {
         {transform:'translateY(0px)'}
       ], 760);
       await this._wait(980);
+      if (token !== this._transitionToken) return;
       this._eyeBob = null;
       if (this._state==='happy') await this._returnToIdle(520);
     }
@@ -575,6 +603,7 @@ const AgentRobotAvatar = (() => {
       this.noteActivity();
       this._inputWanted = false;
       if (!(await this._prepareExpression({normalizePose:true, duration:180, pause:320}))) return;
+      const token = this._transitionToken;
       this.setState('sad', {duration:320, keepGazeLock:true});
       this._eyeBob = {start: performance.now(), duration: 700, amp: 7};
       this._animateHead([
@@ -583,6 +612,7 @@ const AgentRobotAvatar = (() => {
         {transform:'translateY(0px)'}
       ], 820);
       await this._wait(1180);
+      if (token !== this._transitionToken) return;
       this._eyeBob = null;
       if (this._state==='sad') {
         await this._returnToIdle(560);
@@ -605,6 +635,7 @@ const AgentRobotAvatar = (() => {
       } else {
         if (!(await this._prepareExpression({normalizePose:true, duration:180, pause:320}))) return;
       }
+      const token = this._transitionToken;
       this.setState('angry', {duration: fromDrag ? 180 : 280, keepGazeLock:true});
       this._angryEyeDrop = {start: performance.now(), duration:680, amount:4.8};
       this._animateHead([
@@ -613,6 +644,7 @@ const AgentRobotAvatar = (() => {
         {transform:'translateY(0px)'}
       ], 820);
       await this._wait(980);
+      if (token !== this._transitionToken) return;
       this._angryEyeDrop = null;
       if (this._state==='angry') await this._returnToIdle(500);
     }
@@ -621,17 +653,19 @@ const AgentRobotAvatar = (() => {
       this.noteActivity();
       this._inputWanted = false;
       if (!(await this._prepareExpression({normalizePose:true, duration:180, pause:320}))) return;
+      const token = this._transitionToken;
       this._surpriseShake = null;
       const pre = {...POSES.idle, w:34, h:36, rx:18};
       this._startMorph(pre, 235, EASE.inOutCubic);
       await this._wait(235);
-      if (this._state!=='idle') return;
+      if (token !== this._transitionToken || this._state!=='idle') return;
       this.setState('surprise', {duration:175, ease:EASE.outQuint, keepGazeLock:true});
       this._animateHead([{transform:'scale(1)'},{transform:'scale(1.035)'}], 175);
       await this._wait(175);
-      if (this._state!=='surprise') return;
+      if (token !== this._transitionToken || this._state!=='surprise') return;
       this._surpriseShake = {start: performance.now(), duration:420};
       await this._wait(420);
+      if (token !== this._transitionToken) return;
       this._surpriseShake = null;
       if (this._state==='surprise') {
         this._animateHead([{transform:'scale(1.035)'},{transform:'scale(1)'}], 430);
@@ -643,6 +677,7 @@ const AgentRobotAvatar = (() => {
       this.noteActivity();
       this._inputWanted = false;
       if (!(await this._prepareExpression({normalizePose:true, duration:180, pause:320}))) return;
+      const token = this._transitionToken;
       this._eyeNod = {start: performance.now(), duration: 760};
       this._animateHead([
         {transform:'translateY(0px)'},
@@ -650,6 +685,7 @@ const AgentRobotAvatar = (() => {
         {transform:'translateY(0px)'}
       ], 920);
       await this._wait(860);
+      if (token !== this._transitionToken) return;
       this._eyeNod = null;
       this._releaseExpressionLock();
     }
@@ -657,21 +693,22 @@ const AgentRobotAvatar = (() => {
     async sleep() {
       if (this._sleeping) return;
       if (!(await this._prepareExpression({normalizePose:true, duration:160}))) return;
+      const token = this._transitionToken;
       this._blinkAnim = null;
       this._blink = 1;
       this._nextBlinkAt = performance.now() + 10000;
       this.setState('sleepy', {duration:940, ease:EASE.inOutCubic, keepGazeLock:true});
       await this._wait(980);
-      if (this._state !== 'sleepy') return;
+      if (token !== this._transitionToken || this._state !== 'sleepy') return;
       const reopen = {...POSES.idle, topY:-22, bottomY:36};
       this._startMorph(reopen, 105, EASE.outQuint);
       await this._wait(120);
-      if (this._state !== 'sleepy') return;
+      if (token !== this._transitionToken || this._state !== 'sleepy') return;
       this.setState('sleepy', {duration:820, ease:EASE.inOutCubic, keepGazeLock:true});
       await this._wait(870);
-      if (this._state !== 'sleepy') return;
+      if (token !== this._transitionToken || this._state !== 'sleepy') return;
       await this._wait(120);
-      if (this._state !== 'sleepy') return;
+      if (token !== this._transitionToken || this._state !== 'sleepy') return;
       this._animateHead([{transform:'translateY(0)'},{transform:'translateY(4px)'}],980);
       this._startMorph(POSES.sleep, 980, EASE.inOutCubic);
       this._state = 'sleep';
@@ -682,6 +719,7 @@ const AgentRobotAvatar = (() => {
 
     async wake() {
       if (!this._sleeping && this._state!=='sleep') return;
+      const token = ++this._transitionToken;
       this._expressionLock = true;
       this._sleeping = false;
       this._animateHead([
@@ -691,9 +729,12 @@ const AgentRobotAvatar = (() => {
       ], 500);
       this.setState('sleepy', {duration:240, keepGazeLock:true});
       await this._wait(260);
+      if (token !== this._transitionToken) return;
       this.setState('surprise', {duration:120, keepGazeLock:true});
       await this._wait(190);
+      if (token !== this._transitionToken) return;
       await this._returnToIdle(300);
+      if (token !== this._transitionToken) return;
       this._lastActivity = performance.now();
     }
 
@@ -715,18 +756,40 @@ const AgentRobotAvatar = (() => {
 
     _animateHead(frames, duration) {
       if (!this._headMotion.animate) return;
+      const token = this._transitionToken;
       const anim = this._headMotion.animate(frames, {duration, easing:'cubic-bezier(.16,1,.3,1)', fill:'forwards'});
-      anim.onfinish = () => { this._headMotion.style.transform = frames[frames.length-1].transform || ''; };
+      anim.onfinish = () => {
+        if (token === this._transitionToken) {
+          this._headMotion.style.transform = frames[frames.length-1].transform || '';
+        }
+      };
       return anim;
     }
 
-    _wait(ms) { return new Promise(r=>setTimeout(r,ms)); }
+    _wait(ms) {
+      return new Promise(resolve => {
+        const timer = setTimeout(() => {
+          this._pendingWaits.delete(timer);
+          resolve();
+        }, ms);
+        this._pendingWaits.set(timer, resolve);
+      });
+    }
+
+    _cancelPendingWaits() {
+      for (const [timer, resolve] of this._pendingWaits) {
+        clearTimeout(timer);
+        resolve();
+      }
+      this._pendingWaits.clear();
+    }
 
     async _returnToIdle(duration=320, ease=EASE.outQuint) {
+      const token = this._transitionToken;
       this.setState('idle', {duration, ease, keepGazeLock:true});
       this._headCenteringUntil = Math.max(this._headCenteringUntil || 0, performance.now() + duration);
       await this._wait(duration);
-      if (this._state === 'idle') this._releaseExpressionLock();
+      if (token === this._transitionToken && this._state === 'idle') this._releaseExpressionLock();
     }
 
     async _prepareExpression({normalizePose=true, duration=180, pause=320}={}) {
@@ -848,7 +911,7 @@ const AgentRobotAvatar = (() => {
     }
 
     _autoSleep(now) {
-      if (!this._autoSleepMs || this._sleeping || ['input','happy','sad','surprise'].includes(this._state)) return;
+      if (!this._autoSleepMs || this._sleeping || this._expressionLock || ['input','happy','sad','surprise'].includes(this._state)) return;
       if (now - this._lastActivity > this._autoSleepMs) this.sleep();
     }
 

@@ -13,6 +13,7 @@ function dispatchFailureState(instance, state) {
 
 function animateFailureHead(instance, frames, duration) {
   if (!instance._headMotion?.animate) return null;
+  const token = instance._transitionToken;
   instance._headMotion.style.transformBox = 'view-box';
   instance._headMotion.style.transformOrigin = '120px 120px';
   const anim = instance._headMotion.animate(frames, {
@@ -21,7 +22,9 @@ function animateFailureHead(instance, frames, duration) {
     fill: 'forwards',
   });
   anim.onfinish = () => {
-    instance._headMotion.style.transform = frames[frames.length - 1].transform || '';
+    if (token === instance._transitionToken) {
+      instance._headMotion.style.transform = frames[frames.length - 1].transform || '';
+    }
   };
   return anim;
 }
@@ -95,6 +98,7 @@ proto.failure = async function() {
     { transform: 'translateY(0px)' },
   ], recover);
   if (this._state === 'sad') await this._returnToIdle(recover);
+  if (token !== this._transitionToken) return;
   this._failureFx = null;
 };
 

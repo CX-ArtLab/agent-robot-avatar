@@ -8,6 +8,7 @@ test('loads the component and exposes its public controls', async ({ page }) => 
   const avatar = page.locator('agent-robot-avatar');
 
   await expect(avatar).toBeVisible();
+  await expect(avatar).toHaveCSS('width', '140px');
   await expect.poll(() => avatar.evaluate(element => Boolean(element.shadowRoot?.querySelector('svg')))).toBe(true);
 
   const api = await avatar.evaluate(element => ({
@@ -31,6 +32,44 @@ test('loads the component and exposes its public controls', async ({ page }) => 
     antennaFlash: 'function',
     demoGlobal: 'undefined',
   });
+  expect(pageErrors).toEqual([]);
+});
+
+test('constructs usable dynamic and direct instances', async ({ page }) => {
+  const pageErrors = [];
+  page.on('pageerror', error => pageErrors.push(error.message));
+
+  await page.goto('/examples/basic.html');
+  const result = await page.evaluate(async () => {
+    const { AgentRobotAvatar: Avatar } = await import('/agent-robot-avatar.js');
+    const dynamic = document.createElement('agent-robot-avatar');
+    const direct = new Avatar();
+    dynamic.id = 'dynamic-avatar';
+    direct.id = 'direct-avatar';
+    direct.setAttribute('size', '156');
+    document.body.append(dynamic, direct);
+
+    const states = [];
+    dynamic.addEventListener('face-state', event => states.push(event.detail.state));
+    await dynamic.play('input');
+
+    return {
+      exportMatchesRegistry: Avatar === customElements.get('agent-robot-avatar'),
+      instances: [dynamic, direct].map(element => ({
+        registered: element instanceof Avatar,
+        play: typeof element.play,
+        hasSvg: Boolean(element.shadowRoot?.querySelector('svg')),
+        size: element.getBoundingClientRect().width,
+        states: element === dynamic ? states : [],
+      })),
+    };
+  });
+
+  expect(result.exportMatchesRegistry).toBe(true);
+  expect(result.instances).toEqual([
+    { registered: true, play: 'function', hasSvg: true, size: 112, states: ['input'] },
+    { registered: true, play: 'function', hasSvg: true, size: 156, states: [] },
+  ]);
   expect(pageErrors).toEqual([]);
 });
 
@@ -178,6 +217,9 @@ test('built-in action registry maps every core action', async ({ page }) => {
 });
 
 test('multiple avatars share one set of global listeners', async ({ page }) => {
+  const pageErrors = [];
+  page.on('pageerror', error => pageErrors.push(error.message));
+
   await page.addInitScript(() => {
     const trackedWindowEvents = new Set(['pointermove', 'pointerdown', 'keydown', 'pointerup', 'pointercancel']);
     const counts = {};
@@ -215,12 +257,23 @@ test('multiple avatars share one set of global listeners', async ({ page }) => {
   });
 
   await page.goto('/examples/basic.html');
-  await page.evaluate(() => {
-    document.body.append(
-      document.createElement('agent-robot-avatar'),
-      document.createElement('agent-robot-avatar'),
-    );
+  const created = await page.evaluate(() => {
+    const first = document.createElement('agent-robot-avatar');
+    const second = document.createElement('agent-robot-avatar');
+    first.id = 'dynamic-first';
+    second.id = 'dynamic-second';
+    document.body.append(first, second);
+    return [first, second].map(element => ({
+      registered: element instanceof customElements.get('agent-robot-avatar'),
+      play: typeof element.play,
+      hasSvg: Boolean(element.shadowRoot?.querySelector('svg')),
+    }));
   });
+
+  expect(created).toEqual([
+    { registered: true, play: 'function', hasSvg: true },
+    { registered: true, play: 'function', hasSvg: true },
+  ]);
 
   const counts = await page.evaluate(() => window.__avatarListenerCounts);
   expect(counts).toEqual({
@@ -231,6 +284,15 @@ test('multiple avatars share one set of global listeners', async ({ page }) => {
     pointercancel: 1,
     visibilitychange: 1,
   });
+
+  await page.locator('#dynamic-first').evaluate(element => element.remove());
+  const remainingStates = await page.locator('#dynamic-second').evaluate(async element => {
+    const states = [];
+    element.addEventListener('face-state', event => states.push(event.detail.state));
+    await element.play('input');
+    return states;
+  });
+  expect(remainingStates).toEqual(['input']);
 
   await page.evaluate(() => {
     document.querySelectorAll('agent-robot-avatar').forEach(element => element.remove());
@@ -244,6 +306,7 @@ test('multiple avatars share one set of global listeners', async ({ page }) => {
     pointercancel: 1,
     visibilitychange: 1,
   });
+  expect(pageErrors).toEqual([]);
 });
 
 test('shared pointer handlers preserve jelly dragging', async ({ page }) => {

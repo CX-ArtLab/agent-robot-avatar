@@ -204,13 +204,16 @@ proto.error = async function() {
 
   centerHeadTransform(this);
   if (this._headMotion?.animate) {
+    const animationToken = this._transitionToken;
     const anim = this._headMotion.animate([
       { transform: 'translateX(0px)', offset: 0, easing: 'cubic-bezier(.38,0,.28,1)' },
       { transform: 'translateX(-4px)', offset: 0.34, easing: 'cubic-bezier(.35,0,.22,1)' },
       { transform: 'translateX(4px)', offset: 0.72, easing: 'cubic-bezier(.35,0,.22,1)' },
       { transform: 'translateX(0px)', offset: 1 }
     ], { duration: headDuration, easing: 'linear', fill: 'forwards' });
-    anim.onfinish = () => { this._headMotion.style.transform = 'translateX(0px)'; };
+    anim.onfinish = () => {
+      if (animationToken === this._transitionToken) this._headMotion.style.transform = 'translateX(0px)';
+    };
   }
 
   await this._wait(headDuration + 40);
@@ -235,6 +238,7 @@ proto.warning = async function() {
 
   centerHeadTransform(this);
   if (this._headMotion?.animate) {
+    const animationToken = this._transitionToken;
     const anim = this._headMotion.animate([
       { transform: 'translateY(0px)', offset: 0 },
       { transform: 'translateY(0px)', offset: WARNING_PHASES.w5Start / duration, easing: 'cubic-bezier(.38,0,.25,1)' },
@@ -245,7 +249,9 @@ proto.warning = async function() {
       { transform: 'translateY(0px)', offset: WARNING_PHASES.w7End / duration },
       { transform: 'translateY(0px)', offset: 1 }
     ], { duration, easing: 'linear', fill: 'forwards' });
-    anim.onfinish = () => { this._headMotion.style.transform = 'translateY(0px)'; };
+    anim.onfinish = () => {
+      if (animationToken === this._transitionToken) this._headMotion.style.transform = 'translateY(0px)';
+    };
   }
 
   await this._wait(duration + 40);
