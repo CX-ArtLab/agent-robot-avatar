@@ -22,7 +22,7 @@ Agent Robot Avatar is built with SVG and vanilla JavaScript. It has no third-par
 
 ## Live Demo
 
-Try the interactive demo: [Open Agent Robot Avatar](https://cx-artlab.github.io/agent-robot-avatar/?lang=en)
+Try the interactive demo: [Open Agent Robot Avatar](https://cx-artlab.github.io/agent-robot-avatar/)
 
 ## Highlights
 
