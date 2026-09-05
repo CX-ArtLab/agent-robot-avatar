@@ -58,9 +58,14 @@ proto.play = function(name) {
   return result;
 };
 
+// Called dynamically by core reset and disconnect; custom-element lifecycle
+// callbacks themselves were already registered before extensions loaded.
+proto._resetExtensionEffects = function() {
+  for (const hook of resetHooks) hook.call(this);
+};
+
 proto.reset = function() {
   this._resumeFrames?.();
-  for (const hook of resetHooks) hook.call(this);
   return baseReset.call(this);
 };
 

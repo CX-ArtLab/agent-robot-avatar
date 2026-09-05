@@ -6,6 +6,14 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed dynamic custom-element creation failing because the constructor added a host style attribute; preserved default and explicit sizing.
+- Prevented interrupted expression continuations and animation callbacks from overriding resets or newer actions.
+- Fixed automatic sleep repeatedly restarting its own preparation instead of reaching sleep.
+- Synchronized dynamic head colors with the eye masks and antenna, including while sleep rendering is paused.
+- Cancelled pending timers, animations, waiting, and drag feedback on disconnect; reattached avatars start idle with their settings preserved.
+
 ## [0.2.0] - 2026-09-04
 
 First stable release of the backward-compatible 0.2 series.

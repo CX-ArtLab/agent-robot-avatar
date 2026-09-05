@@ -122,6 +122,7 @@ function verticalShift(elapsed, phases, offset) {
 // Keep the R60 head motion unchanged: down, up past center, then back to center.
 function animateInspectHead(instance, phases) {
   if (!instance._headMotion?.animate) return;
+  const token = instance._transitionToken;
   const start = phases.down1Start;
   const end = phases.center1End;
   const duration = Math.max(1, end - start);
@@ -142,7 +143,9 @@ function animateInspectHead(instance, phases) {
     easing: 'linear',
     fill: 'forwards',
   });
-  anim.onfinish = () => { instance._headMotion.style.transform = 'translateY(0px)'; };
+  anim.onfinish = () => {
+    if (token === instance._transitionToken) instance._headMotion.style.transform = 'translateY(0px)';
+  };
 }
 
 proto.inspect = async function() {

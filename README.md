@@ -89,6 +89,8 @@ Return to the default idle state:
 avatar.reset();
 ```
 
+`reset()` cancels pending animations and returns to idle. Removing the element also cancels timers, animations, waiting, and drag feedback, without emitting a `face-state` event for cleanup. Reattaching starts from idle and preserves appearance and behavior settings. Cancelled animation promises resolve normally.
+
 ## Actions and states
 
 | State | API name | Intended use |
