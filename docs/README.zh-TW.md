@@ -12,6 +12,12 @@
 
 一個輕量、富有表現力的機器人頭像 Web Component，可用於 AI Agent，也可用於其他需要互動回饋的應用。
 
+適用於 AI 助理與 Agent 互動介面，包括與 ChatGPT、Claude、Codex、Cursor、Grok Bot、Gemini CLI 和 OpenCode 類似的產品與使用情境。
+
+也可用於桌面寵物、虛擬寵物、桌面夥伴、數位吉祥物、聊天機器人頭像，以及其他互動角色體驗。
+
+Agent Robot Avatar 也可作為 AG-UI 類 Agent 介面的視覺回饋層。
+
 Agent Robot Avatar 以 SVG 與原生 JavaScript 建構，不依賴第三方動畫框架。它作為原生自訂元素運作，並提供精簡 API 來控制表情、互動狀態、指標跟隨、等待回饋與頭部造型。
 
 **目前公開版本：v0.2.0**
@@ -220,4 +226,4 @@ MIT License。詳見 [`LICENSE`](../LICENSE)。
 
 | Ko-fi | 支付寶 | 微信支付 |
 | --- | --- | --- |
-| <a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a> | <img src="../assets/support/alipay.png" alt="支付寶收款碼" width="160"> | <img src="../assets/support/wechat-pay.png" alt="微信支付收款碼" width="160"> |
+| <a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a> | <img src="../assets/support/alipay.png" alt="支付寶收款碼" width="160"> | <img src="../assets/support/wechat-pay.png" alt="WeChat Pay QR code" width="160"> |
