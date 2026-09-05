@@ -12,6 +12,12 @@
 
 AI 에이전트와 다양한 인터랙티브 애플리케이션에서 사용할 수 있는 가볍고 표현력 있는 로봇 아바타 Web Component입니다.
 
+ChatGPT, Claude, Codex, Cursor, Grok Bot, Gemini CLI, OpenCode와 유사한 제품과 경험을 포함해 AI 어시스턴트 및 Agent 인터페이스에 적합합니다.
+
+데스크톱 펫, 가상 펫, 데스크톱 컴패니언, 디지털 마스코트, 챗봇 아바타 및 기타 인터랙티브 캐릭터 경험에도 사용할 수 있습니다.
+
+Agent Robot Avatar는 AG-UI 스타일 Agent 인터페이스의 시각적 피드백 레이어로도 사용할 수 있습니다.
+
 Agent Robot Avatar는 SVG와 Vanilla JavaScript로만 구성되어 있으며 타사 애니메이션 프레임워크에 의존하지 않습니다. 네이티브 Custom Element로 동작하고 표정, 상호작용 상태, 포인터 추적, 대기 피드백, 머리 형태를 제어하는 간결한 API를 제공합니다.
 
 **현재 공개 버전: v0.2.0**
