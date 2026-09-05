@@ -1,6 +1,6 @@
 {
   "name": "agent-robot-avatar",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A lightweight expressive robot avatar Web Component for AI agents and interactive applications.",
   "type": "module",
   "main": "./agent-robot-avatar.js",
