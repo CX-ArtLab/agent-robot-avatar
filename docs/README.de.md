@@ -10,6 +10,12 @@
 
 Eine leichte, ausdrucksstarke Roboter-Avatar-Web-Component für KI-Agenten und andere interaktive Anwendungen.
 
+Geeignet für KI-Assistenten- und Agent-Oberflächen, einschließlich Produkten und Erlebnissen ähnlich wie ChatGPT, Claude, Codex, Cursor, Grok Bot, Gemini CLI und OpenCode.
+
+Sie kann außerdem für Desktop Pets, virtuelle Haustiere, Desktop-Begleiter, digitale Maskottchen, Chatbot-Avatare und andere interaktive Charaktererlebnisse verwendet werden.
+
+Agent Robot Avatar kann außerdem als visuelle Feedback-Ebene für Agent-Oberflächen im AG-UI-Stil eingesetzt werden.
+
 Agent Robot Avatar basiert auf SVG und Vanilla JavaScript und benötigt kein externes Animationsframework. Die Komponente funktioniert als natives Custom Element und stellt eine kompakte API für Ausdrücke, Interaktionszustände, Pointer-Following, Wartefeedback und Kopfform bereit.
 
 **Aktuelle öffentliche Version: v0.2.0**

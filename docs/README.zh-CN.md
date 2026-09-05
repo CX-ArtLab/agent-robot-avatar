@@ -12,6 +12,12 @@
 
 一个轻量、富有表现力的机器人头像 Web Component，可用于 AI Agent，也可用于其他需要交互反馈的应用。
 
+适用于 AI 助手和 Agent 交互界面，包括与 ChatGPT、Claude、Codex、Cursor、Grok Bot、Gemini CLI 和 OpenCode 类似的产品与使用场景。
+
+它也可用于桌面宠物、虚拟宠物、桌面伙伴、数字吉祥物、聊天机器人头像以及其他互动角色体验。
+
+Agent Robot Avatar 也可作为 AG-UI 类 Agent 界面的视觉反馈层。
+
 Agent Robot Avatar 基于 SVG 与原生 JavaScript 构建，不依赖第三方动画框架。它作为原生自定义元素工作，并提供一组尽量精简的 API，用于控制表情、交互状态、鼠标跟随、等待反馈和头部造型。
 
 **当前公开版本：v0.2.0**
