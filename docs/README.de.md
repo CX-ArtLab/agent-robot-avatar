@@ -6,7 +6,7 @@
 
 [English](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/README.md) | [简体中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-CN.md) | [繁體中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-TW.md) | [日本語](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ja.md) | [한국어](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ko.md) | [Español](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.es.md) | [Português](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.pt.md) | [Deutsch](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.de.md) | [Français](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.fr.md)
 
-![Version](https://img.shields.io/badge/version-v0.2.0-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
+![Version](https://img.shields.io/badge/version-v0.2.1-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
 Eine leichte, ausdrucksstarke Roboter-Avatar-Web-Component für KI-Agenten und andere interaktive Anwendungen.
 
@@ -18,7 +18,7 @@ Agent Robot Avatar kann außerdem als visuelle Feedback-Ebene für Agent-Oberfl�
 
 Agent Robot Avatar basiert auf SVG und Vanilla JavaScript und benötigt kein externes Animationsframework. Die Komponente funktioniert als natives Custom Element und stellt eine kompakte API für Ausdrücke, Interaktionszustände, Pointer-Following, Wartefeedback und Kopfform bereit.
 
-**Aktuelle öffentliche Version: v0.2.0**
+**Aktuelle öffentliche Version: v0.2.1**
 
 <p align="center">
   <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Interaktive animierte Demo von Agent Robot Avatar" width="560">
@@ -149,7 +149,7 @@ Issues und Pull Requests sind willkommen. Bitte vor Änderungen [`CONTRIBUTING.m
 
 ## Projektstatus
 
-v0.2.0 ist die aktuelle öffentliche Version. v0.1.0 bleibt als erste öffentliche Version verfügbar. Die öffentliche API bleibt bewusst klein, damit sie vor einer späteren Stabilitätszusage mit `1.0.0` sorgfältig weiterentwickelt werden kann.
+v0.2.1 ist die aktuelle öffentliche Version. v0.1.0 bleibt als erste öffentliche Version verfügbar. Die öffentliche API bleibt bewusst klein, damit sie vor einer späteren Stabilitätszusage mit `1.0.0` sorgfältig weiterentwickelt werden kann.
 
 Agent Robot Avatar ist ein unabhängig entwickeltes Open-Source-Projekt und steht in keiner offiziellen Verbindung zu einer KI-Plattform oder Marke.
 

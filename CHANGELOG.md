@@ -6,6 +6,8 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-09-05
+
 ### Fixed
 
 - Fixed dynamic custom-element creation failing because the constructor added a host style attribute; preserved default and explicit sizing.
@@ -64,5 +66,6 @@ First public release.
 - npm-compatible package metadata for later package publication
 - Contribution guide, issue templates, pull request template, MIT License, and Ko-fi funding metadata
 
+[0.2.1]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.2.1
 [0.2.0]: https://github.com/CX-ARTLab/agent-robot-avatar/releases/tag/v0.2.0
 [0.1.0]: https://github.com/CX-ARTLab/agent-robot-avatar/releases/tag/v0.1.0
