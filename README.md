@@ -285,6 +285,10 @@ v0.2.1 is the current public release. v0.1.0 remains available as the first publ
 
 Agent Robot Avatar is independently developed and is not affiliated with, endorsed by, or representative of any AI platform or brand.
 
+## Original character design
+
+The Agent Robot Avatar character, including its robot appearance and visual identity, is an original design by CX ArtLab. References to third-party AI products in this documentation describe possible use cases or product inspiration only and do not indicate affiliation, endorsement, or ownership of the character design.
+
 ## License
 
 MIT License. See [`LICENSE`](./LICENSE).
