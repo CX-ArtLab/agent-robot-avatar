@@ -99,8 +99,27 @@ function cancelContinuousMotion(instance) {
   if (instance._look) instance._look.x = instance._look.y = 0;
 }
 
+function requestedMotion(instance) {
+  const value = String(instance.getAttribute('motion') || 'auto').trim().toLowerCase();
+  return value === 'reduce' || value === 'full' ? value : 'auto';
+}
+
+function effectiveReducedMotion(instance) {
+  const requested = requestedMotion(instance);
+  if (requested === 'reduce') return true;
+  if (requested === 'full') return false;
+
+  // A fresh MediaQueryList avoids engine-specific delays where an older
+  // MediaQueryList object's matches value lags behind a runtime preference
+  // update. Fall back to the coordinator's original resolver when unavailable.
+  if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+  return baseIsReducedMotion.call(instance);
+}
+
 function syncMotionPreference(instance) {
-  const reduced = baseIsReducedMotion.call(instance);
+  const reduced = effectiveReducedMotion(instance);
   if (instance._runtimeLastReducedMotion === reduced) return reduced;
   instance._runtimeLastReducedMotion = reduced;
   instance._runtimeVisualDirty = true;
@@ -116,8 +135,9 @@ proto._isReducedMotion = function() {
 };
 
 // Reduced motion should render each newly reached static state once, then stop
-// scheduling frames. The effect accessors mark a visual change without keeping
-// continuous waiting/error/review loops alive.
+// scheduling frames. Extension effects historically create some Web Animations
+// directly instead of routing through _animateHead; cancel those in a microtask
+// after an effect becomes active so ordinary-mode animation code stays intact.
 for (const property of ['_waitingFx', '_inspectFx', '_failureFx', '_warningFx', '_systemErrorShake']) {
   const slot = Symbol(property);
   Object.defineProperty(proto, property, {
@@ -126,7 +146,12 @@ for (const property of ['_waitingFx', '_inspectFx', '_failureFx', '_warningFx', 
     set(value) {
       this[slot] = value;
       this._runtimeVisualDirty = true;
-      if (this.isConnected && this._isReducedMotion?.()) this._resumeFrames?.();
+      if (this.isConnected && this._isReducedMotion?.()) {
+        this._resumeFrames?.();
+        queueMicrotask(() => {
+          if (this.isConnected && this._isReducedMotion?.()) cancelContinuousMotion(this);
+        });
+      }
     },
   });
 }
