@@ -6,7 +6,7 @@
 
 [English](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/README.md) | [简体中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-CN.md) | [繁體中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-TW.md) | [日本語](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ja.md) | [한국어](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ko.md) | [Español](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.es.md) | [Português](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.pt.md) | [Deutsch](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.de.md) | [Français](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.fr.md)
 
-![Version](https://img.shields.io/badge/version-v0.2.1-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
+![Version](https://img.shields.io/badge/version-v0.3.0-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
 ![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square) ![14 Agent States](https://img.shields.io/badge/Agent%20states-14-8B5CF6?style=flat-square) ![Pointer Following](https://img.shields.io/badge/Pointer-following-00A67E?style=flat-square) ![Jelly Drag](https://img.shields.io/badge/Drag-jelly%20physics-FF69B4?style=flat-square)
 
@@ -20,7 +20,7 @@ Agent Robot Avatar peut également servir de couche de retour visuel pour les in
 
 Agent Robot Avatar est construit avec SVG et JavaScript natif, sans framework d’animation tiers. Il fonctionne comme un Custom Element natif et propose une API compacte pour les expressions, les états d’interaction, le suivi du pointeur, l’attente et la forme de la tête.
 
-**Version publique actuelle : v0.2.1**
+**Version publique actuelle : v0.3.0**
 
 <p align="center">
   <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Démonstration animée interactive d’Agent Robot Avatar" width="560">
@@ -212,7 +212,7 @@ Issues et Pull Requests sont les bienvenus. Consultez [`CONTRIBUTING.md`](../CON
 
 ## État du projet
 
-v0.2.1 est la version publique actuelle. v0.1.0 reste disponible comme première version publique. L’API publique reste volontairement limitée afin d’évoluer avec prudence avant un futur engagement de stabilité `1.0.0`.
+v0.3.0 est la version publique actuelle. v0.1.0 reste disponible comme première version publique. L’API publique reste volontairement limitée afin d’évoluer avec prudence avant un futur engagement de stabilité `1.0.0`.
 
 Agent Robot Avatar est un projet open source développé indépendamment ; il n’est affilié, approuvé ni représentatif d’aucune plateforme ou marque d’IA.
 
