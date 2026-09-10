@@ -22,9 +22,10 @@ function countMatches(text, pattern) {
 }
 
 test('cancelling during replacement delay keeps the request cancelled', async ({ page }) => {
-  await page.locator('#replace-request').click();
-  await page.waitForTimeout(80);
-  await page.locator('#cancel-request').click();
+  await page.evaluate(() => {
+    document.querySelector('#replace-request').click();
+    document.querySelector('#cancel-request').click();
+  });
 
   await expect(status(page)).toHaveText('Request cancelled.');
   await page.waitForTimeout(1500);
@@ -35,9 +36,10 @@ test('cancelling during replacement delay keeps the request cancelled', async ({
 });
 
 test('a newer user request invalidates a delayed replacement start', async ({ page }) => {
-  await page.locator('#replace-request').click();
-  await page.waitForTimeout(80);
-  await page.locator('[data-request="error"]').click();
+  await page.evaluate(() => {
+    document.querySelector('#replace-request').click();
+    document.querySelector('[data-request="error"]').click();
+  });
 
   await expect(log(page)).toContainText('error:end:api', { timeout: 6000 });
   await expect(status(page)).toHaveText('Connection problem.');
@@ -46,9 +48,10 @@ test('a newer user request invalidates a delayed replacement start', async ({ pa
 });
 
 test('repeated replacement clicks invalidate the older replacement flow', async ({ page }) => {
-  await page.locator('#replace-request').click();
-  await page.waitForTimeout(80);
-  await page.locator('#replace-request').click();
+  await page.evaluate(() => {
+    document.querySelector('#replace-request').click();
+    document.querySelector('#replace-request').click();
+  });
 
   await expect(status(page)).toHaveText('Task completed.', { timeout: 6000 });
   await expect(log(page)).toContainText('stale start ignored');

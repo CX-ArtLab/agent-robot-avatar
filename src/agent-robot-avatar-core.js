@@ -59,6 +59,13 @@ const AgentRobotAvatar = (() => {
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const lerp = (a, b, t) => a + (b - a) * t;
   const clonePose = p => ({...p});
+  const DEFAULT_SIZE = 112;
+  const parseSize = value => {
+    const text = String(value ?? '').trim();
+    if (!/^(?:\d+(?:\.\d+)?|\.\d+)(?:px)?$/i.test(text)) return DEFAULT_SIZE;
+    const numeric = Number.parseFloat(text);
+    return Number.isFinite(numeric) && numeric > 0 ? numeric : DEFAULT_SIZE;
+  };
   const connectedFaces = new Set();
 
   const forEachConnectedFace = callback => {
@@ -215,11 +222,21 @@ const AgentRobotAvatar = (() => {
     attributeChangedCallback(name, oldV, newV) {
       if (oldV === newV) return;
       if (name === 'color') this._applyColor(newV);
-      if (name === 'size') this.style.setProperty('--face-size', `${Number(newV)||112}px`);
+      if (name === 'size') this._syncSizeAttribute();
       if (name === 'auto-sleep') {
         this._autoSleepMs = Number(newV) || 0;
         this._scheduleAutoSleep?.();
       }
+    }
+
+    _syncSizeAttribute() {
+      if (!this.hasAttribute('size')) {
+        this.style.removeProperty('--face-size');
+        return DEFAULT_SIZE;
+      }
+      const size = parseSize(this.getAttribute('size'));
+      this.style.setProperty('--face-size', `${size}px`);
+      return size;
     }
 
     _applyColor(value) {

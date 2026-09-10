@@ -76,6 +76,9 @@ export interface AgentRobotAvatarEventMap extends HTMLElementEventMap {
 export declare class AgentRobotAvatar extends HTMLElement {
   play(action: AgentRobotAvatarAction): this | Promise<void>;
   reset(): this;
+  sleep(): this | Promise<void>;
+  wake(): this | Promise<void>;
+  input(active?: boolean): this | Promise<void>;
   startWaiting(): Promise<this>;
   stopWaiting(): this;
   setPointerFollow(enabled?: boolean): this;
