@@ -132,24 +132,9 @@ function trackFiniteAction(instance, record, result) {
   }
 }
 
-function parseSize(value) {
-  const text = String(value ?? '').trim();
-  const match = text.match(/^(?:\d+(?:\.\d+)?|\.\d+)(?:px)?$/i);
-  if (!match) return DEFAULT_SIZE;
-  const numeric = Number.parseFloat(text);
-  if (!Number.isFinite(numeric) || numeric <= 0) return DEFAULT_SIZE;
-  return numeric;
-}
-
 function applySize(instance) {
-  if (!instance.hasAttribute('size')) {
-    if (instance._runtimeSizeApplied) instance.style.removeProperty('--face-size');
-    instance._runtimeSizeApplied = false;
-    return;
-  }
-  const size = parseSize(instance.getAttribute('size'));
-  instance.style.setProperty('--face-size', `${size}px`);
-  instance._runtimeSizeApplied = true;
+  instance._syncSizeAttribute();
+  instance._runtimeSizeApplied = instance.hasAttribute('size');
 }
 
 function hasVisibleLayout(instance) {

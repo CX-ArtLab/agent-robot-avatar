@@ -8,6 +8,11 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ### Fixed
 
+- Unified synchronous `size` attribute parsing so numeric and `px` values use the same validation immediately, without a transient fallback before runtime observers run.
+- Added the existing public `sleep()`, `wake()`, and `input()` convenience methods to the TypeScript declaration surface and type checks.
+- Stabilized request-replacement race tests by ordering competing clicks in the same browser task instead of depending on an 80 ms wall-clock window.
+- Expanded package integrity coverage to require the runtime and geometry modules explicitly.
+
 - Prevented the accessible request lifecycle example's delayed replacement step from starting after cancellation, a newer user request, or a newer replacement flow has invalidated it.
 - Made the example's business status the only automatic live region; the visible request debug log remains available for deliberate reading without `role="log"` live semantics or whole-log text rewrites.
 

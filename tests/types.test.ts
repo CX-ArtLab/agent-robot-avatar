@@ -17,6 +17,10 @@ const motion: AgentRobotAvatarMotion = 'reduce';
 
 void avatar.play(action);
 void avatar.startWaiting();
+void avatar.sleep();
+void avatar.wake();
+void avatar.input();
+void avatar.input(false);
 avatar
   .stopWaiting()
   .setPointerFollow(false)
