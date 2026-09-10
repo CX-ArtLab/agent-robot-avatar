@@ -101,27 +101,44 @@ test('secondary pointers do not steal an active drag and lost capture clears it'
 
 test('avatar touch policy is scoped while the surrounding page remains scrollable', async ({ page, browserName }) => {
   test.skip(browserName !== 'chromium', 'Trusted touch scrolling is verified with Chromium CDP; portable touch contracts run in all projects.');
-  await page.goto('/examples/basic.html');
   await page.setViewportSize({ width: 800, height: 600 });
+  await page.goto('/examples/basic.html');
   await page.evaluate(() => {
+    document.documentElement.style.height = 'auto';
     document.body.style.display = 'block';
-    document.body.style.minHeight = '3200px';
+    document.body.style.height = 'auto';
+    document.body.style.minHeight = '3600px';
+    document.body.style.overflow = 'visible';
     document.querySelector('.example').style.marginTop = '40px';
+    window._outsideTouch = null;
+    document.addEventListener('touchstart', event => {
+      window._outsideTouch = {
+        trusted: event.isTrusted,
+        insideAvatar: event.composedPath().some(node => node?.id === 'avatar'),
+      };
+    }, { once: true, passive: true });
   });
 
   const avatar = page.locator('#avatar');
   expect(await avatar.evaluate(element => getComputedStyle(element).touchAction)).toBe('pinch-zoom');
   expect(await page.evaluate(() => getComputedStyle(document.body).touchAction)).not.toBe('none');
+  expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBeGreaterThan(3000);
 
   const session = await page.context().newCDPSession(page);
   await session.send('Emulation.setTouchEmulationEnabled', { enabled: true, maxTouchPoints: 2 });
-  await session.send('Input.synthesizeScrollGesture', {
-    x: 740,
-    y: 520,
-    yDistance: -700,
-    speed: 900,
-    gestureSourceType: 'touch',
+  const touch = (x, y) => ({ x, y, radiusX: 2, radiusY: 2, force: 1, id: 1 });
+  await session.send('Input.dispatchTouchEvent', {
+    type: 'touchStart',
+    touchPoints: [touch(740, 520)],
   });
-  await page.waitForFunction(() => window.scrollY > 100);
-  expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(100);
+  for (const y of [440, 350, 250, 150, 80]) {
+    await session.send('Input.dispatchTouchEvent', {
+      type: 'touchMove',
+      touchPoints: [touch(740, y)],
+    });
+  }
+  await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(100);
+  expect(await page.evaluate(() => window._outsideTouch)).toEqual({ trusted: true, insideAvatar: false });
 });
