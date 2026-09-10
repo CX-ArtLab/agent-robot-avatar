@@ -224,6 +224,4 @@ MIT License。詳見 [`LICENSE`](../LICENSE)。
 
 ## 請我喝杯咖啡
 
-如果這個專案對你有幫助，也可以請我喝杯咖啡。選擇你方便的方式即可：
-
 <a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>

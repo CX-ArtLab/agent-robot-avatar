@@ -222,6 +222,4 @@ MIT License。詳細は [`LICENSE`](../LICENSE) を参照してください。
 
 ## コーヒーで支援
 
-このプロジェクトが役立った場合は、使いやすい方法で支援できます。
-
 <a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
