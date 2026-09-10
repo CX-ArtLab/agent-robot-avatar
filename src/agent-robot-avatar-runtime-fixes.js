@@ -2,6 +2,9 @@ import AgentRobotAvatar from './agent-robot-avatar-extension-host.js';
 
 const proto = AgentRobotAvatar.prototype;
 const baseUpdateDragJelly = proto._updateDragJelly;
+const baseResumeFrames = proto._resumeFrames;
+const baseCanPauseFrames = proto._canPauseFrames;
+const baseDraw = proto._draw;
 
 let currentEnvironmentEvent = null;
 let clearEnvironmentTimer = 0;
@@ -81,6 +84,38 @@ proto._updateDragJelly = function(dt) {
     }
   }
   return result;
+};
+
+// Reduced motion should render each newly reached static state once, then stop
+// scheduling frames. The effect accessors mark a visual change without keeping
+// continuous waiting/error/review loops alive.
+for (const property of ['_waitingFx', '_inspectFx', '_failureFx', '_warningFx', '_systemErrorShake']) {
+  const slot = Symbol(property);
+  Object.defineProperty(proto, property, {
+    configurable: true,
+    get() { return this[slot]; },
+    set(value) {
+      this[slot] = value;
+      this._runtimeVisualDirty = true;
+      if (this.isConnected && this._isReducedMotion?.()) this._resumeFrames?.();
+    },
+  });
+}
+
+proto._resumeFrames = function() {
+  if (this._isReducedMotion?.()) this._runtimeVisualDirty = true;
+  return baseResumeFrames.call(this);
+};
+
+proto._draw = function(now) {
+  const result = baseDraw.call(this, now);
+  this._runtimeVisualDirty = false;
+  return result;
+};
+
+proto._canPauseFrames = function(now) {
+  if (this._isReducedMotion?.() && this._runtimeVisualDirty) return false;
+  return baseCanPauseFrames.call(this, now);
 };
 
 export { AgentRobotAvatar };
