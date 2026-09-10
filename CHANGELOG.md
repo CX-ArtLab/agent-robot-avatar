@@ -6,6 +6,31 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ## [Unreleased]
 
+### Added
+
+- Added `wake-on="activity|interaction|manual"` to control automatic wake behavior while preserving `activity` as the default.
+- Added `motion="auto|reduce|full"`; `auto` follows `prefers-reduced-motion` and updates when the system preference changes.
+- Added the semantic `action-state` event with `{ action, phase, source }` lifecycle data for host integrations and accessible status messaging.
+- Added explicit `px` support for `size`, alongside existing numeric pixel values.
+- Added Chromium, Firefox, and WebKit browser validation, including trusted Chromium touch-cancellation coverage.
+
+### Changed
+
+- Unified program-action and drag cancellation so reset, replacement actions, disconnect, and pointer cancellation cannot leave delayed drag reactions behind.
+- Program-controlled actions such as waiting and input now keep ownership of their expression while drag deformation remains available; suppressed drag reactions are discarded rather than replayed.
+- Invalid/no-op actions are validated before destructive extension cleanup, so an invalid `wake` or unknown action cannot tear down a running action.
+- Touch interaction uses `touch-action: pinch-zoom` on the avatar interaction region so single-pointer dragging remains available while page scrolling outside the avatar is unaffected and two-finger zoom remains possible.
+- Reduced-motion mode removes continuous decorative motion while preserving distinct static states and semantic action lifecycles.
+- Avatars pause sustained frame rendering when hidden, without layout, or outside the viewport, then resume the current state when visible again.
+- High-frequency pointer updates are coalesced to the latest update per animation frame.
+- Shared the head-flattening geometry used by the antenna and roundness modules.
+
+### Fixed
+
+- Preserved valid `window.AgentRobotAvatarInspectConfig` values supplied before module loading and normalized missing, invalid, and out-of-range values deterministically.
+- Distinguished `pointercancel` from a normal release so cancelled touch gestures recover without success/angry feedback.
+- Tightened `size` parsing so unsupported units, malformed values, zero, negative, and non-finite input use the default size instead of being partially parsed as pixels.
+
 ## [0.2.1] - 2026-09-05
 
 ### Fixed
