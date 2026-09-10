@@ -224,6 +224,4 @@ MIT License. Voir [`LICENSE`](../LICENSE).
 
 Si ce projet vous est utile, vous pouvez le soutenir avec la méthode qui vous convient :
 
-| Ko-fi | Alipay | WeChat Pay |
-| --- | --- | --- |
-| <a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a> | <img src="../assets/support/alipay.png" alt="QR code Alipay" width="160"> | <img src="../assets/support/wechat-pay.png" alt="QR code WeChat Pay" width="160"> |
+<a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
