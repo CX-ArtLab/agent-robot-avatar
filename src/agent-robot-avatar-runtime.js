@@ -63,9 +63,12 @@ function markEnvironmentEvent(event) {
   });
 }
 
-if (typeof window !== 'undefined') {
-  window.addEventListener('pointerdown', markEnvironmentEvent, true);
-  window.addEventListener('keydown', markEnvironmentEvent, true);
+// Core already owns the single shared window listeners. Capture on document so
+// policy context is available before the core's bubbling window handlers run,
+// without adding a second global window listener set per runtime feature.
+if (typeof document !== 'undefined') {
+  document.addEventListener('pointerdown', markEnvironmentEvent, true);
+  document.addEventListener('keydown', markEnvironmentEvent, true);
 }
 
 function normalizeAction(name) {
