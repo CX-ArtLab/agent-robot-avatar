@@ -6,6 +6,7 @@ import './src/agent-robot-avatar-antenna-flash.js';
 import './src/agent-robot-avatar-inspect.js';
 import './src/agent-robot-avatar-failure.js';
 import './src/agent-robot-avatar-head-roundness.js';
+import './src/agent-robot-avatar-runtime.js';
 import { VERSION } from './src/agent-robot-avatar-version.js';
 
 if (typeof window !== 'undefined') {
