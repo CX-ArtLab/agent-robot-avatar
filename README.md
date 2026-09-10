@@ -98,7 +98,7 @@ Return to the default idle state:
 avatar.reset();
 ```
 
-`reset()` cancels the current program action, pending waits, head animations, drag/rebound state, and delayed drag reactions, then returns to idle. Cancelled animation promises continue to resolve normally rather than rejecting. Removing the element performs the same internal cleanup without emitting cleanup-only `face-state` or `action-state` notifications. Reattaching starts from idle and preserves appearance and behavior attributes/settings.
+`reset()` cancels the current program action, pending waits, head animations, drag/rebound state, and delayed drag reactions, then returns to idle. Cancelled animation promises continue to resolve normally rather than rejecting. Removing the element performs the same internal cleanup without emitting cleanup-only `face-state` or `action-state` notifications, and also tears down its per-instance media-query listener and observers without restarting rendering as a cleanup side effect. Reattaching starts from idle, preserves appearance and behavior attributes/settings, and installs connected runtime resources once.
 
 A valid new action replaces the previous active action. The old semantic action receives `cancel`; it cannot resume later and overwrite the replacement. An unknown action throws before destructive cleanup. A no-op action such as `wake` while already awake leaves the current action unchanged.
 
@@ -147,7 +147,7 @@ avatar.startWaiting();
 avatar.stopWaiting();
 ```
 
-`startWaiting()` remains active until `stopWaiting()`, `reset()`, or another program action replaces it. A replacement reports `cancel`; `stopWaiting()` reports a normal `end`. Drag deformation remains available while waiting, but decorative drag expressions are suppressed and discarded rather than replayed after waiting ends.
+`startWaiting()` remains active until `stopWaiting()`, `reset()`, or another program action replaces it. A replacement reports `cancel`; `stopWaiting()` reports a normal `end` when waiting is active. For backward compatibility, calling `stopWaiting()` during another active program action still returns the avatar to idle; that action now receives exactly one `cancel`. Calling it with no active action does not manufacture a lifecycle event. Drag deformation remains available while waiting, but decorative drag expressions are suppressed and discarded rather than replayed after waiting ends.
 
 A typical request lifecycle can be written as:
 
@@ -182,7 +182,7 @@ avatar.addEventListener('action-state', (event) => {
 - `phase`: `start`, followed by exactly one `end` or `cancel` for each action that actually starts.
 - `source`: `api`, `interaction`, or `automatic`.
 - Continuous actions such as `startWaiting()` and active input do not emit `end` just because one animation cycle completes.
-- Replacement or `reset()` emits `cancel`; `stopWaiting()` emits `end` for waiting.
+- Replacement or `reset()` emits `cancel`; `stopWaiting()` emits `end` for active waiting, or `cancel` for a different active action that it resets to idle.
 - No-op calls emit no lifecycle event.
 - Decorative drag feedback uses `action: "reaction"` and `source: "interaction"`, so it cannot be confused with an API-level task success/failure.
 - The event bubbles and is `composed`, so it can be observed above the custom element/Shadow DOM boundary.
@@ -216,7 +216,7 @@ avatar.addEventListener('action-state', ({ detail }) => {
 
 Use a normal `role="status"` for routine updates. Do not announce blinking, gaze changes, or decorative drag reactions, and do not automatically make every error an interruptive alert. If the host already announces the same status elsewhere, the avatar can remain decorative to avoid duplicate screen-reader output.
 
-See [`examples/accessibility.html`](./examples/accessibility.html) for a runnable example.
+See [`examples/accessibility.html`](./examples/accessibility.html) for a runnable request-lifecycle example covering waiting, success, failure, connection errors, host cancellation, request replacement, and stale-result protection. Its live-region text follows host request state rather than low-level face changes.
 
 ## Wake policy
 
@@ -232,7 +232,7 @@ The `wake-on` attribute controls automatic wake behavior:
 | `interaction` | Only direct interaction with this avatar wakes it automatically. Activity elsewhere does not. |
 | `manual` | Environment activity, including direct avatar interaction, does not automatically wake it. |
 
-Explicit API intent remains explicit: `avatar.play('wake')` wakes the avatar in every mode, and `avatar.noteActivity()` keeps its existing behavior of recording activity and waking by default. Pass `false` to `noteActivity(false)` to record activity without waking. Other program actions may leave sleep when their action semantics require a new visible state. `reset()` always returns to idle.
+Explicit API intent remains explicit: `avatar.play('wake')` wakes the avatar in every mode, and `avatar.noteActivity()` records activity and wakes by default even when the host calls it from inside a real `keydown`, `pointerdown`, or `click` handler. Pass `false` to `noteActivity(false)` to record activity without waking. Automatic page/direct-interaction wakeups are handled separately and still obey `wake-on`; their `action-state` source is `automatic`, while an explicit host wake remains `api`. Other program actions may leave sleep when their action semantics require a new visible state. `reset()` always returns to idle.
 
 Different avatar instances may use different `wake-on` values.
 
@@ -250,7 +250,7 @@ Use the `motion` attribute to control animation intensity:
 | `reduce` | Keeps recognizable static states while suppressing continuous or elastic decorative motion. |
 | `full` | Uses the normal animation style regardless of the system reduced-motion preference. |
 
-Reduced mode suppresses continuous waiting orbits, idle wandering/blinking motion, head-follow inertia, elastic rebound, antenna spring motion, and status flashing where appropriate. Waiting/input lifecycles remain active until the host ends or replaces them, even when their visual state is static. Switching modes does not revive cancelled work or change `action-state` lifecycle semantics.
+Reduced mode suppresses continuous waiting orbits, idle wandering/blinking motion, head-follow inertia, elastic rebound, antenna spring motion, and status flashing where appropriate. Waiting/input lifecycles remain active until the host ends or replaces them, even when their visual state is static. Automatic sleep uses an independent cancellable timer rather than the draw loop, so it still works while reduced motion has paused continuous rendering; activity and runtime `auto-sleep` changes reschedule it, and active waiting/input are not overwritten. Static state changes are committed before reduced rendering pauses, including the final closed-eye sleep pose. Switching modes does not revive cancelled work or change `action-state` lifecycle semantics.
 
 ## Pointer following
 

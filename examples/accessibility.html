@@ -3,26 +3,36 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Agent Robot Avatar — Accessible Status Example</title>
+  <title>Agent Robot Avatar — Accessible Request Lifecycle</title>
   <style>
-    html,body{height:100%;margin:0}
-    body{display:grid;place-items:center;background:#f7f7f5;font-family:system-ui,sans-serif}
-    main{display:grid;gap:20px;justify-items:center}
+    *{box-sizing:border-box}
+    html,body{min-height:100%;margin:0}
+    body{display:grid;place-items:center;padding:24px;background:#f7f7f5;font-family:system-ui,sans-serif;color:#24272b}
+    main{width:min(620px,100%);display:grid;gap:18px;justify-items:center}
+    h1{margin:0;font-size:20px;text-align:center}
+    p{margin:0;line-height:1.55;color:#62676e;text-align:center}
     .actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
-    button{border:0;border-radius:10px;padding:8px 12px;cursor:pointer}
-    #agent-status{min-height:1.5em;max-width:34rem;text-align:center}
+    button{border:0;border-radius:10px;padding:9px 12px;cursor:pointer;background:#e9eaec;color:#2d3034}
+    button:focus-visible{outline:2px solid #59616b;outline-offset:2px}
+    #agent-status{min-height:1.5em;width:100%;padding:12px 14px;border-radius:12px;background:#fff;text-align:center}
+    #request-log{width:100%;min-height:5.5em;margin:0;padding:12px 14px;border-radius:12px;background:#fff;color:#6a7077;font:12px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre-wrap;overflow-wrap:anywhere}
+    @media(max-width:480px){body{padding:16px}.actions{display:grid;width:100%;grid-template-columns:1fr 1fr}.actions button{white-space:normal}}
   </style>
 </head>
 <body>
   <main>
     <agent-robot-avatar id="avatar" size="140"></agent-robot-avatar>
-    <div class="actions">
-      <button type="button" data-action="waiting">Start request</button>
-      <button type="button" data-action="success">Success</button>
-      <button type="button" data-action="failure">Failure</button>
-      <button type="button" data-action="error">Connection error</button>
+    <h1>Accessible request lifecycle</h1>
+    <p>The host owns request success, failure, cancellation, and stale-result protection. The avatar only visualizes those decisions.</p>
+    <div class="actions" aria-label="Request lifecycle controls">
+      <button type="button" data-request="success">Run success</button>
+      <button type="button" data-request="failure">Run failure</button>
+      <button type="button" data-request="error">Run connection error</button>
+      <button type="button" id="cancel-request">Cancel request</button>
+      <button type="button" id="replace-request">Replace slow request</button>
     </div>
-    <div id="agent-status" role="status" aria-live="polite" aria-atomic="true"></div>
+    <div id="agent-status" role="status" aria-live="polite" aria-atomic="true">Idle.</div>
+    <pre id="request-log" role="log" aria-label="Request event log"></pre>
   </main>
 
   <script type="module">
@@ -30,6 +40,8 @@
 
     const avatar = document.querySelector('#avatar');
     const status = document.querySelector('#agent-status');
+    const log = document.querySelector('#request-log');
+    const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
     const messages = {
       waiting: 'Processing…',
       success: 'Task completed.',
@@ -37,19 +49,76 @@
       error: 'Connection problem.',
     };
 
+    let requestGeneration = 0;
+    let activeRequest = null;
+
+    function writeLog(message) {
+      log.textContent = `${message}\n${log.textContent}`.trim();
+    }
+
     avatar.addEventListener('action-state', (event) => {
       const { action, phase, source } = event.detail;
-      if (source === 'interaction') return; // Do not announce decorative drag reactions.
-      if (phase === 'start' && messages[action]) status.textContent = messages[action];
-      if (action === 'waiting' && phase === 'cancel') status.textContent = '';
+      if (source === 'interaction') return; // Decorative drag reactions are not announced.
+      writeLog(`${action}:${phase}:${source}`);
+
+      if (phase === 'start' && messages[action]) {
+        status.textContent = messages[action];
+        status.dataset.avatarAction = action;
+        return;
+      }
+
+      // Waiting text is transient. Clear it whenever waiting ends or is cancelled,
+      // but keep success/failure/error text because animation completion does not
+      // mean the underlying business state has changed again.
+      if (action === 'waiting' && phase !== 'start' && status.dataset.avatarAction === 'waiting') {
+        status.textContent = '';
+        delete status.dataset.avatarAction;
+      }
     });
 
+    async function runRequest(outcome, resultDelay = 700) {
+      const generation = ++requestGeneration;
+      if (activeRequest !== null) avatar.reset(); // Replacing a request cancels its current avatar action.
+      activeRequest = generation;
+      writeLog(`request ${generation}:start`);
+      await avatar.startWaiting();
+      if (generation !== requestGeneration) return;
+
+      await delay(resultDelay);
+      if (generation !== requestGeneration) {
+        writeLog(`request ${generation}:stale result ignored`);
+        return;
+      }
+
+      // The host decides the real outcome. End waiting normally, then show it.
+      avatar.stopWaiting();
+      await avatar.play(outcome);
+      if (generation === requestGeneration) activeRequest = null;
+    }
+
+    function cancelRequest() {
+      if (activeRequest === null) return;
+      const cancelled = activeRequest;
+      requestGeneration += 1;
+      activeRequest = null;
+      avatar.reset();
+      status.textContent = 'Request cancelled.';
+      delete status.dataset.avatarAction;
+      writeLog(`request ${cancelled}:cancelled by host`);
+    }
+
+    async function replaceSlowRequest() {
+      void runRequest('failure', 1300); // This result should become stale.
+      await delay(450);
+      void runRequest('success', 350);  // This newer result owns the UI.
+    }
+
     document.querySelector('.actions').addEventListener('click', (event) => {
-      const action = event.target.dataset.action;
-      if (!action) return;
-      if (action === 'waiting') avatar.startWaiting();
-      else avatar.play(action);
+      const outcome = event.target.dataset.request;
+      if (outcome) void runRequest(outcome);
     });
+    document.querySelector('#cancel-request').addEventListener('click', cancelRequest);
+    document.querySelector('#replace-request').addEventListener('click', () => void replaceSlowRequest());
   </script>
 </body>
 </html>
