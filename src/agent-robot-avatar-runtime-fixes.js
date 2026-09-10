@@ -5,6 +5,7 @@ const baseUpdateDragJelly = proto._updateDragJelly;
 const baseResumeFrames = proto._resumeFrames;
 const baseCanPauseFrames = proto._canPauseFrames;
 const baseDraw = proto._draw;
+const baseIsReducedMotion = proto._isReducedMotion;
 
 let currentEnvironmentEvent = null;
 let clearEnvironmentTimer = 0;
@@ -86,6 +87,34 @@ proto._updateDragJelly = function(dt) {
   return result;
 };
 
+function cancelContinuousMotion(instance) {
+  const animations = instance._headMotion?.getAnimations?.() || [];
+  for (const animation of animations) animation.cancel();
+  if (instance._headMotion) instance._headMotion.style.transform = '';
+  instance._blinkAnim = null;
+  instance._blink = 1;
+  instance._boredRoutine = null;
+  instance._boredLookSpeed = null;
+  if (instance._wanderTarget) instance._wanderTarget.x = instance._wanderTarget.y = 0;
+  if (instance._look) instance._look.x = instance._look.y = 0;
+}
+
+function syncMotionPreference(instance) {
+  const reduced = baseIsReducedMotion.call(instance);
+  if (instance._runtimeLastReducedMotion === reduced) return reduced;
+  instance._runtimeLastReducedMotion = reduced;
+  instance._runtimeVisualDirty = true;
+  if (reduced) cancelContinuousMotion(instance);
+  return reduced;
+}
+
+// Some engines deliver matchMedia change events later than the next animation
+// frame. Also sample the effective preference while frames are active so a
+// runtime switch cannot leave an old Web Animation running until that event.
+proto._isReducedMotion = function() {
+  return syncMotionPreference(this);
+};
+
 // Reduced motion should render each newly reached static state once, then stop
 // scheduling frames. The effect accessors mark a visual change without keeping
 // continuous waiting/error/review loops alive.
@@ -108,12 +137,14 @@ proto._resumeFrames = function() {
 };
 
 proto._draw = function(now) {
+  syncMotionPreference(this);
   const result = baseDraw.call(this, now);
   this._runtimeVisualDirty = false;
   return result;
 };
 
 proto._canPauseFrames = function(now) {
+  syncMotionPreference(this);
   if (this._isReducedMotion?.() && this._runtimeVisualDirty) return false;
   return baseCanPauseFrames.call(this, now);
 };
