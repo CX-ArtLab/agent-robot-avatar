@@ -1,45 +1,12 @@
 import AgentRobotAvatar from './agent-robot-avatar-extension-host.js';
+import { flattenHeadPoints } from './agent-robot-avatar-geometry.js';
 import { VERSION } from './agent-robot-avatar-version.js';
 
 const proto = AgentRobotAvatar.prototype;
-const HEAD_HEIGHT_SCALE = 0.9;
 const DEFAULT_ROUNDNESS = 50;
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
-}
-
-function smooth01(t) {
-  t = clamp(t, 0, 1);
-  return t * t * (3 - 2 * t);
-}
-
-function flattenPoints(points) {
-  if (!points?.length) return [];
-  const source = points.map(point => ({ x: point.x, y: point.y }));
-  const minY = Math.min(...source.map(point => point.y));
-  const maxY = Math.max(...source.map(point => point.y));
-  const height = maxY - minY;
-  const centerY = (minY + maxY) / 2;
-  const inset = height * (1 - HEAD_HEIGHT_SCALE) / 2;
-  const upperLockY = minY + height * 0.40;
-  const lowerLockY = maxY - height * 0.40;
-
-  return source.map(point => {
-    let shiftY = 0;
-    if (point.y <= upperLockY) {
-      shiftY = inset;
-    } else if (point.y < centerY) {
-      const t = (centerY - point.y) / Math.max(0.001, centerY - upperLockY);
-      shiftY = inset * smooth01(t);
-    } else if (point.y >= lowerLockY) {
-      shiftY = -inset;
-    } else if (point.y > centerY) {
-      const t = (point.y - centerY) / Math.max(0.001, lowerLockY - centerY);
-      shiftY = -inset * smooth01(t);
-    }
-    return { x: point.x, y: point.y + shiftY };
-  });
 }
 
 function ensureDefaultGeometry(instance) {
@@ -49,7 +16,7 @@ function ensureDefaultGeometry(instance) {
   let points = instance._baseHeadPoints.map(point => ({ x: point.x, y: point.y }));
 
   if (!instance._headFlattenedR32) {
-    points = flattenPoints(points);
+    points = flattenHeadPoints(points);
     instance._headFlattenedR32 = true;
     instance._baseHeadPoints = points.map(point => ({ ...point }));
     instance._baseHeadPathD = instance._pointsToPath(points);
