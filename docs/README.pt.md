@@ -180,6 +180,8 @@ Ao arrastar, a cabeça se deforma localmente ao redor do ponto de interação, e
 - Empurrão forte para o centro: ativa `success` após retornar
 - Arraste pequeno: apenas deformação
 
+Essas expressões de arraste só se aplicam em idle quando nenhuma ação programática controla o avatar. Durante `waiting`, `input`, `inspect` e outras ações ativas, a deformação é preservada, mas a expressão de arraste é suprimida e não é reproduzida depois. `pointercancel` restaura apenas a forma, sem acionar success ou angry.
+
 ## Demo interativo
 
 `demo/index.html` inclui todos os estados públicos, seguimento do ponteiro, arraste tipo gelatina, ciclo de waiting, ajuste do arredondamento, controles de cor e comportamento e simulação de conversa com Agent. O JavaScript exclusivo do Demo fica isolado em `demo/` e não faz parte do runtime reutilizável do npm.

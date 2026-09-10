@@ -180,6 +180,8 @@ avatar.addEventListener('face-state', (event) => {
 - 강하게 중심으로 밀기: 복귀 후 `success`
 - 작은 드래그: 변형만 적용
 
+이 드래그 표정은 프로그램 제어 액션이 아바타를 사용하지 않는 idle 상태에서만 적용됩니다. `waiting`, `input`, `inspect` 등이 실행 중일 때는 변형은 유지되지만 드래그 표정은 억제되며 나중에 재생되지 않습니다. `pointercancel`은 형태만 복구하고 성공/화남 표정을 발생시키지 않습니다.
+
 ## 인터랙티브 Demo
 
 `demo/index.html`에는 모든 공개 상태, 포인터 추적, 젤리 드래그, waiting 라이프사이클, 머리 둥글기 조절, 색상 / 동작 설정, Agent 대화 시뮬레이션이 포함됩니다. Demo 전용 JavaScript는 `demo/`에 분리되어 재사용 가능한 npm runtime에는 포함되지 않습니다.
