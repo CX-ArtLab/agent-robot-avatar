@@ -73,8 +73,14 @@ const AgentRobotAvatar = (() => {
       if (face._dragJelly.active) face._onDragMove(event);
     });
   };
-  const handleGlobalPointerDown = () => forEachConnectedFace(face => face.noteActivity());
-  const handleGlobalKeyDown = () => forEachConnectedFace(face => face.noteActivity());
+  const handleGlobalPointerDown = event => forEachConnectedFace(face => {
+    if (typeof face._noteEnvironmentActivity === 'function') face._noteEnvironmentActivity(event);
+    else face.noteActivity();
+  });
+  const handleGlobalKeyDown = event => forEachConnectedFace(face => {
+    if (typeof face._noteEnvironmentActivity === 'function') face._noteEnvironmentActivity(event);
+    else face.noteActivity();
+  });
   const handleGlobalPointerEnd = event => {
     forEachConnectedFace(face => {
       if (face._dragJelly.active) face._onDragEnd(event);
@@ -175,26 +181,34 @@ const AgentRobotAvatar = (() => {
     }
 
     disconnectedCallback() {
-      unregisterConnectedFace(this);
-      this.removeEventListener('pointerdown', this._boundDragStart);
-      this.removeEventListener('click', this._boundClickCapture, true);
-      // Removal cancels work; reattachment starts idle with appearance settings intact.
-      this._resetToIdle(false);
-      this._blinkAnim = null;
-      this._blink = 1;
-      this._pointer.active = false;
-      this._pointer.influence = 0;
-      const drag = this._dragJelly;
-      if (drag.pointerId != null) {
-        try { this.releasePointerCapture(drag.pointerId); } catch (_) {}
+      // This callback is captured when the custom element is defined, so the
+      // runtime teardown must be entered from the registered core lifecycle.
+      this._runtimeDisconnecting = true;
+      try {
+        unregisterConnectedFace(this);
+        this.removeEventListener('pointerdown', this._boundDragStart);
+        this.removeEventListener('click', this._boundClickCapture, true);
+        // Removal cancels work; reattachment starts idle with appearance settings intact.
+        this._resetToIdle(false);
+        this._blinkAnim = null;
+        this._blink = 1;
+        this._pointer.active = false;
+        this._pointer.influence = 0;
+        const drag = this._dragJelly;
+        if (drag.pointerId != null) {
+          try { this.releasePointerCapture(drag.pointerId); } catch (_) {}
+        }
+        drag.active = false;
+        drag.pointerId = null;
+        this._finishDragReturn(null);
+        this._suppressClick = false;
+        this._running = false;
+        cancelAnimationFrame(this._raf);
+        this._raf = 0;
+      } finally {
+        this._teardownRuntime?.();
+        this._runtimeDisconnecting = false;
       }
-      drag.active = false;
-      drag.pointerId = null;
-      this._finishDragReturn(null);
-      this._suppressClick = false;
-      this._running = false;
-      cancelAnimationFrame(this._raf);
-      this._raf = 0;
     }
 
     static get observedAttributes() { return ['color','size','auto-sleep']; }
@@ -202,7 +216,10 @@ const AgentRobotAvatar = (() => {
       if (oldV === newV) return;
       if (name === 'color') this._applyColor(newV);
       if (name === 'size') this.style.setProperty('--face-size', `${Number(newV)||112}px`);
-      if (name === 'auto-sleep') this._autoSleepMs = Number(newV) || 0;
+      if (name === 'auto-sleep') {
+        this._autoSleepMs = Number(newV) || 0;
+        this._scheduleAutoSleep?.();
+      }
     }
 
     _applyColor(value) {
@@ -1096,7 +1113,6 @@ const AgentRobotAvatar = (() => {
         this._updateLook(ts, dt);
         this._updateHeadFollow(ts, dt);
         this._updateDragJelly(dt);
-        this._autoSleep(ts);
         this._draw(ts);
       }
       if (this._canPauseFrames(ts)) {

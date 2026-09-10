@@ -6,6 +6,15 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ## [Unreleased]
 
+### Fixed
+
+- Prevented disconnect cleanup from recreating per-instance media-query listeners and observers; reattaching now initializes connected runtime resources once without emitting cleanup-only lifecycle events.
+- Decoupled automatic sleep timing from frame rendering so `motion="reduce"` can pause continuous drawing without disabling `auto-sleep`, while active waiting/input continue to take priority.
+- Ensured reduced-motion state changes commit their final static SVG before rendering pauses, including the fully closed sleep pose.
+- Made `stopWaiting()` terminate the action it actually resets: waiting ends normally, other active program actions are cancelled once, and idle calls emit no false terminal event.
+- Separated explicit `noteActivity()` calls from ambient DOM activity so host calls inside real event handlers keep API semantics while automatic wakeups continue to obey `wake-on`.
+- Restricted action alias lookup to declared keys so prototype-like names such as `constructor` and `__proto__` fail before changing waiting/action state.
+
 ## [0.3.0] - 2026-09-10
 
 ### Added

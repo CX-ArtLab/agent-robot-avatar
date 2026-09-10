@@ -5,7 +5,6 @@ const basePlay = proto.play;
 const baseNoteActivity = proto.noteActivity;
 const baseSleep = proto.sleep;
 const baseWake = proto.wake;
-const baseAutoSleep = proto._autoSleep;
 const baseResetToIdle = proto._resetToIdle;
 const baseStartMorph = proto._startMorph;
 const baseAnimateHead = proto._animateHead;
@@ -22,6 +21,7 @@ const baseCanPauseFrames = proto._canPauseFrames;
 const baseInput = proto.input;
 const baseStartWaiting = proto.startWaiting;
 const baseStopWaiting = proto.stopWaiting;
+const baseDraw = proto._draw;
 
 const DEFAULT_SIZE = 112;
 const ACTION_ALIASES = Object.freeze({
@@ -50,30 +50,10 @@ const ACTION_ALIASES = Object.freeze({
   wake: 'wake',
 });
 
-let environmentEvent = null;
-let environmentClearQueued = false;
-
-function markEnvironmentEvent(event) {
-  environmentEvent = event;
-  if (environmentClearQueued) return;
-  environmentClearQueued = true;
-  queueMicrotask(() => {
-    environmentEvent = null;
-    environmentClearQueued = false;
-  });
-}
-
-// Core already owns the single shared window listeners. Capture on document so
-// policy context is available before the core's bubbling window handlers run,
-// without adding a second global window listener set per runtime feature.
-if (typeof document !== 'undefined') {
-  document.addEventListener('pointerdown', markEnvironmentEvent, true);
-  document.addEventListener('keydown', markEnvironmentEvent, true);
-}
-
 function normalizeAction(name) {
   const raw = String(name || '').trim().toLowerCase();
-  return { raw, canonical: ACTION_ALIASES[raw] || null };
+  const canonical = Object.hasOwn(ACTION_ALIASES, raw) ? ACTION_ALIASES[raw] : null;
+  return { raw, canonical };
 }
 
 function wakePolicy(instance) {
@@ -90,10 +70,12 @@ function reducedMotion(instance) {
   const requested = requestedMotion(instance);
   if (requested === 'reduce') return true;
   if (requested === 'full') return false;
-  if (instance._runtimeMotionQuery) return instance._runtimeMotionQuery.matches;
-  return typeof window !== 'undefined' && typeof window.matchMedia === 'function'
-    ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    : false;
+  // A fresh query preserves the existing WebKit runtime-preference hardening
+  // without installing additional listeners.
+  if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+  return instance._runtimeMotionQuery?.matches === true;
 }
 
 function emitActionState(instance, record, phase, silent = false) {
@@ -115,6 +97,7 @@ function cancelActiveAction(instance, { silent = false } = {}) {
 }
 
 function beginAction(instance, action, source, continuous = false) {
+  clearAutoSleep(instance);
   cancelActiveAction(instance);
   const record = {
     id: (instance._actionStateSequence || 0) + 1,
@@ -134,6 +117,7 @@ function finishAction(instance, record, phase = 'end') {
   if (instance._activeActionState !== record) return;
   instance._activeActionState = null;
   emitActionState(instance, record, phase);
+  scheduleAutoSleep(instance);
 }
 
 function trackFiniteAction(instance, record, result) {
@@ -180,6 +164,98 @@ function cancelHeadAnimations(instance) {
   const animations = instance._headMotion?.getAnimations?.() || [];
   for (const animation of animations) animation.cancel();
   if (instance._headMotion) instance._headMotion.style.transform = '';
+}
+
+
+function cancelContinuousMotion(instance) {
+  cancelHeadAnimations(instance);
+  instance._blinkAnim = null;
+  instance._blink = 1;
+  instance._boredRoutine = null;
+  instance._boredLookSpeed = null;
+  if (instance._wanderTarget) instance._wanderTarget.x = instance._wanderTarget.y = 0;
+  if (instance._wander) instance._wander.x = instance._wander.y = 0;
+  if (instance._look) instance._look.x = instance._look.y = 0;
+}
+
+function dragAtRest(drag) {
+  if (!drag || drag.active || drag.returning || drag.pendingReaction) return false;
+  return Math.abs(drag.x) < 0.0001 && Math.abs(drag.y) < 0.0001 &&
+    Math.abs(drag.vx) < 0.0001 && Math.abs(drag.vy) < 0.0001 &&
+    Math.abs(drag.stretch) < 0.0001 && Math.abs(drag.shear) < 0.0001 &&
+    Math.abs(drag.pullX) < 0.0001 && Math.abs(drag.pullY) < 0.0001;
+}
+
+function clearIdleDragVisuals(instance) {
+  if (!dragAtRest(instance._dragJelly)) return;
+  if (instance._dragMotion) {
+    instance._dragMotion.style.transform = '';
+    instance._dragMotion.style.transformOrigin = '';
+  }
+  if (instance._headShape && instance._baseHeadPathD) {
+    instance._headShape.setAttribute('d', instance._baseHeadPathD);
+  }
+}
+
+function clearAutoSleep(instance) {
+  if (!instance._runtimeAutoSleepTimer) return;
+  clearTimeout(instance._runtimeAutoSleepTimer);
+  instance._runtimeAutoSleepTimer = 0;
+}
+
+function autoSleepBlocked(instance) {
+  const record = instance._activeActionState;
+  return Boolean(
+    !instance.isConnected ||
+    instance._runtimeDisconnecting ||
+    instance._sleeping ||
+    (record && !record.terminal && record.source !== 'interaction') ||
+    instance._waitingRequested ||
+    instance._waitingFx ||
+    instance._inputWanted ||
+    instance._state === 'input' ||
+    instance._expressionLock
+  );
+}
+
+function scheduleAutoSleep(instance) {
+  clearAutoSleep(instance);
+  const delayMs = Number(instance._autoSleepMs);
+  if (!Number.isFinite(delayMs) || delayMs <= 0 || autoSleepBlocked(instance)) return;
+  const remaining = Math.max(0, (instance._lastActivity + delayMs) - performance.now());
+  instance._runtimeAutoSleepTimer = setTimeout(() => {
+    instance._runtimeAutoSleepTimer = 0;
+    if (autoSleepBlocked(instance)) return;
+    const currentDelay = Number(instance._autoSleepMs);
+    if (!Number.isFinite(currentDelay) || currentDelay <= 0) return;
+    const nextRemaining = (instance._lastActivity + currentDelay) - performance.now();
+    if (nextRemaining > 1) {
+      scheduleAutoSleep(instance);
+      return;
+    }
+    const previousSource = instance._runtimeActionSource;
+    instance._runtimeActionSource = 'automatic';
+    try {
+      instance.sleep();
+    } finally {
+      instance._runtimeActionSource = previousSource;
+    }
+  }, remaining);
+}
+
+function requestVisualCommit(instance) {
+  if (!instance.isConnected || instance._runtimeDisconnecting) return;
+  instance._runtimeVisualDirty = true;
+  instance._resumeFrames?.();
+}
+
+function syncMotionPreference(instance) {
+  const reduced = reducedMotion(instance);
+  if (instance._runtimeLastReducedMotion === reduced) return reduced;
+  instance._runtimeLastReducedMotion = reduced;
+  instance._runtimeVisualDirty = true;
+  if (reduced) cancelContinuousMotion(instance);
+  return reduced;
 }
 
 function clearDragGeometry(instance, { preserveClick = false, releaseCapture = true } = {}) {
@@ -298,26 +374,20 @@ function setRuntimeVisible(instance, visible) {
 }
 
 function handleMotionChange(instance) {
-  if (reducedMotion(instance)) {
-    cancelHeadAnimations(instance);
-    instance._blinkAnim = null;
-    instance._blink = 1;
-    instance._boredRoutine = null;
-    instance._boredLookSpeed = null;
-    instance._wanderTarget.x = 0;
-    instance._wanderTarget.y = 0;
-    instance._look.x = 0;
-    instance._look.y = 0;
+  const reduced = syncMotionPreference(instance);
+  if (reduced) {
+    cancelContinuousMotion(instance);
     instance._pose = { ...instance._toPose };
     instance._fromPose = { ...instance._toPose };
     instance._morphDuration = 0;
     if (instance._dragJelly?.returning) finishDragReturn(instance, instance._dragJelly.pendingReaction);
   }
-  instance._resumeFrames?.();
+  requestVisualCommit(instance);
+  scheduleAutoSleep(instance);
 }
 
 function ensureRuntime(instance) {
-  if (instance._runtimePolicyReady) return;
+  if (instance._runtimePolicyReady || !instance.isConnected || instance._runtimeDisconnecting) return;
   instance._runtimePolicyReady = true;
   if (!instance.style.touchAction) instance.style.touchAction = 'pinch-zoom';
   applySize(instance);
@@ -334,15 +404,18 @@ function ensureRuntime(instance) {
   if (typeof MutationObserver !== 'undefined') {
     instance._runtimeAttributeObserver = new MutationObserver(records => {
       let motionChanged = false;
+      let autoSleepChanged = false;
       for (const record of records) {
         if (record.attributeName === 'size') applySize(instance);
         if (record.attributeName === 'motion') motionChanged = true;
+        if (record.attributeName === 'auto-sleep') autoSleepChanged = true;
       }
       if (motionChanged) handleMotionChange(instance);
+      if (autoSleepChanged) scheduleAutoSleep(instance);
     });
     instance._runtimeAttributeObserver.observe(instance, {
       attributes: true,
-      attributeFilter: ['size', 'motion', 'wake-on'],
+      attributeFilter: ['size', 'motion', 'wake-on', 'auto-sleep'],
     });
   }
 
@@ -380,9 +453,12 @@ function ensureRuntime(instance) {
     };
     instance._runtimeLoopWrapped = true;
   }
+  scheduleAutoSleep(instance);
 }
 
 function teardownRuntime(instance) {
+  clearAutoSleep(instance);
+  cancelContinuousMotion(instance);
   instance._runtimeIntersectionObserver?.disconnect();
   instance._runtimeResizeObserver?.disconnect();
   instance._runtimeAttributeObserver?.disconnect();
@@ -404,6 +480,10 @@ function teardownRuntime(instance) {
   instance._runtimeLostCapture = null;
   instance._runtimePolicyReady = false;
   instance._runtimeVisible = false;
+  instance._runtimeLastReducedMotion = undefined;
+  instance._runtimeVisualDirty = false;
+  instance._pendingPointerEvent = null;
+  instance._pendingDragEvent = null;
 }
 
 function eventTargetsAvatar(event, instance) {
@@ -418,19 +498,28 @@ proto._isReducedMotion = function() {
 
 proto.noteActivity = function(wake = true) {
   ensureRuntime(this);
-  if (!wake || !this._sleeping) return baseNoteActivity.call(this, wake);
+  const shouldWake = wake !== false && (this._sleeping || this._state === 'sleep');
+  const result = baseNoteActivity.call(this, false);
+  scheduleAutoSleep(this);
+  if (shouldWake) this.wake();
+  return result;
+};
 
-  const event = environmentEvent;
-  if (!event) return baseNoteActivity.call(this, wake);
+proto._noteEnvironmentActivity = function(event) {
+  ensureRuntime(this);
+  const shouldConsiderWake = this._sleeping || this._state === 'sleep';
+  const result = baseNoteActivity.call(this, false);
+  scheduleAutoSleep(this);
+  if (!shouldConsiderWake) return result;
 
   const policy = wakePolicy(this);
   const shouldWake = policy === 'activity' || (policy === 'interaction' && eventTargetsAvatar(event, this));
-  if (!shouldWake) return baseNoteActivity.call(this, false);
+  if (!shouldWake) return result;
 
   const previousSource = this._runtimeActionSource;
   this._runtimeActionSource = 'automatic';
   try {
-    return baseNoteActivity.call(this, true);
+    return this.wake();
   } finally {
     this._runtimeActionSource = previousSource;
   }
@@ -443,11 +532,15 @@ proto._resetToIdle = function(notify = true) {
     return baseResetToIdle.call(this, notify);
   } finally {
     this._runtimeResetNotify = previous;
+    scheduleAutoSleep(this);
   }
 };
 
 proto._startMorph = function(target, duration, ease) {
-  return baseStartMorph.call(this, target, reducedMotion(this) ? 0 : duration, ease);
+  const reduced = reducedMotion(this);
+  const result = baseStartMorph.call(this, target, reduced ? 0 : duration, ease);
+  if (reduced) requestVisualCommit(this);
+  return result;
 };
 
 proto._animateHead = function(frames, duration) {
@@ -481,8 +574,12 @@ proto._updateHeadFollow = function(now, dt) {
 };
 
 proto._updateDragJelly = function(dt) {
-  if (!reducedMotion(this)) return baseUpdateDragJelly.call(this, dt);
   const drag = this._dragJelly;
+  if (!reducedMotion(this)) {
+    const result = baseUpdateDragJelly.call(this, dt);
+    clearIdleDragVisuals(this);
+    return result;
+  }
   if (!drag) return;
   if (drag.active) {
     drag.x = drag.targetX;
@@ -495,6 +592,7 @@ proto._updateDragJelly = function(dt) {
   } else if (drag.returning) {
     finishDragReturn(this, drag.pendingReaction);
   }
+  clearIdleDragVisuals(this);
 };
 
 proto._onPointerMove = function(event) {
@@ -542,15 +640,25 @@ proto._finishDragReturn = function(reaction) {
 };
 
 proto._resumeFrames = function() {
+  if (!this.isConnected || this._runtimeDisconnecting) return;
   ensureRuntime(this);
   if (this._runtimeVisible === false) return;
+  if (syncMotionPreference(this)) this._runtimeVisualDirty = true;
   return baseResumeFrames.call(this);
+};
+
+proto._draw = function(now) {
+  syncMotionPreference(this);
+  const result = baseDraw.call(this, now);
+  this._runtimeVisualDirty = false;
+  return result;
 };
 
 proto._canPauseFrames = function(now) {
   if (this._runtimeVisible === false) return true;
-  if (!reducedMotion(this)) return baseCanPauseFrames.call(this, now);
-  if (this._pendingPointerEvent || this._pendingDragEvent) return false;
+  const reduced = syncMotionPreference(this);
+  if (!reduced) return baseCanPauseFrames.call(this, now);
+  if (this._pendingPointerEvent || this._pendingDragEvent || this._runtimeVisualDirty) return false;
   return true;
 };
 
@@ -568,6 +676,7 @@ function leaveSleepForAction(instance) {
 }
 
 function prepareReplacement(instance, canonical) {
+  clearAutoSleep(instance);
   cancelActiveAction(instance);
   clearDragGeometry(instance, { preserveClick: true });
   instance._cancelPendingWaits?.();
@@ -618,6 +727,7 @@ proto.input = function(active = true) {
 
 proto.startWaiting = async function() {
   ensureRuntime(this);
+  clearAutoSleep(this);
   const result = await baseStartWaiting.call(this);
   if (this._waitingRequested && this._waitingFx) beginAction(this, 'waiting', 'api', true);
   return result;
@@ -626,7 +736,7 @@ proto.startWaiting = async function() {
 proto.stopWaiting = function() {
   ensureRuntime(this);
   const record = this._activeActionState?.action === 'waiting' ? this._activeActionState : null;
-  this._runtimeEndingWaiting = true;
+  this._runtimeEndingWaiting = Boolean(record);
   let result;
   try {
     result = baseStopWaiting.call(this);
@@ -661,14 +771,16 @@ proto.wake = function() {
   return result;
 };
 
-proto._autoSleep = function(now) {
-  const previousSource = this._runtimeActionSource;
-  this._runtimeActionSource = 'automatic';
-  try {
-    return baseAutoSleep.call(this, now);
-  } finally {
-    this._runtimeActionSource = previousSource;
-  }
+proto._autoSleep = function() {
+  // Auto-sleep is scheduled independently from drawing by scheduleAutoSleep().
+};
+
+proto._scheduleAutoSleep = function() {
+  scheduleAutoSleep(this);
+};
+
+proto._teardownRuntime = function() {
+  teardownRuntime(this);
 };
 
 function setMask(top, bottom, topY, bottomY, topAngle = 0, bottomAngle = 0) {
@@ -721,6 +833,26 @@ function drawReducedState(instance) {
   }
 }
 
+for (const property of ['_waitingFx', '_inspectFx', '_failureFx', '_warningFx', '_systemErrorShake']) {
+  const slot = Symbol(property);
+  Object.defineProperty(proto, property, {
+    configurable: true,
+    get() { return this[slot]; },
+    set(value) {
+      this[slot] = value;
+      this._runtimeVisualDirty = true;
+      if (this.isConnected && !this._runtimeDisconnecting && syncMotionPreference(this)) {
+        requestVisualCommit(this);
+        queueMicrotask(() => {
+          if (this.isConnected && !this._runtimeDisconnecting && syncMotionPreference(this)) {
+            cancelContinuousMotion(this);
+          }
+        });
+      }
+    },
+  });
+}
+
 registerAvatarExtension({
   name: 'runtime-policy',
   reset() {
@@ -728,7 +860,6 @@ registerAvatarExtension({
     if (!this._runtimeEndingWaiting) cancelActiveAction(this, { silent });
     clearDragGeometry(this, { preserveClick: !silent });
     this._pendingPointerEvent = null;
-    if (!this.isConnected) teardownRuntime(this);
   },
   draw() {
     ensureRuntime(this);

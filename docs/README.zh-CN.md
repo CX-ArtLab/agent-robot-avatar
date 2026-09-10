@@ -83,7 +83,7 @@ avatar.play('error');
 avatar.reset();
 ```
 
-`reset()` 会统一取消当前程序动作、待完成计时、头部动画、拖拽/回弹和尚未触发的拖拽表情，然后回到 `idle`。被取消的动画 Promise 仍按原约定正常结束，不会因为取消而产生未处理拒绝。移除组件时会执行同类内部清理，但不会额外发送用于清理的 `face-state` 或 `action-state` 通知；重新挂载后从 `idle` 开始，并保留配置。
+`reset()` 会统一取消当前程序动作、待完成计时、头部动画、拖拽/回弹和尚未触发的拖拽表情，然后回到 `idle`。被取消的动画 Promise 仍按原约定正常结束，不会因为取消而产生未处理拒绝。移除组件时会执行同类内部清理，但不会额外发送用于清理的 `face-state` 或 `action-state` 通知；同时会释放该实例的媒体偏好监听和观察器，清理过程不会反向重启渲染。重新挂载后从 `idle` 开始、保留配置，并只初始化一次连接期运行资源。
 
 真正开始的新动作会替换旧动作；旧动作不能在之后恢复并覆盖新动作。未知动作会在破坏性清理前抛错。已经醒着时调用 `wake`、已经处于持续输入时再次调用 `input` 等无操作调用不会破坏当前动作，也不会产生虚假的语义生命周期事件。
 
@@ -130,7 +130,7 @@ avatar.startWaiting();
 avatar.stopWaiting();
 ```
 
-`startWaiting()` 会一直保持到 `stopWaiting()`、`reset()` 或新的程序动作将其替换。`stopWaiting()` 对语义生命周期来说是正常 `end`；被其他动作或 reset 替换时是 `cancel`。
+`startWaiting()` 会一直保持到 `stopWaiting()`、`reset()` 或新的程序动作将其替换。当前确实处于 waiting 时，`stopWaiting()` 对 waiting 的语义生命周期是正常 `end`。为保持既有行为，如果在其他活跃程序动作期间调用 `stopWaiting()`，头像仍会回到 `idle`，但该动作现在会且只会记录一次 `cancel`；没有活跃动作时不会制造虚假的终止事件。
 
 等待、输入或其他尚未结束的程序动作期间仍可以拖拽产生形变，但拖拽表情不会覆盖程序动作；被抑制的拖拽表情会直接丢弃，不会在动作结束后补播。
 
@@ -167,7 +167,7 @@ avatar.addEventListener('action-state', (event) => {
 - `phase`：`start`，之后且仅之后一个 `end` 或 `cancel`。
 - `source`：`api`、`interaction`、`automatic`。
 - 持续 waiting / input 不会因为单次视觉循环完成而产生 `end`。
-- `stopWaiting()` 正常结束 waiting；reset 或其他动作替换时记录 `cancel`。
+- `stopWaiting()` 在 waiting 活跃时正常记录 `end`；若它把其他活跃程序动作重置为 idle，则该动作记录 `cancel`。
 - 无操作调用不产生虚假事件。
 - 普通拖拽反馈使用 `action: "reaction"`、`source: "interaction"`，不会被误认为 API 发出的任务成功/失败。
 - 事件会冒泡，并设置为 `composed`，可跨越组件的 Shadow DOM 边界监听。
@@ -199,7 +199,7 @@ avatar.addEventListener('action-state', ({ detail }) => {
 
 不要播报眨眼、视线变化或普通拖拽反应；也不要默认把所有错误都做成打断式警报。如果宿主本身已经播报同一状态，可以把头像视为装饰，避免重复通知。
 
-完整示例见 [`examples/accessibility.html`](../examples/accessibility.html)。
+完整示例见 [`examples/accessibility.html`](../examples/accessibility.html)，其中覆盖等待、成功、失败、连接错误、宿主取消、新请求替换旧请求，以及旧请求迟到结果不能覆盖新状态；无障碍文字由宿主请求状态驱动，不重复播报底层表情变化。
 
 ## 睡眠唤醒策略
 
@@ -215,7 +215,7 @@ avatar.addEventListener('action-state', ({ detail }) => {
 | `interaction` | 只有直接与这个头像交互时自动唤醒；页面其他区域活动不唤醒。 |
 | `manual` | 页面活动和头像交互都不会自动唤醒，由宿主显式控制。 |
 
-显式调用仍保持显式语义：`avatar.play('wake')` 在所有模式下都可唤醒；现有 `avatar.noteActivity()` 仍默认记录活动并唤醒，`noteActivity(false)` 只记录活动、不唤醒。其他程序动作可以按照动作语义离开睡眠；`reset()` 始终回到 `idle`。不同实例可以使用不同策略。
+显式调用仍保持显式语义：`avatar.play('wake')` 在所有模式下都可唤醒；`avatar.noteActivity()` 默认记录活动并唤醒，即使宿主是在真实 `keydown`、`pointerdown` 或 `click` 事件处理函数中调用它也一样。`noteActivity(false)` 只记录活动、不唤醒。页面环境活动与头像直接交互的自动唤醒会走独立来源并继续遵守 `wake-on`；自动唤醒的 `action-state` source 为 `automatic`，宿主显式唤醒仍为 `api`。其他程序动作可以按照动作语义离开睡眠；`reset()` 始终回到 `idle`。不同实例可以使用不同策略。
 
 ## 减少动态效果
 
@@ -231,7 +231,7 @@ avatar.addEventListener('action-state', ({ detail }) => {
 | `reduce` | 保留可辨认的静态状态，减少持续、弹性和闪烁类动画。 |
 | `full` | 始终使用普通动画，不受系统减少动态效果偏好影响。 |
 
-reduce 模式会简化等待转圈、待机游走/眨眼、惯性跟随、弹性回弹、天线弹簧和闪烁等装饰动态，但 waiting / input 等语义生命周期仍持续存在，直到宿主结束或替换。切换 motion 不会恢复已经被取消的旧动作，也不会改变 `action-state` 的语义。
+reduce 模式会简化等待转圈、待机游走/眨眼、惯性跟随、弹性回弹、天线弹簧和闪烁等装饰动态，但 waiting / input 等语义生命周期仍持续存在，直到宿主结束或替换。自动睡眠使用独立、可取消的计时调度，不依赖持续绘制，因此 reduce 已暂停绘制时仍能按 `auto-sleep` 进入睡眠；用户活动和运行时修改超时会重新调度，waiting/input 不会被自动睡眠覆盖。影响画面的静态状态会先提交最终 SVG 再暂停，包括最终闭眼的 sleep 姿态。切换 motion 不会恢复已经被取消的旧动作，也不会改变 `action-state` 的语义。
 
 ## 鼠标 / 指针跟随
 
