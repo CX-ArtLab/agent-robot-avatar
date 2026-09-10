@@ -6,6 +6,8 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-09-10
+
 ### Fixed
 
 - Prevented disconnect cleanup from recreating per-instance media-query listeners and observers; reattaching now initializes connected runtime resources once without emitting cleanup-only lifecycle events.
@@ -102,6 +104,7 @@ First public release.
 - npm-compatible package metadata for later package publication
 - Contribution guide, issue templates, pull request template, MIT License, and Ko-fi funding metadata
 
+[0.3.1]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.3.1
 [0.3.0]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.3.0
 [0.2.1]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.2.1
 [0.2.0]: https://github.com/CX-ARTLab/agent-robot-avatar/releases/tag/v0.2.0
