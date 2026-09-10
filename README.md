@@ -40,6 +40,9 @@ Try the interactive demo: [Open Agent Robot Avatar](https://cx-artlab.github.io/
 - Jelly-style local drag deformation with elastic recovery
 - Programmatically controlled Agent states and expressions
 - Distinct waiting, failure, warning, review, blocked-content, and system-error semantics
+- Semantic `action-state` lifecycle events for host integrations
+- Reduced-motion support and visibility-aware frame pausing
+- Configurable sleep wake policy
 - Adjustable head roundness
 - Floating antenna with optional status flashing
 - Demo UI kept separate from the reusable component
@@ -60,7 +63,7 @@ Add the custom element:
 
 The avatar enters its default idle behavior automatically. No initialization code is required.
 
-A minimal runnable example is available at [`examples/basic.html`](./examples/basic.html).
+A minimal runnable example is available at [`examples/basic.html`](./examples/basic.html). An accessibility-oriented integration example is available at [`examples/accessibility.html`](./examples/accessibility.html).
 
 Bundler-based projects can install and use the component from npm with:
 
@@ -95,7 +98,9 @@ Return to the default idle state:
 avatar.reset();
 ```
 
-`reset()` cancels pending animations and returns to idle. Removing the element also cancels timers, animations, waiting, and drag feedback, without emitting a `face-state` event for cleanup. Reattaching starts from idle and preserves appearance and behavior settings. Cancelled animation promises resolve normally.
+`reset()` cancels the current program action, pending waits, head animations, drag/rebound state, and delayed drag reactions, then returns to idle. Cancelled animation promises continue to resolve normally rather than rejecting. Removing the element performs the same internal cleanup without emitting cleanup-only `face-state` or `action-state` notifications. Reattaching starts from idle and preserves appearance and behavior attributes/settings.
+
+A valid new action replaces the previous active action. The old semantic action receives `cancel`; it cannot resume later and overwrite the replacement. An unknown action throws before destructive cleanup. A no-op action such as `wake` while already awake leaves the current action unchanged.
 
 ## Actions and states
 
@@ -113,10 +118,10 @@ avatar.reset();
 | Blocked | `blocked` | A request is blocked, disallowed, or cannot proceed |
 | System error | `error` | Connection, service, or system failure |
 | Surprise | `surprise` | An unexpected event or result |
-| Sleep | `sleep` | Enter the sleep state |
-| Wake | `wake` | Wake from sleep |
+| Sleep | `sleep` | Enter the component sleep state |
+| Wake | `wake` | Wake the component from sleep |
 
-The state names intentionally distinguish task results from system conditions. For example, `failure` means the requested task finished unsuccessfully, while `error` is reserved for connection, service, or system failures. `waiting` represents an active pending request; `bored` represents inactivity.
+The state names intentionally distinguish task results from system conditions. For example, `failure` means the requested task finished unsuccessfully, while `error` is reserved for connection, service, or system failures. `waiting` represents an active pending request; `bored` represents inactivity. `sleep` describes the avatar component state only and does not imply that the real Agent is offline.
 
 Semantic aliases are also available:
 
@@ -138,11 +143,114 @@ For real Agent workflows, use the dedicated waiting lifecycle when a request is 
 ```js
 avatar.startWaiting();
 
-// Stop when a response or result arrives.
+// Stop when the request ends without replacing it with another action.
 avatar.stopWaiting();
 ```
 
-Calling another action also interrupts the active waiting state.
+`startWaiting()` remains active until `stopWaiting()`, `reset()`, or another program action replaces it. A replacement reports `cancel`; `stopWaiting()` reports a normal `end`. Drag deformation remains available while waiting, but decorative drag expressions are suppressed and discarded rather than replayed after waiting ends.
+
+A typical request lifecycle can be written as:
+
+```js
+avatar.startWaiting();
+try {
+  const result = await runAgentRequest();
+  await avatar.play(result.ok ? 'success' : 'failure');
+} catch (error) {
+  await avatar.play('error');
+}
+```
+
+The visual `error` action eventually returns to idle. That visual completion does not mean the underlying request, connection, or business error has been resolved; the host application remains the source of truth.
+
+## Semantic action event
+
+`face-state` remains available for backward compatibility and describes visual face states. It may contain visual terms such as `happy` or `sad`, so it should not be treated as a reliable business-result event.
+
+For semantic integration, listen to `action-state`:
+
+```js
+avatar.addEventListener('action-state', (event) => {
+  const { action, phase, source } = event.detail;
+  console.log(action, phase, source);
+});
+```
+
+`action-state` uses this contract:
+
+- `action`: normalized action name. Aliases such as `failed`/`fail` become `failure`; `verify`/`review` become `inspect`.
+- `phase`: `start`, followed by exactly one `end` or `cancel` for each action that actually starts.
+- `source`: `api`, `interaction`, or `automatic`.
+- Continuous actions such as `startWaiting()` and active input do not emit `end` just because one animation cycle completes.
+- Replacement or `reset()` emits `cancel`; `stopWaiting()` emits `end` for waiting.
+- No-op calls emit no lifecycle event.
+- Decorative drag feedback uses `action: "reaction"` and `source: "interaction"`, so it cannot be confused with an API-level task success/failure.
+- The event bubbles and is `composed`, so it can be observed above the custom element/Shadow DOM boundary.
+- Disconnect cleanup is silent and does not manufacture host-facing status notifications.
+
+The event describes avatar actions, not real request outcomes. The host must decide what the underlying Agent state actually means.
+
+## Accessibility integration
+
+For accessible status text, map program actions to localized host text rather than announcing every visual change:
+
+```html
+<div id="agent-status" role="status" aria-live="polite"></div>
+```
+
+```js
+const status = document.querySelector('#agent-status');
+const messages = {
+  waiting: 'Processing…',
+  failure: 'Task failed.',
+  error: 'Connection problem.',
+};
+
+avatar.addEventListener('action-state', ({ detail }) => {
+  if (detail.source === 'interaction') return;
+  if (detail.phase === 'start' && messages[detail.action]) {
+    status.textContent = messages[detail.action];
+  }
+});
+```
+
+Use a normal `role="status"` for routine updates. Do not announce blinking, gaze changes, or decorative drag reactions, and do not automatically make every error an interruptive alert. If the host already announces the same status elsewhere, the avatar can remain decorative to avoid duplicate screen-reader output.
+
+See [`examples/accessibility.html`](./examples/accessibility.html) for a runnable example.
+
+## Wake policy
+
+The `wake-on` attribute controls automatic wake behavior:
+
+```html
+<agent-robot-avatar wake-on="manual"></agent-robot-avatar>
+```
+
+| Value | Behavior |
+| --- | --- |
+| `activity` | Default. Page pointer/keyboard activity can wake a sleeping avatar, preserving previous behavior. |
+| `interaction` | Only direct interaction with this avatar wakes it automatically. Activity elsewhere does not. |
+| `manual` | Environment activity, including direct avatar interaction, does not automatically wake it. |
+
+Explicit API intent remains explicit: `avatar.play('wake')` wakes the avatar in every mode, and `avatar.noteActivity()` keeps its existing behavior of recording activity and waking by default. Pass `false` to `noteActivity(false)` to record activity without waking. Other program actions may leave sleep when their action semantics require a new visible state. `reset()` always returns to idle.
+
+Different avatar instances may use different `wake-on` values.
+
+## Reduced motion
+
+Use the `motion` attribute to control animation intensity:
+
+```html
+<agent-robot-avatar motion="auto"></agent-robot-avatar>
+```
+
+| Value | Behavior |
+| --- | --- |
+| `auto` | Default. Follows `prefers-reduced-motion` and responds to preference changes at runtime. |
+| `reduce` | Keeps recognizable static states while suppressing continuous or elastic decorative motion. |
+| `full` | Uses the normal animation style regardless of the system reduced-motion preference. |
+
+Reduced mode suppresses continuous waiting orbits, idle wandering/blinking motion, head-follow inertia, elastic rebound, antenna spring motion, and status flashing where appropriate. Waiting/input lifecycles remain active until the host ends or replaces them, even when their visual state is static. Switching modes does not revive cancelled work or change `action-state` lifecycle semantics.
 
 ## Pointer following
 
@@ -153,6 +261,8 @@ avatar.setPointerFollow(false);
 avatar.setPointerFollow(true);
 ```
 
+High-frequency pointer positions are coalesced to the latest update per animation frame. Pointer following remains active in normal mode when the avatar is not being dragged or owned by another expression.
+
 ## Antenna flashing
 
 Antenna status flashing is disabled by default and can be enabled per avatar:
@@ -161,6 +271,24 @@ Antenna status flashing is disabled by default and can be enabled per avatar:
 avatar.setAntennaFlash(true);
 avatar.setAntennaFlash(false);
 ```
+
+## Inspect configuration
+
+Inspect/review timing and geometry can be customized before loading the component:
+
+```html
+<script>
+  window.AgentRobotAvatarInspectConfig = {
+    aperture: 24,
+    scanOffset: 12,
+  };
+</script>
+<script type="module" src="./agent-robot-avatar.js"></script>
+```
+
+The existing configuration object is preserved. Values are converted with `Number(...)`, must be finite, and are clamped to supported ranges; missing or invalid values receive defaults. `aperture` is clamped to `6–40`, `scanOffset` to `0–24`, and timing values to their supported `0/40–2400 ms` ranges. The same `window.AgentRobotAvatarInspectConfig` object can still be modified after loading; values are normalized again when an inspect action begins. Invalid input cannot enter the animation calculations as `NaN`.
+
+Default configuration keeps the existing v0.2.1 visual timing.
 
 ## Head roundness
 
@@ -184,9 +312,9 @@ avatar.addEventListener('head-roundness-change', (event) => {
 });
 ```
 
-## State event
+## Visual state event
 
-The component emits a `face-state` event whenever its visual state changes:
+The component continues to emit `face-state` whenever its visual state changes:
 
 ```js
 avatar.addEventListener('face-state', (event) => {
@@ -194,25 +322,29 @@ avatar.addEventListener('face-state', (event) => {
 });
 ```
 
-Host applications can use this event to synchronize interface state, logs, Agent workflows, or accessibility feedback.
+Use this event for visual synchronization or legacy integrations. Prefer `action-state` for business/Agent lifecycle logic and accessibility status text.
 
 ## Attributes
 
 ```html
 <agent-robot-avatar
-  size="160"
+  size="160px"
   color="#08090b"
-  auto-sleep="30000">
+  auto-sleep="30000"
+  wake-on="activity"
+  motion="auto">
 </agent-robot-avatar>
 ```
 
 | Attribute | Description |
 | --- | --- |
-| `size` | Component size in pixels |
-| `color` | Main avatar color |
-| `auto-sleep` | Idle time before automatic sleep, in milliseconds; `0` disables automatic sleep |
+| `size` | Positive pixel size. Accepts plain numbers such as `140` and explicit pixels such as `140px`. Unsupported units, malformed strings, zero, negative, and non-finite values fall back to `112px`. |
+| `color` | Main avatar color. |
+| `auto-sleep` | Idle time before automatic sleep, in milliseconds; `0` disables automatic sleep. |
+| `wake-on` | Automatic wake policy: `activity` (default), `interaction`, or `manual`. |
+| `motion` | Motion policy: `auto` (default), `reduce`, or `full`. |
 
-All attributes are optional.
+All attributes are optional. Dynamic size changes are supported; drag coordinates and pointer following use the element's current layout size.
 
 ## Default behavior
 
@@ -225,15 +357,25 @@ Without explicit API calls, the avatar already provides subtle ambient behavior:
 - Natural return to idle
 - Optional automatic sleep
 
+`motion="reduce"` or an active system reduced-motion preference simplifies these decorative behaviors.
+
 ## Drag interaction
 
-The avatar supports direct pointer dragging. The head deforms locally around the interaction point instead of moving as a rigid object.
+The avatar supports direct mouse, pen, and touch pointer dragging. The head deforms locally around the interaction point instead of moving as a rigid object.
 
-- Strong outward pull: triggers `angry` after recovery
-- Strong inward push toward the center: triggers `success` after recovery
+- Strong outward pull while idle: triggers an `angry` visual reaction after recovery
+- Strong inward push toward the center while idle: triggers a `success` visual reaction after recovery
 - Small drag: deformation only, with no expression trigger
+- Active program actions such as waiting/input keep expression ownership; drag deformation remains available but its decorative reaction is discarded
+- `pointercancel`, lost capture, reset, replacement actions, and disconnect restore drag geometry without delayed reaction
 
-When released, the shape returns with an elastic rebound.
+The avatar interaction region uses `touch-action: pinch-zoom`: single-pointer movement remains available to the custom drag gesture, while two-pointer pinch zoom remains allowed. Page scrolling initiated outside the avatar keeps the page's normal touch behavior. Desktop mouse interaction is unchanged.
+
+## Rendering and visibility
+
+The component pauses sustained frame rendering when it has no visible layout area or is outside the viewport. Parent-container hiding is covered through layout/intersection observation. When it becomes visible again, the avatar resumes the current valid state rather than replaying stale actions.
+
+Finite action timers continue to settle while visual drawing is paused, so action promises do not depend on continuous rendering. The existing hidden-page and settled-sleep pause behavior remains in place. Observers and per-instance media-query listeners are cleaned up when an avatar is disconnected.
 
 ## Interactive Demo
 
@@ -269,11 +411,13 @@ LICENSE                   MIT License
 
 The package is published on npm as `agent-robot-avatar`. It includes the public entry, TypeScript declarations, runtime modules, documentation, and support assets.
 
-The npm package intentionally includes only the public entry, TypeScript declarations, `src/` runtime, documentation, and support assets; Demo-only files are excluded.
+The npm package intentionally includes only the public entry, TypeScript declarations, `src/` runtime, documentation, and support assets; Demo-only files and test files are excluded.
 
 ## Compatibility
 
-Agent Robot Avatar is designed for modern browsers with support for ES modules, Custom Elements, SVG, Pointer Events, and the Web Animations API.
+Agent Robot Avatar is designed for modern browsers with support for ES modules, Custom Elements, SVG, Pointer Events, the Web Animations API, `IntersectionObserver`, `ResizeObserver`, and `matchMedia`.
+
+The automated browser suite covers Chromium, Firefox, and WebKit. Trusted touch-drag cancellation is additionally exercised through Chromium's touch emulation; see the PR/release validation notes for any real-device coverage.
 
 ## Contributing
 
@@ -299,8 +443,4 @@ MIT License. See [`LICENSE`](./LICENSE).
 
 ## Buy me a coffee
 
-If this project is useful to you, you can buy me a coffee. Use whichever option is most convenient:
-
-| Ko-fi | Alipay | WeChat Pay |
-| --- | --- | --- |
-| <a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a> | <img src="./assets/support/alipay.png" alt="Alipay QR code" width="160"> | <img src="./assets/support/wechat-pay.png" alt="WeChat Pay QR code" width="160"> |
+<a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>

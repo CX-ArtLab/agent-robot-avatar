@@ -180,6 +180,8 @@ avatar.addEventListener('face-state', (event) => {
 - 강하게 중심으로 밀기: 복귀 후 `success`
 - 작은 드래그: 변형만 적용
 
+이 드래그 표정은 프로그램 제어 액션이 아바타를 사용하지 않는 idle 상태에서만 적용됩니다. `waiting`, `input`, `inspect` 등이 실행 중일 때는 변형은 유지되지만 드래그 표정은 억제되며 나중에 재생되지 않습니다. `pointercancel`은 형태만 복구하고 성공/화남 표정을 발생시키지 않습니다.
+
 ## 인터랙티브 Demo
 
 `demo/index.html`에는 모든 공개 상태, 포인터 추적, 젤리 드래그, waiting 라이프사이클, 머리 둥글기 조절, 색상 / 동작 설정, Agent 대화 시뮬레이션이 포함됩니다. Demo 전용 JavaScript는 `demo/`에 분리되어 재사용 가능한 npm runtime에는 포함되지 않습니다.
@@ -220,8 +222,4 @@ MIT License. 자세한 내용은 [`LICENSE`](../LICENSE)를 참조하세요.
 
 ## 커피 한 잔으로 후원하기
 
-프로젝트가 도움이 되었다면 편한 방법으로 후원할 수 있습니다.
-
-| Ko-fi | Alipay | WeChat Pay |
-| --- | --- | --- |
-| <a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a> | <img src="../assets/support/alipay.png" alt="Alipay QR code" width="160"> | <img src="../assets/support/wechat-pay.png" alt="WeChat Pay QR code" width="160"> |
+<a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>

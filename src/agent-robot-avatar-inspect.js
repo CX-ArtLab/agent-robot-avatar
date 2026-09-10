@@ -31,46 +31,54 @@ const INSPECT_DEFAULTS = Object.freeze({
   open: 260,
 });
 
+const INSPECT_BOUNDS = Object.freeze({
+  aperture: [6, 40],
+  scanOffset: [0, 24],
+  prepPause: [0, 2400],
+  close: [40, 2400],
+  holdClosed: [0, 2400],
+  down1: [40, 2400],
+  holdDown1: [0, 2400],
+  up1: [40, 2400],
+  holdUp1: [0, 2400],
+  center1: [40, 2400],
+  holdCenter: [0, 2400],
+  down2: [40, 2400],
+  holdDown2: [0, 2400],
+  up2: [40, 2400],
+  holdUp2: [0, 2400],
+  center2: [40, 2400],
+  holdAfter: [0, 2400],
+  open: [40, 2400],
+});
+
 const runtimeWindow = typeof window !== 'undefined' ? window : null;
 const inspectConfig = (runtimeWindow?.AgentRobotAvatarInspectConfig && typeof runtimeWindow.AgentRobotAvatarInspectConfig === 'object')
   ? runtimeWindow.AgentRobotAvatarInspectConfig
   : {};
-for (const [key, value] of Object.entries(INSPECT_DEFAULTS)) {
-  inspectConfig[key] = value;
+
+function normalizeConfigValue(key, value) {
+  const fallback = INSPECT_DEFAULTS[key];
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return fallback;
+  const [min, max] = INSPECT_BOUNDS[key];
+  return Math.max(min, Math.min(max, numeric));
+}
+
+for (const key of Object.keys(INSPECT_DEFAULTS)) {
+  inspectConfig[key] = normalizeConfigValue(key, inspectConfig[key]);
 }
 if (runtimeWindow) {
   runtimeWindow.AgentRobotAvatarInspectConfig = inspectConfig;
   runtimeWindow.AgentRobotAvatarInspectDefaults = INSPECT_DEFAULTS;
 }
 
-function configNumber(key, fallback, min, max) {
-  const value = Number(inspectConfig[key]);
-  if (!Number.isFinite(value)) return fallback;
-  return Math.max(min, Math.min(max, value));
-}
-
 function currentInspectConfig() {
-  const duration = key => configNumber(key, INSPECT_DEFAULTS[key], 0, 2400);
-  return {
-    aperture: configNumber('aperture', INSPECT_DEFAULTS.aperture, 6, 40),
-    scanOffset: configNumber('scanOffset', INSPECT_DEFAULTS.scanOffset, 0, 24),
-    prepPause: duration('prepPause'),
-    close: Math.max(40, duration('close')),
-    holdClosed: duration('holdClosed'),
-    down1: Math.max(40, duration('down1')),
-    holdDown1: duration('holdDown1'),
-    up1: Math.max(40, duration('up1')),
-    holdUp1: duration('holdUp1'),
-    center1: Math.max(40, duration('center1')),
-    holdCenter: duration('holdCenter'),
-    down2: Math.max(40, duration('down2')),
-    holdDown2: duration('holdDown2'),
-    up2: Math.max(40, duration('up2')),
-    holdUp2: duration('holdUp2'),
-    center2: Math.max(40, duration('center2')),
-    holdAfter: duration('holdAfter'),
-    open: Math.max(40, duration('open')),
-  };
+  const config = {};
+  for (const key of Object.keys(INSPECT_DEFAULTS)) {
+    config[key] = normalizeConfigValue(key, inspectConfig[key]);
+  }
+  return config;
 }
 
 function dispatchInspectState(instance, state) {

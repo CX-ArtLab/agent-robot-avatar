@@ -180,6 +180,8 @@ Ao arrastar, a cabeça se deforma localmente ao redor do ponto de interação, e
 - Empurrão forte para o centro: ativa `success` após retornar
 - Arraste pequeno: apenas deformação
 
+Essas expressões de arraste só se aplicam em idle quando nenhuma ação programática controla o avatar. Durante `waiting`, `input`, `inspect` e outras ações ativas, a deformação é preservada, mas a expressão de arraste é suprimida e não é reproduzida depois. `pointercancel` restaura apenas a forma, sem acionar success ou angry.
+
 ## Demo interativo
 
 `demo/index.html` inclui todos os estados públicos, seguimento do ponteiro, arraste tipo gelatina, ciclo de waiting, ajuste do arredondamento, controles de cor e comportamento e simulação de conversa com Agent. O JavaScript exclusivo do Demo fica isolado em `demo/` e não faz parte do runtime reutilizável do npm.
@@ -220,8 +222,4 @@ MIT License. Consulte [`LICENSE`](../LICENSE).
 
 ## Pague-me um café
 
-Se este projeto for útil, você pode apoiá-lo pelo método mais conveniente:
-
-| Ko-fi | Alipay | WeChat Pay |
-| --- | --- | --- |
-| <a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a> | <img src="../assets/support/alipay.png" alt="QR code do Alipay" width="160"> | <img src="../assets/support/wechat-pay.png" alt="QR code do WeChat Pay" width="160"> |
+<a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>

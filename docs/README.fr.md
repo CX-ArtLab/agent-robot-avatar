@@ -8,6 +8,8 @@
 
 ![Version](https://img.shields.io/badge/version-v0.2.1-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
+![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square) ![14 Agent States](https://img.shields.io/badge/Agent%20states-14-8B5CF6?style=flat-square) ![Pointer Following](https://img.shields.io/badge/Pointer-following-00A67E?style=flat-square) ![Jelly Drag](https://img.shields.io/badge/Drag-jelly%20physics-FF69B4?style=flat-square)
+
 Un Web Component léger et expressif d’avatar robot pour les agents IA et d’autres applications interactives.
 
 Il convient aux interfaces d’assistants IA et d’Agents, notamment aux produits et expériences similaires à ChatGPT, Claude, Codex, Cursor, Grok Bot, Gemini CLI et OpenCode.
@@ -178,6 +180,8 @@ Lors du glisser, la tête se déforme localement autour du point d’interaction
 - Forte poussée vers le centre : déclenche `success` après le retour
 - Petit glisser : déformation uniquement
 
+Ces expressions de glisser ne s’appliquent à l’état idle que lorsqu’aucune action programmée ne contrôle l’avatar. Pendant `waiting`, `input`, `inspect` et les autres actions actives, la déformation reste visible mais l’expression de glisser est supprimée et n’est pas rejouée ensuite. `pointercancel` restaure uniquement la forme sans déclencher success ni angry.
+
 ## Demo interactive
 
 `demo/index.html` contient tous les états publics, le suivi du pointeur, le glisser type gelée, le cycle waiting, le réglage de l’arrondi, les contrôles de couleur et de comportement et une simulation de conversation Agent. Le JavaScript propre à la Demo reste dans `demo/` et n’est pas inclus dans le runtime npm réutilisable.
@@ -218,8 +222,4 @@ MIT License. Voir [`LICENSE`](../LICENSE).
 
 ## Offrez-moi un café
 
-Si ce projet vous est utile, vous pouvez le soutenir avec la méthode qui vous convient :
-
-| Ko-fi | Alipay | WeChat Pay |
-| --- | --- | --- |
-| <a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a> | <img src="../assets/support/alipay.png" alt="QR code Alipay" width="160"> | <img src="../assets/support/wechat-pay.png" alt="QR code WeChat Pay" width="160"> |
+<a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>

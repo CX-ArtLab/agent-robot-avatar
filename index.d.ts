@@ -38,8 +38,38 @@ export type AgentRobotAvatarState =
   | 'inspect'
   | 'failure';
 
+export type AgentRobotAvatarCanonicalAction =
+  | 'idle'
+  | 'bored'
+  | 'waiting'
+  | 'input'
+  | 'send'
+  | 'success'
+  | 'failure'
+  | 'warning'
+  | 'inspect'
+  | 'angry'
+  | 'blocked'
+  | 'error'
+  | 'surprise'
+  | 'sleep'
+  | 'wake'
+  | 'reaction';
+
+export type AgentRobotAvatarActionPhase = 'start' | 'end' | 'cancel';
+export type AgentRobotAvatarActionSource = 'api' | 'interaction' | 'automatic';
+export type AgentRobotAvatarWakeOn = 'activity' | 'interaction' | 'manual';
+export type AgentRobotAvatarMotion = 'auto' | 'reduce' | 'full';
+
+export interface AgentRobotAvatarActionStateDetail {
+  action: AgentRobotAvatarCanonicalAction;
+  phase: AgentRobotAvatarActionPhase;
+  source: AgentRobotAvatarActionSource;
+}
+
 export interface AgentRobotAvatarEventMap extends HTMLElementEventMap {
   'face-state': CustomEvent<{ state: AgentRobotAvatarState }>;
+  'action-state': CustomEvent<AgentRobotAvatarActionStateDetail>;
   'head-roundness-change': CustomEvent<{ value: number; version: string }>;
 }
 

@@ -180,6 +180,8 @@ API を呼ばなくても、ランダムなまばたき、視線移動、近く�
 - 強く中心へ押す：復帰後に `success`
 - 小さなドラッグ：変形のみ
 
+これらのドラッグ表情は、プログラム制御のアクションがアバターを使用していない idle 時にのみ適用されます。`waiting`、`input`、`inspect` などの実行中は変形だけを残し、ドラッグ表情は抑制して後から再生しません。`pointercancel` では形状だけを復元し、成功・怒りの表情は発生しません。
+
 ## インタラクティブ Demo
 
 `demo/index.html` には全公開状態、ポインター追従、ゼリー風ドラッグ、waiting ライフサイクル、頭部丸み調整、色・挙動設定、Agent 会話シミュレーションが含まれます。Demo 専用 JavaScript は `demo/` に分離され、再利用用 npm runtime には含まれません。
@@ -220,8 +222,4 @@ MIT License。詳細は [`LICENSE`](../LICENSE) を参照してください。
 
 ## コーヒーで支援
 
-このプロジェクトが役立った場合は、使いやすい方法で支援できます。
-
-| Ko-fi | Alipay | WeChat Pay |
-| --- | --- | --- |
-| <a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a> | <img src="../assets/support/alipay.png" alt="Alipay QR code" width="160"> | <img src="../assets/support/wechat-pay.png" alt="WeChat Pay QR code" width="160"> |
+<a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>

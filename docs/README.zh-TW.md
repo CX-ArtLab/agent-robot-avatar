@@ -182,6 +182,8 @@ avatar.addEventListener('face-state', (event) => {
 - 強力向中心推：回彈後觸發 `success`
 - 小幅拖曳：只變形，不觸發表情
 
+上述拖曳表情只會在沒有程式控制動作佔用頭像的 idle 狀態生效。`waiting`、`input`、`inspect` 等動作執行期間仍保留拖曳形變，但拖曳表情會被抑制且不會延後補播；`pointercancel` 只恢復形狀，不會觸發成功或生氣表情。
+
 ## 互動 Demo
 
 `demo/index.html` 包含全部公開表情、指標跟隨、果凍拖曳、等待生命週期、頭部圓角調整、顏色 / 行為控制，以及模擬 Agent 對話。Demo 專用 JavaScript 全部集中在 `demo/`，不會進入可重複使用的 npm runtime。
@@ -222,8 +224,4 @@ MIT License。詳見 [`LICENSE`](../LICENSE)。
 
 ## 請我喝杯咖啡
 
-如果這個專案對你有幫助，也可以請我喝杯咖啡。選擇你方便的方式即可：
-
-| Ko-fi | 支付寶 | 微信支付 |
-| --- | --- | --- |
-| <a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a> | <img src="../assets/support/alipay.png" alt="支付寶收款碼" width="160"> | <img src="../assets/support/wechat-pay.png" alt="WeChat Pay QR code" width="160"> |
+<a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
