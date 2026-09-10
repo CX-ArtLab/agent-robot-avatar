@@ -7,7 +7,6 @@ import './src/agent-robot-avatar-inspect.js';
 import './src/agent-robot-avatar-failure.js';
 import './src/agent-robot-avatar-head-roundness.js';
 import './src/agent-robot-avatar-runtime.js';
-import './src/agent-robot-avatar-runtime-fixes.js';
 import { VERSION } from './src/agent-robot-avatar-version.js';
 
 // Elements already present in markup can upgrade while the core module is
