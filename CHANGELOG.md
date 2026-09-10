@@ -6,6 +6,11 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ## [Unreleased]
 
+### Fixed
+
+- Prevented the accessible request lifecycle example's delayed replacement step from starting after cancellation, a newer user request, or a newer replacement flow has invalidated it.
+- Made the example's business status the only automatic live region; the visible request debug log remains available for deliberate reading without `role="log"` live semantics or whole-log text rewrites.
+
 ## [0.3.1] - 2026-09-10
 
 ### Fixed
