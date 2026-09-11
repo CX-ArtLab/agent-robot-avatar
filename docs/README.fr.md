@@ -8,213 +8,154 @@
 
 ![Version](https://img.shields.io/badge/version-v0.3.2-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
-![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square) ![14 Agent States](https://img.shields.io/badge/Agent%20states-14-8B5CF6?style=flat-square) ![Pointer Following](https://img.shields.io/badge/Pointer-following-00A67E?style=flat-square) ![Jelly Drag](https://img.shields.io/badge/Drag-jelly%20physics-FF69B4?style=flat-square)
+![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square)
 
-Un Web Component léger et expressif d’avatar robot pour les agents IA et d’autres applications interactives.
+Un Web Component d’avatar robot léger et expressif pour les agents IA et les applications interactives.
 
-Il convient aux interfaces d’assistants IA et d’Agents, notamment aux produits et expériences similaires à ChatGPT, Claude, Codex, Cursor, Grok Bot, Gemini CLI et OpenCode.
+Il peut être utilisé dans des assistants IA, des interfaces d’agents, des compagnons de bureau, des animaux virtuels, des mascottes numériques, des avatars de chatbot et d’autres expériences de personnages interactifs.
 
-Il peut également être utilisé pour les desktop pets, animaux virtuels, compagnons de bureau, mascottes numériques, avatars de chatbots et autres expériences de personnages interactifs.
-
-Agent Robot Avatar peut également servir de couche de retour visuel pour les interfaces d’Agents de style AG-UI.
-
-Agent Robot Avatar est construit avec SVG et JavaScript natif, sans framework d’animation tiers. Il fonctionne comme un Custom Element natif et propose une API compacte pour les expressions, les états d’interaction, le suivi du pointeur, l’attente et la forme de la tête.
-
-**Version publique actuelle : v0.3.2**
+Construit avec SVG et JavaScript natif, il fonctionne comme un Custom Element sans dépendance d’exécution.
 
 <p align="center">
-  <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Démonstration animée interactive d’Agent Robot Avatar" width="560">
+  <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Démo animée interactive de Agent Robot Avatar" width="560">
 </p>
 
 ## Démo en ligne
 
-Essayez la démo interactive : [Ouvrir Agent Robot Avatar](https://cx-artlab.github.io/agent-robot-avatar/?lang=fr)
+[Ouvrir la démo interactive](https://cx-artlab.github.io/agent-robot-avatar/?lang=fr)
 
 ## Points forts
 
-- SVG + JavaScript natif
 - Web Component natif
-- Aucune dépendance à un framework d’animation
-- Clignement automatique et mouvements subtils du regard
-- Suivi du pointeur et mouvement de tête avec inertie
-- Déformation locale type gelée lors du glisser et retour élastique
-- États et expressions d’Agent pilotables par code
-- Sémantique distincte pour waiting, failure, warning, inspect, blocked et system error
+- Rendu SVG + JavaScript natif
+- Zéro dépendance d’exécution
+- Clignements automatiques et comportement idle discret
+- Yeux suivant le pointeur et mouvement inertiel de la tête
+- Déformation locale façon gelée lors du glisser, avec retour élastique
+- États et expressions d’Agent contrôlables par code
+- Retours pour waiting, success, failure, warning, review, blocked et system error
+- Prise en charge du mouvement réduit
+- Comportement de sommeil configurable
 - Arrondi de la tête réglable
-- Antenne flottante avec clignotement d’état optionnel
-- Demo séparée du composant réutilisable
+- Clignotement d’état optionnel de l’antenne
+- Déclarations TypeScript incluses
 
-## Démarrage rapide
+## Installation
 
-Si vous utilisez directement le code du dépôt, conservez `agent-robot-avatar.js` avec le dossier `src/`, puis chargez l’entrée publique :
+```bash
+npm install agent-robot-avatar
+```
+
+```js
+import 'agent-robot-avatar';
+```
+
+Vous pouvez aussi charger directement le code source du dépôt :
 
 ```html
 <script type="module" src="./agent-robot-avatar.js"></script>
 ```
 
+Puis ajouter le composant :
+
 ```html
 <agent-robot-avatar id="avatar"></agent-robot-avatar>
 ```
 
-L’avatar passe automatiquement à l’état idle. Un exemple minimal est disponible dans [`examples/basic.html`](../examples/basic.html).
+Aucun code d’initialisation n’est nécessaire. L’avatar entre automatiquement dans son état idle par défaut.
 
-## API de base
+## Utilisation de base
 
 ```js
 const avatar = document.querySelector('#avatar');
 
 avatar.play('success');
-avatar.play('failure');
 avatar.play('warning');
-avatar.play('inspect');
-avatar.play('blocked');
 avatar.play('error');
 
 avatar.reset();
 ```
 
-## États et expressions
+Actions disponibles :
 
-| État | API | Usage |
-| --- | --- | --- |
-| Idle | `idle` | État d’attente normal |
-| Bored | `bored` | Longue période sans tâche active |
-| Waiting | `waiting` | Requête envoyée, résultat en attente |
-| Input | `input` | L’utilisateur saisit du texte |
-| Send | `send` | Envoi / retour par hochement |
-| Success | `success` | Tâche terminée avec succès |
-| Failure | `failure` | Tâche terminée sans succès |
-| Warning | `warning` | Action importante nécessitant confirmation |
-| Inspect | `inspect` | Examiner, contrôler ou vérifier un résultat |
-| Blocked | `blocked` | Requête bloquée ou impossible à poursuivre |
-| System error | `error` | Erreur de connexion, de service ou système |
-| Surprise | `surprise` | Événement ou résultat inattendu |
-| Sleep | `sleep` | Entrer en veille |
-| Wake | `wake` | Sortir de veille |
+`idle` · `bored` · `waiting` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `sleep` · `wake`
 
-`failure` correspond à l’échec de la tâche elle-même ; `error` est réservé aux problèmes de connexion, de service ou de système. `waiting` indique une requête en cours et `bored` une période d’inactivité.
+`failure` représente une tâche terminée sans succès, tandis que `error` est réservé aux erreurs de connexion, de service ou de système.
 
-Des alias sémantiques sont également disponibles :
-
-```js
-avatar.play('failed');
-avatar.play('fail');
-avatar.play('verify');
-avatar.play('review');
-avatar.play('angry'); // même expression visuelle que blocked
-avatar.play('policy-blocked');
-avatar.play('system-error');
-avatar.play('connection-error');
-```
-
-## Attente continue
+Exemple de cycle de requête Agent :
 
 ```js
 avatar.startWaiting();
-// Arrêter lorsque la réponse ou le résultat arrive.
-avatar.stopWaiting();
+
+try {
+  const result = await runAgentRequest();
+  await avatar.play(result.ok ? 'success' : 'failure');
+} catch (error) {
+  await avatar.play('error');
+}
 ```
 
-Toute autre action interrompt aussi l’état waiting actif.
-
-## Suivi du pointeur
-
-```js
-avatar.setPointerFollow(false);
-avatar.setPointerFollow(true);
-```
-
-## Arrondi de la tête
-
-```js
-avatar.setHeadRoundness(0);   // plus carrée
-avatar.setHeadRoundness(50);  // valeur par défaut
-avatar.setHeadRoundness(100); // plus ronde
-
-console.log(avatar.getHeadRoundness());
-```
-
-Les valeurs sont limitées à `0–100`. Les changements déclenchent `head-roundness-change`.
-
-```js
-avatar.addEventListener('head-roundness-change', (event) => {
-  console.log(event.detail.value);
-});
-```
-
-## Événement d’état
-
-Chaque changement visuel déclenche `face-state` :
-
-```js
-avatar.addEventListener('face-state', (event) => {
-  console.log(event.detail.state);
-});
-```
-
-## Attributs
+## Options courantes
 
 ```html
 <agent-robot-avatar
   size="160"
   color="#08090b"
-  auto-sleep="30000">
+  auto-sleep="30000"
+  wake-on="activity"
+  motion="auto">
 </agent-robot-avatar>
 ```
 
-| Attribut | Description |
+| Attribut | Usage |
 | --- | --- |
-| `size` | Taille du composant en pixels |
+| `size` | Taille de l’avatar en pixels |
 | `color` | Couleur principale de l’avatar |
-| `auto-sleep` | Temps d’inactivité avant veille automatique, en ms ; `0` désactive la fonction |
+| `auto-sleep` | Temps d’inactivité avant le sommeil automatique ; `0` le désactive |
+| `wake-on` | Politique de réveil automatique : `activity`, `interaction` ou `manual` |
+| `motion` | Politique d’animation : `auto`, `reduce` ou `full` |
 
-## Comportement par défaut
+Contrôles courants à l’exécution :
 
-Sans appel explicite à l’API, l’avatar propose déjà des clignements aléatoires, de petits mouvements du regard, le suivi du pointeur proche, une légère inertie de la tête, un retour naturel à idle et une veille automatique optionnelle.
-
-## Interaction par glisser
-
-Lors du glisser, la tête se déforme localement autour du point d’interaction au lieu de se déplacer comme un objet rigide.
-
-- Forte traction vers l’extérieur : déclenche `angry` après le retour
-- Forte poussée vers le centre : déclenche `success` après le retour
-- Petit glisser : déformation uniquement
-
-Ces expressions de glisser ne s’appliquent à l’état idle que lorsqu’aucune action programmée ne contrôle l’avatar. Pendant `waiting`, `input`, `inspect` et les autres actions actives, la déformation reste visible mais l’expression de glisser est supprimée et n’est pas rejouée ensuite. `pointercancel` restaure uniquement la forme sans déclencher success ni angry.
-
-## Demo interactive
-
-`demo/index.html` contient tous les états publics, le suivi du pointeur, le glisser type gelée, le cycle waiting, le réglage de l’arrondi, les contrôles de couleur et de comportement et une simulation de conversation Agent. Le JavaScript propre à la Demo reste dans `demo/` et n’est pas inclus dans le runtime npm réutilisable.
-
-## Structure du projet
-
-```text
-agent-robot-avatar.js     Entrée publique du composant
-src/                      Runtime réutilisable et modules d’expression
-demo/                     Demo interactive et scripts dédiés
-examples/                 Exemples minimaux d’intégration
-assets/support/           Ressources QR de soutien / paiement
-docs/                     Documentation multilingue
-README.md                 Documentation principale en anglais
-CHANGELOG.md              Historique public des versions
-CONTRIBUTING.md           Guide de contribution
-package.json              Métadonnées du paquet
-LICENSE                   Licence MIT
+```js
+avatar.setPointerFollow(false);
+avatar.setHeadRoundness(75);
+avatar.setAntennaFlash(true);
 ```
 
-## Distribution et compatibilité
+## Événements et intégration
 
-Le paquet est publié sur npm sous le nom `agent-robot-avatar` et inclut des déclarations TypeScript pour les actions, les événements et les méthodes publiques. Le composant cible les navigateurs modernes prenant en charge ES Modules, Custom Elements, SVG, Pointer Events et Web Animations API.
+Le composant émet `face-state` pour les changements d’état visuel et `action-state` pour les changements sémantiques du cycle de vie des actions.
 
-## Contribuer
+Pour les intégrations avec l’application hôte et les textes d’état accessibles, préférez `action-state`. Consultez [`examples/accessibility.html`](../examples/accessibility.html) pour un exemple exécutable de cycle de requête.
 
-Issues et Pull Requests sont les bienvenus. Consultez [`CONTRIBUTING.md`](../CONTRIBUTING.md) avant de proposer des changements.
+Un exemple minimal d’intégration est disponible dans [`examples/basic.html`](../examples/basic.html).
+
+## Compatibilité
+
+Conçu pour les navigateurs modernes prenant en charge ES Modules, Custom Elements, SVG, Pointer Events, Web Animations API, `IntersectionObserver`, `ResizeObserver` et `matchMedia`.
+
+Les tests automatisés couvrent Chromium, Firefox et WebKit.
+
+## Contribution
+
+Issues et Pull Requests sont les bienvenus. Consultez [`CONTRIBUTING.md`](../CONTRIBUTING.md) avant de proposer des modifications.
 
 ## État du projet
 
-v0.3.2 est la version publique actuelle. v0.1.0 reste disponible comme première version publique. L’API publique reste volontairement limitée afin d’évoluer avec prudence avant un futur engagement de stabilité `1.0.0`.
+**Version publique actuelle : v0.3.2**
 
-Agent Robot Avatar est un projet open source développé indépendamment ; il n’est affilié, approuvé ni représentatif d’aucune plateforme ou marque d’IA.
+L’API publique reste volontairement compacte pendant l’évolution du projet vers un futur engagement de stabilité `1.0.0`.
+
+Agent Robot Avatar est développé indépendamment et n’est affilié, approuvé ou représentatif d’aucune plateforme ou marque d’IA.
+
+## Design du personnage et identité visuelle
+
+Le personnage Agent Robot Avatar, y compris son apparence robotique et son identité visuelle, est une création originale de CX ArtLab.
+
+La licence MIT s’applique au logiciel et au code source. Elle permet d’utiliser, modifier et distribuer l’avatar dans des applications, mais ne transfère pas la propriété du nom Agent Robot Avatar, de l’identité du personnage ou de son identité visuelle, et n’accorde pas le droit de les présenter comme le personnage original ou la marque autonome d’un tiers.
+
+Les noms de produits tiers mentionnés dans ce projet servent uniquement à décrire des cas d’usage possibles et n’impliquent aucune affiliation ni approbation.
 
 ## Licence
 

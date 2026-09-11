@@ -8,19 +8,13 @@
 
 ![Version](https://img.shields.io/badge/version-v0.3.2-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
-![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square) ![14 Agent States](https://img.shields.io/badge/Agent%20states-14-8B5CF6?style=flat-square) ![Pointer Following](https://img.shields.io/badge/Pointer-following-00A67E?style=flat-square) ![Jelly Drag](https://img.shields.io/badge/Drag-jelly%20physics-FF69B4?style=flat-square)
+![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square)
 
-AI エージェントやその他のインタラクティブなアプリケーションで使える、軽量で表情豊かなロボットアバター Web Component です。
+AI Agent やインタラクティブなアプリケーション向けの、軽量で表情豊かなロボットアバター Web Component です。
 
-AI アシスタントや Agent のインターフェースに適しており、ChatGPT、Claude、Codex、Cursor、Grok Bot、Gemini CLI、OpenCode に似た製品や体験で利用できます。
+AI アシスタント、Agent インターフェース、デスクトップコンパニオン、バーチャルペット、デジタルマスコット、チャットボットのアバターなど、さまざまなインタラクティブキャラクター体験に利用できます。
 
-デスクトップペット、バーチャルペット、デスクトップコンパニオン、デジタルマスコット、チャットボットのアバターなど、さまざまなインタラクティブキャラクター体験にも利用できます。
-
-Agent Robot Avatar は、AG-UI スタイルの Agent インターフェースにおける視覚的なフィードバックレイヤーとしても利用できます。
-
-Agent Robot Avatar は SVG と Vanilla JavaScript だけで構築され、サードパーティー製アニメーションフレームワークに依存しません。ネイティブ Custom Element として動作し、表情、状態、ポインター追従、待機フィードバック、頭部形状をシンプルな API で制御できます。
-
-**現在の公開バージョン：v0.3.2**
+SVG と Vanilla JavaScript で構築され、ネイティブ Custom Element として動作し、ランタイム依存はありません。
 
 <p align="center">
   <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Agent Robot Avatar インタラクティブアニメーションデモ" width="560">
@@ -28,200 +22,147 @@ Agent Robot Avatar は SVG と Vanilla JavaScript だけで構築され、サー
 
 ## ライブデモ
 
-インタラクティブデモを試す：[Agent Robot Avatar を開く](https://cx-artlab.github.io/agent-robot-avatar/?lang=ja)
+[インタラクティブデモを開く](https://cx-artlab.github.io/agent-robot-avatar/?lang=ja)
 
 ## 特長
 
-- SVG + Vanilla JavaScript
 - ネイティブ Web Component
-- 外部アニメーション依存なし
-- 自動まばたきと自然な視線移動
-- ポインター追従と慣性のある頭部モーション
-- 局所的なゼリー風ドラッグ変形と弾性復帰
+- SVG レンダリング + Vanilla JavaScript
+- ランタイム依存なし
+- 自動まばたきと控えめな idle 動作
+- ポインター追従する目と慣性のある頭部モーション
+- ゼリー風の局所ドラッグ変形と弾性復帰
 - Agent の状態や表情をプログラムから制御可能
-- waiting / failure / warning / inspect / blocked / system error を意味的に分離
+- waiting、success、failure、warning、review、blocked、system error のフィードバック
+- Reduced Motion 対応
+- 設定可能なスリープ動作
 - 頭部の丸みを調整可能
-- オプションで点滅するフローティングアンテナ
-- Demo と再利用可能なコンポーネント本体を分離
+- アンテナのステータス点滅を任意で有効化
+- TypeScript 型定義を同梱
 
-## クイックスタート
+## インストール
 
-リポジトリのソースを直接使う場合は、ルートの `agent-robot-avatar.js` と `src/` を同じ構成で保ち、公開エントリを読み込みます。
+```bash
+npm install agent-robot-avatar
+```
+
+```js
+import 'agent-robot-avatar';
+```
+
+リポジトリのソースを直接読み込むこともできます。
 
 ```html
 <script type="module" src="./agent-robot-avatar.js"></script>
 ```
 
+続いてコンポーネントを追加します。
+
 ```html
 <agent-robot-avatar id="avatar"></agent-robot-avatar>
 ```
 
-読み込み後は自動的に idle 状態になります。最小サンプルは [`examples/basic.html`](../examples/basic.html) にあります。
+初期化コードは不要です。アバターは自動的にデフォルトの idle 状態になります。
 
-## 基本 API
+## 基本的な使い方
 
 ```js
 const avatar = document.querySelector('#avatar');
 
 avatar.play('success');
-avatar.play('failure');
 avatar.play('warning');
-avatar.play('inspect');
-avatar.play('blocked');
 avatar.play('error');
 
 avatar.reset();
 ```
 
-## 状態と表情
+利用可能なアクション：
 
-| 状態 | API 名 | 用途 |
-| --- | --- | --- |
-| Idle | `idle` | 通常の待機状態 |
-| Bored | `bored` | 長時間タスクがない状態 |
-| Waiting | `waiting` | リクエスト送信後、結果待ち |
-| Input | `input` | ユーザー入力中 |
-| Send | `send` | 送信 / うなずきフィードバック |
-| Success | `success` | タスク成功 |
-| Failure | `failure` | タスク自体が失敗 |
-| Warning | `warning` | 危険・破壊的な操作の確認 |
-| Inspect | `inspect` | 結果の確認・検証 |
-| Blocked | `blocked` | リクエストが拒否・停止された状態 |
-| System error | `error` | 接続・サービス・システム障害 |
-| Surprise | `surprise` | 予期しない結果 |
-| Sleep | `sleep` | スリープへ移行 |
-| Wake | `wake` | スリープから復帰 |
+`idle` · `bored` · `waiting` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `sleep` · `wake`
 
-`failure` はタスク結果の失敗、`error` は接続・サービス・システム側の障害を表します。`waiting` は進行中の待機、`bored` はアクティブなタスクがない状態です。
+`failure` はタスクが完了したものの失敗した場合、`error` は接続・サービス・システム障害の場合に使います。
 
-セマンティックエイリアスも利用できます。
-
-```js
-avatar.play('failed');
-avatar.play('fail');
-avatar.play('verify');
-avatar.play('review');
-avatar.play('angry'); // blocked と同じ表情
-avatar.play('policy-blocked');
-avatar.play('system-error');
-avatar.play('connection-error');
-```
-
-## 継続待機
+典型的な Agent リクエストの流れ：
 
 ```js
 avatar.startWaiting();
-// 結果が返ったら停止します。
-avatar.stopWaiting();
+
+try {
+  const result = await runAgentRequest();
+  await avatar.play(result.ok ? 'success' : 'failure');
+} catch (error) {
+  await avatar.play('error');
+}
 ```
 
-別のアクションを再生した場合も waiting は解除されます。
-
-## ポインター追従
-
-```js
-avatar.setPointerFollow(false);
-avatar.setPointerFollow(true);
-```
-
-## 頭部の丸み
-
-```js
-avatar.setHeadRoundness(0);   // より角ばった形
-avatar.setHeadRoundness(50);  // デフォルト
-avatar.setHeadRoundness(100); // より丸い形
-
-console.log(avatar.getHeadRoundness());
-```
-
-値は `0–100` に制限されます。変更時には `head-roundness-change` イベントが発火します。
-
-```js
-avatar.addEventListener('head-roundness-change', (event) => {
-  console.log(event.detail.value);
-});
-```
-
-## 状態イベント
-
-表示状態が変化すると `face-state` イベントが発火します。
-
-```js
-avatar.addEventListener('face-state', (event) => {
-  console.log(event.detail.state);
-});
-```
-
-## 属性
+## よく使うオプション
 
 ```html
 <agent-robot-avatar
   size="160"
   color="#08090b"
-  auto-sleep="30000">
+  auto-sleep="30000"
+  wake-on="activity"
+  motion="auto">
 </agent-robot-avatar>
 ```
 
-| 属性 | 説明 |
+| 属性 | 用途 |
 | --- | --- |
-| `size` | コンポーネントのサイズ（px） |
+| `size` | アバターのサイズ（px） |
 | `color` | アバターのメインカラー |
-| `auto-sleep` | 自動スリープまでのアイドル時間（ms）。`0` で無効 |
+| `auto-sleep` | 自動スリープまでの待機時間。`0` で無効 |
+| `wake-on` | 自動ウェイク方針：`activity`、`interaction`、`manual` |
+| `motion` | モーション方針：`auto`、`reduce`、`full` |
 
-## デフォルト動作
+よく使うランタイム制御：
 
-API を呼ばなくても、ランダムなまばたき、視線移動、近くのポインターへの追従、軽い慣性モーション、自然な idle 復帰、オプションの自動スリープが動作します。
-
-## ドラッグ操作
-
-ドラッグ時は頭全体を剛体として動かすのではなく、操作点の周辺が局所的に変形します。
-
-- 強く外側へ引く：復帰後に `angry`
-- 強く中心へ押す：復帰後に `success`
-- 小さなドラッグ：変形のみ
-
-これらのドラッグ表情は、プログラム制御のアクションがアバターを使用していない idle 時にのみ適用されます。`waiting`、`input`、`inspect` などの実行中は変形だけを残し、ドラッグ表情は抑制して後から再生しません。`pointercancel` では形状だけを復元し、成功・怒りの表情は発生しません。
-
-## インタラクティブ Demo
-
-`demo/index.html` には全公開状態、ポインター追従、ゼリー風ドラッグ、waiting ライフサイクル、頭部丸み調整、色・挙動設定、Agent 会話シミュレーションが含まれます。Demo 専用 JavaScript は `demo/` に分離され、再利用用 npm runtime には含まれません。
-
-## プロジェクト構成
-
-```text
-agent-robot-avatar.js     公開コンポーネントのエントリ
-src/                      再利用可能な runtime / 表情モジュール
-demo/                     インタラクティブ Demo と専用スクリプト
-examples/                 最小統合サンプル
-assets/support/           支援 / 決済 QR アセット
-docs/                     多言語ドキュメント
-README.md                 英語メインドキュメント
-CHANGELOG.md              公開リリース履歴
-CONTRIBUTING.md           コントリビューションガイド
-package.json              パッケージ情報
-LICENSE                   MIT License
+```js
+avatar.setPointerFollow(false);
+avatar.setHeadRoundness(75);
+avatar.setAntennaFlash(true);
 ```
 
-## 配布と互換性
+## イベントと統合
 
-パッケージは `agent-robot-avatar` として npm に公開され、アクション、イベント、公開メソッドの TypeScript 型定義を含みます。ES Modules、Custom Elements、SVG、Pointer Events、Web Animations API をサポートするモダンブラウザーを対象とします。
+コンポーネントは視覚状態の変化を `face-state`、意味的なアクションライフサイクルの変化を `action-state` で通知します。
+
+ホストアプリとの統合やアクセシビリティ向けステータステキストには `action-state` を推奨します。実行可能なリクエストライフサイクル例は [`examples/accessibility.html`](../examples/accessibility.html) を参照してください。
+
+最小構成の統合例は [`examples/basic.html`](../examples/basic.html) にあります。
+
+## 互換性
+
+ES Modules、Custom Elements、SVG、Pointer Events、Web Animations API、`IntersectionObserver`、`ResizeObserver`、`matchMedia` をサポートするモダンブラウザ向けです。
+
+自動ブラウザテストは Chromium、Firefox、WebKit を対象にしています。
 
 ## コントリビューション
 
-Issue と Pull Request を歓迎します。提出前に [`CONTRIBUTING.md`](../CONTRIBUTING.md) を確認してください。
+Issue と Pull Request を歓迎します。変更を送る前に [`CONTRIBUTING.md`](../CONTRIBUTING.md) を確認してください。
 
-## プロジェクトの状態
+## プロジェクト状況
 
-v0.3.2 は現在の公開バージョンです。v0.1.0 は最初の公開バージョンとして引き続き利用できます。将来の `1.0.0` に向けて慎重に進化できるよう、公開 API は意図的に小さく保っています。
+**現在の公開バージョン：v0.3.2**
 
-Agent Robot Avatar は独立して開発されたオープンソースプロジェクトであり、特定の AI プラットフォームやブランドとは提携・公式承認関係にありません。
+公開 API は、将来の `1.0.0` における安定性コミットメントに向けて、意図的にコンパクトなまま慎重に進化させています。
 
-## License
+Agent Robot Avatar は独立して開発されたプロジェクトであり、いかなる AI プラットフォームやブランドとも提携・承認・公式な関係はありません。
 
-MIT License。詳細は [`LICENSE`](../LICENSE) を参照してください。
+## キャラクターデザインとビジュアルアイデンティティ
+
+Agent Robot Avatar のキャラクター、ロボットの外観、ビジュアルアイデンティティは CX ArtLab によるオリジナルデザインです。
+
+MIT License はソフトウェアとソースコードに適用されます。アプリケーションの一部としてアバターを使用・変更・配布できますが、Agent Robot Avatar の名称、キャラクターアイデンティティ、ビジュアルアイデンティティの所有権を移転するものではなく、他者のオリジナルキャラクターや独立ブランドとして提示する権利を付与するものでもありません。
+
+本プロジェクト内で言及する第三者製品名は、想定される使用例を説明するためのものであり、提携や承認を示すものではありません。
+
+## ライセンス
+
+MIT License。詳しくは [`LICENSE`](../LICENSE) を参照してください。
 
 ---
 
-このプロジェクトが役に立ったら、コーヒーを一杯ご馳走していただけると嬉しいです。
+このプロジェクトが役に立ったら、コーヒーを一杯ごちそうしていただけます。
 
 <a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>

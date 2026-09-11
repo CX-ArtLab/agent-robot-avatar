@@ -6,21 +6,15 @@
 
 [English](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/README.md) | [简体中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-CN.md) | [Español](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.es.md) | [Русский](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ru.md) | [Français](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.fr.md) | [Português](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.pt.md) | [Deutsch](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.de.md) | [日本語](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ja.md) | [한국어](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ko.md) | [繁體中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-TW.md)
 
-![버전](https://img.shields.io/badge/version-v0.3.2-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
+![Version](https://img.shields.io/badge/version-v0.3.2-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
-![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square) ![14 Agent States](https://img.shields.io/badge/Agent%20states-14-8B5CF6?style=flat-square) ![Pointer Following](https://img.shields.io/badge/Pointer-following-00A67E?style=flat-square) ![Jelly Drag](https://img.shields.io/badge/Drag-jelly%20physics-FF69B4?style=flat-square)
+![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square)
 
-AI 에이전트와 다양한 인터랙티브 애플리케이션에서 사용할 수 있는 가볍고 표현력 있는 로봇 아바타 Web Component입니다.
+AI Agent와 인터랙티브 애플리케이션을 위한 가볍고 표현력 있는 로봇 아바타 Web Component입니다.
 
-ChatGPT, Claude, Codex, Cursor, Grok Bot, Gemini CLI, OpenCode와 유사한 제품과 경험을 포함해 AI 어시스턴트 및 Agent 인터페이스에 적합합니다.
+AI 어시스턴트, Agent 인터페이스, 데스크톱 컴패니언, 가상 펫, 디지털 마스코트, 챗봇 아바타 등 다양한 인터랙티브 캐릭터 경험에 사용할 수 있습니다.
 
-데스크톱 펫, 가상 펫, 데스크톱 컴패니언, 디지털 마스코트, 챗봇 아바타 및 기타 인터랙티브 캐릭터 경험에도 사용할 수 있습니다.
-
-Agent Robot Avatar는 AG-UI 스타일 Agent 인터페이스의 시각적 피드백 레이어로도 사용할 수 있습니다.
-
-Agent Robot Avatar는 SVG와 Vanilla JavaScript로만 구성되어 있으며 타사 애니메이션 프레임워크에 의존하지 않습니다. 네이티브 Custom Element로 동작하고 표정, 상호작용 상태, 포인터 추적, 대기 피드백, 머리 형태를 제어하는 간결한 API를 제공합니다.
-
-**현재 공개 버전: v0.3.2**
+SVG와 순수 JavaScript로 만들어졌으며 네이티브 Custom Element로 동작하고 런타임 의존성이 없습니다.
 
 <p align="center">
   <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Agent Robot Avatar 인터랙티브 애니메이션 데모" width="560">
@@ -28,200 +22,147 @@ Agent Robot Avatar는 SVG와 Vanilla JavaScript로만 구성되어 있으며 타
 
 ## 라이브 데모
 
-인터랙티브 데모 체험: [Agent Robot Avatar 열기](https://cx-artlab.github.io/agent-robot-avatar/?lang=ko)
+[인터랙티브 데모 열기](https://cx-artlab.github.io/agent-robot-avatar/?lang=ko)
 
 ## 주요 특징
 
-- 순수 SVG + Vanilla JavaScript
 - 네이티브 Web Component
-- 외부 애니메이션 프레임워크 의존성 없음
-- 자동 깜빡임과 자연스러운 시선 이동
-- 포인터 추적과 관성이 있는 머리 움직임
-- 국소적인 젤리 스타일 드래그 변형과 탄성 복귀
-- 프로그램으로 제어하는 Agent 상태와 표정
-- waiting / failure / warning / inspect / blocked / system error 의미 구분
-- 머리 둥글기 조절
-- 선택적으로 상태 점멸이 가능한 플로팅 안테나
-- Demo와 재사용 가능한 컴포넌트 런타임 분리
+- SVG 렌더링 + 순수 JavaScript
+- 런타임 의존성 0
+- 자동 눈 깜빡임과 은은한 idle 동작
+- 포인터를 따라가는 눈과 관성 있는 머리 움직임
+- 젤리 스타일의 국소 드래그 변형과 탄성 복귀
+- 프로그램으로 제어할 수 있는 Agent 상태와 표정
+- waiting, success, failure, warning, review, blocked, system error 피드백
+- Reduced Motion 지원
+- 설정 가능한 수면 동작
+- 조절 가능한 머리 둥글기
+- 선택 가능한 안테나 상태 점멸
+- TypeScript 선언 포함
 
-## 빠른 시작
+## 설치
 
-저장소 소스를 직접 사용할 때는 루트의 `agent-robot-avatar.js`와 `src/` 디렉터리를 함께 유지하고 공개 엔트리를 불러옵니다.
+```bash
+npm install agent-robot-avatar
+```
+
+```js
+import 'agent-robot-avatar';
+```
+
+저장소 소스를 직접 불러올 수도 있습니다.
 
 ```html
 <script type="module" src="./agent-robot-avatar.js"></script>
 ```
 
+그다음 컴포넌트를 추가합니다.
+
 ```html
 <agent-robot-avatar id="avatar"></agent-robot-avatar>
 ```
 
-컴포넌트는 로드 후 자동으로 기본 idle 상태에 들어갑니다. 최소 실행 예제는 [`examples/basic.html`](../examples/basic.html)에 있습니다.
+별도의 초기화 코드는 필요하지 않습니다. 아바타는 자동으로 기본 idle 상태로 들어갑니다.
 
-## 기본 API
+## 기본 사용법
 
 ```js
 const avatar = document.querySelector('#avatar');
 
 avatar.play('success');
-avatar.play('failure');
 avatar.play('warning');
-avatar.play('inspect');
-avatar.play('blocked');
 avatar.play('error');
 
 avatar.reset();
 ```
 
-## 상태와 표정
+사용 가능한 액션:
 
-| 상태 | API 이름 | 용도 |
-| --- | --- | --- |
-| Idle | `idle` | 기본 대기 상태 |
-| Bored | `bored` | 오랫동안 활성 작업이 없음 |
-| Waiting | `waiting` | 요청을 보낸 뒤 결과를 기다림 |
-| Input | `input` | 사용자가 입력 중 |
-| Send | `send` | 전송 / 끄덕임 피드백 |
-| Success | `success` | 작업 성공 |
-| Failure | `failure` | 작업 결과 실패 |
-| Warning | `warning` | 위험하거나 파괴적인 동작 확인 |
-| Inspect | `inspect` | 결과 검토 / 확인 / 검증 |
-| Blocked | `blocked` | 요청이 차단되거나 진행 불가 |
-| System error | `error` | 연결, 서비스 또는 시스템 오류 |
-| Surprise | `surprise` | 예상하지 못한 결과 |
-| Sleep | `sleep` | 수면 상태 진입 |
-| Wake | `wake` | 수면 상태에서 복귀 |
+`idle` · `bored` · `waiting` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `sleep` · `wake`
 
-`failure`는 요청한 작업 자체의 실패를 의미하고, `error`는 연결·서비스·시스템 문제를 의미합니다. `waiting`은 진행 중인 요청을 기다리는 상태이며 `bored`는 활성 작업이 없는 상태입니다.
+`failure`는 작업이 완료되었지만 실패한 경우에 사용하고, `error`는 연결·서비스·시스템 오류에 사용합니다.
 
-의미 기반 별칭도 지원합니다.
-
-```js
-avatar.play('failed');
-avatar.play('fail');
-avatar.play('verify');
-avatar.play('review');
-avatar.play('angry'); // blocked와 동일한 표정
-avatar.play('policy-blocked');
-avatar.play('system-error');
-avatar.play('connection-error');
-```
-
-## 지속 대기
+일반적인 Agent 요청 흐름:
 
 ```js
 avatar.startWaiting();
-// 응답이나 결과를 받으면 중지합니다.
-avatar.stopWaiting();
+
+try {
+  const result = await runAgentRequest();
+  await avatar.play(result.ok ? 'success' : 'failure');
+} catch (error) {
+  await avatar.play('error');
+}
 ```
 
-다른 액션을 재생해도 현재 waiting 상태가 종료됩니다.
-
-## 포인터 추적
-
-```js
-avatar.setPointerFollow(false);
-avatar.setPointerFollow(true);
-```
-
-## 머리 둥글기
-
-```js
-avatar.setHeadRoundness(0);   // 더 각진 형태
-avatar.setHeadRoundness(50);  // 기본값
-avatar.setHeadRoundness(100); // 더 둥근 형태
-
-console.log(avatar.getHeadRoundness());
-```
-
-값은 `0–100` 범위로 제한됩니다. 변경 시 `head-roundness-change` 이벤트가 발생합니다.
-
-```js
-avatar.addEventListener('head-roundness-change', (event) => {
-  console.log(event.detail.value);
-});
-```
-
-## 상태 이벤트
-
-시각 상태가 바뀔 때 `face-state` 이벤트가 발생합니다.
-
-```js
-avatar.addEventListener('face-state', (event) => {
-  console.log(event.detail.state);
-});
-```
-
-## 속성
+## 자주 쓰는 옵션
 
 ```html
 <agent-robot-avatar
   size="160"
   color="#08090b"
-  auto-sleep="30000">
+  auto-sleep="30000"
+  wake-on="activity"
+  motion="auto">
 </agent-robot-avatar>
 ```
 
-| 속성 | 설명 |
+| 속성 | 용도 |
 | --- | --- |
-| `size` | 컴포넌트 크기(px) |
+| `size` | 아바타 크기(px) |
 | `color` | 아바타 기본 색상 |
-| `auto-sleep` | 자동 수면까지의 유휴 시간(ms), `0`은 비활성화 |
+| `auto-sleep` | 자동 수면까지의 유휴 시간; `0`이면 비활성화 |
+| `wake-on` | 자동 깨우기 정책: `activity`, `interaction`, `manual` |
+| `motion` | 모션 정책: `auto`, `reduce`, `full` |
 
-## 기본 동작
+자주 쓰는 런타임 제어:
 
-별도 API 호출이 없어도 랜덤 깜빡임, 미세한 시선 이동, 가까운 포인터 추적, 가벼운 관성 움직임, 자연스러운 idle 복귀, 선택적 자동 수면이 동작합니다.
-
-## 드래그 상호작용
-
-드래그할 때 머리 전체가 단단한 물체처럼 이동하는 대신 입력 지점 주변이 국소적으로 변형됩니다.
-
-- 강하게 바깥쪽으로 당김: 복귀 후 `angry`
-- 강하게 중심으로 밀기: 복귀 후 `success`
-- 작은 드래그: 변형만 적용
-
-이 드래그 표정은 프로그램 제어 액션이 아바타를 사용하지 않는 idle 상태에서만 적용됩니다. `waiting`, `input`, `inspect` 등이 실행 중일 때는 변형은 유지되지만 드래그 표정은 억제되며 나중에 재생되지 않습니다. `pointercancel`은 형태만 복구하고 성공/화남 표정을 발생시키지 않습니다.
-
-## 인터랙티브 Demo
-
-`demo/index.html`에는 모든 공개 상태, 포인터 추적, 젤리 드래그, waiting 라이프사이클, 머리 둥글기 조절, 색상 / 동작 설정, Agent 대화 시뮬레이션이 포함됩니다. Demo 전용 JavaScript는 `demo/`에 분리되어 재사용 가능한 npm runtime에는 포함되지 않습니다.
-
-## 프로젝트 구조
-
-```text
-agent-robot-avatar.js     공개 컴포넌트 엔트리
-src/                      재사용 가능한 runtime 및 표정 모듈
-demo/                     인터랙티브 Demo와 전용 스크립트
-examples/                 최소 통합 예제
-assets/support/           후원 / 결제 QR 자산
-docs/                     다국어 문서
-README.md                 영어 기본 문서
-CHANGELOG.md              공개 릴리스 기록
-CONTRIBUTING.md           기여 가이드
-package.json              패키지 메타데이터
-LICENSE                   MIT License
+```js
+avatar.setPointerFollow(false);
+avatar.setHeadRoundness(75);
+avatar.setAntennaFlash(true);
 ```
 
-## 배포 및 호환성
+## 이벤트와 통합
 
-패키지는 `agent-robot-avatar` 이름으로 npm에 공개되며 액션, 이벤트 및 공개 메서드에 대한 TypeScript 타입 선언을 포함합니다. ES Modules, Custom Elements, SVG, Pointer Events, Web Animations API를 지원하는 최신 브라우저를 대상으로 합니다.
+컴포넌트는 시각 상태 변경에 `face-state`, 의미 기반 액션 라이프사이클 변경에 `action-state`를 발생시킵니다.
+
+호스트 애플리케이션 통합과 접근성 상태 텍스트에는 `action-state` 사용을 권장합니다. 실행 가능한 요청 라이프사이클 예시는 [`examples/accessibility.html`](../examples/accessibility.html)을 참고하세요.
+
+최소 통합 예시는 [`examples/basic.html`](../examples/basic.html)에 있습니다.
+
+## 호환성
+
+ES Modules, Custom Elements, SVG, Pointer Events, Web Animations API, `IntersectionObserver`, `ResizeObserver`, `matchMedia`를 지원하는 최신 브라우저를 대상으로 합니다.
+
+자동 브라우저 테스트는 Chromium, Firefox, WebKit을 포함합니다.
 
 ## 기여
 
-Issue와 Pull Request를 환영합니다. 제출 전 [`CONTRIBUTING.md`](../CONTRIBUTING.md)를 확인해 주세요.
+Issue와 Pull Request를 환영합니다. 변경 사항을 제출하기 전에 [`CONTRIBUTING.md`](../CONTRIBUTING.md)를 확인하세요.
 
 ## 프로젝트 상태
 
-v0.3.2은 현재 공개 버전입니다. v0.1.0은 첫 공개 버전으로 계속 제공됩니다. 향후 `1.0.0` 안정성 약속 이전에 신중하게 발전시킬 수 있도록 공개 API를 의도적으로 작게 유지하고 있습니다.
+**현재 공개 버전: v0.3.2**
 
-Agent Robot Avatar는 독립적으로 개발된 오픈 소스 프로젝트이며 특정 AI 플랫폼이나 브랜드와 제휴하거나 공식 승인을 받은 프로젝트가 아닙니다.
+공개 API는 향후 `1.0.0` 안정성 약속을 향해 발전하는 동안 의도적으로 간결하게 유지합니다.
 
-## License
+Agent Robot Avatar는 독립적으로 개발되며 어떤 AI 플랫폼이나 브랜드와도 제휴, 보증 또는 공식적인 관계가 없습니다.
 
-MIT License. 자세한 내용은 [`LICENSE`](../LICENSE)를 참조하세요.
+## 캐릭터 디자인과 비주얼 아이덴티티
+
+Agent Robot Avatar 캐릭터의 로봇 외형과 비주얼 아이덴티티는 CX ArtLab의 오리지널 디자인입니다.
+
+MIT License는 소프트웨어와 소스 코드에 적용됩니다. 애플리케이션의 일부로 아바타를 사용·수정·배포할 수 있지만 Agent Robot Avatar의 이름, 캐릭터 정체성 또는 비주얼 아이덴티티의 소유권을 이전하지 않으며, 이를 다른 주체의 오리지널 캐릭터나 독립 브랜드로 표시할 권리를 부여하지 않습니다.
+
+이 프로젝트에 언급된 제3자 제품명은 가능한 사용 사례를 설명하기 위한 것이며 제휴나 보증을 의미하지 않습니다.
+
+## 라이선스
+
+MIT License. 자세한 내용은 [`LICENSE`](../LICENSE)를 참고하세요.
 
 ---
 
-이 프로젝트가 도움이 되었다면 커피 한 잔을 사주셔도 좋습니다.
+이 프로젝트가 유용하다면 커피 한 잔을 사 주셔도 좋습니다.
 
 <a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>

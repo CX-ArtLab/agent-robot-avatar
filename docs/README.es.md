@@ -6,21 +6,15 @@
 
 [English](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/README.md) | [简体中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-CN.md) | [Español](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.es.md) | [Русский](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ru.md) | [Français](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.fr.md) | [Português](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.pt.md) | [Deutsch](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.de.md) | [日本語](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ja.md) | [한국어](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ko.md) | [繁體中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-TW.md)
 
-![Versión](https://img.shields.io/badge/version-v0.3.2-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
+![Version](https://img.shields.io/badge/version-v0.3.2-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
-![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square) ![14 Agent States](https://img.shields.io/badge/Agent%20states-14-8B5CF6?style=flat-square) ![Pointer Following](https://img.shields.io/badge/Pointer-following-00A67E?style=flat-square) ![Jelly Drag](https://img.shields.io/badge/Drag-jelly%20physics-FF69B4?style=flat-square)
+![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square)
 
-Un Web Component ligero y expresivo de avatar robótico para agentes de IA y otras aplicaciones interactivas.
+Un Web Component de avatar robótico ligero y expresivo para agentes de IA y aplicaciones interactivas.
 
-Es adecuado para interfaces de asistentes y agentes de IA, incluidos productos y experiencias similares a ChatGPT, Claude, Codex, Cursor, Grok Bot, Gemini CLI y OpenCode.
+Puede usarse en asistentes de IA, interfaces de agentes, compañeros de escritorio, mascotas virtuales, mascotas digitales, avatares de chatbots y otras experiencias con personajes interactivos.
 
-También puede utilizarse para desktop pets, mascotas virtuales, compañeros de escritorio, mascotas digitales, avatares de chatbots y otras experiencias con personajes interactivos.
-
-Agent Robot Avatar también puede funcionar como una capa de feedback visual para interfaces de agentes de estilo AG-UI.
-
-Agent Robot Avatar está construido con SVG y JavaScript nativo, sin depender de frameworks de animación de terceros. Funciona como un Custom Element nativo y ofrece una API compacta para expresiones, estados de interacción, seguimiento del puntero, espera y forma de la cabeza.
-
-**Versión pública actual: v0.3.2**
+Está construido con SVG y JavaScript nativo, funciona como un Custom Element y no tiene dependencias en tiempo de ejecución.
 
 <p align="center">
   <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Demostración animada interactiva de Agent Robot Avatar" width="560">
@@ -28,183 +22,120 @@ Agent Robot Avatar está construido con SVG y JavaScript nativo, sin depender de
 
 ## Demo en vivo
 
-Prueba la demo interactiva: [Abrir Agent Robot Avatar](https://cx-artlab.github.io/agent-robot-avatar/?lang=es)
+[Abrir la demo interactiva](https://cx-artlab.github.io/agent-robot-avatar/?lang=es)
 
-## Características principales
+## Características
 
-- SVG + JavaScript nativo
 - Web Component nativo
-- Sin dependencias de frameworks de animación
-- Parpadeo automático y mirada sutil
-- Seguimiento del puntero y movimiento de cabeza con inercia
-- Deformación local tipo gelatina al arrastrar y recuperación elástica
-- Estados y expresiones de Agent controlables por código
-- Semántica separada para espera, fallo, advertencia, revisión, bloqueo y error del sistema
+- Renderizado SVG + JavaScript nativo
+- Cero dependencias en tiempo de ejecución
+- Parpadeo automático y comportamiento idle sutil
+- Ojos que siguen el puntero y movimiento inercial de la cabeza
+- Deformación local tipo gelatina al arrastrar, con recuperación elástica
+- Estados y expresiones del Agent controlables por código
+- Feedback para waiting, success, failure, warning, review, blocked y system error
+- Compatibilidad con movimiento reducido
+- Comportamiento de sueño configurable
 - Redondez de la cabeza ajustable
-- Antena flotante con parpadeo de estado opcional
-- Demo separado del componente reutilizable
+- Parpadeo opcional de estado en la antena
+- Declaraciones TypeScript incluidas
 
-## Inicio rápido
+## Instalación
 
-Si usas directamente el código del repositorio, conserva `agent-robot-avatar.js` junto con `src/` y carga la entrada pública:
+```bash
+npm install agent-robot-avatar
+```
+
+```js
+import 'agent-robot-avatar';
+```
+
+También puedes cargar directamente el código fuente del repositorio:
 
 ```html
 <script type="module" src="./agent-robot-avatar.js"></script>
 ```
 
+Después añade el componente:
+
 ```html
 <agent-robot-avatar id="avatar"></agent-robot-avatar>
 ```
 
-El avatar entra automáticamente en el estado idle. Hay un ejemplo mínimo en [`examples/basic.html`](../examples/basic.html).
+No hace falta código de inicialización. El avatar entra automáticamente en su estado idle predeterminado.
 
-## API básica
+## Uso básico
 
 ```js
 const avatar = document.querySelector('#avatar');
 
 avatar.play('success');
-avatar.play('failure');
 avatar.play('warning');
-avatar.play('inspect');
-avatar.play('blocked');
 avatar.play('error');
 
 avatar.reset();
 ```
 
-## Estados y expresiones
+Acciones disponibles:
 
-| Estado | API | Uso previsto |
-| --- | --- | --- |
-| Idle | `idle` | Estado normal de reposo |
-| Bored | `bored` | Periodos largos sin tarea activa |
-| Waiting | `waiting` | Solicitud enviada, esperando resultado |
-| Input | `input` | El usuario está escribiendo |
-| Send | `send` | Envío / gesto de asentir |
-| Success | `success` | Tarea completada correctamente |
-| Failure | `failure` | La tarea terminó sin éxito |
-| Warning | `warning` | Acción arriesgada o destructiva que requiere confirmación |
-| Inspect | `inspect` | Revisar, comprobar o verificar un resultado |
-| Blocked | `blocked` | Solicitud bloqueada o que no puede continuar |
-| System error | `error` | Error de conexión, servicio o sistema |
-| Surprise | `surprise` | Resultado o evento inesperado |
-| Sleep | `sleep` | Entrar en reposo |
-| Wake | `wake` | Despertar |
+`idle` · `bored` · `waiting` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `sleep` · `wake`
 
-`failure` representa un fallo de la tarea; `error` se reserva para problemas de conexión, servicio o sistema. `waiting` indica una solicitud pendiente y `bored` indica inactividad.
+`failure` indica una tarea que terminó sin éxito; `error` se reserva para fallos de conexión, servicio o sistema.
 
-También hay alias semánticos:
-
-```js
-avatar.play('failed');
-avatar.play('fail');
-avatar.play('verify');
-avatar.play('review');
-avatar.play('angry'); // misma expresión visual que blocked
-avatar.play('policy-blocked');
-avatar.play('system-error');
-avatar.play('connection-error');
-```
-
-## Espera continua
+Un flujo típico para una solicitud de Agent:
 
 ```js
 avatar.startWaiting();
-// Detener cuando llegue la respuesta o el resultado.
-avatar.stopWaiting();
+
+try {
+  const result = await runAgentRequest();
+  await avatar.play(result.ok ? 'success' : 'failure');
+} catch (error) {
+  await avatar.play('error');
+}
 ```
 
-Cualquier otra acción también interrumpe el estado waiting activo.
-
-## Seguimiento del puntero
-
-```js
-avatar.setPointerFollow(false);
-avatar.setPointerFollow(true);
-```
-
-## Redondez de la cabeza
-
-```js
-avatar.setHeadRoundness(0);   // más cuadrada
-avatar.setHeadRoundness(50);  // predeterminado
-avatar.setHeadRoundness(100); // más redonda
-
-console.log(avatar.getHeadRoundness());
-```
-
-Los valores se limitan a `0–100`. Al cambiar se emite `head-roundness-change`.
-
-```js
-avatar.addEventListener('head-roundness-change', (event) => {
-  console.log(event.detail.value);
-});
-```
-
-## Evento de estado
-
-Cada cambio visual emite `face-state`:
-
-```js
-avatar.addEventListener('face-state', (event) => {
-  console.log(event.detail.state);
-});
-```
-
-## Atributos
+## Opciones comunes
 
 ```html
 <agent-robot-avatar
   size="160"
   color="#08090b"
-  auto-sleep="30000">
+  auto-sleep="30000"
+  wake-on="activity"
+  motion="auto">
 </agent-robot-avatar>
 ```
 
-| Atributo | Descripción |
+| Atributo | Uso |
 | --- | --- |
-| `size` | Tamaño del componente en píxeles |
+| `size` | Tamaño del avatar en píxeles |
 | `color` | Color principal del avatar |
-| `auto-sleep` | Tiempo de inactividad antes de dormir, en ms; `0` lo desactiva |
+| `auto-sleep` | Tiempo de inactividad antes del sueño automático; `0` lo desactiva |
+| `wake-on` | Política de activación automática: `activity`, `interaction` o `manual` |
+| `motion` | Política de movimiento: `auto`, `reduce` o `full` |
 
-## Comportamiento predeterminado
+Controles habituales en tiempo de ejecución:
 
-Sin llamadas explícitas a la API, el avatar ya ofrece parpadeo aleatorio, movimiento sutil de la mirada, seguimiento del puntero cercano, movimiento inercial de la cabeza, retorno natural a idle y suspensión automática opcional.
-
-## Interacción de arrastre
-
-Al arrastrar, la cabeza se deforma localmente alrededor del punto de interacción en lugar de moverse como un objeto rígido.
-
-- Tirón fuerte hacia fuera: activa `angry` después de recuperarse
-- Empuje fuerte hacia el centro: activa `success` después de recuperarse
-- Arrastre pequeño: solo deformación
-
-Estas expresiones de arrastre solo se aplican en idle cuando ninguna acción programática controla el avatar. Durante `waiting`, `input`, `inspect` y otras acciones activas se conserva la deformación, pero la expresión de arrastre se suprime y no se reproduce después. `pointercancel` restaura la forma sin activar success ni angry.
-
-## Demo interactiva
-
-`demo/index.html` incluye todos los estados públicos, seguimiento del puntero, arrastre tipo gelatina, ciclo de waiting, ajuste de redondez, controles de color y comportamiento y una simulación de conversación con Agent. El JavaScript exclusivo de la Demo está aislado en `demo/` y no forma parte del runtime reutilizable de npm.
-
-## Estructura del proyecto
-
-```text
-agent-robot-avatar.js     Entrada pública del componente
-src/                      Runtime reutilizable y módulos de expresiones
-demo/                     Demo interactiva y scripts exclusivos
-examples/                 Ejemplos mínimos de integración
-assets/support/           Recursos QR de apoyo / pago
-docs/                     Documentación multilingüe
-README.md                 Documento principal en inglés
-CHANGELOG.md              Historial público de versiones
-CONTRIBUTING.md           Guía de contribución
-package.json              Metadatos del paquete
-LICENSE                   Licencia MIT
+```js
+avatar.setPointerFollow(false);
+avatar.setHeadRoundness(75);
+avatar.setAntennaFlash(true);
 ```
 
-## Distribución y compatibilidad
+## Eventos e integración
 
-El paquete está publicado en npm como `agent-robot-avatar` e incluye declaraciones TypeScript para acciones, eventos y métodos públicos. Está pensado para navegadores modernos compatibles con ES Modules, Custom Elements, SVG, Pointer Events y Web Animations API.
+El componente emite `face-state` para cambios de estado visual y `action-state` para cambios semánticos del ciclo de vida de las acciones.
+
+Para integraciones con la aplicación anfitriona y texto de estado accesible, usa preferentemente `action-state`. Consulta [`examples/accessibility.html`](../examples/accessibility.html) para ver un ejemplo ejecutable del ciclo de vida de una solicitud.
+
+Hay un ejemplo mínimo de integración en [`examples/basic.html`](../examples/basic.html).
+
+## Compatibilidad
+
+Diseñado para navegadores modernos con soporte para ES Modules, Custom Elements, SVG, Pointer Events, Web Animations API, `IntersectionObserver`, `ResizeObserver` y `matchMedia`.
+
+Las pruebas automatizadas cubren Chromium, Firefox y WebKit.
 
 ## Contribuir
 
@@ -212,9 +143,19 @@ Se aceptan Issues y Pull Requests. Consulta [`CONTRIBUTING.md`](../CONTRIBUTING.
 
 ## Estado del proyecto
 
-v0.3.2 es la versión pública actual. v0.1.0 continúa disponible como la primera versión pública. La API pública se mantiene deliberadamente pequeña para poder evolucionar con cuidado antes de un futuro compromiso de estabilidad `1.0.0`.
+**Versión pública actual: v0.3.2**
 
-Agent Robot Avatar es un proyecto independiente de código abierto y no está afiliado, respaldado ni representa a ninguna plataforma o marca de IA.
+La API pública se mantiene deliberadamente compacta mientras el proyecto evoluciona hacia un futuro compromiso de estabilidad `1.0.0`.
+
+Agent Robot Avatar se desarrolla de forma independiente y no está afiliado, respaldado ni representa a ninguna plataforma o marca de IA.
+
+## Diseño del personaje e identidad visual
+
+El personaje Agent Robot Avatar, incluido su aspecto robótico y su identidad visual, es un diseño original de CX ArtLab.
+
+La licencia MIT se aplica al software y al código fuente. Permite usar, modificar y distribuir el avatar como parte de aplicaciones, pero no transfiere la propiedad del nombre Agent Robot Avatar, la identidad del personaje o su identidad visual, ni concede el derecho a presentarlos como personaje original o marca independiente de otra parte.
+
+Los nombres de productos de terceros mencionados en este proyecto se usan únicamente para describir posibles casos de uso y no implican afiliación ni respaldo.
 
 ## Licencia
 
