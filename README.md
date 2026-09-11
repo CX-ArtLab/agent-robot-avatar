@@ -12,7 +12,11 @@
 
 A lightweight, expressive robot avatar Web Component for AI agents and interactive applications.
 
-It can be used in AI assistants, agent interfaces, desktop companions, virtual pets, digital mascots, chatbot avatars, and other interactive character experiences.
+Suitable for AI assistant and agent interfaces, including products and experiences similar to ChatGPT, Claude, Codex, Cursor, Grok Bot, Gemini CLI, and OpenCode.
+
+It can also be used for desktop pets, virtual pets, desktop companions, digital mascots, chatbot avatars, and other interactive character experiences.
+
+Agent Robot Avatar can also be used as a visual feedback layer for AG-UI-style agent interfaces.
 
 Built with SVG and vanilla JavaScript, it works as a native custom element with zero runtime dependencies.
 
