@@ -441,6 +441,8 @@ MIT License применяется к программному обеспече�
 
 MIT License. См. [`LICENSE`](../LICENSE).
 
+---
+
 Если этот проект оказался полезен, вы можете угостить меня кофе.
 
 <a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
