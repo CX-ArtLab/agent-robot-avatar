@@ -220,8 +220,6 @@ Agent Robot Avatar는 독립적으로 개발된 오픈 소스 프로젝트이며
 
 MIT License. 자세한 내용은 [`LICENSE`](../LICENSE)를 참조하세요.
 
-## 커피 한 잔으로 후원하기
-
 이 프로젝트가 도움이 되었다면 커피 한 잔을 사주셔도 좋습니다.
 
 <a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>

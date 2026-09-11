@@ -387,8 +387,6 @@ Agent Robot Avatar 为独立开发的开源项目，不隶属于、代表或获�
 
 MIT License。详见 [`LICENSE`](../LICENSE)。
 
-## 请我喝杯咖啡
-
 如果这个项目对你有帮助，也可以请我喝杯咖啡：
 
 | Ko-fi | 支付宝 | 微信支付 |

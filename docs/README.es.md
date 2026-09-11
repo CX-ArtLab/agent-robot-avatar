@@ -220,8 +220,6 @@ Agent Robot Avatar es un proyecto independiente de código abierto y no está af
 
 MIT License. Consulta [`LICENSE`](../LICENSE).
 
-## Invítame a un café
-
 Si este proyecto te resulta útil, puedes invitarme a un café.
 
 <a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
