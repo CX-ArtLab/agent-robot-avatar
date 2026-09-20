@@ -14,7 +14,11 @@
 
 可用于 AI 助手、Agent 界面、桌面伙伴、虚拟宠物、数字吉祥物、聊天机器人头像及其他交互角色体验。
 
+可用于 AI 助手、Agent 界面，包括类似 ChatGPT、Claude、Codex、Cursor、Grok Bot、Gemini CLI 和 OpenCode 的产品与体验。
+
 使用 SVG 与原生 JavaScript 构建，以原生 Custom Element 运行，运行时零依赖。
+
+Agent Robot Avatar 还可作为 AG-UI 风格 Agent 界面的视觉反馈层。
 
 <p align="center">
   <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Agent Robot Avatar 交互动画演示" width="560">
@@ -157,11 +161,13 @@ MIT License 适用于软件和源代码，允许在应用中使用、修改和�
 
 本项目提及的第三方产品名称仅用于说明可能的使用场景，不代表任何关联或官方认可。
 
-## License
+## 许可证
 
 MIT License。详见 [`LICENSE`](../LICENSE)。
 
 ---
+
+## 请我喝杯咖啡
 
 如果这个项目对你有帮助，也可以请我喝杯咖啡：
 

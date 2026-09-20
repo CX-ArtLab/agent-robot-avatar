@@ -14,7 +14,11 @@
 
 可用於 AI 助理、Agent 介面、桌面夥伴、虛擬寵物、數位吉祥物、聊天機器人頭像，以及其他互動角色體驗。
 
+適用於 AI 助理與 Agent 介面，包括類似 ChatGPT、Claude、Codex、Cursor、Grok Bot、Gemini CLI 與 OpenCode 的產品與體驗。
+
 使用 SVG 與原生 JavaScript 建構，以原生 Custom Element 運作，執行階段零依賴。
+
+Agent Robot Avatar 也可作為 AG-UI 風格 Agent 介面的視覺回饋層。
 
 <p align="center">
   <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Agent Robot Avatar 互動動畫示範" width="560">
@@ -157,12 +161,12 @@ MIT License 適用於軟體和原始碼，允許在應用中使用、修改和�
 
 本專案提及的第三方產品名稱僅用於說明可能的使用情境，不代表任何關聯或官方認可。
 
-## License
+## 授權條款
 
 MIT License。詳見 [`LICENSE`](../LICENSE)。
 
 ---
 
-如果這個專案對你有幫助，也可以請我喝杯咖啡。
+## 請我喝杯咖啡
 
 <a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>

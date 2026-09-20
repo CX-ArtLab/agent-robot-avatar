@@ -14,7 +14,11 @@ Eine leichtgewichtige, ausdrucksstarke Roboter-Avatar-Web-Component für KI-Agen
 
 Sie kann in KI-Assistenten, Agent-Oberflächen, Desktop-Begleitern, virtuellen Haustieren, digitalen Maskottchen, Chatbot-Avataren und anderen interaktiven Charaktererlebnissen eingesetzt werden.
 
+Geeignet für KI-Assistenten- und Agent-Oberflächen, einschließlich Produkten und Erlebnissen ähnlich wie ChatGPT, Claude, Codex, Cursor, Grok Bot, Gemini CLI und OpenCode.
+
 Sie basiert auf SVG und Vanilla JavaScript, läuft als natives Custom Element und hat keine Runtime-Abhängigkeiten.
+
+Agent Robot Avatar kann außerdem als visuelle Feedback-Ebene für Agent-Oberflächen im AG-UI-Stil verwendet werden.
 
 <p align="center">
   <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Interaktive Animationsdemo von Agent Robot Avatar" width="560">
@@ -24,7 +28,7 @@ Sie basiert auf SVG und Vanilla JavaScript, läuft als natives Custom Element un
 
 [Interaktive Demo öffnen](https://cx-artlab.github.io/agent-robot-avatar/?lang=de)
 
-## Highlights
+## Besondere Merkmale
 
 - Native Web Component
 - SVG-Rendering + Vanilla JavaScript
@@ -123,7 +127,7 @@ avatar.setHeadRoundness(75);
 avatar.setAntennaFlash(true);
 ```
 
-## Events und Integration
+## Ereignisse und Integration
 
 Die Komponente sendet `face-state` für visuelle Zustandsänderungen und `action-state` für semantische Änderungen im Aktionslebenszyklus.
 

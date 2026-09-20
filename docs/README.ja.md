@@ -14,7 +14,11 @@ AI Agent やインタラクティブなアプリケーション向けの、軽�
 
 AI アシスタント、Agent インターフェース、デスクトップコンパニオン、バーチャルペット、デジタルマスコット、チャットボットのアバターなど、さまざまなインタラクティブキャラクター体験に利用できます。
 
+ChatGPT、Claude、Codex、Cursor、Grok Bot、Gemini CLI、OpenCode に似た製品や体験を含む、AI アシスタントおよび Agent インターフェースに適しています。
+
 SVG と Vanilla JavaScript で構築され、ネイティブ Custom Element として動作し、ランタイム依存はありません。
+
+Agent Robot Avatar は、AG-UI スタイルの Agent インターフェースにおける視覚的なフィードバック層としても利用できます。
 
 <p align="center">
   <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Agent Robot Avatar インタラクティブアニメーションデモ" width="560">

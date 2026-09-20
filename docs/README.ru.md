@@ -14,15 +14,19 @@
 
 Его можно использовать в AI-ассистентах, интерфейсах агентов, настольных компаньонах, виртуальных питомцах, цифровых маскотах, аватарах чат-ботов и других интерактивных персонажах.
 
+Подходит для интерфейсов AI-ассистентов и агентов, включая продукты и сценарии, похожие на ChatGPT, Claude, Codex, Cursor, Grok Bot, Gemini CLI и OpenCode.
+
 Компонент построен на SVG и vanilla JavaScript, работает как нативный Custom Element и не имеет runtime-зависимостей.
+
+Agent Robot Avatar также можно использовать как слой визуальной обратной связи для интерфейсов агентов в стиле AG-UI.
 
 <p align="center">
   <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Интерактивная анимационная демонстрация Agent Robot Avatar" width="560">
 </p>
 
-## Live Demo
+## Демонстрация в реальном времени
 
-[Открыть интерактивную демонстрацию](https://cx-artlab.github.io/agent-robot-avatar/?lang=en)
+[Открыть интерактивную демонстрацию](https://cx-artlab.github.io/agent-robot-avatar/?lang=ru)
 
 ## Основные возможности
 

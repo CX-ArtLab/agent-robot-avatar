@@ -14,7 +14,11 @@ Um Web Component leve e expressivo de avatar robô para agentes de IA e aplicaç
 
 Pode ser usado em assistentes de IA, interfaces de agentes, companheiros de desktop, pets virtuais, mascotes digitais, avatares de chatbot e outras experiências com personagens interativos.
 
+É adequado para interfaces de assistentes de IA e agentes, incluindo produtos e experiências semelhantes ao ChatGPT, Claude, Codex, Cursor, Grok Bot, Gemini CLI e OpenCode.
+
 Construído com SVG e JavaScript nativo, funciona como um Custom Element e não possui dependências em tempo de execução.
+
+O Agent Robot Avatar também pode ser usado como camada de feedback visual para interfaces de agentes no estilo AG-UI.
 
 <p align="center">
   <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Demonstração animada interativa do Agent Robot Avatar" width="560">
