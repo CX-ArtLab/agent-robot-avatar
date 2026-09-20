@@ -10,35 +10,39 @@
 
 ![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square)
 
-Um Web Component leve e expressivo de avatar robô para agentes de IA e aplicações interativas.
+Um Web Component leve e expressivo com um avatar de robô para agentes de IA e aplicações interativas.
 
-Pode ser usado em assistentes de IA, interfaces de agentes, companheiros de desktop, pets virtuais, mascotes digitais, avatares de chatbot e outras experiências com personagens interativos.
+Ideal para interfaces de assistentes de IA e agentes, incluindo produtos e experiências semelhantes a ChatGPT, Claude, Codex, Cursor, Grok Bot, Gemini CLI e OpenCode.
 
-Construído com SVG e JavaScript nativo, funciona como um Custom Element e não possui dependências em tempo de execução.
+Também pode ser usado como bichinho de estimação de desktop, companheiro virtual, mascote digital, avatar de chatbot e outros personagens interativos.
+
+O Agent Robot Avatar também pode servir como camada de feedback visual em interfaces de agentes no estilo AG-UI.
+
+Criado com SVG e JavaScript puro, funciona como um elemento personalizado nativo sem dependências em tempo de execução.
 
 <p align="center">
-  <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Demonstração animada interativa do Agent Robot Avatar" width="560">
+  <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Agent Robot Avatar interactive animation demo" width="560">
 </p>
 
-## Demo ao vivo
+## Demonstração interativa
 
-[Abrir a demo interativa](https://cx-artlab.github.io/agent-robot-avatar/?lang=pt)
+[Abrir a demonstração interativa](https://cx-artlab.github.io/agent-robot-avatar/)
 
 ## Destaques
 
 - Web Component nativo
-- Renderização SVG + JavaScript nativo
-- Zero dependências em tempo de execução
-- Piscar automático e comportamento idle sutil
-- Olhos que seguem o ponteiro e movimento inercial da cabeça
-- Deformação local tipo gelatina ao arrastar, com recuperação elástica
-- Estados e expressões do Agent controláveis por código
-- Feedback para waiting, success, failure, warning, review, blocked e system error
-- Suporte a movimento reduzido
+- Renderização SVG e JavaScript puro
+- Sem dependências em tempo de execução
+- Piscar automático e movimentos sutis em repouso
+- Olhos que acompanham o ponteiro e movimentos de cabeça com inércia
+- Deformação flexível ao arrastar, com recuperação elástica
+- Estados e expressões de Agent controlados por código
+- Feedback visual de espera, sucesso, falha, aviso, revisão, bloqueio e erro do sistema
+- Suporte à redução de movimento
 - Comportamento de sono configurável
 - Arredondamento da cabeça ajustável
-- Pisca de status opcional na antena
-- Declarações TypeScript incluídas
+- Piscar opcional da antena para indicar estados
+- Declarações de tipos TypeScript incluídas
 
 ## Instalação
 
@@ -50,7 +54,7 @@ npm install agent-robot-avatar
 import 'agent-robot-avatar';
 ```
 
-Também é possível carregar diretamente o código-fonte do repositório:
+Como alternativa, carregue diretamente o código-fonte do repositório:
 
 ```html
 <script type="module" src="./agent-robot-avatar.js"></script>
@@ -62,7 +66,7 @@ Depois, adicione o componente:
 <agent-robot-avatar id="avatar"></agent-robot-avatar>
 ```
 
-Nenhum código de inicialização é necessário. O avatar entra automaticamente no estado idle padrão.
+Não é necessário código de inicialização. O avatar inicia automaticamente seu comportamento padrão de repouso.
 
 ## Uso básico
 
@@ -80,9 +84,9 @@ Ações disponíveis:
 
 `idle` · `bored` · `waiting` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `sleep` · `wake`
 
-`failure` representa uma tarefa concluída sem sucesso; `error` é reservado para falhas de conexão, serviço ou sistema.
+`failure` indica uma tarefa concluída sem sucesso; `error` indica falhas de conexão, serviço ou sistema.
 
-Um fluxo típico de solicitação de Agent:
+Exemplo de ciclo de vida de uma solicitação real de Agent:
 
 ```js
 avatar.startWaiting();
@@ -107,11 +111,11 @@ try {
 </agent-robot-avatar>
 ```
 
-| Atributo | Uso |
+| Atributo | Finalidade |
 | --- | --- |
 | `size` | Tamanho do avatar em pixels |
 | `color` | Cor principal do avatar |
-| `auto-sleep` | Tempo de inatividade antes do sono automático; `0` desativa |
+| `auto-sleep` | Tempo ocioso antes do sono automático; `0` desativa |
 | `wake-on` | Política de despertar automático: `activity`, `interaction` ou `manual` |
 | `motion` | Política de movimento: `auto`, `reduce` ou `full` |
 
@@ -125,9 +129,9 @@ avatar.setAntennaFlash(true);
 
 ## Eventos e integração
 
-O componente emite `face-state` para mudanças de estado visual e `action-state` para mudanças semânticas no ciclo de vida das ações.
+O componente emite `face-state` quando o estado visual muda e `action-state` quando há mudanças semânticas no ciclo de vida de uma ação.
 
-Para integrações com a aplicação host e textos de status acessíveis, prefira `action-state`. Veja [`examples/accessibility.html`](../examples/accessibility.html) para um exemplo executável do ciclo de vida de uma solicitação.
+Para integração com o aplicativo hospedeiro e textos de status acessíveis, prefira `action-state`. Veja um exemplo executável do ciclo de vida de uma solicitação em [`examples/accessibility.html`](../examples/accessibility.html).
 
 Um exemplo mínimo de integração está disponível em [`examples/basic.html`](../examples/basic.html).
 
@@ -135,34 +139,34 @@ Um exemplo mínimo de integração está disponível em [`examples/basic.html`](
 
 Projetado para navegadores modernos com suporte a ES Modules, Custom Elements, SVG, Pointer Events, Web Animations API, `IntersectionObserver`, `ResizeObserver` e `matchMedia`.
 
-Os testes automatizados cobrem Chromium, Firefox e WebKit.
+Os testes automatizados de navegador abrangem Chromium, Firefox e WebKit.
 
-## Contribuindo
+## Como contribuir
 
-Issues e Pull Requests são bem-vindos. Consulte [`CONTRIBUTING.md`](../CONTRIBUTING.md) antes de enviar alterações.
+Issues e pull requests são bem-vindos. Leia [`CONTRIBUTING.md`](../CONTRIBUTING.md) antes de enviar alterações.
 
 ## Status do projeto
 
 **Versão pública atual: v0.3.2**
 
-A API pública é mantida deliberadamente compacta enquanto o projeto evolui em direção a um futuro compromisso de estabilidade `1.0.0`.
+A API pública permanece intencionalmente compacta enquanto o projeto evolui para uma futura garantia de estabilidade em `1.0.0`.
 
-Agent Robot Avatar é desenvolvido de forma independente e não é afiliado, endossado nem representa qualquer plataforma ou marca de IA.
+Agent Robot Avatar é desenvolvido de forma independente e não possui afiliação, endosso ou representação oficial de qualquer plataforma ou marca de IA.
 
 ## Design do personagem e identidade visual
 
-O personagem Agent Robot Avatar, incluindo sua aparência robótica e identidade visual, é um design original da CX ArtLab.
+O personagem Agent Robot Avatar, incluindo sua aparência robótica e identidade visual, é uma criação original da CX ArtLab.
 
-A licença MIT se aplica ao software e ao código-fonte. Ela permite usar, modificar e distribuir o avatar como parte de aplicações, mas não transfere a propriedade do nome Agent Robot Avatar, da identidade do personagem ou de sua identidade visual, nem concede o direito de apresentá-los como personagem original ou marca independente de outra parte.
+A licença MIT se aplica ao software e ao código-fonte. Ela permite utilizar, modificar e distribuir o avatar como parte de aplicações, mas não transfere a propriedade do nome Agent Robot Avatar, da identidade do personagem ou de sua identidade visual, nem concede o direito de apresentá-los como personagem original ou marca independente de terceiros.
 
-Os nomes de produtos de terceiros mencionados neste projeto servem apenas para descrever possíveis casos de uso e não indicam afiliação ou endosso.
+Os nomes de produtos de terceiros mencionados no projeto ilustram apenas possíveis casos de uso e não indicam afiliação ou endosso.
 
 ## Licença
 
-MIT License. Consulte [`LICENSE`](../LICENSE).
+Licença MIT. Consulte [`LICENSE`](../LICENSE).
 
 ---
 
-Se este projeto for útil para você, você pode me pagar um café.
+Se este projeto for útil para você, pode me pagar um café.
 
 <a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>

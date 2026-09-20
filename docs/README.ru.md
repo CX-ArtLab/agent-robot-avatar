@@ -1,44 +1,48 @@
 # Agent Robot Avatar
 
 <p align="center">
-  <img src="../assets/readme/agent-robot-avatar-header.jpg" alt="Agent Robot Avatar">
+  <img src="./assets/readme/agent-robot-avatar-header.jpg" alt="Agent Robot Avatar">
 </p>
 
 [English](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/README.md) | [简体中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-CN.md) | [Español](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.es.md) | [Русский](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ru.md) | [Français](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.fr.md) | [Português](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.pt.md) | [Deutsch](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.de.md) | [日本語](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ja.md) | [한국어](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ko.md) | [繁體中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-TW.md)
 
-![Version](https://img.shields.io/badge/version-v0.3.2-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
+![Version](https://img.shields.io/badge/version-v0.3.2-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](./LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
 ![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square)
 
-Лёгкий и выразительный Web Component с роботом-аватаром для AI-агентов и интерактивных приложений.
+Лёгкий и выразительный Web Component с аватаром робота для ИИ-агентов и интерактивных приложений.
 
-Его можно использовать в AI-ассистентах, интерфейсах агентов, настольных компаньонах, виртуальных питомцах, цифровых маскотах, аватарах чат-ботов и других интерактивных персонажах.
+Подходит для интерфейсов ИИ-помощников и агентов, включая продукты и сценарии, похожие на ChatGPT, Claude, Codex, Cursor, Grok Bot, Gemini CLI и OpenCode.
 
-Компонент построен на SVG и vanilla JavaScript, работает как нативный Custom Element и не имеет runtime-зависимостей.
+Также подходит для настольных и виртуальных питомцев, цифровых компаньонов, талисманов, аватаров чат-ботов и других интерактивных персонажей.
+
+Agent Robot Avatar можно использовать как слой визуальной обратной связи в интерфейсах агентов в стиле AG-UI.
+
+Компонент создан на SVG и обычном JavaScript, работает как нативный пользовательский элемент и не имеет зависимостей во время выполнения.
 
 <p align="center">
-  <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Интерактивная анимационная демонстрация Agent Robot Avatar" width="560">
+  <img src="./assets/demo/agent-robot-avatar-demo.gif" alt="Agent Robot Avatar interactive animation demo" width="560">
 </p>
 
-## Live Demo
+## Интерактивная демонстрация
 
-[Открыть интерактивную демонстрацию](https://cx-artlab.github.io/agent-robot-avatar/?lang=en)
+[Открыть интерактивную демонстрацию](https://cx-artlab.github.io/agent-robot-avatar/)
 
 ## Основные возможности
 
 - Нативный Web Component
-- SVG-рендеринг + vanilla JavaScript
-- Ноль runtime-зависимостей
-- Автоматическое моргание и лёгкое idle-поведение
-- Следование глазами за указателем и инерционное движение головы
-- Локальная jelly-деформация при перетаскивании с упругим возвратом
+- SVG-рендеринг и обычный JavaScript
+- Нет зависимостей во время выполнения
+- Автоматическое моргание и ненавязчивые движения в режиме ожидания
+- Глаза следят за указателем, движения головы имеют инерцию
+- Мягкая деформация при перетаскивании с упругим восстановлением
 - Программное управление состояниями и выражениями Agent
-- Обратная связь для waiting, success, failure, warning, review, blocked и system error
-- Поддержка reduced motion
+- Визуальная обратная связь для ожидания, успеха, неудачи, предупреждения, проверки, блокировки и системной ошибки
+- Поддержка уменьшенной анимации
 - Настраиваемое поведение сна
-- Регулируемое скругление головы
-- Опциональное мигание антенны для статуса
-- TypeScript-декларации включены
+- Регулируемая округлость головы
+- Дополнительное мигание антенны для индикации состояния
+- Включены объявления типов TypeScript
 
 ## Установка
 
@@ -50,7 +54,7 @@ npm install agent-robot-avatar
 import 'agent-robot-avatar';
 ```
 
-Также можно напрямую загрузить исходный код из репозитория:
+Можно также загрузить исходный код непосредственно из репозитория:
 
 ```html
 <script type="module" src="./agent-robot-avatar.js"></script>
@@ -62,9 +66,9 @@ import 'agent-robot-avatar';
 <agent-robot-avatar id="avatar"></agent-robot-avatar>
 ```
 
-Инициализация не требуется. Аватар автоматически переходит в стандартное состояние idle.
+Код инициализации не требуется: аватар автоматически переходит в режим ожидания по умолчанию.
 
-## Базовое использование
+## Основное использование
 
 ```js
 const avatar = document.querySelector('#avatar');
@@ -80,9 +84,9 @@ avatar.reset();
 
 `idle` · `bored` · `waiting` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `sleep` · `wake`
 
-`failure` означает, что задача завершилась неуспешно; `error` предназначен для ошибок соединения, сервиса или системы.
+`failure` означает, что задача завершилась неудачей, а `error` — сбой соединения, службы или системы.
 
-Типичный жизненный цикл запроса Agent:
+Пример реального жизненного цикла запроса к Agent:
 
 ```js
 avatar.startWaiting();
@@ -111,11 +115,11 @@ try {
 | --- | --- |
 | `size` | Размер аватара в пикселях |
 | `color` | Основной цвет аватара |
-| `auto-sleep` | Время бездействия до автоматического сна; `0` отключает его |
+| `auto-sleep` | Время простоя до автоматического сна; `0` отключает его |
 | `wake-on` | Политика автоматического пробуждения: `activity`, `interaction` или `manual` |
-| `motion` | Политика движения: `auto`, `reduce` или `full` |
+| `motion` | Режим анимации: `auto`, `reduce` или `full` |
 
-Часто используемые runtime-настройки:
+Часто используемые методы управления:
 
 ```js
 avatar.setPointerFollow(false);
@@ -125,44 +129,44 @@ avatar.setAntennaFlash(true);
 
 ## События и интеграция
 
-Компонент отправляет `face-state` при изменениях визуального состояния и `action-state` при семантических изменениях жизненного цикла действий.
+Компонент отправляет событие `face-state` при изменении визуального состояния и `action-state` при семантических изменениях жизненного цикла действия.
 
-Для интеграции с host-приложением и доступного статусного текста предпочтительнее `action-state`. Рабочий пример жизненного цикла запроса находится в [`examples/accessibility.html`](../examples/accessibility.html).
+Для интеграции с основным приложением и доступного текста состояния предпочтительно использовать `action-state`. Исполняемый пример жизненного цикла запроса доступен в [`examples/accessibility.html`](../examples/accessibility.html).
 
-Минимальный пример интеграции доступен в [`examples/basic.html`](../examples/basic.html).
+Минимальный пример интеграции находится в [`examples/basic.html`](../examples/basic.html).
 
 ## Совместимость
 
-Рассчитан на современные браузеры с поддержкой ES Modules, Custom Elements, SVG, Pointer Events, Web Animations API, `IntersectionObserver`, `ResizeObserver` и `matchMedia`.
+Предназначен для современных браузеров с поддержкой ES Modules, Custom Elements, SVG, Pointer Events, Web Animations API, `IntersectionObserver`, `ResizeObserver` и `matchMedia`.
 
-Автоматизированные тесты покрывают Chromium, Firefox и WebKit.
+Автоматизированные браузерные тесты охватывают Chromium, Firefox и WebKit.
 
 ## Участие в разработке
 
-Issues и Pull Requests приветствуются. Перед отправкой изменений прочитайте [`CONTRIBUTING.md`](../CONTRIBUTING.md).
+Приветствуются Issues и Pull Requests. Перед отправкой изменений ознакомьтесь с [`CONTRIBUTING.md`](../CONTRIBUTING.md).
 
-## Статус проекта
+## Состояние проекта
 
 **Текущая публичная версия: v0.3.2**
 
-Публичный API намеренно остаётся компактным, пока проект развивается к будущему обязательству стабильности `1.0.0`.
+Публичный API намеренно остаётся компактным, пока проект движется к обязательству стабильности в будущей версии `1.0.0`.
 
-Agent Robot Avatar разрабатывается независимо и не аффилирован, не одобрен и не представляет какую-либо AI-платформу или бренд.
+Agent Robot Avatar разрабатывается независимо и не связан ни с какой ИИ-платформой или брендом, не представляет их и не пользуется их официальной поддержкой.
 
 ## Дизайн персонажа и визуальная идентичность
 
-Персонаж Agent Robot Avatar, включая внешний вид робота и визуальную идентичность, является оригинальной разработкой CX ArtLab.
+Персонаж Agent Robot Avatar, включая его внешний вид и визуальную идентичность, — оригинальная разработка CX ArtLab.
 
-MIT License применяется к программному обеспечению и исходному коду. Она разрешает использовать, изменять и распространять аватар как часть приложений, но не передаёт права собственности на название Agent Robot Avatar, идентичность персонажа или визуальную идентичность и не даёт права представлять их как оригинального персонажа или самостоятельный бренд другой стороны.
+Лицензия MIT распространяется на программное обеспечение и исходный код. Она разрешает использовать, изменять и распространять аватар в составе приложений, но не передаёт право собственности на название Agent Robot Avatar, идентичность персонажа или его визуальную идентичность и не даёт права представлять их как оригинального персонажа или самостоятельный бренд другой стороны.
 
-Названия сторонних продуктов, упомянутые в проекте, используются только для описания возможных сценариев применения и не означают аффилированность или одобрение.
+Названия сторонних продуктов упоминаются только для иллюстрации возможных сценариев использования и не означают сотрудничества или одобрения.
 
 ## Лицензия
 
-MIT License. См. [`LICENSE`](../LICENSE).
+Лицензия MIT. См. [`LICENSE`](../LICENSE).
 
 ---
 
-Если этот проект оказался полезен, вы можете угостить меня кофе.
+Если этот проект оказался полезным, вы можете угостить меня кофе.
 
 <a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
