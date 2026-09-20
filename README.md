@@ -26,7 +26,7 @@ Built with SVG and vanilla JavaScript, it works as a native custom element with 
 
 ## Live Demo
 
-[Open the interactive demo](https://cx-artlab.github.io/agent-robot-avatar/?lang=en)
+[Open the interactive demo](https://cx-artlab.github.io/agent-robot-avatar/)
 
 ## Highlights
 
