@@ -10,31 +10,19 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ### Added
 
+- Added a second waiting choice, `startWaiting({ variant: 'wrap' })`, with the approved 2.4-second left-out/right-in eye turn and custom easing. `play('waiting-wrap')` plays one cycle; the original waiting remains available and is the default.
+- Added center press-and-hold squeezing, sustained compression tremor, and spring/jelly release. Moving more than 4 CSS pixels transfers the gesture to the existing head drag.
+- Added antenna dragging with the head drag's 25-unit pull cap, a localized head deformation, a firmer spring return, and the existing angry reaction after recovery.
+- Added `setPressSqueeze()` and `setAntennaDrag()` opt-outs, interaction state events, and reduced-motion behavior.
 - Added localized “Try” tags below the Demo status for double-clicking, head dragging, center press-and-hold squeezing, and antenna dragging.
-
-### Fixed
-
-- Kept both eyes looking at the live pointer position throughout antenna dragging instead of returning them to center when the drag begins.
-
-## [0.4.1] - 2026-09-21
 
 ### Changed
 
-- Renamed the second waiting choice from `orbit` to the more precise `wrap`: use `startWaiting({ variant: 'wrap' })` for continuous waiting or `play('waiting-wrap')` for one cycle.
 - Renamed and repositioned the Demo action as “Waiting · Wrap” directly after the original waiting action.
 
 ### Fixed
 
-- Updated the Demo build badge and version expectations to the current public version.
-
-## [0.4.0] - 2026-09-21
-
-### Added
-
-- Added a second waiting choice, `startWaiting({ variant: 'orbit' })`, with the approved 2.4-second left-out/right-in eye turn and custom easing. `play('waiting-orbit')` plays one cycle; the original waiting remains available and is the default.
-- Added center press-and-hold squeezing, sustained compression tremor, and spring/jelly release. Moving more than 4 CSS pixels transfers the gesture to the existing head drag.
-- Added antenna dragging with the head drag's 25-unit pull cap, a localized head deformation, a firmer spring return, and the existing angry reaction after recovery.
-- Added `setPressSqueeze()` and `setAntennaDrag()` opt-outs, interaction state events, reduced-motion behavior, and public demo guidance.
+- Kept both eyes looking at the live pointer position throughout antenna dragging instead of returning them to center when the drag begins.
 
 ## [0.3.2] - 2026-09-10
 
@@ -147,8 +135,6 @@ First public release.
 - Contribution guide, issue templates, pull request template, MIT License, and Ko-fi funding metadata
 
 [0.4.2]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.4.2
-[0.4.1]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.4.1
-[0.4.0]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.4.0
 [0.3.2]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.3.2
 [0.3.1]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.3.1
 [0.3.0]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.3.0
