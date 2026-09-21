@@ -8,6 +8,7 @@ const gazeTarget=(box,event)=>({
   x:clamp((event.clientX-box.left-box.width/2)*.42,-48,48),
   y:clamp((event.clientY-box.top-box.height/2)*.38,-34,34),
 });
+const SQUEEZE_HOLD_SECONDS=.14;
 
 function restore(face) {
   face._headMotion.style.transform='';face._headMotion.removeAttribute('transform');
@@ -21,9 +22,20 @@ function restore(face) {
 proto._cancelGesture=function(silent=false) {
   const fx=this._gestureFx;if(!fx)return;
   this._gestureFx=null;
-  if(fx.pointerId!=null && this.hasPointerCapture(fx.pointerId))this.releasePointerCapture(fx.pointerId);
+  try{if(fx.pointerId!=null&&this.hasPointerCapture(fx.pointerId))this.releasePointerCapture(fx.pointerId);}catch(_){ }
+  if(!fx.committed)return;
   restore(this);this._endGestureAction?.('cancel',false,silent);
 };
+
+function commit(face,s,look=null) {
+  if(s.committed||face._gestureFx!==s)return false;
+  face._gestureFx=null;
+  face.reset();
+  face._gestureFx=s;s.committed=true;face.noteActivity(false);face._expressionLock=true;
+  if(look){face._look.x=look.x;face._look.y=look.y;}
+  face._beginGestureAction?.(s.kind);emit(face,s.kind);face._resumeFrames();
+  return true;
+}
 
 proto.setPressSqueeze=function(enabled=true){
   this.setAttribute('press-squeeze',String(Boolean(enabled)));
@@ -44,20 +56,19 @@ proto._startGesture=function(event) {
   const onAntenna=r && Number(dot.getAttribute('opacity')??1)>.01 &&
     Math.hypot(event.clientX-r.left-r.width/2,event.clientY-r.top-r.height/2)<=radius;
   const kind=onAntenna&&!disabled(this,'antenna-drag')?'antenna-drag':
-    !onAntenna&&!disabled(this,'press-squeeze')&&x*x+y*y<=.32*.32?'squeeze':null;
+    !onAntenna&&event.pointerType!=='touch'&&!disabled(this,'press-squeeze')&&x*x+y*y<=.32*.32?'squeeze':null;
   if(!kind)return false;
   event.preventDefault();
   const home={x:Number(dot?.getAttribute('cx')??120),y:Number(dot?.getAttribute('cy')??12)};
   const gaze=kind==='antenna-drag'?gazeTarget(box,event):null;
   const currentLook=gaze?{...this._look}:null;
-  this.reset();this.noteActivity();this._expressionLock=true;
-  if(currentLook){this._look.x=currentLook.x;this._look.y=currentLook.y;}
   this._gestureFx={kind,held:true,pointerId:event.pointerId,startX:event.clientX,startY:event.clientY,
     pointerType:event.pointerType,size:Math.max(1,box.width),threshold:clamp(box.width*.4,24,46),home,
-    start:performance.now(),last:performance.now(),age:0,releaseAge:0,maxDist:0,react:false,
+    start:performance.now(),last:performance.now(),age:0,releaseAge:0,maxDist:0,react:false,committed:false,
     gazeX:gaze?.x??0,gazeY:gaze?.y??0,
     q:0,v:0,pressure:0,apex:0,releaseDepth:1,x:0,y:0,vx:0,vy:0,hx:0,hy:0,hvx:0,hvy:0,tx:0,ty:0};
-  this.setPointerCapture(event.pointerId);this._beginGestureAction?.(kind);emit(this,kind);
+  try{this.setPointerCapture(event.pointerId);}catch(_){ }
+  if(kind==='antenna-drag')commit(this,this._gestureFx,currentLook);
   this._resumeFrames();return true;
 };
 
@@ -69,7 +80,7 @@ proto._moveGesture=function(event) {
   const dx=event.clientX-s.startX,dy=event.clientY-s.startY,dist=Math.hypot(dx,dy);
   s.maxDist=Math.max(s.maxDist,dist);
   if(s.kind==='squeeze'&&dist>4){
-    this._cancelGesture();this._startHeadDragFromGesture?.(event,s);return;
+    this._cancelGesture(true);this._startHeadDragFromGesture?.(event,s);return;
   }
   if(dist>2.5)this._suppressClick=true;
   const gain=dist>s.threshold*.6 ? .24 : .19,scale=240/s.size;
@@ -80,9 +91,10 @@ proto._moveGesture=function(event) {
 proto._endGesture=function(event) {
   const s=this._gestureFx;if(!s?.held||s.pointerId!==event.pointerId)return;
   if(event.type==='pointercancel'){this._cancelGesture();return;}
+  if(!s.committed){this._cancelGesture(true);return;}
   s.held=false;s.releaseAge=0;s.react=s.kind==='antenna-drag'&&s.maxDist>2.5;s.releaseDepth=Math.min(1,Math.abs(s.q));
   const id=s.pointerId;s.pointerId=null;
-  if(this.hasPointerCapture(id))this.releasePointerCapture(id);
+  try{if(this.hasPointerCapture(id))this.releasePointerCapture(id);}catch(_){ }
   if(s.kind==='squeeze'&&s.age>.15)this._suppressClick=true;
   this._runtimeVisualDirty=true;this._resumeFrames();
 };
@@ -140,6 +152,10 @@ function drawAntennaDrag(face,s,dt,reduced) {
 registerAvatarExtension({name:'gestures',reset(){this._cancelGesture(this._runtimeResetNotify===false);},draw(now){
   const s=this._gestureFx;if(!s)return;
   const dt=Math.min(.034,Math.max(0,(now-s.last)/1000));s.last=now;s.age+=dt;if(!s.held)s.releaseAge+=dt;
+  if(s.kind==='squeeze'&&!s.committed){
+    if(s.age<SQUEEZE_HOLD_SECONDS)return;
+    if(!commit(this,s))return;
+  }
   const done=s.kind==='squeeze'?drawSqueeze(this,s,dt,this._isReducedMotion?.()):drawAntennaDrag(this,s,dt,this._isReducedMotion?.());
   if(done)finish(this,s);
 }});
