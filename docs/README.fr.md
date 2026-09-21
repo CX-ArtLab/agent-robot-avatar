@@ -36,6 +36,7 @@ Agent Robot Avatar peut également servir de couche de retour visuel pour les in
 - Clignements automatiques et comportement idle discret
 - Yeux suivant le pointeur et mouvement inertiel de la tête
 - Déformation locale façon gelée lors du glisser, avec retour élastique
+- Compression par appui prolongé et antenne ressort déplaçable
 - États et expressions d’Agent contrôlables par code
 - Retours pour waiting, success, failure, warning, review, blocked et system error
 - Prise en charge du mouvement réduit
@@ -82,7 +83,7 @@ avatar.reset();
 
 Actions disponibles :
 
-`idle` · `bored` · `waiting` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `sleep` · `wake`
+`idle` · `bored` · `waiting` · `waiting-orbit` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `sleep` · `wake`
 
 `failure` représente une tâche terminée sans succès, tandis que `error` est réservé aux erreurs de connexion, de service ou de système.
 
@@ -90,6 +91,9 @@ Exemple de cycle de requête Agent :
 
 ```js
 avatar.startWaiting();
+
+// Deuxième attente : les yeux sortent d'un côté et reviennent par l'autre.
+avatar.startWaiting({ variant: 'orbit' });
 
 try {
   const result = await runAgentRequest();
@@ -118,6 +122,8 @@ try {
 | `auto-sleep` | Temps d’inactivité avant le sommeil automatique ; `0` le désactive |
 | `wake-on` | Politique de réveil automatique : `activity`, `interaction` ou `manual` |
 | `motion` | Politique d’animation : `auto`, `reduce` ou `full` |
+| `press-squeeze` | Maintenir le centre pour comprimer ; `false` désactive le geste |
+| `antenna-drag` | Glisser et faire rebondir l’antenne avec réaction de colère ; `false` désactive le geste |
 
 Contrôles courants à l’exécution :
 
@@ -125,7 +131,11 @@ Contrôles courants à l’exécution :
 avatar.setPointerFollow(false);
 avatar.setHeadRoundness(75);
 avatar.setAntennaFlash(true);
+avatar.setPressSqueeze(true);
+avatar.setAntennaDrag(true);
 ```
+
+Maintenir le centre lance la compression. Après plus de 4 pixels CSS de déplacement, le même geste bascule vers le glisser de tête existant. L’antenne reprend sa limite de distance et se termine par la réaction de colère existante.
 
 ## Événements et intégration
 

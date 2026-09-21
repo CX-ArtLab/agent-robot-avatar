@@ -418,15 +418,19 @@ function mountDemoControls() {
     loopEnabled = loopToggle.checked;
     if (!loopEnabled) {
       loopToken += 1;
-      if (activeAction === 'waiting') face.stopWaiting();
+      if (activeAction === 'waiting' || activeAction === 'waiting-orbit') face.stopWaiting();
     }
   });
 
-  const extraLoopDelay = Object.freeze({ idle:900, bored:3350, waiting:0, input:900, sleep:800, wake:500 });
+  const extraLoopDelay = Object.freeze({ idle:900, bored:3350, waiting:0, 'waiting-orbit':0, input:900, sleep:800, wake:500 });
 
   async function playOneCycle(action, token) {
     if (action === 'waiting' && loopEnabled) {
       await face.startWaiting();
+      return;
+    }
+    if (action === 'waiting-orbit' && loopEnabled) {
+      await face.startWaiting({ variant:'orbit' });
       return;
     }
     if (action === 'wake' && loopEnabled) {
@@ -450,7 +454,7 @@ function mountDemoControls() {
     do {
       if (token !== loopToken) return;
       await playOneCycle(action, token);
-      if (action === 'waiting' && loopEnabled) return;
+      if ((action === 'waiting' || action === 'waiting-orbit') && loopEnabled) return;
       if (token !== loopToken || !loopEnabled) return;
       const delay = extraLoopDelay[action] ?? 140;
       if (delay > 0) await wait(delay);

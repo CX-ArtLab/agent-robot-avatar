@@ -77,7 +77,7 @@ const AgentRobotAvatar = (() => {
   const handleGlobalPointerMove = event => {
     forEachConnectedFace(face => {
       face._onPointerMove(event);
-      if (face._dragJelly.active) face._onDragMove(event);
+      if (face._dragJelly.active || face._gestureFx?.held) face._onDragMove(event);
     });
   };
   const handleGlobalPointerDown = event => forEachConnectedFace(face => {
@@ -90,7 +90,7 @@ const AgentRobotAvatar = (() => {
   });
   const handleGlobalPointerEnd = event => {
     forEachConnectedFace(face => {
-      if (face._dragJelly.active) face._onDragEnd(event);
+      if (face._dragJelly.active || face._gestureFx?.held) face._onDragEnd(event);
     });
   };
   const handleGlobalVisibility = () => forEachConnectedFace(face => face._onVisibility());
@@ -352,6 +352,7 @@ const AgentRobotAvatar = (() => {
       this._running = !document.hidden;
       if (this._running) this._resumeFrames();
       else {
+        this._cancelGesture?.();
         cancelAnimationFrame(this._raf);
         this._raf = 0;
       }

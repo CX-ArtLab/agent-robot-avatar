@@ -36,6 +36,7 @@ Agent Robot Avatar также можно использовать как сло�
 - Автоматическое моргание и лёгкое idle-поведение
 - Следование глазами за указателем и инерционное движение головы
 - Локальная jelly-деформация при перетаскивании с упругим возвратом
+- Сжатие при удержании и перетаскиваемая пружинящая антенна
 - Программное управление состояниями и выражениями Agent
 - Обратная связь для waiting, success, failure, warning, review, blocked и system error
 - Поддержка reduced motion
@@ -82,7 +83,7 @@ avatar.reset();
 
 Доступные действия:
 
-`idle` · `bored` · `waiting` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `sleep` · `wake`
+`idle` · `bored` · `waiting` · `waiting-orbit` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `sleep` · `wake`
 
 `failure` означает, что задача завершилась неуспешно; `error` предназначен для ошибок соединения, сервиса или системы.
 
@@ -90,6 +91,9 @@ avatar.reset();
 
 ```js
 avatar.startWaiting();
+
+// Второй вариант ожидания: глаза уходят с одной стороны и возвращаются с другой.
+avatar.startWaiting({ variant: 'orbit' });
 
 try {
   const result = await runAgentRequest();
@@ -118,6 +122,8 @@ try {
 | `auto-sleep` | Время бездействия до автоматического сна; `0` отключает его |
 | `wake-on` | Политика автоматического пробуждения: `activity`, `interaction` или `manual` |
 | `motion` | Политика движения: `auto`, `reduce` или `full` |
+| `press-squeeze` | Удержание центра для сжатия; `false` отключает жест |
+| `antenna-drag` | Перетаскивание и пружинящий возврат антенны с сердитой реакцией; `false` отключает жест |
 
 Часто используемые runtime-настройки:
 
@@ -125,7 +131,11 @@ try {
 avatar.setPointerFollow(false);
 avatar.setHeadRoundness(75);
 avatar.setAntennaFlash(true);
+avatar.setPressSqueeze(true);
+avatar.setAntennaDrag(true);
 ```
+
+Удержание центра запускает сжатие. После перемещения более чем на 4 CSS-пикселя тот же жест переходит в существующее перетаскивание головы. Для антенны действует тот же предел расстояния, а после возврата запускается существующая сердитая реакция.
 
 ## События и интеграция
 

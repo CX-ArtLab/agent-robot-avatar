@@ -29,6 +29,7 @@ const ACTION_ALIASES = Object.freeze({
   bored: 'bored',
   waiting: 'waiting',
   wait: 'waiting',
+  'waiting-orbit': 'waiting',
   input: 'input',
   send: 'send',
   success: 'success',
@@ -199,7 +200,8 @@ function autoSleepBlocked(instance) {
     instance._waitingFx ||
     instance._inputWanted ||
     instance._state === 'input' ||
-    instance._expressionLock
+    instance._expressionLock ||
+    instance._gestureFx
   );
 }
 
@@ -340,6 +342,7 @@ function setRuntimeVisible(instance, visible) {
   if (instance._runtimeVisible === next) return;
   instance._runtimeVisible = next;
   if (!next) {
+    instance._cancelGesture?.();
     if (instance._raf) cancelAnimationFrame(instance._raf);
     instance._raf = 0;
     instance._framePaused = true;
@@ -424,6 +427,9 @@ function ensureRuntime(instance) {
 
   instance._runtimeVisible = hasVisibleLayout(instance);
   instance._runtimeLostCapture = event => {
+    if (instance._gestureFx?.held && event.pointerId === instance._gestureFx.pointerId) {
+      instance._cancelGesture?.();
+    }
     if (instance._dragJelly?.active && event.pointerId === instance._dragJelly.pointerId) {
       clearDragGeometry(instance, { preserveClick: false, releaseCapture: false });
     }
@@ -592,6 +598,10 @@ proto._onPointerMove = function(event) {
 
 proto._onDragMove = function(event) {
   ensureRuntime(this);
+  if (this._gestureFx) {
+    this._moveGesture(event);
+    return;
+  }
   if (!this._dragJelly?.active || event.pointerId !== this._dragJelly.pointerId) return;
   this._pendingDragEvent = {
     clientX: event.clientX,
@@ -605,10 +615,39 @@ proto._onDragStart = function(event) {
   ensureRuntime(this);
   if (this._dragJelly?.active) return;
   if (event.pointerType === 'touch' && event.isPrimary === false) return;
+  if (this._gestureFx?.held) return;
+  if (this._startGesture?.(event)) return;
   return baseOnDragStart.call(this, event);
 };
 
+proto._startHeadDragFromGesture = function(event, start) {
+  baseOnDragStart.call(this, {
+    button: 0,
+    clientX: start.startX,
+    clientY: start.startY,
+    pointerId: event.pointerId,
+    pointerType: start.pointerType,
+  });
+  baseOnDragMove.call(this, event);
+};
+
+proto._beginGestureAction = function(kind) {
+  beginAction(this, kind, 'interaction', true);
+};
+proto._endGestureAction = function(phase, react = false, silent = false) {
+  const record = this._activeActionState;
+  if (record && (record.action === 'squeeze' || record.action === 'antenna-drag')) {
+    if (silent) cancelActiveAction(this, { silent: true });
+    else finishAction(this, record, phase);
+  }
+  if (react) startDragReaction(this, 'angry');
+};
+
 proto._onDragEnd = function(event) {
+  if (this._gestureFx) {
+    this._endGesture(event);
+    return;
+  }
   const drag = this._dragJelly;
   if (!drag?.active || event.pointerId !== drag.pointerId) return;
   flushPointerWork(this);
@@ -661,6 +700,7 @@ function leaveSleepForAction(instance) {
 }
 
 function prepareReplacement(instance, canonical) {
+  instance._cancelGesture?.();
   clearAutoSleep(instance);
   cancelActiveAction(instance);
   clearDragGeometry(instance, { preserveClick: true });
@@ -710,10 +750,10 @@ proto.input = function(active = true) {
   return result;
 };
 
-proto.startWaiting = async function() {
+proto.startWaiting = async function(options = {}) {
   ensureRuntime(this);
   clearAutoSleep(this);
-  const result = await baseStartWaiting.call(this);
+  const result = await baseStartWaiting.call(this, options);
   if (this._waitingRequested && this._waitingFx) beginAction(this, 'waiting', 'api', true);
   return result;
 };

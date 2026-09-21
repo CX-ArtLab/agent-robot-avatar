@@ -36,6 +36,7 @@ O Agent Robot Avatar também pode ser usado como camada de feedback visual para 
 - Piscar automático e comportamento idle sutil
 - Olhos que seguem o ponteiro e movimento inercial da cabeça
 - Deformação local tipo gelatina ao arrastar, com recuperação elástica
+- Compressão ao manter pressionado e antena elástica arrastável
 - Estados e expressões do Agent controláveis por código
 - Feedback para waiting, success, failure, warning, review, blocked e system error
 - Suporte a movimento reduzido
@@ -82,7 +83,7 @@ avatar.reset();
 
 Ações disponíveis:
 
-`idle` · `bored` · `waiting` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `sleep` · `wake`
+`idle` · `bored` · `waiting` · `waiting-orbit` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `sleep` · `wake`
 
 `failure` representa uma tarefa concluída sem sucesso; `error` é reservado para falhas de conexão, serviço ou sistema.
 
@@ -90,6 +91,9 @@ Um fluxo típico de solicitação de Agent:
 
 ```js
 avatar.startWaiting();
+
+// Segunda espera: os olhos saem por um lado e voltam pelo outro.
+avatar.startWaiting({ variant: 'orbit' });
 
 try {
   const result = await runAgentRequest();
@@ -118,6 +122,8 @@ try {
 | `auto-sleep` | Tempo de inatividade antes do sono automático; `0` desativa |
 | `wake-on` | Política de despertar automático: `activity`, `interaction` ou `manual` |
 | `motion` | Política de movimento: `auto`, `reduce` ou `full` |
+| `press-squeeze` | Pressione o centro para comprimir; `false` desativa |
+| `antenna-drag` | Arraste e retorno elástico da antena com reação de raiva; `false` desativa |
 
 Controles comuns em tempo de execução:
 
@@ -125,7 +131,11 @@ Controles comuns em tempo de execução:
 avatar.setPointerFollow(false);
 avatar.setHeadRoundness(75);
 avatar.setAntennaFlash(true);
+avatar.setPressSqueeze(true);
+avatar.setAntennaDrag(true);
 ```
+
+Manter o centro pressionado inicia a compressão. Ao mover mais de 4 pixels CSS, o mesmo gesto passa ao arraste de cabeça existente. A antena usa o mesmo limite de distância e termina com a reação de raiva existente.
 
 ## Eventos e integração
 
