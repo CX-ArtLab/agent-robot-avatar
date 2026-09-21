@@ -6,6 +6,13 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ## [Unreleased]
 
+### Added
+
+- Added a second waiting choice, `startWaiting({ variant: 'orbit' })`, with the approved 2.4-second left-out/right-in eye turn and custom easing. `play('waiting-orbit')` plays one cycle; the original waiting remains available and is the default.
+- Added center press-and-hold squeezing, sustained compression tremor, and spring/jelly release. Moving more than 4 CSS pixels transfers the gesture to the existing head drag.
+- Added antenna dragging with the head drag's 25-unit pull cap, a localized head deformation, a firmer spring return, and the existing angry reaction after recovery.
+- Added `setPressSqueeze()` and `setAntennaDrag()` opt-outs, interaction state events, reduced-motion behavior, and public demo guidance.
+
 ## [0.3.2] - 2026-09-10
 
 ### Fixed

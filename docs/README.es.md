@@ -36,6 +36,7 @@ Agent Robot Avatar también puede utilizarse como capa de retroalimentación vis
 - Parpadeo automático y comportamiento idle sutil
 - Ojos que siguen el puntero y movimiento inercial de la cabeza
 - Deformación local tipo gelatina al arrastrar, con recuperación elástica
+- Compresión al mantener pulsado y antena elástica arrastrable
 - Estados y expresiones del Agent controlables por código
 - Feedback para waiting, success, failure, warning, review, blocked y system error
 - Compatibilidad con movimiento reducido
@@ -82,7 +83,7 @@ avatar.reset();
 
 Acciones disponibles:
 
-`idle` · `bored` · `waiting` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `sleep` · `wake`
+`idle` · `bored` · `waiting` · `waiting-orbit` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `sleep` · `wake`
 
 `failure` indica una tarea que terminó sin éxito; `error` se reserva para fallos de conexión, servicio o sistema.
 
@@ -90,6 +91,9 @@ Un flujo típico para una solicitud de Agent:
 
 ```js
 avatar.startWaiting();
+
+// Segunda espera: los ojos salen por un lado y vuelven por el otro.
+avatar.startWaiting({ variant: 'orbit' });
 
 try {
   const result = await runAgentRequest();
@@ -118,6 +122,8 @@ try {
 | `auto-sleep` | Tiempo de inactividad antes del sueño automático; `0` lo desactiva |
 | `wake-on` | Política de activación automática: `activity`, `interaction` o `manual` |
 | `motion` | Política de movimiento: `auto`, `reduce` o `full` |
+| `press-squeeze` | Mantener pulsado el centro para comprimir; `false` lo desactiva |
+| `antenna-drag` | Arrastre y rebote de antena con reacción de enfado; `false` lo desactiva |
 
 Controles habituales en tiempo de ejecución:
 
@@ -125,7 +131,11 @@ Controles habituales en tiempo de ejecución:
 avatar.setPointerFollow(false);
 avatar.setHeadRoundness(75);
 avatar.setAntennaFlash(true);
+avatar.setPressSqueeze(true);
+avatar.setAntennaDrag(true);
 ```
+
+Mantener pulsado el centro inicia la compresión. Al mover más de 4 píxeles CSS, el mismo gesto pasa al arrastre de cabeza existente. La antena usa el mismo límite de distancia y termina con la reacción de enfado existente.
 
 ## Eventos e integración
 

@@ -36,6 +36,7 @@ Agent Robot Avatar 还可作为 AG-UI 风格 Agent 界面的视觉反馈层。
 - 自动眨眼与轻微待机动作
 - 眼睛跟随指针与头部惯性运动
 - 果冻式局部拖拽形变与弹性恢复
+- 按住挤压与可拖动的弹簧天线交互
 - 可通过程序控制 Agent 状态与表情
 - 支持 waiting、success、failure、warning、review、blocked、system error 等反馈
 - 支持减少动态效果
@@ -82,7 +83,7 @@ avatar.reset();
 
 可用动作：
 
-`idle` · `bored` · `waiting` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `sleep` · `wake`
+`idle` · `bored` · `waiting` · `waiting-orbit` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `sleep` · `wake`
 
 `failure` 用于表示任务执行完成但结果失败；`error` 用于连接、服务或系统错误。
 
@@ -90,6 +91,9 @@ avatar.reset();
 
 ```js
 avatar.startWaiting();
+
+// 第二种等待：眼睛从一侧转出，再从另一侧转入。
+avatar.startWaiting({ variant: 'orbit' });
 
 try {
   const result = await runAgentRequest();
@@ -118,6 +122,8 @@ try {
 | `auto-sleep` | 自动睡眠前的空闲时间；`0` 为关闭 |
 | `wake-on` | 自动唤醒策略：`activity`、`interaction` 或 `manual` |
 | `motion` | 动态效果策略：`auto`、`reduce` 或 `full` |
+| `press-squeeze` | 按住头像中心进行挤压；设为 `false` 可关闭 |
+| `antenna-drag` | 拖动天线、弹簧复原并接愤怒表情；设为 `false` 可关闭 |
 
 常用运行时控制：
 
@@ -125,7 +131,11 @@ try {
 avatar.setPointerFollow(false);
 avatar.setHeadRoundness(75);
 avatar.setAntennaFlash(true);
+avatar.setPressSqueeze(true);
+avatar.setAntennaDrag(true);
 ```
+
+按住头像中心会开始挤压；移动超过 4 个 CSS 像素后，同一次指针操作会切换为原有的头部拖动。拖动天线沿用头部拖动的距离限制，复原后接原有的愤怒反应。
 
 ## 事件与集成
 

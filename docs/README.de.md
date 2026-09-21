@@ -36,6 +36,7 @@ Agent Robot Avatar kann außerdem als visuelle Feedback-Ebene für Agent-Oberfl�
 - Automatisches Blinzeln und dezentes Idle-Verhalten
 - Zeigerfolgende Augen und träge Kopfbewegung
 - Lokale Jelly-Drag-Verformung mit elastischer Rückkehr
+- Drücken-und-Halten-Stauchung und ziehbare Federantenne
 - Programmatisch steuerbare Agent-Zustände und Ausdrücke
 - Feedback für waiting, success, failure, warning, review, blocked und system error
 - Unterstützung für reduzierte Bewegung
@@ -82,7 +83,7 @@ avatar.reset();
 
 Verfügbare Aktionen:
 
-`idle` · `bored` · `waiting` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `sleep` · `wake`
+`idle` · `bored` · `waiting` · `waiting-orbit` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `sleep` · `wake`
 
 `failure` steht für eine Aufgabe, die erfolglos abgeschlossen wurde; `error` ist für Verbindungs-, Dienst- oder Systemfehler vorgesehen.
 
@@ -90,6 +91,9 @@ Ein typischer Agent-Anfrageablauf:
 
 ```js
 avatar.startWaiting();
+
+// Zweite Wartebewegung: Die Augen drehen seitlich heraus und kommen von der anderen Seite zurück.
+avatar.startWaiting({ variant: 'orbit' });
 
 try {
   const result = await runAgentRequest();
@@ -118,6 +122,8 @@ try {
 | `auto-sleep` | Leerlaufzeit vor automatischem Schlaf; `0` deaktiviert ihn |
 | `wake-on` | Automatische Aufwachstrategie: `activity`, `interaction` oder `manual` |
 | `motion` | Bewegungsstrategie: `auto`, `reduce` oder `full` |
+| `press-squeeze` | Mitte gedrückt halten und stauchen; `false` deaktiviert die Geste |
+| `antenna-drag` | Antenne ziehen, federnd zurückkehren und wütend reagieren; `false` deaktiviert sie |
 
 Häufige Runtime-Steuerungen:
 
@@ -125,7 +131,11 @@ Häufige Runtime-Steuerungen:
 avatar.setPointerFollow(false);
 avatar.setHeadRoundness(75);
 avatar.setAntennaFlash(true);
+avatar.setPressSqueeze(true);
+avatar.setAntennaDrag(true);
 ```
+
+Gedrückthalten in der Mitte startet die Stauchung. Nach mehr als 4 CSS-Pixeln Bewegung wechselt dieselbe Zeigergeste zum vorhandenen Kopfziehen. Die Antenne verwendet dessen Distanzlimit und endet mit der vorhandenen Wutreaktion.
 
 ## Ereignisse und Integration
 

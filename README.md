@@ -36,6 +36,7 @@ Built with SVG and vanilla JavaScript, it works as a native custom element with 
 - Automatic blinking and subtle idle behavior
 - Pointer-following eyes and inertial head movement
 - Jelly-style drag deformation with elastic recovery
+- Press-and-hold squeeze and draggable spring antenna interactions
 - Programmatically controlled Agent states and expressions
 - Waiting, success, failure, warning, review, blocked, and system-error feedback
 - Reduced-motion support
@@ -82,7 +83,7 @@ avatar.reset();
 
 Available actions:
 
-`idle` · `bored` · `waiting` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `sleep` · `wake`
+`idle` · `bored` · `waiting` · `waiting-orbit` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `sleep` · `wake`
 
 `failure` is intended for a task that completed unsuccessfully, while `error` is intended for connection, service, or system failures.
 
@@ -90,6 +91,9 @@ For a real Agent request lifecycle:
 
 ```js
 avatar.startWaiting();
+
+// Alternative waiting motion: eyes turn out through one side and return through the other.
+avatar.startWaiting({ variant: 'orbit' });
 
 try {
   const result = await runAgentRequest();
@@ -118,6 +122,8 @@ try {
 | `auto-sleep` | Idle time before automatic sleep; `0` disables it |
 | `wake-on` | Automatic wake policy: `activity`, `interaction`, or `manual` |
 | `motion` | Motion policy: `auto`, `reduce`, or `full` |
+| `press-squeeze` | Center press-and-hold squeeze; set to `false` to disable |
+| `antenna-drag` | Antenna drag, spring return, and angry reaction; set to `false` to disable |
 
 Common runtime controls:
 
@@ -125,7 +131,11 @@ Common runtime controls:
 avatar.setPointerFollow(false);
 avatar.setHeadRoundness(75);
 avatar.setAntennaFlash(true);
+avatar.setPressSqueeze(true);
+avatar.setAntennaDrag(true);
 ```
+
+The avatar center begins the squeeze interaction. Moving more than 4 CSS pixels transfers the same pointer gesture to the existing head drag. Dragging the antenna uses the same pull limit as head dragging and ends with the existing angry reaction.
 
 ## Events and integration
 

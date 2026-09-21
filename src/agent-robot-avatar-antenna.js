@@ -66,7 +66,7 @@ function ensureAntenna(instance, now) {
     dot.setAttribute('r', String(configNumber('radius', ANTENNA_DEFAULTS.radius, 2, 40)));
     dot.setAttribute('fill', instance._head?.getAttribute('fill') || '#08090b');
     dot.setAttribute('aria-hidden', 'true');
-    dot.style.pointerEvents = 'none';
+    dot.style.pointerEvents = 'auto';
     svg.appendChild(dot);
   }
 

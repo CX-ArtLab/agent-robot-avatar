@@ -1,4 +1,5 @@
 import AgentRobotAvatar, { registerAvatarExtension } from './agent-robot-avatar-extension-host.js';
+import { ORBIT_CYCLE, drawOrbitWaiting } from './agent-robot-avatar-orbit.js';
 
 const WAITING_CYCLE = 3200;
 const proto = AgentRobotAvatar.prototype;
@@ -26,7 +27,9 @@ function setEyeOrbitTransform(eye, x, scaleX, scaleY) {
   );
 }
 
-async function enterWaiting(instance, continuous, source) {
+async function enterWaiting(instance, continuous, source, options = {}) {
+  const variant = options?.variant ?? 'default';
+  if (variant !== 'default' && variant !== 'orbit') throw new TypeError(`Unknown waiting variant: ${variant}`);
   instance.noteActivity();
   instance._inputWanted = false;
 
@@ -41,7 +44,8 @@ async function enterWaiting(instance, continuous, source) {
   instance._look.y = 0;
   instance._waitingFx = {
     start: performance.now(),
-    duration: WAITING_CYCLE,
+    duration: variant === 'orbit' ? ORBIT_CYCLE : WAITING_CYCLE,
+    variant,
     continuous: continuous === true,
     source,
   };
@@ -49,11 +53,11 @@ async function enterWaiting(instance, continuous, source) {
   return token;
 }
 
-proto.waiting = async function() {
-  const token = await enterWaiting(this, false, 'play');
+proto.waiting = async function(options = {}) {
+  const token = await enterWaiting(this, false, 'play', options);
   if (token == null) return;
 
-  await this._wait(WAITING_CYCLE);
+  await this._wait(options?.variant === 'orbit' ? ORBIT_CYCLE : WAITING_CYCLE);
   if (token !== this._transitionToken || !this._waitingRequested) return;
   this._waitingRequested = false;
   this._waitingFx = null;
@@ -63,8 +67,8 @@ proto.waiting = async function() {
 
 // Runtime/Agent behavior: call when a request has been sent and the reply has not arrived yet.
 // It stays seamless until another action or stopWaiting() occurs.
-proto.startWaiting = async function() {
-  await enterWaiting(this, true, 'runtime');
+proto.startWaiting = async function(options = {}) {
+  await enterWaiting(this, true, 'runtime', options);
   return this;
 };
 
@@ -81,6 +85,10 @@ function drawWaiting(now) {
     ? (elapsed % fx.duration)
     : Math.min(fx.duration, elapsed);
   const t = clamp01(phaseMs / fx.duration);
+  if (fx.variant === 'orbit') {
+    drawOrbitWaiting(this, phaseMs);
+    return;
+  }
 
   // Original R43 waiting-eye motion: two continuous horizontal orbits per 3.2 s cycle.
   const angle = t * Math.PI * 4;
@@ -104,9 +112,10 @@ registerAvatarExtension({
   actions: {
     waiting() { return this.waiting(); },
     wait() { return this.waiting(); },
+    'waiting-orbit'() { return this.waiting({ variant: 'orbit' }); },
   },
   beforePlay(action) {
-    if (action === 'waiting' || action === 'wait') return;
+    if (action === 'waiting' || action === 'wait' || action === 'waiting-orbit') return;
     this._waitingRequested = false;
     this._waitingFx = null;
   },

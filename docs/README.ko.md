@@ -36,6 +36,7 @@ Agent Robot Avatar는 AG-UI 스타일 Agent 인터페이스를 위한 시각적 
 - 자동 눈 깜빡임과 은은한 idle 동작
 - 포인터를 따라가는 눈과 관성 있는 머리 움직임
 - 젤리 스타일의 국소 드래그 변형과 탄성 복귀
+- 길게 누르는 압축과 드래그 가능한 스프링 안테나
 - 프로그램으로 제어할 수 있는 Agent 상태와 표정
 - waiting, success, failure, warning, review, blocked, system error 피드백
 - Reduced Motion 지원
@@ -82,7 +83,7 @@ avatar.reset();
 
 사용 가능한 액션:
 
-`idle` · `bored` · `waiting` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `sleep` · `wake`
+`idle` · `bored` · `waiting` · `waiting-orbit` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `sleep` · `wake`
 
 `failure`는 작업이 완료되었지만 실패한 경우에 사용하고, `error`는 연결·서비스·시스템 오류에 사용합니다.
 
@@ -90,6 +91,9 @@ avatar.reset();
 
 ```js
 avatar.startWaiting();
+
+// 두 번째 대기 동작: 눈이 한쪽으로 빠져나갔다가 반대쪽에서 돌아옵니다.
+avatar.startWaiting({ variant: 'orbit' });
 
 try {
   const result = await runAgentRequest();
@@ -118,6 +122,8 @@ try {
 | `auto-sleep` | 자동 수면까지의 유휴 시간; `0`이면 비활성화 |
 | `wake-on` | 자동 깨우기 정책: `activity`, `interaction`, `manual` |
 | `motion` | 모션 정책: `auto`, `reduce`, `full` |
+| `press-squeeze` | 중앙을 길게 눌러 압축; `false`로 비활성화 |
+| `antenna-drag` | 안테나 드래그, 스프링 복귀, 화난 반응; `false`로 비활성화 |
 
 자주 쓰는 런타임 제어:
 
@@ -125,7 +131,11 @@ try {
 avatar.setPointerFollow(false);
 avatar.setHeadRoundness(75);
 avatar.setAntennaFlash(true);
+avatar.setPressSqueeze(true);
+avatar.setAntennaDrag(true);
 ```
+
+중앙을 길게 누르면 압축이 시작됩니다. 4 CSS 픽셀을 넘게 움직이면 같은 포인터 제스처가 기존 머리 드래그로 전환됩니다. 안테나는 머리 드래그와 같은 거리 제한을 사용하며 복귀 후 기존 화난 반응이 이어집니다.
 
 ## 이벤트와 통합
 

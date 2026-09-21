@@ -3,6 +3,7 @@ export type AgentRobotAvatarAction =
   | 'bored'
   | 'waiting'
   | 'wait'
+  | 'waiting-orbit'
   | 'input'
   | 'send'
   | 'success'
@@ -36,7 +37,9 @@ export type AgentRobotAvatarState =
   | 'warning'
   | 'error'
   | 'inspect'
-  | 'failure';
+  | 'failure'
+  | 'squeeze'
+  | 'antenna-drag';
 
 export type AgentRobotAvatarCanonicalAction =
   | 'idle'
@@ -54,12 +57,17 @@ export type AgentRobotAvatarCanonicalAction =
   | 'surprise'
   | 'sleep'
   | 'wake'
-  | 'reaction';
+  | 'reaction'
+  | 'squeeze'
+  | 'antenna-drag';
 
 export type AgentRobotAvatarActionPhase = 'start' | 'end' | 'cancel';
 export type AgentRobotAvatarActionSource = 'api' | 'interaction' | 'automatic';
 export type AgentRobotAvatarWakeOn = 'activity' | 'interaction' | 'manual';
 export type AgentRobotAvatarMotion = 'auto' | 'reduce' | 'full';
+export interface AgentRobotAvatarWaitingOptions {
+  variant?: 'default' | 'orbit';
+}
 
 export interface AgentRobotAvatarActionStateDetail {
   action: AgentRobotAvatarCanonicalAction;
@@ -79,10 +87,12 @@ export declare class AgentRobotAvatar extends HTMLElement {
   sleep(): this | Promise<void>;
   wake(): this | Promise<void>;
   input(active?: boolean): this | Promise<void>;
-  startWaiting(): Promise<this>;
+  startWaiting(options?: AgentRobotAvatarWaitingOptions): Promise<this>;
   stopWaiting(): this;
   setPointerFollow(enabled?: boolean): this;
   setAntennaFlash(enabled?: boolean): this;
+  setPressSqueeze(enabled?: boolean): this;
+  setAntennaDrag(enabled?: boolean): this;
   setHeadRoundness(value?: number): this;
   getHeadRoundness(): number;
   noteActivity(wake?: boolean): void;
