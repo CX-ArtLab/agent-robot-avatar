@@ -922,6 +922,8 @@ const AgentRobotAvatar = (() => {
     _updateLook(now, dt) {
       this._updateBored(now);
       const pointerFresh = (now - this._pointer.lastMove) < 900;
+      const antennaGaze = this._gestureFx?.kind === 'antenna-drag' && this._gestureFx.held;
+      const gazeLocked = this._expressionLock && !antennaGaze;
       if (!this._expressionLock && !this._boredRoutine && !this._sleeping && this._state!=='input' && now >= this._nextWanderAt) {
         const ampX = 12 + Math.random()*13;
         const ampY = 5 + Math.random()*9;
@@ -930,12 +932,12 @@ const AgentRobotAvatar = (() => {
         this._nextWanderAt = now + 1150 + Math.random()*1900;
       }
       const draggingJelly = this._dragJelly.active || this._dragJelly.returning;
-      const pointerMix = (!this._expressionLock && !this._boredRoutine && pointerFresh && this._pointer.active && !this._sleeping && this._state!=='input')
+      const pointerMix = (!gazeLocked && !this._boredRoutine && pointerFresh && this._pointer.active && !this._sleeping && this._state!=='input')
         ? Math.pow(this._pointer.influence || 0, 1.6)
         : 0;
-      const targetX = this._expressionLock ? 0 : lerp(this._wanderTarget.x, this._pointer.x, pointerMix);
-      const targetY = this._expressionLock ? 0 : lerp(this._wanderTarget.y, this._pointer.y, pointerMix);
-      const lookSpeed = this._expressionLock ? 0.40 : (draggingJelly ? 0.42 : (this._boredRoutine && this._boredLookSpeed != null ? this._boredLookSpeed : (pointerMix > 0.05 ? 0.28 : 0.16)));
+      const targetX = antennaGaze ? this._gestureFx.gazeX : (gazeLocked ? 0 : lerp(this._wanderTarget.x, this._pointer.x, pointerMix));
+      const targetY = antennaGaze ? this._gestureFx.gazeY : (gazeLocked ? 0 : lerp(this._wanderTarget.y, this._pointer.y, pointerMix));
+      const lookSpeed = antennaGaze ? 0.42 : (gazeLocked ? 0.40 : (draggingJelly ? 0.42 : (this._boredRoutine && this._boredLookSpeed != null ? this._boredLookSpeed : (pointerMix > 0.05 ? 0.28 : 0.16))));
       const kL = 1 - Math.pow(1 - clamp(lookSpeed,0.02,.9), dt/16.67);
       this._look.x = lerp(this._look.x, targetX, kL);
       this._look.y = lerp(this._look.y, targetY, kL);
