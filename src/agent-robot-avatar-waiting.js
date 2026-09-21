@@ -1,5 +1,5 @@
 import AgentRobotAvatar, { registerAvatarExtension } from './agent-robot-avatar-extension-host.js';
-import { ORBIT_CYCLE, drawOrbitWaiting } from './agent-robot-avatar-orbit.js';
+import { WRAP_CYCLE, drawWrapWaiting } from './agent-robot-avatar-wrap.js';
 
 const WAITING_CYCLE = 3200;
 const proto = AgentRobotAvatar.prototype;
@@ -29,7 +29,7 @@ function setEyeOrbitTransform(eye, x, scaleX, scaleY) {
 
 async function enterWaiting(instance, continuous, source, options = {}) {
   const variant = options?.variant ?? 'default';
-  if (variant !== 'default' && variant !== 'orbit') throw new TypeError(`Unknown waiting variant: ${variant}`);
+  if (variant !== 'default' && variant !== 'wrap') throw new TypeError(`Unknown waiting variant: ${variant}`);
   instance.noteActivity();
   instance._inputWanted = false;
 
@@ -44,7 +44,7 @@ async function enterWaiting(instance, continuous, source, options = {}) {
   instance._look.y = 0;
   instance._waitingFx = {
     start: performance.now(),
-    duration: variant === 'orbit' ? ORBIT_CYCLE : WAITING_CYCLE,
+    duration: variant === 'wrap' ? WRAP_CYCLE : WAITING_CYCLE,
     variant,
     continuous: continuous === true,
     source,
@@ -57,7 +57,7 @@ proto.waiting = async function(options = {}) {
   const token = await enterWaiting(this, false, 'play', options);
   if (token == null) return;
 
-  await this._wait(options?.variant === 'orbit' ? ORBIT_CYCLE : WAITING_CYCLE);
+  await this._wait(options?.variant === 'wrap' ? WRAP_CYCLE : WAITING_CYCLE);
   if (token !== this._transitionToken || !this._waitingRequested) return;
   this._waitingRequested = false;
   this._waitingFx = null;
@@ -85,8 +85,8 @@ function drawWaiting(now) {
     ? (elapsed % fx.duration)
     : Math.min(fx.duration, elapsed);
   const t = clamp01(phaseMs / fx.duration);
-  if (fx.variant === 'orbit') {
-    drawOrbitWaiting(this, phaseMs);
+  if (fx.variant === 'wrap') {
+    drawWrapWaiting(this, phaseMs);
     return;
   }
 
@@ -112,10 +112,10 @@ registerAvatarExtension({
   actions: {
     waiting() { return this.waiting(); },
     wait() { return this.waiting(); },
-    'waiting-orbit'() { return this.waiting({ variant: 'orbit' }); },
+    'waiting-wrap'() { return this.waiting({ variant: 'wrap' }); },
   },
   beforePlay(action) {
-    if (action === 'waiting' || action === 'wait' || action === 'waiting-orbit') return;
+    if (action === 'waiting' || action === 'wait' || action === 'waiting-wrap') return;
     this._waitingRequested = false;
     this._waitingFx = null;
   },

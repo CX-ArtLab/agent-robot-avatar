@@ -22,9 +22,9 @@ const FAILURE_LABELS = Object.freeze({
   fr: { action: 'Échec', state: 'Échec' },
 });
 
-const ORBIT_WAITING_LABELS = Object.freeze({
-  'zh-CN':'等待 · 转圈', 'zh-TW':'等待 · 轉圈', en:'Waiting · Orbit', ja:'待機 · 回転',
-  ko:'대기 · 회전', es:'Espera · Giro', pt:'Espera · Giro', de:'Warten · Kreis', fr:'Attente · Rotation',
+const WRAP_WAITING_LABELS = Object.freeze({
+  'zh-CN':'等待 · 环绕', 'zh-TW':'等待 · 環繞', en:'Waiting · Wrap', ja:'待機 · 回り込み',
+  ko:'대기 · 감싸기', es:'Espera · Envoltura', pt:'Espera · Contorno', de:'Warten · Umlauf', fr:'Attente · Enveloppement',
 });
 
 const HINTS = Object.freeze({
@@ -64,10 +64,10 @@ function syncActionLabels() {
   const failure = FAILURE_LABELS[activeLanguage(FAILURE_LABELS)];
   const inspectButton = ensureActionButton('inspect', 'warning');
   const failureButton = ensureActionButton('failure', 'success');
-  const orbitButton = ensureActionButton('waiting-orbit', 'waiting');
+  const wrapButton = ensureActionButton('waiting-wrap', 'waiting');
   if (inspectButton) inspectButton.textContent = inspect.action;
   if (failureButton) failureButton.textContent = failure.action;
-  if (orbitButton) orbitButton.textContent = ORBIT_WAITING_LABELS[activeLanguage(ORBIT_WAITING_LABELS)];
+  if (wrapButton) wrapButton.textContent = WRAP_WAITING_LABELS[activeLanguage(WRAP_WAITING_LABELS)];
 }
 
 function applyDefaultAntennaFlashOff() {

@@ -17,6 +17,8 @@ const motion: AgentRobotAvatarMotion = 'reduce';
 
 void avatar.play(action);
 void avatar.startWaiting();
+void avatar.startWaiting({ variant: 'wrap' });
+void avatar.play('waiting-wrap');
 void avatar.sleep();
 void avatar.wake();
 void avatar.input();
