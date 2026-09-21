@@ -4,6 +4,10 @@ const proto=AgentRobotAvatar.prototype;
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const disabled=(face,key)=>face.getAttribute(key)==='false';
 const emit=(face,state)=>face.dispatchEvent(new CustomEvent('face-state',{detail:{state}}));
+const gazeTarget=(box,event)=>({
+  x:clamp((event.clientX-box.left-box.width/2)*.42,-48,48),
+  y:clamp((event.clientY-box.top-box.height/2)*.38,-34,34),
+});
 
 function restore(face) {
   face._headMotion.style.transform='';face._headMotion.removeAttribute('transform');
@@ -44,10 +48,14 @@ proto._startGesture=function(event) {
   if(!kind)return false;
   event.preventDefault();
   const home={x:Number(dot?.getAttribute('cx')??120),y:Number(dot?.getAttribute('cy')??12)};
+  const gaze=kind==='antenna-drag'?gazeTarget(box,event):null;
+  const currentLook=gaze?{...this._look}:null;
   this.reset();this.noteActivity();this._expressionLock=true;
+  if(currentLook){this._look.x=currentLook.x;this._look.y=currentLook.y;}
   this._gestureFx={kind,held:true,pointerId:event.pointerId,startX:event.clientX,startY:event.clientY,
     pointerType:event.pointerType,size:Math.max(1,box.width),threshold:clamp(box.width*.4,24,46),home,
     start:performance.now(),last:performance.now(),age:0,releaseAge:0,maxDist:0,react:false,
+    gazeX:gaze?.x??0,gazeY:gaze?.y??0,
     q:0,v:0,pressure:0,apex:0,releaseDepth:1,x:0,y:0,vx:0,vy:0,hx:0,hy:0,hvx:0,hvy:0,tx:0,ty:0};
   this.setPointerCapture(event.pointerId);this._beginGestureAction?.(kind);emit(this,kind);
   this._resumeFrames();return true;
@@ -55,6 +63,9 @@ proto._startGesture=function(event) {
 
 proto._moveGesture=function(event) {
   const s=this._gestureFx;if(!s?.held||s.pointerId!==event.pointerId)return;
+  if(s.kind==='antenna-drag'){
+    const gaze=gazeTarget(this.getBoundingClientRect(),event);s.gazeX=gaze.x;s.gazeY=gaze.y;
+  }
   const dx=event.clientX-s.startX,dy=event.clientY-s.startY,dist=Math.hypot(dx,dy);
   s.maxDist=Math.max(s.maxDist,dist);
   if(s.kind==='squeeze'&&dist>4){

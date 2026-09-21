@@ -6,6 +6,16 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ## [Unreleased]
 
+## [0.4.2] - 2026-09-21
+
+### Added
+
+- Added localized “Try” tags below the Demo status for double-clicking, head dragging, center press-and-hold squeezing, and antenna dragging.
+
+### Fixed
+
+- Kept both eyes looking at the live pointer position throughout antenna dragging instead of returning them to center when the drag begins.
+
 ## [0.4.1] - 2026-09-21
 
 ### Changed
@@ -136,6 +146,7 @@ First public release.
 - npm-compatible package metadata for later package publication
 - Contribution guide, issue templates, pull request template, MIT License, and Ko-fi funding metadata
 
+[0.4.2]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.4.2
 [0.4.1]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.4.1
 [0.4.0]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.4.0
 [0.3.2]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.3.2
