@@ -6,6 +6,8 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ## [Unreleased]
 
+## [0.4.3] - 2026-09-22
+
 ### Fixed
 
 - Restored the existing head-drag, waiting, sleep-wake, and touch-cancel behavior alongside press-and-hold squeezing by deferring squeeze activation until the hold is confirmed.
@@ -139,6 +141,7 @@ First public release.
 - npm-compatible package metadata for later package publication
 - Contribution guide, issue templates, pull request template, MIT License, and Ko-fi funding metadata
 
+[0.4.3]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.4.3
 [0.4.2]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.4.2
 [0.3.2]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.3.2
 [0.3.1]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.3.1
