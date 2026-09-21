@@ -21,6 +21,10 @@ function mountDemoLayout() {
       else controls.appendChild(waitingButton);
     }
 
+    const waitingButton = controls.querySelector('[data-action="waiting"]');
+    const wrapButton = controls.querySelector('[data-action="waiting-wrap"]');
+    if (waitingButton && wrapButton) waitingButton.insertAdjacentElement('afterend', wrapButton);
+
     const buttons = Array.from(controls.querySelectorAll(':scope > button[data-action]'));
     if (buttons.length) {
       const firstRow = document.createElement('div');

@@ -29,7 +29,7 @@ const ACTION_ALIASES = Object.freeze({
   bored: 'bored',
   waiting: 'waiting',
   wait: 'waiting',
-  'waiting-orbit': 'waiting',
+  'waiting-wrap': 'waiting',
   input: 'input',
   send: 'send',
   success: 'success',

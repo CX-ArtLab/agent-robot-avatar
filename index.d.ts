@@ -3,7 +3,7 @@ export type AgentRobotAvatarAction =
   | 'bored'
   | 'waiting'
   | 'wait'
-  | 'waiting-orbit'
+  | 'waiting-wrap'
   | 'input'
   | 'send'
   | 'success'
@@ -66,7 +66,7 @@ export type AgentRobotAvatarActionSource = 'api' | 'interaction' | 'automatic';
 export type AgentRobotAvatarWakeOn = 'activity' | 'interaction' | 'manual';
 export type AgentRobotAvatarMotion = 'auto' | 'reduce' | 'full';
 export interface AgentRobotAvatarWaitingOptions {
-  variant?: 'default' | 'orbit';
+  variant?: 'default' | 'wrap';
 }
 
 export interface AgentRobotAvatarActionStateDetail {
