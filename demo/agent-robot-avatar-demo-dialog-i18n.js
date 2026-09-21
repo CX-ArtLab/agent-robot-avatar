@@ -1,8 +1,8 @@
-const STYLE_ID = 'agent-demo-dialog-i18n-style-r52';
+const STYLE_ID = 'agent-demo-dialog-i18n-style-r53';
 
 const DIALOG_I18N = Object.freeze({
   'zh-CN': {
-    hint: '双击头像 · 模拟对话', dialogLabel: 'Agent 对话演示', subtitle: '随机状态回复演示', close: '关闭',
+    hint: { lead:'试一下：', items:['双击头像','任意方向拖动头像','按住头像中心挤压','拖动天线'] }, dialogLabel: 'Agent 对话演示', subtitle: '随机状态回复演示', close: '关闭',
     intro: '这是一个模拟 Agent。输入任意内容后，会随机模拟成功、风险确认、内容阻止、系统错误等回复，并在正文下方标注对应表情。',
     placeholder: '输入内容……', keyboard: 'Enter 发送 · Shift+Enter 换行', send: '发送',
     tags: { success:'演示表情 · 成功 / success', warning:'演示表情 · 警告 / warning', angry:'演示表情 · 内容阻止 / blocked', error:'演示表情 · 系统错误 / error', surprise:'演示表情 · 惊讶 / surprise', bored:'演示表情 · 等待 / waiting' },
@@ -16,7 +16,7 @@ const DIALOG_I18N = Object.freeze({
     },
   },
   'zh-TW': {
-    hint: '雙擊頭像 · 模擬對話', dialogLabel: 'Agent 對話示範', subtitle: '隨機狀態回覆示範', close: '關閉',
+    hint: { lead:'試一下：', items:['雙擊頭像','向任意方向拖動頭像','按住頭像中央擠壓','拖動天線'] }, dialogLabel: 'Agent 對話示範', subtitle: '隨機狀態回覆示範', close: '關閉',
     intro: '這是一個模擬 Agent。輸入任意內容後，會隨機模擬成功、風險確認、內容阻止、系統錯誤等回覆，並在正文下方標示對應表情。',
     placeholder: '輸入內容……', keyboard: 'Enter 傳送 · Shift+Enter 換行', send: '傳送',
     tags: { success:'示範表情 · 成功 / success', warning:'示範表情 · 警告 / warning', angry:'示範表情 · 內容阻止 / blocked', error:'示範表情 · 系統錯誤 / error', surprise:'示範表情 · 驚訝 / surprise', bored:'示範表情 · 等待 / waiting' },
@@ -30,7 +30,7 @@ const DIALOG_I18N = Object.freeze({
     },
   },
   en: {
-    hint: 'Double-click avatar · Demo chat', dialogLabel: 'Agent chat demo', subtitle: 'Random state response demo', close: 'Close',
+    hint: { lead:'Try:', items:['Double-click the avatar','Drag the avatar any direction','Press and hold the center','Drag the antenna'] }, dialogLabel: 'Agent chat demo', subtitle: 'Random state response demo', close: 'Close',
     intro: 'This is a simulated Agent. Enter anything to trigger random success, confirmation, blocked-content, system-error and other responses, with the matching expression shown below each reply.',
     placeholder: 'Type a message…', keyboard: 'Enter to send · Shift+Enter for new line', send: 'Send',
     tags: { success:'Demo expression · Success', warning:'Demo expression · Warning', angry:'Demo expression · Blocked', error:'Demo expression · System error', surprise:'Demo expression · Surprise', bored:'Demo expression · Waiting' },
@@ -44,7 +44,7 @@ const DIALOG_I18N = Object.freeze({
     },
   },
   ja: {
-    hint: 'アバターをダブルクリック · 模擬チャット', dialogLabel: 'Agent チャットデモ', subtitle: 'ランダム状態返信デモ', close: '閉じる',
+    hint: { lead:'試す：', items:['アバターをダブルクリック','アバターを自由にドラッグ','中央を長押ししてつぶす','アンテナをドラッグ'] }, dialogLabel: 'Agent チャットデモ', subtitle: 'ランダム状態返信デモ', close: '閉じる',
     intro: 'これは模擬 Agent です。任意の内容を入力すると、成功、確認、ブロック、システムエラーなどの返信をランダムに再現し、対応する表情を返信の下に表示します。',
     placeholder: 'メッセージを入力…', keyboard: 'Enter 送信 · Shift+Enter 改行', send: '送信',
     tags: { success:'デモ表情 · 成功', warning:'デモ表情 · 警告', angry:'デモ表情 · ブロック', error:'デモ表情 · システムエラー', surprise:'デモ表情 · 驚き', bored:'デモ表情 · 待機' },
@@ -58,7 +58,7 @@ const DIALOG_I18N = Object.freeze({
     },
   },
   ko: {
-    hint: '아바타 더블클릭 · 데모 채팅', dialogLabel: 'Agent 채팅 데모', subtitle: '무작위 상태 응답 데모', close: '닫기',
+    hint: { lead:'해보기:', items:['아바타 더블클릭','아바타를 원하는 방향으로 드래그','중앙을 길게 눌러 압축','안테나 드래그'] }, dialogLabel: 'Agent 채팅 데모', subtitle: '무작위 상태 응답 데모', close: '닫기',
     intro: '모의 Agent입니다. 아무 내용을 입력하면 성공, 확인, 차단, 시스템 오류 등의 응답을 무작위로 보여 주고 해당 표정을 답변 아래에 표시합니다.',
     placeholder: '메시지 입력…', keyboard: 'Enter 전송 · Shift+Enter 줄바꿈', send: '전송',
     tags: { success:'데모 표정 · 성공', warning:'데모 표정 · 경고', angry:'데모 표정 · 차단', error:'데모 표정 · 시스템 오류', surprise:'데모 표정 · 놀람', bored:'데모 표정 · 대기' },
@@ -72,7 +72,7 @@ const DIALOG_I18N = Object.freeze({
     },
   },
   es: {
-    hint: 'Doble clic en el avatar · Chat de prueba', dialogLabel: 'Demo de chat del Agent', subtitle: 'Demo de respuestas de estado aleatorias', close: 'Cerrar',
+    hint: { lead:'Prueba:', items:['Doble clic en el avatar','Arrastra el avatar en cualquier dirección','Mantén pulsado el centro','Arrastra la antena'] }, dialogLabel: 'Demo de chat del Agent', subtitle: 'Demo de respuestas de estado aleatorias', close: 'Cerrar',
     intro: 'Este es un Agent simulado. Escribe cualquier cosa para generar respuestas aleatorias de éxito, confirmación, bloqueo, error del sistema y otros estados, con la expresión correspondiente debajo.',
     placeholder: 'Escribe un mensaje…', keyboard: 'Enter para enviar · Shift+Enter nueva línea', send: 'Enviar',
     tags: { success:'Expresión demo · Éxito', warning:'Expresión demo · Aviso', angry:'Expresión demo · Bloqueado', error:'Expresión demo · Error del sistema', surprise:'Expresión demo · Sorpresa', bored:'Expresión demo · Esperando' },
@@ -86,7 +86,7 @@ const DIALOG_I18N = Object.freeze({
     },
   },
   pt: {
-    hint: 'Clique duas vezes no avatar · Chat de teste', dialogLabel: 'Demo de chat do Agent', subtitle: 'Demo de respostas aleatórias', close: 'Fechar',
+    hint: { lead:'Experimente:', items:['Clique duas vezes no avatar','Arraste o avatar em qualquer direção','Pressione e segure o centro','Arraste a antena'] }, dialogLabel: 'Demo de chat do Agent', subtitle: 'Demo de respostas aleatórias', close: 'Fechar',
     intro: 'Este é um Agent simulado. Digite qualquer coisa para gerar respostas aleatórias de sucesso, confirmação, bloqueio, erro do sistema e outros estados, com a expressão correspondente abaixo.',
     placeholder: 'Digite uma mensagem…', keyboard: 'Enter para enviar · Shift+Enter nova linha', send: 'Enviar',
     tags: { success:'Expressão demo · Sucesso', warning:'Expressão demo · Aviso', angry:'Expressão demo · Bloqueado', error:'Expressão demo · Erro do sistema', surprise:'Expressão demo · Surpresa', bored:'Expressão demo · Aguardando' },
@@ -100,7 +100,7 @@ const DIALOG_I18N = Object.freeze({
     },
   },
   de: {
-    hint: 'Avatar doppelklicken · Demo-Chat', dialogLabel: 'Agent-Chat-Demo', subtitle: 'Demo zufälliger Statusantworten', close: 'Schließen',
+    hint: { lead:'Ausprobieren:', items:['Avatar doppelklicken','Avatar in jede Richtung ziehen','Mitte gedrückt halten','Antenne ziehen'] }, dialogLabel: 'Agent-Chat-Demo', subtitle: 'Demo zufälliger Statusantworten', close: 'Schließen',
     intro: 'Dies ist ein simulierter Agent. Gib etwas ein, um zufällige Erfolgs-, Bestätigungs-, Blockierungs-, Systemfehler- und andere Antworten mit dem passenden Ausdruck darunter zu sehen.',
     placeholder: 'Nachricht eingeben…', keyboard: 'Enter senden · Shift+Enter neue Zeile', send: 'Senden',
     tags: { success:'Demo-Ausdruck · Erfolg', warning:'Demo-Ausdruck · Warnung', angry:'Demo-Ausdruck · Blockiert', error:'Demo-Ausdruck · Systemfehler', surprise:'Demo-Ausdruck · Überraschung', bored:'Demo-Ausdruck · Warten' },
@@ -114,7 +114,7 @@ const DIALOG_I18N = Object.freeze({
     },
   },
   fr: {
-    hint: 'Double-cliquez sur l’avatar · Chat de démo', dialogLabel: 'Démo de chat Agent', subtitle: 'Démo de réponses d’état aléatoires', close: 'Fermer',
+    hint: { lead:'Essayez :', items:['Double-cliquez sur l’avatar','Faites glisser l’avatar dans toutes les directions','Maintenez le centre appuyé','Faites glisser l’antenne'] }, dialogLabel: 'Démo de chat Agent', subtitle: 'Démo de réponses d’état aléatoires', close: 'Fermer',
     intro: 'Ceci est un Agent simulé. Saisissez n’importe quoi pour obtenir aléatoirement des réponses de succès, confirmation, blocage, erreur système et autres états, avec l’expression correspondante dessous.',
     placeholder: 'Saisissez un message…', keyboard: 'Entrée envoyer · Maj+Entrée nouvelle ligne', send: 'Envoyer',
     tags: { success:'Expression démo · Succès', warning:'Expression démo · Avertissement', angry:'Expression démo · Bloqué', error:'Expression démo · Erreur système', surprise:'Expression démo · Surprise', bored:'Expression démo · Attente' },
@@ -138,6 +138,22 @@ function text(el, value) {
   if (el && el.textContent !== value) el.textContent = value;
 }
 
+function interactionHint(el, hint, language) {
+  if (!el || el.dataset.language === language) return;
+  el.dataset.language = language;
+  const lead = document.createElement('span');
+  lead.className = 'demo-interaction-lead';
+  lead.textContent = hint.lead;
+  const tags = hint.items.map(value => {
+    const tag = document.createElement('span');
+    tag.className = 'demo-interaction-tag';
+    tag.textContent = value;
+    return tag;
+  });
+  el.replaceChildren(lead, ...tags);
+  el.setAttribute('aria-label', [hint.lead, ...hint.items].join(' '));
+}
+
 function expressionState(tag) {
   return ['success','warning','angry','error','surprise','bored'].find(name => tag?.classList.contains(name)) || null;
 }
@@ -148,19 +164,20 @@ function injectStyle() {
   style.id = STYLE_ID;
   style.textContent = `
     .demo-chat-entry-hint{
-      position:absolute;left:50%;top:calc(39% + 66px);transform:translateX(-50%);z-index:14;
-      padding:3px 7px;border-radius:999px;color:#a0a4aa;background:rgba(255,255,255,.62);
-      border:1px solid rgba(0,0,0,.035);font-size:9px;line-height:1.25;white-space:nowrap;
-      pointer-events:none;user-select:none;backdrop-filter:blur(8px);
+      position:static;z-index:14;display:flex;align-items:center;justify-content:center;gap:5px;flex-wrap:wrap;
+      width:max-content;max-width:100%;padding:0;color:#8f949b;font-size:9px;line-height:1.25;
+      pointer-events:none;user-select:none;justify-self:center;
     }
+    .demo-interaction-lead{padding:3px 1px;font-weight:650;white-space:nowrap}
+    .demo-interaction-tag{padding:4px 7px;border:1px solid rgba(0,0,0,.055);border-radius:999px;background:rgba(255,255,255,.76);white-space:nowrap;box-shadow:0 3px 12px rgba(0,0,0,.025)}
     .status-pill.demo-status{top:calc(39% + 90px)!important}
     @media(max-width:600px){
-      .demo-chat-entry-hint{top:calc(27% + 64px)}
+      .demo-chat-entry-hint{max-width:calc(100vw - 28px);gap:4px}
+      .demo-interaction-tag{padding:4px 6px}
       .status-pill.demo-status{top:calc(27% + 88px)!important}
       .demo-control-stack{top:calc(27% + 134px)!important}
     }
     @media(max-width:390px){
-      .demo-chat-entry-hint{top:calc(26% + 64px)}
       .status-pill.demo-status{top:calc(26% + 88px)!important}
       .demo-control-stack{top:calc(26% + 134px)!important}
     }
@@ -177,16 +194,19 @@ function ensureHint() {
   hint = document.createElement('div');
   hint.id = 'demoChatEntryHint';
   hint.className = 'demo-chat-entry-hint';
-  hint.setAttribute('aria-hidden', 'true');
-  if (status?.parentNode === canvas) canvas.insertBefore(hint, status);
+  hint.setAttribute('role', 'note');
+  const stack = document.querySelector('.demo-control-stack');
+  if (stack) stack.prepend(hint);
+  else if (status?.parentNode === canvas) canvas.insertBefore(hint, status.nextSibling);
   else canvas.appendChild(hint);
   return hint;
 }
 
 function syncDialog() {
-  const t = DIALOG_I18N[activeLanguage()];
+  const language = activeLanguage();
+  const t = DIALOG_I18N[language];
   const hint = ensureHint();
-  text(hint, t.hint);
+  interactionHint(hint, t.hint, language);
 
   const dialog = document.querySelector('.agent-phone');
   if (dialog) dialog.setAttribute('aria-label', t.dialogLabel);

@@ -27,18 +27,6 @@ const WRAP_WAITING_LABELS = Object.freeze({
   ko:'대기 · 감싸기', es:'Espera · Envoltura', pt:'Espera · Contorno', de:'Warten · Umlauf', fr:'Attente · Enveloppement',
 });
 
-const HINTS = Object.freeze({
-  'zh-CN': '双击进入对话模拟 · 头像支持拖动',
-  'zh-TW': '雙擊進入對話模擬 · 頭像支援拖動',
-  en: 'Double-click for demo chat · Avatar is draggable',
-  ja: 'ダブルクリックで会話デモ · アバターはドラッグ可能',
-  ko: '더블클릭하여 데모 대화 · 아바타 드래그 지원',
-  es: 'Doble clic para chat de prueba · Avatar arrastrable',
-  pt: 'Clique duas vezes para chat de teste · Avatar arrastável',
-  de: 'Doppelklick für Demo-Chat · Avatar verschiebbar',
-  fr: 'Double-cliquez pour le chat démo · Avatar déplaçable',
-});
-
 function activeLanguage(table) {
   const lang = document.documentElement.lang || 'zh-CN';
   if (table[lang]) return lang;
@@ -80,13 +68,6 @@ function applyDefaultAntennaFlashOff() {
   if (dot) dot.style.opacity = '1';
 }
 
-function syncHint() {
-  const hint = document.getElementById('demoChatEntryHint');
-  if (!hint) return false;
-  hint.textContent = HINTS[activeLanguage(HINTS)];
-  return true;
-}
-
 function mountWaitingSync() {
   const face = document.getElementById('face');
   const chat = document.getElementById('chat');
@@ -122,20 +103,10 @@ function mountExtras() {
   applyDefaultAntennaFlashOff();
   mountWaitingSync();
   mountStateLabels();
-  syncHint();
 
   new MutationObserver(() => {
     syncActionLabels();
-    syncHint();
   }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
-
-  // demoChatEntryHint is created later by the dialog i18n module.
-  if (!document.getElementById('demoChatEntryHint') && document.body) {
-    const bodyObserver = new MutationObserver(() => {
-      if (syncHint()) bodyObserver.disconnect();
-    });
-    bodyObserver.observe(document.body, { childList: true, subtree: true });
-  }
 
 }
 
