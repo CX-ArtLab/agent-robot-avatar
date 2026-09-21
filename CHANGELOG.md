@@ -9,6 +9,7 @@ The project follows Semantic Versioning for public releases. Internal developmen
 ### Fixed
 
 - Restored the existing head-drag, waiting, sleep-wake, and touch-cancel behavior alongside press-and-hold squeezing by deferring squeeze activation until the hold is confirmed.
+- Refined the wrap waiting animation with shared rotational projection, optical height compensation, and edge contact so the eyes turn around the head without overlapping, clipping, or using transparency.
 
 ## [0.4.2] - 2026-09-21
 
