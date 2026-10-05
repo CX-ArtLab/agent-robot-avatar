@@ -93,7 +93,7 @@ function dispatchLoveState(instance, state) {
   instance.dispatchEvent(new CustomEvent('face-state', { detail: { state } }));
 }
 
-function animateLoveHead(instance, config, duration) {
+function animateLoveHead(instance, config, duration, elapsed = 0) {
   if (!instance._headMotion?.animate) return;
   const token = instance._transitionToken;
   const { swayAngle, swayLift } = config;
@@ -104,7 +104,7 @@ function animateLoveHead(instance, config, duration) {
     { transform: `translateY(${-swayLift}px) rotate(${-swayAngle}deg)`, offset: 0.3, easing: 'cubic-bezier(.35,0,.22,1)' },
     { transform: `translateY(${-swayLift / 2}px) rotate(${swayAngle}deg)`, offset: 0.68, easing: 'cubic-bezier(.35,0,.22,1)' },
     { transform: 'translateY(0px) rotate(0deg)', offset: 1 },
-  ], { duration, easing: 'linear', fill: 'forwards' });
+  ], { duration, delay: -elapsed, easing: 'linear', fill: 'forwards' });
   anim.onfinish = () => {
     if (token === instance._transitionToken) instance._headMotion.style.transform = 'translateY(0px)';
   };
@@ -122,11 +122,15 @@ proto.love = async function() {
   this._look.x = 0;
   this._look.y = 0;
 
-  const reduced = reducedMotion(this);
   const duration = loveDuration(config);
-  this._loveFx = { start: performance.now(), duration, timing: config, reduced };
+  this._loveFx = { start: performance.now(), duration, timing: config, headStarted: false };
   dispatchLoveState(this, 'love');
-  if (!reduced) animateLoveHead(this, config, duration);
+  // Motion preference is read on every frame, so switching it mid-action
+  // takes effect immediately; the head sway starts from the first full-motion frame.
+  if (!reducedMotion(this)) {
+    this._loveFx.headStarted = true;
+    animateLoveHead(this, config, duration);
+  }
 
   await this._wait(duration + 30);
   if (token !== this._transitionToken) return;
@@ -149,14 +153,22 @@ function drawLove(now) {
   const elapsed = Math.max(0, Math.min(fx.duration, now - fx.start));
   const holdEnd = timing.morphIn + timing.beat * timing.beats;
 
-  // 0 = idle eyes, 1 = full heart.
+  const reduced = reducedMotion(this);
+  if (!reduced && !fx.headStarted) {
+    fx.headStarted = true;
+    animateLoveHead(this, timing, fx.duration, elapsed);
+  }
+
+  // 0 = idle eyes, 1 = full heart. Reduced motion shows the finished heart
+  // straight away and holds it, with no in-between frames or beat.
   let morph = 1;
-  if (elapsed < timing.morphIn) morph = smooth(elapsed / timing.morphIn);
+  if (reduced) morph = 1;
+  else if (elapsed < timing.morphIn) morph = smooth(elapsed / timing.morphIn);
   else if (elapsed > holdEnd) morph = 1 - smooth((elapsed - holdEnd) / timing.morphOut);
 
   // Heartbeat: two soft swells per beat ("lub-dub"), only while held.
   let pulse = 0;
-  if (!fx.reduced && elapsed >= timing.morphIn && elapsed <= holdEnd) {
+  if (!reduced && elapsed >= timing.morphIn && elapsed <= holdEnd) {
     const phase = ((elapsed - timing.morphIn) % timing.beat) / timing.beat;
     const swell = (centre, width) => Math.max(0, 1 - Math.abs(phase - centre) / width);
     pulse = Math.max(smooth(swell(0.12, 0.12)), 0.6 * smooth(swell(0.36, 0.12)));

@@ -184,10 +184,9 @@ test('reduced motion keeps a static heart without head motion or beating', async
   await advance(page, 900);
   const first = await avatar.evaluate(element => ({
     effect: Boolean(element._loveFx),
-    reduced: element._loveFx?.reduced,
     animations: element._headMotion.getAnimations().filter(animation => animation.playState === 'running').length,
   }));
-  expect(first).toEqual({ effect: true, reduced: true, animations: 0 });
+  expect(first).toEqual({ effect: true, animations: 0 });
 
   const samples = [];
   for (let i = 0; i < 4; i++) {
@@ -195,8 +194,58 @@ test('reduced motion keeps a static heart without head motion or beating', async
     await advance(page, 190);
   }
   expect(new Set(samples).size).toBe(1);
-  expect((await eyeTilts(avatar)).right).toBeGreaterThan(0);
+  // The finished heart is shown at once, not stuck at the start of the morph.
+  const defaultTilt = await page.evaluate(() => window.AgentRobotAvatarLoveDefaults.tilt);
+  expect((await eyeTilts(avatar)).right).toBeCloseTo(defaultTilt, 1);
 
   await avatar.evaluate(element => element.reset());
   expect(await avatar.evaluate(element => element._actions.at(-1))).toBe('love:cancel:api');
+});
+
+test('reduced motion love still ends and returns to ordinary eyes', async ({ page }) => {
+  const avatar = await loadAvatar(page, { reducedMotion: 'reduce' });
+
+  await avatar.evaluate(element => { element._task = element.play('love'); });
+  await advance(page, 5000);
+  const result = await avatar.evaluate(async element => {
+    await element._task;
+    return { actions: element._actions, fx: element._loveFx, state: element._state };
+  });
+  expect(result.actions).toEqual(['love:start:api', 'love:end:api']);
+  expect(result.fx).toBeNull();
+  expect(result.state).toBe('idle');
+  await advance(page, 300);
+  // Ordinary eyes carry no heart tilt (NaN means the transform has no rotation at all).
+  const tilt = (await eyeTilts(avatar)).right;
+  expect(Number.isNaN(tilt) || Math.abs(tilt) < 0.5).toBe(true);
+});
+
+test('love follows motion preference changes while it plays', async ({ page }) => {
+  const avatar = await loadAvatar(page);
+  const scale = () => avatar.evaluate(element => Number(/scale\(([\d.]+)\)/.exec(element._leftEye.getAttribute('transform'))?.[1]));
+  const sampleScales = async () => {
+    const values = new Set();
+    for (let i = 0; i < 5; i++) {
+      await page.mouse.move(20 + i * 5, 40 + i * 3);
+      values.add(await scale());
+      await advance(page, 70);
+    }
+    return values.size;
+  };
+
+  await avatar.evaluate(element => { void element.play('love'); });
+  await advance(page, 700);
+  expect(await sampleScales()).toBeGreaterThan(1);
+
+  // Full -> reduce: the heart stops beating and the head stops swaying, even with the pointer moving.
+  await avatar.evaluate(element => element.setAttribute('motion', 'reduce'));
+  await advance(page, 50);
+  expect(await sampleScales()).toBe(1);
+  expect(await avatar.evaluate(element => element._headMotion.getAnimations()
+    .filter(animation => animation.playState === 'running').length)).toBe(0);
+
+  // Reduce -> full: the beat comes back.
+  await avatar.evaluate(element => element.setAttribute('motion', 'full'));
+  await advance(page, 50);
+  expect(await sampleScales()).toBeGreaterThan(1);
 });
