@@ -12,8 +12,16 @@ test.afterEach(async ({ page }) => {
   expect(pageErrors.get(page)).toEqual([]);
 });
 
+// Wait until the demo has finished loading every module, otherwise navigating away
+// (or ending the test) aborts in-flight imports and the browser reports page errors.
+async function openDemo(page, query = '') {
+  await page.goto(`/demo/${query}`, { waitUntil: 'networkidle' });
+  await expect(page.locator('.controls button[data-action]')).toHaveCount(17);
+  await expect(page.locator('#agent-demo-build')).toHaveText(/^Demo \d/);
+}
+
 test('the demo lists the newest actions last, each flagged with a NEW badge', async ({ page }) => {
-  await page.goto('/demo/?lang=en');
+  await openDemo(page, '?lang=en');
   const buttons = page.locator('.controls button[data-action]');
   await expect(buttons.last()).toHaveAttribute('data-action', 'random');
 
@@ -26,12 +34,15 @@ test('the demo lists the newest actions last, each flagged with a NEW badge', as
     badge: getComputedStyle(button, '::after').content,
   })));
   expect(flags.filter(flag => flag.isNew).map(flag => flag.action)).toEqual(['love', 'random']);
-  for (const flag of flags.filter(flag => flag.isNew)) expect(flag.badge).toBe('"NEW"');
+  // Chromium and WebKit resolve attr(data-new) to "NEW"; Firefox reports the unresolved attr().
+  for (const flag of flags.filter(flag => flag.isNew)) expect(['"NEW"', 'attr(data-new)']).toContain(flag.badge);
+  const labels = await buttons.evaluateAll(list => list.filter(button => button.classList.contains('is-new')).map(button => button.dataset.new));
+  expect(labels).toEqual(['NEW', 'NEW']);
   for (const flag of flags.filter(flag => !flag.isNew)) expect(['none', 'normal']).toContain(flag.badge);
 });
 
 test('the new demo buttons play their real actions and stay labelled in every language', async ({ page }) => {
-  await page.goto('/demo/?lang=en');
+  await openDemo(page, '?lang=en');
   await page.evaluate(() => {
     const face = document.getElementById('face');
     face._demoActions = [];
@@ -46,7 +57,7 @@ test('the new demo buttons play their real actions and stay labelled in every la
     .toEqual(expect.arrayContaining(['love:start', 'love:end', 'random:start', 'random:end']));
 
   for (const lang of ['zh-CN', 'zh-TW', 'ja', 'ko', 'es', 'pt', 'de', 'fr']) {
-    await page.goto(`/demo/?lang=${lang}`);
+    await openDemo(page, `?lang=${lang}`);
     await expect(page.locator('.controls button.is-new')).toHaveCount(2);
     const labels = await page.locator('.controls button.is-new').evaluateAll(list => list.map(button => button.textContent.trim()));
     expect(labels).toHaveLength(2);
@@ -59,7 +70,7 @@ for (const [name, viewport] of [['phone', { width: 390, height: 844 }], ['small 
   test(`the demo action row wraps instead of overflowing on a ${name}`, async ({ page }) => {
     await page.setViewportSize(viewport);
     for (const lang of ['zh-CN', 'de']) {
-      await page.goto(`/demo/?lang=${lang}`);
+      await openDemo(page, `?lang=${lang}`);
       await expect(page.locator('.controls button.is-new')).toHaveCount(2);
       const layout = await page.evaluate(() => {
         const controls = document.querySelector('.controls').getBoundingClientRect();

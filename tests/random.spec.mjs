@@ -67,9 +67,11 @@ test('random plays one lifecycle and returns to ordinary eyes', async ({ page })
   expect(result.fx).toBeNull();
   expect(result.baseOpacity).toBe('1.000');
 
+  // Idle eyes drift slightly, so check for an ordinary full-size eye rather than exact numbers.
   const rest = await eyeShape(avatar);
   for (const eye of [rest.left, rest.right]) {
-    expect(eye.rx).toBeCloseTo(27, 0);
+    expect(eye.rx).toBeGreaterThan(22);
+    expect(eye.rx).toBeLessThanOrEqual(27.01);
     expect(eye.ry).toBeGreaterThan(20);
     expect(Math.abs(eye.cy)).toBeLessThan(2);
   }
@@ -178,7 +180,9 @@ test('reset cancels random and restores the eyes without a late idle event', asy
   expect(result.fx).toBeNull();
   expect(result.state).toBe('idle');
   const rest = await eyeShape(avatar);
-  expect(rest.left.rx).toBeCloseTo(27, 0);
+  expect(rest.left.rx).toBeGreaterThan(22);
+  expect(rest.left.rx).toBeLessThanOrEqual(27.01);
+  expect(rest.left.ry).toBeGreaterThan(20);
 });
 
 test('another action replaces random cleanly', async ({ page }) => {
