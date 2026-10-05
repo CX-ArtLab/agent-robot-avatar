@@ -83,9 +83,13 @@ avatar.reset();
 
 利用可能なアクション：
 
-`idle` · `bored` · `waiting` · `waiting-wrap` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `sleep` · `wake`
+`idle` · `bored` · `waiting` · `waiting-wrap` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `love` · `random` · `sleep` · `wake`
 
 `failure` はタスクが完了したものの失敗した場合、`error` は接続・サービス・システム障害の場合に使います。
+
+`love` は好意や感謝を表します。両目が寄り合って一つのハートになり、3 回脈打ってから元に戻ります。
+
+`random` はスロットマシンの回転を再生します。各目がドラム上を転がり、まず左目が減速してバウンドしながら止まり、続いて右目が止まります。`slot` はエイリアスです。
 
 典型的な Agent リクエストの流れ：
 

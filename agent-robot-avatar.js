@@ -5,6 +5,8 @@ import './src/agent-robot-avatar-waiting.js';
 import './src/agent-robot-avatar-antenna-flash.js';
 import './src/agent-robot-avatar-inspect.js';
 import './src/agent-robot-avatar-failure.js';
+import './src/agent-robot-avatar-love.js';
+import './src/agent-robot-avatar-random.js';
 import './src/agent-robot-avatar-head-roundness.js';
 import './src/agent-robot-avatar-gestures.js';
 import './src/agent-robot-avatar-runtime.js';
