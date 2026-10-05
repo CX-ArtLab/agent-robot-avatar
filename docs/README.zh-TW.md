@@ -83,9 +83,13 @@ avatar.reset();
 
 可用動作：
 
-`idle` · `bored` · `waiting` · `waiting-wrap` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `sleep` · `wake`
+`idle` · `bored` · `waiting` · `waiting-wrap` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `love` · `random` · `sleep` · `wake`
 
 `failure` 用於表示任務執行完成但結果失敗；`error` 用於連線、服務或系統錯誤。
+
+`love` 用於表達喜歡或感謝：兩隻眼睛向中間靠攏合成一顆愛心，跳動三下後恢復。
+
+`random` 播放老虎機式的轉動：兩隻眼睛各自在滾筒上滾動，隨後左眼減速、彈跳著停下，右眼稍後停下。`slot` 是它的別名。
 
 典型的 Agent 請求流程：
 

@@ -21,6 +21,9 @@ export type AgentRobotAvatarAction =
   | 'system-error'
   | 'connection-error'
   | 'surprise'
+  | 'love'
+  | 'random'
+  | 'slot'
   | 'sleep'
   | 'wake';
 
@@ -33,6 +36,8 @@ export type AgentRobotAvatarState =
   | 'input'
   | 'sleep'
   | 'surprise'
+  | 'love'
+  | 'random'
   | 'waiting'
   | 'warning'
   | 'error'
@@ -55,6 +60,8 @@ export type AgentRobotAvatarCanonicalAction =
   | 'blocked'
   | 'error'
   | 'surprise'
+  | 'love'
+  | 'random'
   | 'sleep'
   | 'wake'
   | 'reaction'

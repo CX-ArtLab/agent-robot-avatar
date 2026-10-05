@@ -47,6 +47,9 @@ const ACTION_ALIASES = Object.freeze({
   'system-error': 'error',
   'connection-error': 'error',
   surprise: 'surprise',
+  love: 'love',
+  random: 'random',
+  slot: 'random',
   sleep: 'sleep',
   wake: 'wake',
 });
@@ -287,6 +290,8 @@ function programActionOwnsExpression(instance) {
     instance._waitingFx ||
     instance._inputWanted ||
     instance._inspectFx ||
+    instance._loveFx ||
+    instance._randomFx ||
     instance._failureFx ||
     instance._warningFx ||
     instance._systemErrorShake ||
@@ -858,7 +863,7 @@ function drawReducedState(instance) {
   }
 }
 
-for (const property of ['_waitingFx', '_inspectFx', '_failureFx', '_warningFx', '_systemErrorShake']) {
+for (const property of ['_waitingFx', '_inspectFx', '_loveFx', '_randomFx', '_failureFx', '_warningFx', '_systemErrorShake']) {
   const slot = Symbol(property);
   Object.defineProperty(proto, property, {
     configurable: true,
