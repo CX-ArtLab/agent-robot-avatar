@@ -246,7 +246,7 @@ test('reduced motion holds a static part-way eye instead of spinning', async ({ 
 
   await avatar.evaluate(element => { void element.play('random'); });
   await advance(page, 500);
-  expect(await avatar.evaluate(element => element._randomFx?.reduced)).toBe(true);
+  expect(await avatar.evaluate(element => Boolean(element._randomFx))).toBe(true);
 
   const samples = [];
   for (let i = 0; i < 4; i++) {
@@ -259,4 +259,48 @@ test('reduced motion holds a static part-way eye instead of spinning', async ({ 
 
   await avatar.evaluate(element => element.reset());
   expect(await avatar.evaluate(element => element._actions.at(-1))).toBe('random:cancel:api');
+});
+
+test('reduced motion random still ends and returns to ordinary eyes', async ({ page }) => {
+  const avatar = await loadAvatar(page, { reducedMotion: 'reduce' });
+
+  await avatar.evaluate(element => { element._task = element.play('random'); });
+  await advance(page, 5000);
+  const result = await avatar.evaluate(async element => {
+    await element._task;
+    return { actions: element._actions, fx: element._randomFx, state: element._state };
+  });
+  expect(result.actions).toEqual(['random:start:api', 'random:end:api']);
+  expect(result.fx).toBeNull();
+  await advance(page, 300);
+  const rest = await eyeShape(avatar);
+  expect(rest.left.rx).toBeGreaterThan(22);
+  expect(rest.left.ry).toBeGreaterThan(8);
+});
+
+test('random follows motion preference changes while it plays', async ({ page }) => {
+  const avatar = await loadAvatar(page);
+  const sampleHeights = async () => {
+    const values = new Set();
+    for (let i = 0; i < 8; i++) {
+      await page.mouse.move(20 + i * 5, 40 + i * 3);
+      values.add((await eyeShape(avatar)).left.ry.toFixed(2));
+      await advance(page, 50);
+    }
+    return values.size;
+  };
+
+  await avatar.evaluate(element => { void element.play('random'); });
+  await advance(page, 500);
+  expect(await sampleHeights()).toBeGreaterThan(1);
+
+  // Full -> reduce: the eye holds still even with the pointer moving.
+  await avatar.evaluate(element => element.setAttribute('motion', 'reduce'));
+  await advance(page, 100);
+  expect(await sampleHeights()).toBe(1);
+
+  // Reduce -> full: the reel rolls again.
+  await avatar.evaluate(element => element.setAttribute('motion', 'full'));
+  await advance(page, 100);
+  expect(await sampleHeights()).toBeGreaterThan(1);
 });

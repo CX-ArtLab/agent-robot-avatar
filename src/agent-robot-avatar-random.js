@@ -170,7 +170,7 @@ proto._previewRandom = function(elapsed) {
     this._look.y = 0;
     dispatchRandomState(this, 'random');
   }
-  this._randomFx = buildRandomFx(currentRandomConfig(), 0, { preview: true, frozenAt: elapsed, reduced: false });
+  this._randomFx = buildRandomFx(currentRandomConfig(), 0, { preview: true, frozenAt: elapsed });
   this._resumeFrames?.();
   return this._randomFx.duration;
 };
@@ -187,7 +187,7 @@ proto.random = async function() {
   this._look.x = 0;
   this._look.y = 0;
 
-  this._randomFx = buildRandomFx(config, performance.now(), { reduced: reducedMotion(this) });
+  this._randomFx = buildRandomFx(config, performance.now());
   const duration = this._randomFx.duration;
   dispatchRandomState(this, 'random');
 
@@ -206,6 +206,8 @@ function drawRandom(now) {
   if (!fx) return;
 
   const elapsed = fx.frozenAt ?? Math.max(0, now - fx.start);
+  // Read live so a motion-preference change takes effect mid-action.
+  const reduced = fx.preview ? false : reducedMotion(this);
   const { period: P, radius: R, squeeze } = fx;
   const half = Math.PI * R / 2;
 
@@ -218,7 +220,7 @@ function drawRandom(now) {
     const bottom = index === 0 ? this._leftBottom : this._rightBottom;
 
     // Reduced motion holds the eye part-way round instead of spinning.
-    const position = fx.reduced ? P * 0.3 : plan.position(elapsed);
+    const position = reduced ? P * 0.3 : plan.position(elapsed);
     let offset = ((position % P) + P) % P;
     if (offset > P / 2) offset -= P;
 
