@@ -6,6 +6,8 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ## [Unreleased]
 
+## [0.5.1] - 2026-10-05
+
 ### Fixed
 
 - `love` now shows the full heart under reduced motion, and `love` and `random` follow motion preference changes while they play.
