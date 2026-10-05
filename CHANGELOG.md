@@ -8,18 +8,8 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ### Added
 
-- Added the `love` action. The two eyes lean together into a single heart with a rounded base, beat three times, then return to normal. It is built from the existing eye ovals, so it keeps the avatar's visual language, and it shows a static heart under reduced motion.
-- Added the `love` action to the TypeScript declarations (`AgentRobotAvatarAction`, `AgentRobotAvatarCanonicalAction`, and the `face-state` state `love`).
-- Added `window.AgentRobotAvatarLoveConfig` (with `AgentRobotAvatarLoveDefaults` and `AgentRobotAvatarLoveBounds`) to adjust the heart's shape, heartbeat, timing, and head lift; invalid values fall back and out-of-range values are clamped.
-- Added the `random` action, with `slot` as an alias. Each eye rolls over a drum like the reels of a slot machine, then the left eye slows, overshoots, bounces and settles, followed by the right eye. It uses the same rotational projection as the wrap waiting eyes (position follows the sine, height follows the cosine, so the eye flattens away at the drum edge instead of being clipped), keeps exactly one eye per side so eyes never overlap, and hands back to the ordinary eye with no visible jump. Under reduced motion it holds a static part-way eye.
-- Added `random` to the TypeScript declarations (`AgentRobotAvatarAction`, `AgentRobotAvatarCanonicalAction`, and the `face-state` state `random`).
-- Added `window.AgentRobotAvatarRandomConfig` (with `AgentRobotAvatarRandomDefaults` and `AgentRobotAvatarRandomBounds`) to adjust the drum radius, hidden gap, edge-on width correction, spin speed, stop timing, and bounce; invalid values fall back and out-of-range values are clamped.
-- Added `demo/love-tuner.html` and `demo/random-tuner.html`, standalone pages for tuning and previewing the new expressions at several sizes. They are development tools and are not published to GitHub Pages or the npm package.
-- The demo now lists the newest actions (`love`, `random`) last in the action row, each flagged with a “NEW” corner badge, with labels in all nine demo languages.
-
-### Fixed
-
-- The demo's action buttons now wrap automatically, on as many rows as the width needs, instead of being forced into two fixed rows that overflowed and cut buttons off on narrow screens.
+- Added the `love` action: the eyes lean together into a heart, beat three times, then return.
+- Added the `random` action (alias `slot`): the eyes roll like slot-machine reels, then settle with a bounce.
 
 ## [0.4.3] - 2026-09-22
 
