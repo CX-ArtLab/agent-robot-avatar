@@ -6,6 +6,8 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-10-05
+
 ### Added
 
 - Added the `love` action: the eyes lean together into a heart, beat three times, then return.
