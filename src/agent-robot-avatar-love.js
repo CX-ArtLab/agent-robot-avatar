@@ -20,12 +20,12 @@ const smooth = t => {
 // pulse       heartbeat swell, as a fraction of size
 // swayAngle / swayLift   head lean in degrees / lift in px while the heart is held
 const LOVE_DEFAULTS = Object.freeze({
-  rx: 30.5,
-  ry: 47,
-  tilt: 38.5,
-  cross: 10.5,
+  rx: 28,
+  ry: 43,
+  tilt: 42,
+  cross: 13,
   centerY: 126,
-  pulse: 0.08,
+  pulse: 0.155,
   prep: 120,
   morphIn: 240,
   beat: 760,

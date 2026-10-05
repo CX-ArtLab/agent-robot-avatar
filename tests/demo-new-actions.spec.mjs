@@ -83,7 +83,16 @@ for (const [name, viewport] of [['phone', { width: 390, height: 844 }], ['small 
             if (a.left < b.right - 0.5 && b.left < a.right - 0.5 && a.top < b.bottom - 0.5 && b.top < a.bottom - 0.5) overlaps++;
           }
         }
+        // Width of each visual row; wrapping must leave the rows close to equal.
+        const rows = new Map();
+        for (const rect of rects) {
+          const key = Math.round(rect.top);
+          const span = rows.get(key) || { left: Infinity, right: -Infinity };
+          rows.set(key, { left: Math.min(span.left, rect.left), right: Math.max(span.right, rect.right) });
+        }
+        const rowWidths = [...rows.values()].map(span => span.right - span.left);
         return {
+          rowRatio: Math.min(...rowWidths) / Math.max(...rowWidths),
           count: rects.length,
           outside: rects.filter(rect => rect.left < controls.left - 0.5 || rect.right > controls.right + 0.5
             || rect.left < 0 || rect.right > innerWidth).length,
@@ -95,6 +104,7 @@ for (const [name, viewport] of [['phone', { width: 390, height: 844 }], ['small 
       expect(layout.outside).toBe(0);
       expect(layout.overlaps).toBe(0);
       expect(layout.scrolls).toBe(false);
+      expect(layout.rowRatio).toBeGreaterThan(0.65);
     }
   });
 }

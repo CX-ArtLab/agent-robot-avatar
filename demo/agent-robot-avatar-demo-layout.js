@@ -1,5 +1,51 @@
 const STYLE_ID = 'agent-demo-layout-style-r58';
 
+// Wrapping alone leaves one long row and one short one. Count the rows the widest
+// layout needs, then narrow the container to the smallest width that still fits
+// in that many rows, so the rows come out close to equal.
+function balanceControls() {
+  const controls = document.querySelector('.demo-control-stack>.controls');
+  if (!controls) return;
+  const buttons = Array.from(controls.querySelectorAll('button[data-action]')).filter(button => button.offsetParent);
+  if (!buttons.length) return;
+
+  const rowsAt = width => {
+    controls.style.setProperty('--demo-controls-width', `${width}px`);
+    return new Set(buttons.map(button => Math.round(button.offsetTop))).size;
+  };
+
+  const limit = window.innerWidth <= 600 ? window.innerWidth - 16 : Math.min(760, window.innerWidth - 20);
+  const rows = rowsAt(limit);
+  let low = 120;
+  let high = limit;
+  while (high - low > 1) {
+    const middle = Math.floor((low + high) / 2);
+    if (rowsAt(middle) > rows) low = middle;
+    else high = middle;
+  }
+  controls.style.setProperty('--demo-controls-width', `${high}px`);
+}
+
+let balanceFrame = 0;
+function scheduleBalance() {
+  cancelAnimationFrame(balanceFrame);
+  balanceFrame = requestAnimationFrame(balanceControls);
+}
+
+function watchControls(attempt = 0) {
+  const controls = document.querySelector('.demo-control-stack>.controls');
+  if (!controls) {
+    // The control stack is assembled by another demo script; wait for it.
+    if (attempt < 120) requestAnimationFrame(() => watchControls(attempt + 1));
+    return;
+  }
+  window.addEventListener('resize', scheduleBalance);
+  document.fonts?.ready.then(scheduleBalance);
+  // Button labels change with the demo language and as extra actions are added.
+  new MutationObserver(scheduleBalance).observe(controls, { childList: true, subtree: true, characterData: true });
+  scheduleBalance();
+}
+
 function mountDemoLayout() {
   if (document.getElementById(STYLE_ID)) return;
 
@@ -38,7 +84,7 @@ function mountDemoLayout() {
     }
     .demo-control-stack>.controls{
       position:static!important;left:auto!important;top:auto!important;transform:none!important;
-      width:min(760px,calc(100vw - 20px))!important;max-width:calc(100vw - 20px)!important;margin:0!important;
+      width:var(--demo-controls-width,min(760px,calc(100vw - 20px)))!important;max-width:calc(100vw - 20px)!important;margin:0!important;
       display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:center!important;
       flex-wrap:wrap!important;gap:9px 6px!important;overflow:visible!important;padding:9px 8px 8px!important;
     }
@@ -49,7 +95,7 @@ function mountDemoLayout() {
     .demo-options-group{width:max-content!important;max-width:calc(100vw - 20px)!important;margin-inline:auto!important}
     @media(max-width:600px){
       .demo-control-stack{max-width:calc(100vw - 16px)!important}
-      .demo-control-stack>.controls{width:calc(100vw - 16px)!important;max-width:calc(100vw - 16px)!important;gap:9px 5px!important;padding:9px 7px 7px!important}
+      .demo-control-stack>.controls{width:var(--demo-controls-width,calc(100vw - 16px))!important;max-width:calc(100vw - 16px)!important;gap:9px 5px!important;padding:9px 7px 7px!important}
       .demo-control-stack>.controls button{font-size:11px!important;padding:8px 7px!important}
       .demo-options,.demo-options-group{max-width:calc(100vw - 16px)!important}
     }
@@ -62,6 +108,7 @@ function mountDemoLayout() {
   document.head.appendChild(style);
 
   window.AgentRobotAvatarApplyDemoLanguage?.();
+  watchControls();
 }
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mountDemoLayout, { once: true });
