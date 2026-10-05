@@ -56,11 +56,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CX-ARTLab/agent-robot-avatar.git"
+    "url": "git+https://github.com/CX-ArtLab/agent-robot-avatar.git"
   },
-  "homepage": "https://github.com/CX-ARTLab/agent-robot-avatar#readme",
+  "homepage": "https://github.com/CX-ArtLab/agent-robot-avatar#readme",
   "bugs": {
-    "url": "https://github.com/CX-ARTLab/agent-robot-avatar/issues"
+    "url": "https://github.com/CX-ArtLab/agent-robot-avatar/issues"
   },
   "funding": {
     "type": "individual",
