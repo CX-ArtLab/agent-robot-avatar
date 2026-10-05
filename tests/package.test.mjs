@@ -41,6 +41,8 @@ test('package contains the complete runtime and excludes the demo', async () => 
     'src/agent-robot-avatar-antenna-flash.js',
     'src/agent-robot-avatar-inspect.js',
     'src/agent-robot-avatar-failure.js',
+    'src/agent-robot-avatar-love.js',
+    'src/agent-robot-avatar-random.js',
     'src/agent-robot-avatar-head-roundness.js',
     'src/agent-robot-avatar-runtime.js',
   ];
@@ -61,6 +63,8 @@ test('package contains the complete runtime and excludes the demo', async () => 
     'src/agent-robot-avatar-antenna-flash.js',
     'src/agent-robot-avatar-inspect.js',
     'src/agent-robot-avatar-failure.js',
+    'src/agent-robot-avatar-love.js',
+    'src/agent-robot-avatar-random.js',
   ]) {
     const source = await readFile(path.join(root, file), 'utf8');
     assert.doesNotMatch(source, /proto\.(play|reset|_draw)\s*=/, `Legacy method wrapper remains in ${file}`);

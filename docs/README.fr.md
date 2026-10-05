@@ -83,9 +83,13 @@ avatar.reset();
 
 Actions disponibles :
 
-`idle` · `bored` · `waiting` · `waiting-wrap` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `sleep` · `wake`
+`idle` · `bored` · `waiting` · `waiting-wrap` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `love` · `random` · `sleep` · `wake`
 
 `failure` représente une tâche terminée sans succès, tandis que `error` est réservé aux erreurs de connexion, de service ou de système.
+
+`love` exprime l’affection ou la gratitude : les deux yeux s’inclinent l’un vers l’autre pour former un seul cœur, battent trois fois, puis reviennent à la normale.
+
+`random` joue un tour de machine à sous : chaque œil roule sur un tambour, puis l’œil gauche ralentit, rebondit et s’arrête, suivi du droit. `slot` est un alias.
 
 Exemple de cycle de requête Agent :
 
