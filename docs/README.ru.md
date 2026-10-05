@@ -83,9 +83,13 @@ avatar.reset();
 
 Доступные действия:
 
-`idle` · `bored` · `waiting` · `waiting-wrap` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `sleep` · `wake`
+`idle` · `bored` · `waiting` · `waiting-wrap` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `love` · `random` · `sleep` · `wake`
 
 `failure` означает, что задача завершилась неуспешно; `error` предназначен для ошибок соединения, сервиса или системы.
+
+`love` выражает симпатию или благодарность: два глаза наклоняются друг к другу и образуют одно сердце, трижды бьются и возвращаются в исходное состояние.
+
+`random` проигрывает вращение игрового автомата: каждый глаз катится по барабану, затем левый глаз замедляется, подпрыгивает и останавливается, следом правый. `slot` — псевдоним.
 
 Типичный жизненный цикл запроса Agent:
 

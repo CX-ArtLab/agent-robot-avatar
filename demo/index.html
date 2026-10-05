@@ -17,6 +17,8 @@
   .controls{position:absolute;left:50%;top:calc(39% + 102px);transform:translateX(-50%);padding:8px;border-radius:16px;background:rgba(255,255,255,.88);box-shadow:0 7px 30px rgba(0,0,0,.08);backdrop-filter:blur(14px);display:flex;gap:6px;z-index:20;flex-wrap:wrap;justify-content:center;max-width:min(900px,calc(100% - 56px))}
   button{border:0;background:#f1f2f3;padding:8px 11px;border-radius:10px;font-size:12px;color:#333;cursor:pointer;white-space:nowrap}
   button:hover{background:#e7e8ea} button:active{transform:translateY(1px)}
+  .controls button.is-new{position:relative}
+  .controls button.is-new::after{content:attr(data-new);position:absolute;top:-6px;right:-6px;padding:2px 5px;border-radius:999px;background:#e5484d;color:#fff;font:700 8px/1 Inter,system-ui,sans-serif;letter-spacing:.05em;pointer-events:none;box-shadow:0 2px 6px rgba(229,72,77,.35)}
   .status-pill{position:absolute;left:28px;bottom:25px;font-size:11px;color:#858990;background:#fff;border:1px solid #ececec;border-radius:999px;padding:6px 10px}
   .follow-control{position:absolute;right:28px;bottom:24px;display:inline-flex;align-items:center;gap:9px;padding:6px 9px 6px 11px;border:1px solid #e2e3e5;border-radius:999px;background:rgba(255,255,255,.92);color:#777c83;font-size:11px;font-weight:600;white-space:nowrap;user-select:none}
   .follow-control input{position:absolute;opacity:0;pointer-events:none}

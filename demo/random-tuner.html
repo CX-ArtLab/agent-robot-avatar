@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Random 表情调参器</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;min-height:100%;font-family:Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:#15171a;background:#f7f7f5}
+  .page{display:grid;grid-template-columns:minmax(0,1fr) 400px;min-height:100vh}
+  .stage{position:relative;background-color:#f8f8f6;background-image:radial-gradient(#d7d9dc 1px,transparent 1px);background-size:24px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;padding:32px 20px}
+  .title{position:absolute;left:28px;top:22px;font-size:13px;color:#8a8f98;letter-spacing:.04em}
+  .big{position:relative;width:300px;height:300px;display:grid;place-items:center}
+  .big agent-robot-avatar{filter:drop-shadow(0 12px 24px rgba(0,0,0,.08))}
+  .guides{position:absolute;inset:0;pointer-events:none;display:none}
+  .guides.on{display:block}
+  .guides i{position:absolute;display:block}
+  .g-drum{left:0;right:0;border-top:1px dashed rgba(70,110,255,.55)}
+  .g-rest{border:1px dashed rgba(255,70,110,.7);border-radius:50%}
+  .sizes{display:flex;align-items:flex-end;gap:36px;color:#8a8f98;font-size:11px}
+  .sizes figure{margin:0;display:grid;justify-items:center;gap:8px}
+  .player{width:min(520px,100%);display:grid;gap:10px;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.9);box-shadow:0 7px 30px rgba(0,0,0,.08)}
+  .player-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .player-row.grow{flex-wrap:nowrap}
+  .player input[type=range]{flex:1;min-width:0;accent-color:#666b72}
+  .time{font-size:11px;color:#666b72;font-variant-numeric:tabular-nums;min-width:96px;text-align:right}
+  .phase{font-size:12px;color:#555;display:flex;gap:16px}
+  .phase b{color:#15171a;font-weight:600}
+  button,select{border:0;background:#f1f2f3;padding:8px 12px;border-radius:10px;font-size:12px;color:#333;cursor:pointer;white-space:nowrap;font-family:inherit}
+  button:hover,select:hover{background:#e7e8ea} button:active{transform:translateY(1px)}
+  button.primary{background:#666b72;color:#fff} button.primary:hover{background:#585d63}
+  .toggles{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;font-size:12px;color:#666b72}
+  .toggles label{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+  .panel{background:#fff;border-left:1px solid #ececec;overflow-y:auto;max-height:100vh;position:sticky;top:0}
+  .toolbar{position:sticky;top:0;z-index:2;display:flex;gap:8px;flex-wrap:wrap;padding:14px 22px;background:rgba(255,255,255,.96);border-bottom:1px solid #f0f0ee;backdrop-filter:blur(8px)}
+  .toolbar button[hidden]{display:none}
+  .body{padding:6px 22px 40px}
+  .body h2{margin:22px 0 10px;font-size:12px;font-weight:700;letter-spacing:.06em;color:#8a8f98;text-transform:uppercase}
+  .row{display:grid;grid-template-columns:104px 1fr 62px 26px;align-items:center;gap:8px;margin:7px 0;font-size:12px;color:#444}
+  .row .hint{grid-column:2 / 5;margin:-3px 0 2px;font-size:10px;color:#a0a4ab}
+  .row input[type=range]{width:100%;accent-color:#666b72}
+  .row input[type=number]{width:62px;padding:4px 6px;border:1px solid #e2e3e5;border-radius:8px;font-size:12px;font-family:inherit;color:#333}
+  .row .undo{width:26px;height:26px;padding:0;border-radius:8px;font-size:13px;line-height:1;background:#fdecf2;color:#d6336c}
+  .row .undo:hover{background:#fadbe7}
+  .row:not(.changed) .undo{opacity:.3;pointer-events:none;background:#f1f2f3;color:#8a8f98}
+  .row.changed label{color:#d6336c;font-weight:600}
+  textarea{width:100%;height:150px;resize:vertical;border:1px solid #e2e3e5;border-radius:10px;padding:10px;font:11px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;color:#333;background:#fafafa}
+  .note{margin-top:8px;font-size:11px;color:#8a8f98;line-height:1.55}
+  @media (max-width:860px){
+    .page{grid-template-columns:1fr}
+    .panel{position:static;max-height:none;border-left:0;border-top:1px solid #ececec}
+    .stage{min-height:auto;padding-top:60px}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <main class="stage">
+    <div class="title">Agent Robot Avatar — Random（老虎机）表情调参器</div>
+
+    <div class="big">
+      <agent-robot-avatar id="face" size="300"></agent-robot-avatar>
+      <div class="guides" id="guides">
+        <i class="g-drum" id="drumT"></i><i class="g-drum" id="drumB"></i>
+        <i class="g-rest" id="restL"></i><i class="g-rest" id="restR"></i>
+      </div>
+    </div>
+
+    <div class="sizes">
+      <figure><agent-robot-avatar id="faceMid" size="112"></agent-robot-avatar>112px（默认尺寸）</figure>
+      <figure><agent-robot-avatar id="faceSmall" size="56"></agent-robot-avatar>56px（聊天头像）</figure>
+    </div>
+
+    <div class="player">
+      <div class="player-row grow">
+        <button type="button" class="primary" id="toggle">⏸ 暂停</button>
+        <input type="range" id="scrub" min="0" max="1" step="1" value="0" aria-label="时间轴">
+        <span class="time" id="time">0 / 0 ms</span>
+      </div>
+      <div class="player-row">
+        <button type="button" id="restart">↻ 从头播放</button>
+        <select id="rate" aria-label="播放速度">
+          <option value="1">速度 1×</option>
+          <option value="0.5">速度 0.5×</option>
+          <option value="0.25">速度 0.25×</option>
+          <option value="0.1">速度 0.1×</option>
+        </select>
+        <button type="button" id="real">用真实动作播放一次</button>
+      </div>
+      <div class="phase"><span>左眼：<b id="phL">—</b></span><span>右眼：<b id="phR">—</b></span></div>
+    </div>
+    <div class="toggles">
+      <label><input type="checkbox" id="guideToggle" checked> 参考线</label>
+      <span style="color:#a0a4ab">表情会一直保持，不会回到普通眼睛；空格键 = 播放/暂停</span>
+    </div>
+  </main>
+
+  <aside class="panel">
+    <div class="toolbar">
+      <button type="button" class="primary" id="copy">复制参数</button>
+      <button type="button" id="reset">恢复全部默认</button>
+      <button type="button" id="undoReset" hidden>撤销恢复</button>
+    </div>
+    <div class="body">
+      <h2>转筒</h2>
+      <div id="g-reel"></div>
+      <h2>旋转</h2>
+      <div id="g-spin"></div>
+      <h2>停下（减速 + 回弹）</h2>
+      <div id="g-stop"></div>
+      <h2>其他</h2>
+      <div id="g-other"></div>
+
+      <h2>当前参数</h2>
+      <textarea id="out" readonly></textarea>
+      <div class="note">蓝色虚线 = 转筒的上下边缘（眼睛转到这里时侧立消失）；粉色虚线 = 停稳后眼睛的位置。粉色字 = 与默认值不同，点右侧 ↺ 可单独恢复该项。改动会自动保存在本浏览器里。调好后把“复制参数”的内容发给我。</div>
+    </div>
+  </aside>
+</div>
+
+<script type="module">
+  import '../agent-robot-avatar.js';
+
+  const config = window.AgentRobotAvatarRandomConfig;
+  const defaults = window.AgentRobotAvatarRandomDefaults;
+  const bounds = window.AgentRobotAvatarRandomBounds;
+
+  // [key, label, step, group, restartsPlayback, hint]
+  const CONTROLS = [
+    ['radius', '转筒半径 radius', 1, 'g-reel', true, '越大眼睛上下走得越远，也转得越“缓”'],
+    ['gap', '首尾间隔 gap', 1, 'g-reel', true, '眼睛从下缘翻出后，到再次从上缘翻入之间的空隙；0 = 首尾相接'],
+    ['squeeze', '侧面收窄 squeeze', 0.5, 'g-reel', false, '眼睛转到侧面时额外变窄多少（光学补偿，同环绕等待）'],
+    ['speed', '转速 speed', 0.01, 'g-spin', true, '转筒表面速度，单位/毫秒'],
+    ['ramp', '起转时间 ms', 10, 'g-spin', true, '从静止加速到满速'],
+    ['spin', '左眼转动时长 ms', 10, 'g-spin', true, '满速转多久后开始减速'],
+    ['stagger', '右眼延后 ms', 10, 'g-spin', true, '右眼比左眼晚多久开始减速'],
+    ['slowDist', '减速距离 slowDist', 1, 'g-stop', true, '越大停得越缓'],
+    ['overshoot', '回弹过冲 overshoot', 0.5, 'g-stop', true, '冲过头多少再弹回；0 = 不回弹'],
+    ['bouncePeriod', '回弹周期 ms', 10, 'g-stop', true, '越小弹得越快'],
+    ['damping', '阻尼 damping', 0.01, 'g-stop', true, '越小弹得次数越多'],
+    ['prep', '起手停顿 ms', 10, 'g-other', false, '仅影响“真实动作”，预览里不体现'],
+  ];
+
+  const $ = id => document.getElementById(id);
+  const faces = [$('face'), $('faceMid'), $('faceSmall')];
+  const primary = faces[0];
+  const STORE = 'random-tuner-v1';
+  const TAIL = 700; // keep the settled pose on screen this long before looping
+  const values = { ...defaults };
+  const inputs = {};
+
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORE) || '{}');
+    for (const key of Object.keys(defaults)) {
+      if (Number.isFinite(saved[key])) values[key] = Math.min(bounds[key][1], Math.max(bounds[key][0], saved[key]));
+    }
+  } catch {}
+
+  const decimals = step => (String(step).split('.')[1] || '').length;
+  const clampValue = (key, n) => Math.min(bounds[key][1], Math.max(bounds[key][0], n));
+  const fmt = (key, v) => Number(v).toFixed(decimals(CONTROLS.find(c => c[0] === key)[2]));
+
+  for (const [key, label, step, group, , hint] of CONTROLS) {
+    const row = document.createElement('div');
+    row.className = 'row';
+    row.innerHTML = `<label for="r-${key}">${label}</label>
+      <input type="range" id="r-${key}" min="${bounds[key][0]}" max="${bounds[key][1]}" step="${step}">
+      <input type="number" id="n-${key}" min="${bounds[key][0]}" max="${bounds[key][1]}" step="${step}">
+      <button type="button" class="undo" title="恢复默认值 ${defaults[key]}" aria-label="恢复 ${label} 为默认值">↺</button>
+      ${hint ? `<div class="hint">${hint}</div>` : ''}`;
+    $(group).appendChild(row);
+    inputs[key] = {
+      row,
+      range: row.querySelector('[type=range]'),
+      number: row.querySelector('[type=number]'),
+      undo: row.querySelector('.undo'),
+    };
+  }
+
+  // ---- parameter state -----------------------------------------------------
+  let undoSnapshot = null;
+
+  function guides() {
+    const pct = n => `${(n / 240 * 100).toFixed(3)}%`;
+    $('drumT').style.top = pct(126 - values.radius);
+    $('drumB').style.top = pct(126 + values.radius);
+    for (const [id, cx] of [['restL', 86], ['restR', 154]]) {
+      $(id).style.cssText = `left:${pct(cx - 27)};width:${pct(54)};top:${pct(126 - 29)};height:${pct(58)}`;
+    }
+  }
+
+  function refresh() {
+    for (const key of Object.keys(inputs)) {
+      const v = values[key];
+      inputs[key].range.value = v;
+      inputs[key].number.value = fmt(key, v);
+      inputs[key].row.classList.toggle('changed', Math.abs(v - defaults[key]) > 1e-9);
+      config[key] = v;
+    }
+    guides();
+    const json = {};
+    for (const key of Object.keys(defaults)) json[key] = Number(Number(values[key]).toFixed(4));
+    $('out').value = JSON.stringify(json, null, 2);
+    try { localStorage.setItem(STORE, JSON.stringify(json)); } catch {}
+  }
+
+  // ---- player --------------------------------------------------------------
+  let t = 0;
+  let duration = 0;
+  let playing = true;
+  let real = false;
+  let lastFrame = performance.now();
+
+  const phaseLabel = (plan, time) => {
+    if (time >= plan.tEnd) return '落定';
+    if (time >= plan.tLand) return '回弹';
+    if (time >= plan.tStop) return '减速';
+    return '旋转';
+  };
+
+  function apply() {
+    let d = duration;
+    for (const face of faces) d = face._previewRandom(Math.max(0, Math.min(t, duration || t)));
+    duration = d;
+    const shown = Math.min(t, duration);
+    $('scrub').max = String(Math.round(duration));
+    $('scrub').value = String(Math.round(shown));
+    $('time').textContent = `${Math.round(shown)} / ${Math.round(duration)} ms`;
+    const plans = primary._randomFx?.plans;
+    if (plans) {
+      $('phL').textContent = phaseLabel(plans[0], shown);
+      $('phR').textContent = phaseLabel(plans[1], shown);
+    }
+  }
+
+  function setPlaying(next) {
+    playing = next;
+    $('toggle').textContent = playing ? '⏸ 暂停' : '▶ 播放';
+  }
+
+  function frame(now) {
+    const dt = Math.min(100, now - lastFrame);
+    lastFrame = now;
+    if (!real) {
+      if (playing) {
+        t += dt * Number($('rate').value);
+        if (t > duration + TAIL) t = 0;
+      }
+      apply();
+    }
+    requestAnimationFrame(frame);
+  }
+
+  $('toggle').addEventListener('click', () => {
+    if (!playing && t >= duration) t = 0;
+    setPlaying(!playing);
+  });
+  $('restart').addEventListener('click', () => { t = 0; setPlaying(true); });
+  $('scrub').addEventListener('input', e => { setPlaying(false); t = Number(e.target.value); });
+  document.addEventListener('keydown', e => {
+    if (e.code !== 'Space' || /^(INPUT|SELECT|TEXTAREA|BUTTON)$/.test(document.activeElement?.tagName)) return;
+    e.preventDefault();
+    $('toggle').click();
+  });
+
+  // Exercise the real action once (including lifecycle events), then resume the preview.
+  $('real').addEventListener('click', () => {
+    real = true;
+    for (const face of faces) face._previewRandom(null);
+    for (const face of faces) Promise.resolve(face.play('random')).catch(() => {});
+  });
+  primary.addEventListener('action-state', event => {
+    const { action, phase } = event.detail;
+    if (action === 'random' && real && (phase === 'end' || phase === 'cancel')) {
+      real = false;
+      t = 0;
+      setPlaying(true);
+    }
+  });
+
+  // ---- parameter controls ---------------------------------------------------
+  function changed(restart) {
+    undoSnapshot = null;
+    $('undoReset').hidden = true;
+    refresh();
+    if (restart && playing) t = 0;
+    if (!real) apply();
+  }
+
+  for (const [key, , , , restart] of CONTROLS) {
+    const set = raw => {
+      const n = Number(raw);
+      if (!Number.isFinite(n)) return;
+      values[key] = clampValue(key, n);
+      changed(restart);
+    };
+    inputs[key].range.addEventListener('input', e => set(e.target.value));
+    inputs[key].number.addEventListener('change', e => set(e.target.value));
+    inputs[key].undo.addEventListener('click', () => { values[key] = defaults[key]; changed(restart); });
+  }
+
+  $('reset').addEventListener('click', () => {
+    undoSnapshot = { ...values };
+    Object.assign(values, defaults);
+    refresh();
+    if (playing) t = 0;
+    if (!real) apply();
+    $('undoReset').hidden = false;
+  });
+  $('undoReset').addEventListener('click', () => {
+    if (!undoSnapshot) return;
+    Object.assign(values, undoSnapshot);
+    undoSnapshot = null;
+    $('undoReset').hidden = true;
+    refresh();
+    if (playing) t = 0;
+    if (!real) apply();
+  });
+  $('copy').addEventListener('click', async () => {
+    const text = $('out').value;
+    try { await navigator.clipboard.writeText(text); }
+    catch { $('out').select(); document.execCommand('copy'); }
+    $('copy').textContent = '已复制 ✓';
+    setTimeout(() => { $('copy').textContent = '复制参数'; }, 1400);
+  });
+  $('guideToggle').addEventListener('change', e => $('guides').classList.toggle('on', e.target.checked));
+  $('guides').classList.toggle('on', $('guideToggle').checked);
+
+  refresh();
+  apply();
+  requestAnimationFrame(frame);
+</script>
+</body>
+</html>

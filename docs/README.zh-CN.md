@@ -83,9 +83,13 @@ avatar.reset();
 
 可用动作：
 
-`idle` · `bored` · `waiting` · `waiting-wrap` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `sleep` · `wake`
+`idle` · `bored` · `waiting` · `waiting-wrap` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `love` · `random` · `sleep` · `wake`
 
 `failure` 用于表示任务执行完成但结果失败；`error` 用于连接、服务或系统错误。
+
+`love` 用于表达喜欢或感谢：两只眼睛向中间靠拢合成一颗爱心，跳动三下后恢复。
+
+`random` 播放老虎机式的转动：两只眼睛各自在滚筒上滚动，随后左眼减速、弹跳着停下，右眼稍后停下。`slot` 是它的别名。
 
 一个典型的 Agent 请求流程：
 
