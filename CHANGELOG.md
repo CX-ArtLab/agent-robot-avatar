@@ -6,6 +6,12 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ## [Unreleased]
 
+## [0.5.2] - 2026-10-06
+
+### Fixed
+
+- Corrected the repository URL case in `package.json` so npm provenance publishing succeeds.
+
 ## [0.5.1] - 2026-10-05
 
 ### Fixed
