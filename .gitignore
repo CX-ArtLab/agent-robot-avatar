@@ -6,3 +6,4 @@ Thumbs.db
 playwright-report/
 test-results/
 .pages-site/
+demo/*-tuner.html
