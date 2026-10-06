@@ -8,22 +8,14 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ## [0.5.2] - 2026-10-06
 
-### Fixed
-
-- Corrected the repository URL case in `package.json` so npm provenance publishing succeeds.
-
-## [0.5.1] - 2026-10-05
-
-### Fixed
-
-- `love` now shows the full heart under reduced motion, and `love` and `random` follow motion preference changes while they play.
-
-## [0.5.0] - 2026-10-05
-
 ### Added
 
 - Added the `love` action: the eyes lean together into a heart, beat three times, then return.
 - Added the `random` action (alias `slot`): the eyes roll like slot-machine reels, then settle with a bounce.
+
+### Fixed
+
+- `love` now shows the full heart under reduced motion, and `love` and `random` follow motion preference changes while they play.
 
 ## [0.4.3] - 2026-09-22
 
