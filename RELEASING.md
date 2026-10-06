@@ -31,8 +31,6 @@ Stable versions publish to `latest`; prereleases publish to `next`. Publish stab
 
 Publishing a Release before this workflow is installed does not trigger it retroactively. After the one-time npm setup, use **Actions → Publish to npm → Run workflow**, select `main`, and enter the existing published Release tag (for example `v0.5.0`). This also supports retrying a failed publish. The workflow checks out that tag, not the current `main` source. Do not rerun a version already published to npm.
 
-The known v0.5.0 reduced-motion issues should be fixed in a patch release before promoting it for users; workflow validation alone does not cover those bugs.
-
 ## Manual npm publishing (fallback)
 
 1. Confirm the version and changelog are ready.
