@@ -23,7 +23,7 @@ const WARNING_TIMING = Object.freeze({
   W5: 200,
   W5P: 300,
   W6: 200,
-  W6P: 300,
+  W6P: 500,
   W7: 100,
   W8: 800,
   W9: 227,
@@ -345,29 +345,32 @@ function drawWarning(now) {
     farDeepLidDrop = segment(elapsed, WARNING_PHASES.w6Start, WARNING_PHASES.w6End, 3.5, 0);
   }
 
-  const nearSX = lerp(1, 1.48, proximity);
+  const nearSX = lerp(1, 1.37, proximity);
   const nearSY = lerp(1, 1.40, proximity);
-  const farSX = lerp(1, 0.78, proximity);
-  const farSY = lerp(1, 0.97, proximity);
+  const farSX = lerp(1, 0.68, proximity);
+  const farSY = lerp(1, 0.99, proximity);
+
+  const nearTilt = lerp(0, -6.5, proximity);
+  const farTilt = lerp(0, 7.5, proximity);
 
   const nearX = lerp(86, 102.0, proximity);
-  const farX = lerp(154, 178.5, proximity);
+  const farX = lerp(154, 174.5, proximity);
   const nearY = lerp(126, 125.5, proximity);
-  const farY = lerp(126, 134.0, proximity) + farLowOffset;
+  const farY = lerp(126, 133.5, proximity) + farLowOffset;
 
   this._leftEye.setAttribute(
     'transform',
-    `translate(${nearX.toFixed(2)} ${nearY.toFixed(2)}) scale(${nearSX.toFixed(3)} ${nearSY.toFixed(3)})`
+    `translate(${nearX.toFixed(2)} ${nearY.toFixed(2)}) rotate(${nearTilt.toFixed(2)}) scale(${nearSX.toFixed(3)} ${nearSY.toFixed(3)})`
   );
   this._rightEye.setAttribute(
     'transform',
-    `translate(${farX.toFixed(2)} ${farY.toFixed(2)}) scale(${farSX.toFixed(3)} ${farSY.toFixed(3)})`
+    `translate(${farX.toFixed(2)} ${farY.toFixed(2)}) rotate(${farTilt.toFixed(2)}) scale(${farSX.toFixed(3)} ${farSY.toFixed(3)})`
   );
 
-  const nearTopY = lerp(-36, -10.0, lids) + lidShift;
-  const farTopY = lerp(-36, -18.0, lids) + lidShift * 0.95 + farDeepLidDrop;
-  const nearTopRot = lerp(0, 10.0, lids);
-  const farTopRot = lerp(0, -7.5, lids);
+  const nearTopY = lerp(-36, -8.0, lids) + lidShift;
+  const farTopY = lerp(-36, -10.0, lids) + lidShift * 0.95 + farDeepLidDrop;
+  const nearTopRot = lerp(0, 25.0, lids);
+  const farTopRot = lerp(0, -17.0, lids);
 
   this._leftTop.setAttribute('y', (nearTopY - 90).toFixed(2));
   this._leftTop.setAttribute('height', '90');

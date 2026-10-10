@@ -6,6 +6,10 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ## [Unreleased]
 
+### Changed
+
+- Refined the warning expression with independently tilted eyes, adjusted eye proportions and eyelids, and a longer raised-head pause.
+
 ## [0.5.2] - 2026-10-06
 
 ### Added
