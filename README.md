@@ -89,7 +89,9 @@ avatar.reset();
 
 Available actions:
 
-`idle` · `bored` · `waiting` · `waiting-wrap` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `love` · `random` · `sleep` · `wake`
+`idle` · `bored` · `waiting` · `waiting-wrap` · `waiting-wave` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `love` · `random` · `sleep` · `wake`
+
+`waiting-wave` plays three 1.1-second waves: the eyes bob vertically with a staggered rhythm and amplitude of 10 SVG units, then settle. Use `startWaiting({ variant: 'wave' })` for seamless continuous waiting, and `stopWaiting()` to stop. It honors the component's reduced-motion setting and reports the canonical `waiting` action lifecycle.
 
 `failure` is intended for a task that completed unsuccessfully, while `error` is intended for connection, service, or system failures.
 
@@ -104,6 +106,9 @@ avatar.startWaiting();
 
 // Alternative waiting motion: eyes turn out through one side and return through the other.
 avatar.startWaiting({ variant: 'wrap' });
+
+// Alternative waiting motion: staggered vertical eye waves.
+avatar.startWaiting({ variant: 'wave' });
 
 try {
   const result = await runAgentRequest();
@@ -190,4 +195,5 @@ MIT License. See [`LICENSE`](./LICENSE).
 If this project is useful to you, you can buy me a coffee.
 
 <a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+
 

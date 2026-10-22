@@ -4,6 +4,7 @@ export type AgentRobotAvatarAction =
   | 'waiting'
   | 'wait'
   | 'waiting-wrap'
+  | 'waiting-wave'
   | 'input'
   | 'send'
   | 'success'
@@ -73,7 +74,7 @@ export type AgentRobotAvatarActionSource = 'api' | 'interaction' | 'automatic';
 export type AgentRobotAvatarWakeOn = 'activity' | 'interaction' | 'manual';
 export type AgentRobotAvatarMotion = 'auto' | 'reduce' | 'full';
 export interface AgentRobotAvatarWaitingOptions {
-  variant?: 'default' | 'wrap';
+  variant?: 'default' | 'wrap' | 'wave';
 }
 
 export interface AgentRobotAvatarActionStateDetail {
@@ -126,3 +127,4 @@ declare global {
     'agent-robot-avatar': AgentRobotAvatar;
   }
 }
+

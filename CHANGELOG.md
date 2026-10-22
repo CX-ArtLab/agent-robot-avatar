@@ -8,6 +8,8 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ### Added
 
+- Added the SVG `waiting-wave` action (等待 · 波动), approved and queued for a future batched release: three 1.1-second waves with a 10-unit vertical amplitude and staggered eye motion. `startWaiting({ variant: 'wave' })` loops continuously; the demo, TypeScript API, motion policy and action lifecycle support the new variant.
+
 - Added an experimental portable C++11 eyes-only engine, with ESP32 and RP2040 reference firmware, explicit program-controlled expressions, native safety tests and separate embedded build checks. Physical hardware verification is pending.
 
 ### Fixed
@@ -172,4 +174,5 @@ First public release.
 [0.2.1]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.2.1
 [0.2.0]: https://github.com/CX-ARTLab/agent-robot-avatar/releases/tag/v0.2.0
 [0.1.0]: https://github.com/CX-ARTLab/agent-robot-avatar/releases/tag/v0.1.0
+
 

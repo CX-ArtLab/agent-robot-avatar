@@ -89,7 +89,9 @@ avatar.reset();
 
 可用动作：
 
-`idle` · `bored` · `waiting` · `waiting-wrap` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `love` · `random` · `sleep` · `wake`
+`idle` · `bored` · `waiting` · `waiting-wrap` · `waiting-wave` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `love` · `random` · `sleep` · `wake`
+
+`waiting-wave`（等待 · 波动）：双眼错开节奏上下起伏，每轮周期 1.1 秒、振幅 10 SVG 单位。`play('waiting-wave')` 连续播放三轮并回正；`startWaiting({ variant: 'wave' })` 持续循环，直到被其他动作替换或调用 `stopWaiting()`。支持减少动态效果设置，动作生命周期事件统一使用 `waiting`。
 
 `failure` 用于表示任务执行完成但结果失败；`error` 用于连接、服务或系统错误。
 
@@ -104,6 +106,9 @@ avatar.startWaiting();
 
 // 第二种等待：眼睛从一侧转出，再从另一侧转入。
 avatar.startWaiting({ variant: 'wrap' });
+
+// 另一种等待动作：双眼错开节奏上下波动。
+avatar.startWaiting({ variant: 'wave' });
 
 try {
   const result = await runAgentRequest();
@@ -194,4 +199,5 @@ MIT License。详见 [`LICENSE`](../LICENSE)。
 | Ko-fi | 支付宝 | 微信支付 |
 | --- | --- | --- |
 | <a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a> | <img src="../assets/support/alipay.png" alt="支付宝收款码" width="160"> | <img src="../assets/support/wechat-pay.png" alt="微信支付收款码" width="160"> |
+
 

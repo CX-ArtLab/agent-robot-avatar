@@ -2,6 +2,17 @@
 
 This checklist is for project maintainers. Run releases from a clean `main` branch in the development repository.
 
+## Queue changes for a batched release
+
+Use `dev/expressions` to accumulate approved SVG expressions before releasing them together.
+
+1. Save completed code and tests on this branch and record each approved feature under `CHANGELOG.md → Unreleased`. Keep the public version unchanged during development.
+2. Add further approved expressions to the same branch. A branch commit is a saved development change, not a new release.
+3. Wait for the maintainer's explicit approval to release the batch. Then run the full validation suite, prepare one version/changelog update, and review the changes before merging to `main`.
+4. Follow the release checklist below to publish the approved batch. After release, start the next queue from the updated `main`.
+
+Do not merge the queue branch, publish a Release/tag, or manually run deployment/publishing while the batch is waiting. The current Pages workflow deploys on qualifying pushes to `main`; npm publishes on a published GitHub Release. Saving this branch alone does not invoke either publication workflow.
+
 ## Automatic npm publishing
 
 The `.github/workflows/publish-npm.yml` workflow publishes the matching release tag to npm when a GitHub Release is published. It uses npm trusted publishing (OIDC), with no `NPM_TOKEN` secret. A merged PR or a pushed tag alone does not publish a package.
@@ -47,3 +58,4 @@ Prerelease versions must use the npm `next` tag. A publish-time guard rejects at
 ## GitHub release
 
 With automatic publishing configured, publish the GitHub Release first, then verify the npm workflow result. For the manual fallback, verify npm before publishing the GitHub Release; the automatic workflow will reject a version that is already published. Never overwrite the existing `v0.1.0` release.
+

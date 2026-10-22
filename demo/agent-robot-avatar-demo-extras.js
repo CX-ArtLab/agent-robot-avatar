@@ -51,6 +51,11 @@ const WRAP_WAITING_LABELS = Object.freeze({
   ko:'대기 · 감싸기', es:'Espera · Envoltura', pt:'Espera · Contorno', de:'Warten · Umlauf', fr:'Attente · Enveloppement',
 });
 
+const WAVE_WAITING_LABELS = Object.freeze({
+  'zh-CN':'等待 · 波动', 'zh-TW':'等待 · 波動', en:'Waiting · Wave', ja:'待機 · ウェーブ',
+  ko:'대기 · 물결', es:'Espera · Onda', pt:'Espera · Onda', de:'Warten · Welle', fr:'Attente · Vague',
+});
+
 function activeLanguage(table) {
   const lang = document.documentElement.lang || 'zh-CN';
   if (table[lang]) return lang;
@@ -85,6 +90,7 @@ function syncActionLabels() {
   const inspectButton = ensureActionButton('inspect', 'warning');
   const failureButton = ensureActionButton('failure', 'success');
   const wrapButton = ensureActionButton('waiting-wrap', 'waiting');
+  const waveButton = ensureActionButton('waiting-wave', 'waiting-wrap');
   // New actions go at the very end of the row, in the order they were added.
   const loveButton = ensureActionButton('love', 'wake');
   const randomButton = ensureActionButton('random', 'love');
@@ -94,6 +100,10 @@ function syncActionLabels() {
   if (loveButton) loveButton.textContent = love.action;
   if (randomButton) randomButton.textContent = random.action;
   if (wrapButton) wrapButton.textContent = WRAP_WAITING_LABELS[activeLanguage(WRAP_WAITING_LABELS)];
+  if (waveButton) {
+    waveButton.textContent = WAVE_WAITING_LABELS[activeLanguage(WAVE_WAITING_LABELS)];
+    markAsNew(waveButton);
+  }
 }
 
 function applyDefaultAntennaFlashOff() {
@@ -158,3 +168,4 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
 else mountExtras();
 
 export { mountExtras };
+

@@ -328,7 +328,7 @@ function mountDemoControls() {
     loopEnabled = loopToggle.checked;
     if (!loopEnabled) {
       loopToken += 1;
-      if (activeAction === 'waiting' || activeAction === 'waiting-wrap') face.stopWaiting();
+      if (['waiting', 'waiting-wrap', 'waiting-wave'].includes(activeAction)) face.stopWaiting();
     }
   });
 
@@ -341,6 +341,10 @@ function mountDemoControls() {
     }
     if (action === 'waiting-wrap' && loopEnabled) {
       await face.startWaiting({ variant:'wrap' });
+      return;
+    }
+    if (action === 'waiting-wave' && loopEnabled) {
+      await face.startWaiting({ variant:'wave' });
       return;
     }
     if (action === 'wake' && loopEnabled) {
@@ -364,7 +368,7 @@ function mountDemoControls() {
     do {
       if (token !== loopToken) return;
       await playOneCycle(action, token);
-      if ((action === 'waiting' || action === 'waiting-wrap') && loopEnabled) return;
+      if (['waiting', 'waiting-wrap', 'waiting-wave'].includes(action) && loopEnabled) return;
       if (token !== loopToken || !loopEnabled) return;
       const delay = extraLoopDelay[action] ?? 140;
       if (delay > 0) await wait(delay);
@@ -404,4 +408,5 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
 else mountDemoControls();
 
 export { mountDemoControls };
+
 

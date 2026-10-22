@@ -30,6 +30,7 @@ const ACTION_ALIASES = Object.freeze({
   waiting: 'waiting',
   wait: 'waiting',
   'waiting-wrap': 'waiting',
+  'waiting-wave': 'waiting',
   input: 'input',
   send: 'send',
   success: 'success',
@@ -903,3 +904,4 @@ export {
   DEFAULT_SIZE,
 };
 export default AgentRobotAvatar;
+

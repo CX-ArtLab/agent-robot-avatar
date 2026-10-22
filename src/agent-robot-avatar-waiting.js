@@ -2,9 +2,13 @@ import AgentRobotAvatar, { registerAvatarExtension } from './agent-robot-avatar-
 import { WRAP_CYCLE, drawWrapWaiting } from './agent-robot-avatar-wrap.js';
 
 const WAITING_CYCLE = 3200;
+const WAVE_WAITING_CYCLE = 1100;
+const WAVE_WAITING_REPEATS = 3;
 const proto = AgentRobotAvatar.prototype;
 
 const clamp01 = value => Math.max(0, Math.min(1, value));
+const smooth = value => { const t = clamp01(value); return t * t * (3 - 2 * t); };
+const waitingDuration = variant => variant === 'wave' ? WAVE_WAITING_CYCLE * WAVE_WAITING_REPEATS : variant === 'wrap' ? WRAP_CYCLE : WAITING_CYCLE;
 
 function dispatchWaitingState(instance, state) {
   instance.dispatchEvent(new CustomEvent('face-state', {
@@ -29,7 +33,7 @@ function setEyeOrbitTransform(eye, x, scaleX, scaleY) {
 
 async function enterWaiting(instance, continuous, source, options = {}) {
   const variant = options?.variant ?? 'default';
-  if (variant !== 'default' && variant !== 'wrap') throw new TypeError(`Unknown waiting variant: ${variant}`);
+  if (variant !== 'default' && variant !== 'wrap' && variant !== 'wave') throw new TypeError(`Unknown waiting variant: ${variant}`);
   instance.noteActivity();
   instance._inputWanted = false;
 
@@ -44,7 +48,7 @@ async function enterWaiting(instance, continuous, source, options = {}) {
   instance._look.y = 0;
   instance._waitingFx = {
     start: performance.now(),
-    duration: variant === 'wrap' ? WRAP_CYCLE : WAITING_CYCLE,
+    duration: waitingDuration(variant),
     variant,
     continuous: continuous === true,
     source,
@@ -57,7 +61,7 @@ proto.waiting = async function(options = {}) {
   const token = await enterWaiting(this, false, 'play', options);
   if (token == null) return;
 
-  await this._wait(options?.variant === 'wrap' ? WRAP_CYCLE : WAITING_CYCLE);
+  await this._wait(waitingDuration(options?.variant));
   if (token !== this._transitionToken || !this._waitingRequested) return;
   this._waitingRequested = false;
   this._waitingFx = null;
@@ -89,6 +93,22 @@ function drawWaiting(now) {
     drawWrapWaiting(this, phaseMs);
     return;
   }
+  if (fx.variant === 'wave') {
+    // Restore the first embedded prototype's staggered vertical eye motion.
+    // Ease its entry/finite exit; continuous loops keep their phase at the seam.
+    let amplitude = 10 * smooth(elapsed / 140);
+    if (!fx.continuous) amplitude *= smooth((fx.duration - phaseMs) / 140);
+    const angle = (elapsed % WAVE_WAITING_CYCLE) / WAVE_WAITING_CYCLE * Math.PI * 2;
+    for (const [side, x, offset] of [['left', 86, 0], ['right', 154, 0.7]]) {
+      this[`_${side}Base`].setAttribute('cx', '0');
+      this[`_${side}Base`].setAttribute('cy', '0');
+      this[`_${side}Base`].setAttribute('rx', '27');
+      this[`_${side}Base`].setAttribute('ry', '29');
+      this[`_${side}Eye`].setAttribute('transform',
+        `translate(${x} ${(126 + Math.sin(angle + offset) * amplitude).toFixed(2)})`);
+    }
+    return;
+  }
 
   // Original R43 waiting-eye motion: two continuous horizontal orbits per 3.2 s cycle.
   const angle = t * Math.PI * 4;
@@ -113,9 +133,10 @@ registerAvatarExtension({
     waiting() { return this.waiting(); },
     wait() { return this.waiting(); },
     'waiting-wrap'() { return this.waiting({ variant: 'wrap' }); },
+    'waiting-wave'() { return this.waiting({ variant: 'wave' }); },
   },
   beforePlay(action) {
-    if (action === 'waiting' || action === 'wait' || action === 'waiting-wrap') return;
+    if (action === 'waiting' || action === 'wait' || action === 'waiting-wrap' || action === 'waiting-wave') return;
     this._waitingRequested = false;
     this._waitingFx = null;
   },
@@ -126,5 +147,6 @@ registerAvatarExtension({
   draw: drawWaiting,
 });
 
-export { AgentRobotAvatar, WAITING_CYCLE };
+export { AgentRobotAvatar, WAITING_CYCLE, WAVE_WAITING_CYCLE };
 export default AgentRobotAvatar;
+
