@@ -26,6 +26,8 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ### Changed
 
+- Reorganized the hardware preview into a two-column workspace: preview and expressions on the left, all function controls expanded on the right, with a stacked layout on narrow screens.
+
 - Refined the warning expression with independently tilted eyes, adjusted eye proportions and eyelids, and a longer raised-head pause.
 
 ## [0.5.2] - 2026-10-06

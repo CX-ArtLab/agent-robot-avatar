@@ -116,6 +116,7 @@
     frameKey=key;
     const [x,y,dw,dh]=display;
     $('sensor-wrap').style.width=(screen.width*Number($('zoom').value)*w/dw)+'px';
+    $('sensor-wrap').style.setProperty('--module-ratio',String(w/h));
     device.style.width='100%';device.style.aspectRatio=w+' / '+h;
     device.dataset.profile=preset.frame;
     device.dataset.module=framed&&model?preset.module:'';
@@ -268,11 +269,6 @@
       for(const id of ['hold','response','moving-only'])$(id).onchange=()=>{applyGazeConfig();updateTrackingStatus();};
       $('motion-sensitivity').onchange=()=>{motionAnchor=null;lastMotion=-Infinity;};
       for(const id of ['fit','face-scale','offset-x','offset-y'])$(id).oninput=applyLayout;
-      $('settings-toggle').onclick=()=>{
-        const open=$('settings-panel').hidden;$('settings-panel').hidden=!open;
-        $('settings-toggle').setAttribute('aria-expanded',String(open));
-        $('settings-toggle').classList.toggle('demo-panel-open',open);
-      };
       $('speed').onchange=()=>{previous=null;};
       $('gx').oninput=$('gy').oninput=gaze;
       $('center').onclick=()=>{$('gx').value=$('gy').value='0';gaze();};

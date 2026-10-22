@@ -28,7 +28,6 @@ try {
   await page.goto(file);
   await page.waitForFunction(() => document.getElementById('status').textContent.includes('本机绘制'));
   await page.locator('#tracking').uncheck();
-  await page.locator('#settings-toggle').click();
   assert.equal(await page.locator('.action').count(),18);
   assert((await frame()).lit>1000);
   assert.equal(await page.locator('#step').isDisabled(),true);

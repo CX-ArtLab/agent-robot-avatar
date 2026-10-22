@@ -6,6 +6,8 @@ Download **`agent-robot-eyes-preview.html`** and open it in a browser. The file 
 
 ## Controls / 使用
 
+Desktop uses a two-column workspace: the module preview and all expression buttons stay on the left; screen, playback, layout, proximity and manual-gaze controls are always expanded on the right. The settings column scrolls independently when needed. On narrow screens the same sections stack below the preview. / 桌面采用左右结构：左侧预览和表情选择，右侧集中显示所有功能选项；窄屏自动改为上下排列。
+
 - **等待 · 波动 / `waiting-wave`** restores the earlier experimental waiting animation as an additional action: full elliptical eyes move vertically with amplitude 10 in the 160×100 face space, a 1400 ms period and a 0.7 rad right-eye phase offset. It loops until replaced; `stopWaiting()` also stops it. Existing original `waiting` and `waiting-wrap` actions are retained. The preview and C++ core now offer 18 actions. The SVG component also has a separately tuned waiting-wave variant (three 1100 ms cycles); this hardware preview retains the earlier continuous 1400 ms motion.
 - **等待 · 波动**作为新增动作保留旧实验版的双眼错相上下起伏；原版等待、环绕不变。硬件版保留 1400 毫秒持续循环；SVG 版另有调校过的三个 1100 毫秒循环。
 - Choose an expression; it interrupts the current action and stops cycling. / 点击表情立即切换并退出轮播。
