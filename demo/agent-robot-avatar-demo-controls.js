@@ -184,11 +184,13 @@ function mountDemoControls() {
     button.className = 'demo-preset';
     button.dataset.preset = preset.id;
     button.style.setProperty('--preset-bg', preset.background);
+    button.style.setProperty('--preset-head', preset.head);
     button.setAttribute('aria-pressed', 'false');
-    button.innerHTML = `<svg viewBox="0 0 32 36" aria-hidden="true"><circle cx="16" cy="3.5" r="1.7" fill="${preset.head}"/><rect x="2" y="8" width="28" height="26" rx="10" fill="${preset.head}"/><ellipse cx="11" cy="21" rx="3.6" ry="4.1" fill="${preset.background}"/><ellipse cx="21" cy="21" rx="3.6" ry="4.1" fill="${preset.background}"/></svg>`;
     button.addEventListener('click', () => {
-      bgColor.value = preset.background;
-      headColor.value = preset.head;
+      const reverse = bgColor.value.toLowerCase() === preset.background
+        && headColor.value.toLowerCase() === preset.head;
+      bgColor.value = reverse ? preset.head : preset.background;
+      headColor.value = reverse ? preset.background : preset.head;
       eyeThrough.checked = true;
       applyBackground();
       applyHeadColor();
@@ -248,8 +250,9 @@ function mountDemoControls() {
     presets.querySelectorAll('[data-preset]').forEach((button, index) => {
       const preset = COLOR_PRESETS[index];
       const name = currentLanguage.startsWith('zh') ? preset.zh : preset.en;
-      button.title = name;
-      button.setAttribute('aria-label', name);
+      const hint = currentLanguage.startsWith('zh') ? '再次点击交换前景与背景' : 'Click again to swap foreground and background';
+      button.title = `${name} · ${hint}`;
+      button.setAttribute('aria-label', `${name} · ${hint}`);
     });
     settingsPanel.setAttribute('aria-label', t.otherSettings);
     languagePanel.setAttribute('aria-label', t.languageSettings);
@@ -301,9 +304,13 @@ function mountDemoControls() {
   function syncPresetSelection() {
     presets.querySelectorAll('[data-preset]').forEach((button, index) => {
       const preset = COLOR_PRESETS[index];
-      button.setAttribute('aria-pressed', String(eyeThrough.checked
-        && bgColor.value.toLowerCase() === preset.background
-        && headColor.value.toLowerCase() === preset.head));
+      const forward = bgColor.value.toLowerCase() === preset.background
+        && headColor.value.toLowerCase() === preset.head;
+      const reverse = bgColor.value.toLowerCase() === preset.head
+        && headColor.value.toLowerCase() === preset.background;
+      button.setAttribute('aria-pressed', String(eyeThrough.checked && (forward || reverse)));
+      button.style.setProperty('--preset-bg', reverse ? preset.head : preset.background);
+      button.style.setProperty('--preset-head', reverse ? preset.background : preset.head);
     });
   }
 
