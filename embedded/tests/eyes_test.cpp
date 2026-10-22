@@ -108,6 +108,12 @@ static void timingAndSleep() {
   eyes.play("success",102000);
   eyes.update(103800);
   assert(eyes.action()==Action::Idle);
+  // Completing an action must retain an explicit gaze without a one-frame snap.
+  eyes.lookAt(1,0);
+  eyes.reset(104000); eyes.update(105000);
+  const uint32_t gaze = hash(eyes);
+  eyes.play("success",106000); eyes.update(107800);
+  assert(hash(eyes)==gaze);
   // Both the frame limiter and expression deadline survive 32-bit millis rollover.
   const uint32_t start = std::numeric_limits<uint32_t>::max()-100;
   assert(eyes.begin(config,pixels.data(),pixels.size(),start));

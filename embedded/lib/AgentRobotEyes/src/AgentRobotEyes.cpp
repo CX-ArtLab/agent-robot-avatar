@@ -125,11 +125,14 @@ Eyes::Pose Eyes::mix(const Pose& a, const Pose& b, float t) {
 
 Eyes::Pose Eyes::poseAt(uint32_t now) const {
   Pose p = neutral();
+  Pose idle = neutral();
+  idle.left.x += lookX_ * 8; idle.right.x += lookX_ * 8;
+  idle.left.y += lookY_ * 6; idle.right.y += lookY_ * 6;
   const uint32_t elapsed = now - started_; // unsigned subtraction handles millis() rollover
   const float t = static_cast<float>(elapsed);
   const uint32_t total = duration(action_);
   // A missed deadline still samples neutral before replacement or completion.
-  if (total && elapsed >= total) return p;
+  if (total && elapsed >= total) return idle;
   switch (action_) {
     case Action::Bored: {
       const float gaze = sinf(t * PI / 1200) * 10;
@@ -256,7 +259,7 @@ Eyes::Pose Eyes::poseAt(uint32_t now) const {
   if (config_.transitionMs && elapsed < config_.transitionMs) {
     p = mix(from_, p, smooth(t / config_.transitionMs));
   }
-  if (total && total - elapsed < 260) p = mix(p, neutral(), smooth(1 - (total - elapsed) / 260.f));
+  if (total && total - elapsed < 260) p = mix(p, idle, smooth(1 - (total - elapsed) / 260.f));
   return p;
 }
 
@@ -267,9 +270,9 @@ bool Eyes::update(uint32_t now) {
   const uint32_t interval = (1000u + config_.maxFps - 1) / config_.maxFps;
   if (!force_ && now - lastFrame_ < interval) return false;
   if (duration(action_) && elapsed >= duration(action_)) {
+    from_ = poseAt(now);
     action_ = Action::Idle;
     started_ = now;
-    from_ = neutral();
   }
   current_ = poseAt(now);
   render(current_);
