@@ -1,10 +1,35 @@
 // Brand-inspired demo palettes; these are visual examples, not official themes.
 const COLOR_PRESETS = Object.freeze([
-  { id:'default', background:'#f8f8f6', head:'#08090b', zh:'默认配色', en:'Default colors' },
-  { id:'mcdonalds', background:'#ffc72c', head:'#da291c', zh:'麦当劳灵感 · 红黄', en:"McDonald's inspired · Red & gold" },
-  { id:'ikea', background:'#ffda1a', head:'#0058a3', zh:'宜家灵感 · 蓝黄', en:'IKEA inspired · Blue & yellow' },
-  { id:'lakers', background:'#fdb927', head:'#552583', zh:'湖人灵感 · 紫金', en:'Lakers inspired · Purple & gold' },
+  { id:'default', background:'#f8f8f6', head:'#08090b', zh:'默认', en:'Default' },
+  { id:'mcdonalds', background:'#ffc72c', head:'#da291c', zh:'麦当劳', en:"McDonald's" },
+  { id:'ikea', background:'#ffda1a', head:'#0058a3', zh:'宜家', en:'IKEA' },
+  { id:'lakers', background:'#fdb927', head:'#552583', zh:'湖人', en:'Lakers' },
+  { id:'starbucks', background:'#f1f8f4', head:'#00754a', zh:'星巴克', en:'Starbucks' },
+  { id:'claude', background:'#faf4ed', head:'#c96442', zh:'Claude', en:'Claude' },
+  { id:'chatgpt', background:'#ffffff', head:'#10a37f', zh:'ChatGPT', en:'ChatGPT' },
+  { id:'gemini', background:'#e9e6ff', head:'#4b61d1', zh:'Gemini', en:'Gemini' },
+  { id:'lululemon', background:'#ffffff', head:'#d31334', zh:'lululemon', en:'lululemon' },
+  { id:'adidas', background:'#ffffff', head:'#111111', zh:'阿迪达斯', en:'adidas' },
+  { id:'tiffany', background:'#81d8d0', head:'#182e2c', zh:'Tiffany', en:'Tiffany' },
+  { id:'hermes', background:'#f37021', head:'#3b2517', zh:'爱马仕', en:'Hermès' },
+  { id:'burberry', background:'#d6bd98', head:'#30261c', zh:'Burberry', en:'Burberry' },
+  { id:'fendi', background:'#f9d91c', head:'#242424', zh:'Fendi', en:'Fendi' },
+  { id:'spotify', background:'#1ed760', head:'#191414', zh:'Spotify', en:'Spotify' },
+  { id:'nintendo', background:'#e60012', head:'#ffffff', zh:'任天堂', en:'Nintendo' },
+  { id:'muji', background:'#f3efdf', head:'#7f0019', zh:'无印良品', en:'MUJI' },
 ]);
+
+const THEME_UI = Object.freeze({
+  'zh-CN': { custom:'自定义颜色', themes:'主题配色' },
+  'zh-TW': { custom:'自訂顏色', themes:'主題配色' },
+  en: { custom:'Custom colors', themes:'Color themes' },
+  ja: { custom:'カスタムカラー', themes:'配色テーマ' },
+  ko: { custom:'사용자 색상', themes:'색상 테마' },
+  es: { custom:'Colores personalizados', themes:'Temas de color' },
+  pt: { custom:'Cores personalizadas', themes:'Temas de cor' },
+  de: { custom:'Eigene Farben', themes:'Farbthemen' },
+  fr: { custom:'Couleurs personnalisées', themes:'Thèmes de couleurs' },
+});
 
 const DEFAULTS = Object.freeze({
   background: '#f8f8f6',
@@ -164,6 +189,7 @@ function mountDemoControls() {
   const options = stack.querySelector('.demo-options');
 
   const colorPanelToggle = options.querySelector('#demoColorPanelToggle');
+  const themePanelToggle = options.querySelector('#demoThemePanelToggle');
   const settingsPanelToggle = options.querySelector('#demoSettingsPanelToggle');
   const languagePanelToggle = options.querySelector('#demoLanguagePanelToggle');
   const colorPanel = options.querySelector('#demoColorPanel');
@@ -181,11 +207,17 @@ function mountDemoControls() {
   for (const preset of COLOR_PRESETS) {
     const button = document.createElement('button');
     button.type = 'button';
-    button.className = 'demo-preset';
+    button.className = 'demo-option demo-theme';
     button.dataset.preset = preset.id;
     button.style.setProperty('--preset-bg', preset.background);
     button.style.setProperty('--preset-head', preset.head);
     button.setAttribute('aria-pressed', 'false');
+    const name = document.createElement('span');
+    name.className = 'demo-theme-name';
+    const swatch = document.createElement('span');
+    swatch.className = 'demo-theme-swatch';
+    swatch.setAttribute('aria-hidden', 'true');
+    button.append(name, swatch);
     button.addEventListener('click', () => {
       const reverse = bgColor.value.toLowerCase() === preset.background
         && headColor.value.toLowerCase() === preset.head;
@@ -204,15 +236,19 @@ function mountDemoControls() {
 
   function setPanel(openPanel) {
     const colorOpen = openPanel === 'color';
+    const themesOpen = openPanel === 'themes';
     const settingsOpen = openPanel === 'settings';
     const languageOpen = openPanel === 'language';
     colorPanel.hidden = !colorOpen;
+    presets.hidden = !themesOpen;
     settingsPanel.hidden = !settingsOpen;
     languagePanel.hidden = !languageOpen;
     colorPanelToggle.classList.toggle('demo-panel-open', colorOpen);
+    themePanelToggle.classList.toggle('demo-panel-open', themesOpen);
     settingsPanelToggle.classList.toggle('demo-panel-open', settingsOpen);
     languagePanelToggle.classList.toggle('demo-panel-open', languageOpen);
     colorPanelToggle.setAttribute('aria-expanded', String(colorOpen));
+    themePanelToggle.setAttribute('aria-expanded', String(themesOpen));
     settingsPanelToggle.setAttribute('aria-expanded', String(settingsOpen));
     languagePanelToggle.setAttribute('aria-expanded', String(languageOpen));
   }
@@ -239,20 +275,24 @@ function mountDemoControls() {
 
     if (title) title.innerHTML = `<span>Agent Robot Avatar</span><span>SVG + Vanilla JS</span><span>${t.webComponent}</span>`;
 
-    colorPanelToggle.title = t.color;
-    colorPanelToggle.setAttribute('aria-label', t.color);
+    const themeUI = THEME_UI[currentLanguage] || THEME_UI.en;
+    colorPanelToggle.title = themeUI.custom;
+    colorPanelToggle.setAttribute('aria-label', themeUI.custom);
+    themePanelToggle.title = themeUI.themes;
+    themePanelToggle.setAttribute('aria-label', themeUI.themes);
     settingsPanelToggle.title = t.settings;
     settingsPanelToggle.setAttribute('aria-label', t.settings);
     languagePanelToggle.title = t.language;
     languagePanelToggle.setAttribute('aria-label', t.language);
     colorPanel.setAttribute('aria-label', t.colorSettings);
-    presets.setAttribute('aria-label', t.colorSettings);
+    presets.setAttribute('aria-label', themeUI.themes);
     presets.querySelectorAll('[data-preset]').forEach((button, index) => {
       const preset = COLOR_PRESETS[index];
       const name = currentLanguage.startsWith('zh') ? preset.zh : preset.en;
       const hint = currentLanguage.startsWith('zh') ? '再次点击交换前景与背景' : 'Click again to swap foreground and background';
       button.title = `${name} · ${hint}`;
       button.setAttribute('aria-label', `${name} · ${hint}`);
+      button.querySelector('.demo-theme-name').textContent = name;
     });
     settingsPanel.setAttribute('aria-label', t.otherSettings);
     languagePanel.setAttribute('aria-label', t.languageSettings);
@@ -282,6 +322,7 @@ function mountDemoControls() {
   window.AgentRobotAvatarApplyDemoLanguage = () => applyLanguage(currentLanguage);
 
   colorPanelToggle.addEventListener('click', () => setPanel(colorPanel.hidden ? 'color' : null));
+  themePanelToggle.addEventListener('click', () => setPanel(presets.hidden ? 'themes' : null));
   settingsPanelToggle.addEventListener('click', () => setPanel(settingsPanel.hidden ? 'settings' : null));
   languagePanelToggle.addEventListener('click', () => setPanel(languagePanel.hidden ? 'language' : null));
   languagePanel.addEventListener('click', event => {

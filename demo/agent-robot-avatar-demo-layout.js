@@ -22,6 +22,7 @@ function balanceControls() {
     else high = middle;
   }
   controls.style.setProperty('--demo-controls-width', `${high}px`);
+  controls.parentElement.style.setProperty('--demo-controls-width', `${high}px`);
 }
 
 let balanceFrame = 0;
@@ -47,4 +48,5 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
 else mountDemoLayout();
 
 export { mountDemoLayout, balanceControls };
+
 

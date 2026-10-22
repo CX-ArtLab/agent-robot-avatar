@@ -90,12 +90,12 @@
     .demo-options{display:grid;gap:7px;width:100%;max-width:100%;justify-items:center;padding:0;border:0;background:transparent;box-shadow:none;color:#72777e;font-size:11px}
     .demo-panel-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-width:276px}
     .demo-toolbar-group{display:flex;align-items:center;gap:6px;padding:5px;border:1px solid rgba(0,0,0,.055);border-radius:12px;background:rgba(255,255,255,.82);box-shadow:0 6px 22px rgba(0,0,0,.055);backdrop-filter:blur(14px)}
-    .demo-color-presets{display:flex;align-items:center;gap:4px}
-    .demo-preset{width:30px;height:34px;padding:0;border:0;border-radius:9px;display:grid;place-items:center;background:transparent!important;cursor:pointer}
-    .demo-preset::before{content:'';display:block;width:22px;height:22px;border:1px solid rgba(0,0,0,.12);box-sizing:border-box;border-radius:50%;background:linear-gradient(90deg,var(--preset-bg) 50%,var(--preset-head) 50%)}
-    .demo-preset:hover::before{transform:scale(1.08)}
-    .demo-preset[aria-pressed=true]::before{box-shadow:0 0 0 2px #fff,0 0 0 3px #93979d}
-    .demo-preset:focus-visible{outline:2px solid #72777e;outline-offset:1px}
+    .demo-options-group.demo-theme-group{width:var(--demo-controls-width,560px)!important;box-sizing:border-box;justify-content:flex-start!important;max-height:250px;overflow-y:auto;overscroll-behavior:contain}
+    .demo-theme{font:inherit;color:inherit;cursor:pointer}
+    .demo-theme:hover{background:#e9eaec}
+    .demo-theme[aria-pressed=true]{box-shadow:inset 0 0 0 1px #aeb2b8}
+    .demo-theme:focus-visible{outline:2px solid #72777e;outline-offset:1px}
+    .demo-theme-swatch{display:block;flex:0 0 28px;width:28px;height:22px;border:1px solid rgba(0,0,0,.12);box-sizing:border-box;border-radius:5px;background:linear-gradient(90deg,var(--preset-bg) 50%,var(--preset-head) 50%)}
     .demo-panel-toggle{width:34px!important;height:34px!important;padding:0!important;border:0!important;border-radius:9px!important;background:#f4f5f6!important;color:#72777e!important;display:grid!important;place-items:center!important;cursor:pointer!important}
     .demo-panel-toggle:hover{background:#e9eaec!important}
     .demo-panel-toggle.demo-panel-open{background:#dfe1e4!important;color:#25282c!important}
@@ -303,7 +303,9 @@
         <button class="demo-panel-toggle" id="demoColorPanelToggle" type="button" aria-expanded="false" aria-controls="demoColorPanel">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"/><circle class="demo-palette-dot" cx="13.5" cy="6.5" r=".5"/><circle class="demo-palette-dot" cx="17.5" cy="10.5" r=".5"/><circle class="demo-palette-dot" cx="6.5" cy="12.5" r=".5"/><circle class="demo-palette-dot" cx="8.5" cy="7.5" r=".5"/></svg>
         </button>
-        <div class="demo-color-presets" id="demoColorPresets" role="group"></div>
+        <button class="demo-panel-toggle" id="demoThemePanelToggle" type="button" aria-expanded="false" aria-controls="demoColorPresets">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-2"/><rect x="3" y="7" width="14" height="14" rx="2"/><path d="M10 7v14"/></svg>
+        </button>
       </div>
     </div>
     <div class="demo-options-group demo-color-group" id="demoColorPanel" hidden>
@@ -312,6 +314,7 @@
       <label class="demo-option demo-toggle"><span id="demoEyeThroughLabel"></span><input id="demoEyeThrough" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
       <button class="demo-option demo-reset" id="demoReset" type="button"></button>
     </div>
+    <div class="demo-options-group demo-theme-group" id="demoColorPresets" role="group" hidden></div>
     <div class="demo-options-group demo-behavior-group" id="demoSettingsPanel" hidden>
       <label class="demo-option demo-toggle"><span id="demoAntennaLabel"></span><input id="demoAntenna" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
       <label class="demo-option demo-toggle"><span id="demoAntennaFlashLabel"></span><input id="demoAntennaFlash" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>

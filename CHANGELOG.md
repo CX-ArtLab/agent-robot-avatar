@@ -8,7 +8,7 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ### Added
 
-- Added always-visible two-color swatches for default, McDonald's-inspired red/gold, IKEA-inspired blue/yellow and Lakers-inspired purple/gold demo palettes. Clicking the active swatch swaps foreground/background colors. Settings/language and color controls form separate left/right toolbar groups; custom colors and preset selection stay synchronized.
+- Added a collapsible Color themes panel next to Custom colors, with 17 named two-color presets inspired by brands, AI products and sports. Each option uses the existing color-control pill style and a split rounded swatch; clicking the active pair swaps foreground/background colors. The panel wraps within the demo width and scrolls on narrow screens. Settings/language remain grouped on the left.
 
 - Added the SVG `waiting-wave` action (等待 · 波动), approved and queued for a future batched release: three 1.1-second waves with a 10-unit vertical amplitude and staggered eye motion. `startWaiting({ variant: 'wave' })` loops continuously; the demo, TypeScript API, motion policy and action lifecycle support the new variant.
 
