@@ -1,5 +1,3 @@
-const STYLE_ID = 'agent-demo-dialog-i18n-style-r53';
-
 const DIALOG_I18N = Object.freeze({
   'zh-CN': {
     hint: { lead:'试一下：', items:['双击头像','任意方向拖动头像','按住头像中心挤压','拖动天线'] }, dialogLabel: 'Agent 对话演示', subtitle: '随机状态回复演示', close: '关闭',
@@ -158,33 +156,6 @@ function expressionState(tag) {
   return ['success','warning','angry','error','surprise','bored'].find(name => tag?.classList.contains(name)) || null;
 }
 
-function injectStyle() {
-  if (document.getElementById(STYLE_ID)) return;
-  const style = document.createElement('style');
-  style.id = STYLE_ID;
-  style.textContent = `
-    .demo-chat-entry-hint{
-      position:static;z-index:14;display:flex;align-items:center;justify-content:center;gap:5px;flex-wrap:wrap;
-      width:max-content;max-width:100%;padding:0;color:#8f949b;font-size:9px;line-height:1.25;
-      pointer-events:none;user-select:none;justify-self:center;
-    }
-    .demo-interaction-lead{padding:3px 1px;font-weight:650;white-space:nowrap}
-    .demo-interaction-tag{padding:4px 7px;border:1px solid rgba(0,0,0,.055);border-radius:999px;background:rgba(255,255,255,.76);white-space:nowrap;box-shadow:0 3px 12px rgba(0,0,0,.025)}
-    .status-pill.demo-status{top:calc(39% + 90px)!important}
-    @media(max-width:600px){
-      .demo-chat-entry-hint{max-width:calc(100vw - 28px);gap:4px}
-      .demo-interaction-tag{padding:4px 6px}
-      .status-pill.demo-status{top:calc(27% + 88px)!important}
-      .demo-control-stack{top:calc(27% + 134px)!important}
-    }
-    @media(max-width:390px){
-      .status-pill.demo-status{top:calc(26% + 88px)!important}
-      .demo-control-stack{top:calc(26% + 134px)!important}
-    }
-  `;
-  document.head.appendChild(style);
-}
-
 function ensureHint() {
   let hint = document.getElementById('demoChatEntryHint');
   if (hint) return hint;
@@ -244,7 +215,6 @@ function syncDialog() {
 }
 
 function mountDialogI18n() {
-  injectStyle();
   syncDialog();
 
   const chat = document.getElementById('chat');
@@ -264,3 +234,4 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
 else mountDialogI18n();
 
 export { mountDialogI18n };
+

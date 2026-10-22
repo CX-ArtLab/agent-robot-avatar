@@ -118,3 +118,16 @@ test('packed package installs and can be imported without browser globals', asyn
     await rm(temporaryRoot, { recursive: true, force: true });
   }
 });
+
+
+test('Pages build resolves both its component preload and import at the deployment root', async () => {
+  run(process.execPath, ['scripts/build-pages.mjs']);
+  const html = await readFile(path.join(root, '.pages-site', 'index.html'), 'utf8');
+  assert.doesNotMatch(html, /\.\.\/agent-robot-avatar\.js/);
+  const preloads = [...html.matchAll(/rel="modulepreload" href="([^"]+)"/g)].map(match => match[1]);
+  assert.ok(preloads.includes('./agent-robot-avatar.js'));
+  assert.match(html, /import\('\.\/agent-robot-avatar\.js'\)/);
+  for (const preload of preloads) {
+    await readFile(path.join(root, '.pages-site', preload), 'utf8');
+  }
+});

@@ -31,43 +31,6 @@ function activeLanguage() {
   return LABELS[lang] ? lang : 'en';
 }
 
-function injectStyles() {
-  if (document.getElementById('agent-demo-chat-avatar-mode-r63')) return;
-  const style = document.createElement('style');
-  style.id = 'agent-demo-chat-avatar-mode-r63';
-  style.textContent = `
-    .panel-head.agent-avatar-mode-ready{padding-right:174px}
-    .agent-avatar-mode-switch{
-      position:absolute;right:62px;top:33px;display:flex;align-items:center;gap:2px;
-      padding:3px;border:1px solid #e2e4e7;border-radius:10px;background:#f3f4f5;
-      box-shadow:0 2px 8px rgba(0,0,0,.025);z-index:3
-    }
-    .agent-avatar-mode-switch button{
-      min-width:38px;height:28px;padding:0 8px;border:0;border-radius:7px;background:transparent;
-      color:#8b9097;font-size:10px;font-weight:650;line-height:28px;cursor:pointer;box-shadow:none
-    }
-    .agent-avatar-mode-switch button:hover{background:rgba(255,255,255,.72)}
-    .agent-avatar-mode-switch button:active{transform:none}
-    .agent-avatar-mode-switch button.active{background:#fff;color:#4f545a;box-shadow:0 1px 4px rgba(0,0,0,.08)}
-    .agent-phone.avatar-mode-inline .panel-face-slot{display:none}
-    .agent-phone.avatar-mode-inline .panel-head{gap:0}
-    .message.agent.avatar-live-row{align-items:flex-start;gap:10px}
-    .inline-avatar-slot{
-      width:48px;height:48px;flex:0 0 48px;display:grid;place-items:center;margin-top:1px;
-      overflow:visible
-    }
-    .inline-avatar-slot agent-robot-avatar{display:block;filter:drop-shadow(0 7px 14px rgba(0,0,0,.07))}
-    @media(max-width:460px){
-      .panel-head.agent-avatar-mode-ready{padding-right:148px}
-      .agent-avatar-mode-switch{right:58px}
-      .agent-avatar-mode-switch button{min-width:32px;padding:0 6px;font-size:9px}
-      .inline-avatar-slot{width:44px;height:44px;flex-basis:44px}
-      .message.agent.avatar-live-row{gap:8px}
-    }
-  `;
-  document.head.appendChild(style);
-}
-
 function buildSwitch() {
   if (!panelHead) return null;
   let control = panelHead.querySelector('.agent-avatar-mode-switch');
@@ -203,7 +166,6 @@ function setMode(next) {
   syncPlacement(true);
 }
 
-injectStyles();
 buildSwitch();
 updateSwitchLanguage();
 syncPlacement(false);
@@ -247,3 +209,4 @@ window.AgentRobotAvatarDemoAvatarMode = {
   setMode,
 };
 export { setMode };
+

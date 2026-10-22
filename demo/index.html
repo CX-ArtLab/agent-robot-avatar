@@ -4,6 +4,15 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Agent Robot Avatar — Interactive Demo</title>
+<script>document.documentElement.classList.add("demo-initializing");</script>
+<link rel="modulepreload" href="../agent-robot-avatar.js">
+<link rel="modulepreload" href="./agent-robot-avatar-demo-controls.js">
+<link rel="modulepreload" href="./agent-robot-avatar-demo-extras.js">
+<link rel="modulepreload" href="./agent-robot-avatar-demo-roundness.js">
+<link rel="modulepreload" href="./agent-robot-avatar-demo-layout.js">
+<link rel="modulepreload" href="./agent-robot-avatar-demo-dialog-i18n.js">
+<link rel="modulepreload" href="./agent-robot-avatar-demo-chat-avatar-mode.js">
+<link rel="modulepreload" href="./agent-robot-avatar-demo-reply-loop.js">
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;min-height:100%;font-family:Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:#15171a;background:#f7f7f5}
@@ -72,35 +81,255 @@
     .support-link{bottom:18px}
     .agent-overlay{padding:10px}.agent-phone{max-width:calc(100vw - 20px);max-height:calc(100vh - 20px);border-radius:26px}
   }
+
+
+  /* Critical demo styles: available before any module executes. */
+    .demo-control-stack{position:absolute;left:50%;top:calc(39% + 128px);transform:translateX(-50%);width:min(900px,calc(100% - 56px));z-index:20;display:grid;gap:8px}
+    .demo-control-stack>.controls{position:static;left:auto;top:auto;transform:none;max-width:none;width:100%;margin:0;overflow:visible;display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+    .demo-control-stack>.controls button{width:auto!important;min-width:0;flex:0 0 auto!important}
+    .demo-options{display:grid;gap:7px;width:max-content;max-width:100%;justify-items:center;padding:0;border:0;background:transparent;box-shadow:none;color:#72777e;font-size:11px}
+    .demo-panel-toolbar{display:flex;align-items:center;justify-content:center;gap:6px;padding:5px;border:1px solid rgba(0,0,0,.055);border-radius:12px;background:rgba(255,255,255,.82);box-shadow:0 6px 22px rgba(0,0,0,.055);backdrop-filter:blur(14px)}
+    .demo-panel-toggle{width:34px!important;height:34px!important;padding:0!important;border:0!important;border-radius:9px!important;background:#f4f5f6!important;color:#72777e!important;display:grid!important;place-items:center!important;cursor:pointer!important}
+    .demo-panel-toggle:hover{background:#e9eaec!important}
+    .demo-panel-toggle.demo-panel-open{background:#dfe1e4!important;color:#25282c!important}
+    .demo-panel-toggle svg{width:18px;height:18px;display:block;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+    .demo-panel-toggle svg .demo-palette-dot{fill:currentColor}
+    .demo-options-group{display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap;width:max-content;max-width:100%;padding:7px 9px;border:1px solid rgba(0,0,0,.055);border-radius:14px;background:rgba(255,255,255,.82);box-shadow:0 6px 22px rgba(0,0,0,.055);backdrop-filter:blur(14px)}
+    .demo-options-group[hidden]{display:none!important}
+    .demo-option{min-height:30px;display:inline-flex;align-items:center;gap:7px;padding:4px 8px;border-radius:9px;background:#f4f5f6;white-space:nowrap;user-select:none;width:auto!important;flex:0 0 auto!important}
+    .demo-option.color-option{padding-right:5px}
+    .demo-option input[type=color]{width:24px;height:22px;padding:0;border:0;border-radius:6px;background:transparent;cursor:pointer}
+    .demo-option input[type=color]::-webkit-color-swatch-wrapper{padding:1px}
+    .demo-option input[type=color]::-webkit-color-swatch{border:1px solid rgba(0,0,0,.12);border-radius:5px}
+    .demo-toggle input{position:absolute;opacity:0;pointer-events:none}
+    .demo-switch{position:relative;width:30px;height:18px;border-radius:999px;background:#d4d6d9;transition:background .18s ease;cursor:pointer;flex:0 0 auto}
+    .demo-switch::after{content:'';position:absolute;left:2px;top:2px;width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.18);transition:transform .18s ease}
+    .demo-toggle input:checked+.demo-switch{background:#666b72}
+    .demo-toggle input:checked+.demo-switch::after{transform:translateX(12px)}
+    .demo-toggle input:focus-visible+.demo-switch{outline:2px solid #aeb2b8;outline-offset:2px}
+    .demo-reset{border:0!important;color:#656a70!important;font:600 11px/1 Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif!important;cursor:pointer!important;padding:7px 10px!important}
+    .demo-reset:hover{background:#e9eaec!important}
+    .demo-language-option{border:0!important;background:#f4f5f6!important;color:#5f646a!important;border-radius:9px!important;padding:7px 9px!important;font-size:10px!important;cursor:pointer!important}
+    .demo-language-option:hover{background:#e9eaec!important}
+    .demo-language-option.demo-language-active{background:#dfe1e4!important;color:#202327!important;font-weight:700!important}
+    .demo-control-stack .controls button.demo-active{background:#dfe1e4;color:#202327}
+    .title.demo-title span{display:inline}
+    .title.demo-title span:not(:last-child)::after{content:' / '}
+    .follow-control.demo-original-follow{display:none!important}
+    .support-link{display:none!important}
+    .status-pill.demo-status{left:50%;top:calc(39% + 82px);bottom:auto;transform:translateX(-50%);z-index:15;pointer-events:none;white-space:nowrap}
+    @media(max-width:600px){
+      html,body{min-height:100%!important}.canvas{min-height:max(100vh,790px)!important}
+      .title.demo-title{left:18px;top:14px;line-height:1.48;max-width:calc(100% - 90px)}
+      .title.demo-title span{display:block}.title.demo-title span:not(:last-child)::after{content:''}
+      .avatar-home{top:27%!important}.status-pill.demo-status{left:50%!important;top:calc(27% + 80px)!important;bottom:auto!important}
+      .demo-control-stack{top:calc(27% + 128px);width:calc(100% - 20px);gap:7px}
+      .demo-options-group{gap:5px;padding:7px 6px}.demo-option{padding:4px 7px;gap:6px}
+    }
+    @media(max-width:390px){
+      .canvas{min-height:max(100vh,820px)!important}.avatar-home{top:26%!important}.status-pill.demo-status{top:calc(26% + 80px)!important}.demo-control-stack{top:calc(26% + 128px)}
+      .demo-options-group{gap:5px}.demo-option,.demo-reset{font-size:10px!important;padding:4px 5px!important;gap:4px!important}
+    }
+    .demo-roundness-control{
+      display:flex;align-items:center;justify-content:center;gap:8px;justify-self:center;
+      width:max-content;max-width:100%;padding:6px 10px;border:1px solid rgba(0,0,0,.055);border-radius:13px;
+      background:rgba(255,255,255,.84);box-shadow:0 6px 22px rgba(0,0,0,.05);backdrop-filter:blur(14px);
+      color:#747980;font:600 10px/1 Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+      user-select:none
+    }
+    .demo-roundness-label{white-space:nowrap}
+    .demo-roundness-mark{width:14px;height:14px;flex:0 0 14px;border:1.5px solid #9a9ea4;background:transparent}
+    .demo-roundness-mark.square{border-radius:3px}
+    .demo-roundness-mark.round{border-radius:7px}
+    .demo-roundness-control input[type=range]{
+      width:150px;max-width:34vw;height:18px;margin:0;padding:0;accent-color:#666b72;cursor:pointer
+    }
+    .demo-roundness-control input[type=range]:focus-visible{outline:2px solid #aeb2b8;outline-offset:2px;border-radius:999px}
+    .demo-roundness-unlock{display:inline-flex;align-items:center;gap:5px;padding-left:3px;white-space:nowrap;cursor:pointer}
+    .demo-roundness-unlock input{position:absolute;opacity:0;pointer-events:none}
+    .demo-roundness-switch{position:relative;width:30px;height:18px;border-radius:999px;background:#d4d6d9;transition:background .18s ease;flex:0 0 auto}
+    .demo-roundness-switch::after{content:'';position:absolute;left:2px;top:2px;width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.18);transition:transform .18s ease}
+    .demo-roundness-unlock input:checked+.demo-roundness-switch{background:#666b72}
+    .demo-roundness-unlock input:checked+.demo-roundness-switch::after{transform:translateX(12px)}
+    .demo-roundness-unlock input:focus-visible+.demo-roundness-switch{outline:2px solid #aeb2b8;outline-offset:2px}
+    @media(max-width:600px){
+      .demo-roundness-control{gap:7px;padding:6px 8px}
+      .demo-roundness-control input[type=range]{width:132px;max-width:36vw}
+    }
+    @media(max-width:390px){
+      .demo-roundness-control{gap:5px;font-size:9px}
+      .demo-roundness-control input[type=range]{width:104px;max-width:31vw}
+      .demo-roundness-unlock{gap:4px;padding-left:1px}
+    }
+    .demo-control-stack{
+      left:50%!important;
+      transform:translateX(-50%)!important;
+      width:max-content!important;
+      max-width:calc(100vw - 20px)!important;
+      justify-items:center!important;
+    }
+    .demo-control-stack>.controls{
+      position:static!important;left:auto!important;top:auto!important;transform:none!important;
+      width:var(--demo-controls-width,min(760px,calc(100vw - 20px)))!important;max-width:calc(100vw - 20px)!important;margin:0!important;
+      display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:center!important;
+      flex-wrap:wrap!important;gap:9px 6px!important;overflow:visible!important;padding:9px 8px 8px!important;
+    }
+    .demo-control-stack>.controls button{
+      width:auto!important;min-width:0!important;max-width:none!important;flex:0 0 auto!important;padding:8px 11px!important;
+    }
+    .demo-options{width:max-content!important;max-width:calc(100vw - 20px)!important;margin:0!important;justify-self:center!important}
+    .demo-options-group{width:max-content!important;max-width:calc(100vw - 20px)!important;margin-inline:auto!important}
+    @media(max-width:600px){
+      .demo-control-stack{max-width:calc(100vw - 16px)!important}
+      .demo-control-stack>.controls{width:var(--demo-controls-width,calc(100vw - 16px))!important;max-width:calc(100vw - 16px)!important;gap:9px 5px!important;padding:9px 7px 7px!important}
+      .demo-control-stack>.controls button{font-size:11px!important;padding:8px 7px!important}
+      .demo-options,.demo-options-group{max-width:calc(100vw - 16px)!important}
+    }
+    @media(max-width:440px){
+      .demo-control-stack>.controls{gap:9px 4px!important}
+      .demo-control-stack>.controls button{font-size:10px!important;padding:8px 5px!important}
+      .demo-option,.demo-reset{font-size:10px!important;padding:4px 5px!important}
+    }
+    .demo-chat-entry-hint{
+      position:static;z-index:14;display:flex;align-items:center;justify-content:center;gap:5px;flex-wrap:wrap;
+      width:max-content;max-width:100%;padding:0;color:#8f949b;font-size:9px;line-height:1.25;
+      pointer-events:none;user-select:none;justify-self:center;
+    }
+    .demo-interaction-lead{padding:3px 1px;font-weight:650;white-space:nowrap}
+    .demo-interaction-tag{padding:4px 7px;border:1px solid rgba(0,0,0,.055);border-radius:999px;background:rgba(255,255,255,.76);white-space:nowrap;box-shadow:0 3px 12px rgba(0,0,0,.025)}
+    .status-pill.demo-status{top:calc(39% + 90px)!important}
+    @media(max-width:600px){
+      .demo-chat-entry-hint{max-width:calc(100vw - 28px);gap:4px}
+      .demo-interaction-tag{padding:4px 6px}
+      .status-pill.demo-status{top:calc(27% + 88px)!important}
+      .demo-control-stack{top:calc(27% + 134px)!important}
+    }
+    @media(max-width:390px){
+      .status-pill.demo-status{top:calc(26% + 88px)!important}
+      .demo-control-stack{top:calc(26% + 134px)!important}
+    }
+    .panel-head.agent-avatar-mode-ready{padding-right:174px}
+    .agent-avatar-mode-switch{
+      position:absolute;right:62px;top:33px;display:flex;align-items:center;gap:2px;
+      padding:3px;border:1px solid #e2e4e7;border-radius:10px;background:#f3f4f5;
+      box-shadow:0 2px 8px rgba(0,0,0,.025);z-index:3
+    }
+    .agent-avatar-mode-switch button{
+      min-width:38px;height:28px;padding:0 8px;border:0;border-radius:7px;background:transparent;
+      color:#8b9097;font-size:10px;font-weight:650;line-height:28px;cursor:pointer;box-shadow:none
+    }
+    .agent-avatar-mode-switch button:hover{background:rgba(255,255,255,.72)}
+    .agent-avatar-mode-switch button:active{transform:none}
+    .agent-avatar-mode-switch button.active{background:#fff;color:#4f545a;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+    .agent-phone.avatar-mode-inline .panel-face-slot{display:none}
+    .agent-phone.avatar-mode-inline .panel-head{gap:0}
+    .message.agent.avatar-live-row{align-items:flex-start;gap:10px}
+    .inline-avatar-slot{
+      width:48px;height:48px;flex:0 0 48px;display:grid;place-items:center;margin-top:1px;
+      overflow:visible
+    }
+    .inline-avatar-slot agent-robot-avatar{display:block;filter:drop-shadow(0 7px 14px rgba(0,0,0,.07))}
+    @media(max-width:460px){
+      .panel-head.agent-avatar-mode-ready{padding-right:148px}
+      .agent-avatar-mode-switch{right:58px}
+      .agent-avatar-mode-switch button{min-width:32px;padding:0 6px;font-size:9px}
+      .inline-avatar-slot{width:44px;height:44px;flex-basis:44px}
+      .message.agent.avatar-live-row{gap:8px}
+    }
+    .expression-tag.failure{background:#f7ecec;border-color:#ead8d8;color:#9b7474}
+    .expression-tag.inspect{background:#eef0f7;border-color:#dde1ee;color:#737e9b}
+  /* Never paint intermediate controls, translations or a desktop-only position. */
+  .demo-initializing .canvas{visibility:hidden}
+  .demo-load-status{display:none;position:fixed;left:50%;top:40%;transform:translate(-50%,-50%);margin:0;color:#777c83;font:12px/1.5 system-ui,sans-serif;text-align:center}
+  .demo-initializing .demo-load-status{display:block}
 </style>
 </head>
 <body>
-<div class="canvas" id="canvas">
-  <div class="title">Agent Robot Avatar / SVG + Vanilla JS / Web Component</div>
+<p class="demo-load-status" id="demoLoadStatus" role="status">Loading demo…</p>
+<noscript>This interactive demo requires JavaScript.</noscript>
+<div class="canvas" id="canvas" aria-busy="true" inert>
+  <div class="title demo-title"><span>Agent Robot Avatar</span><span>SVG + Vanilla JS</span><span>Web Component</span></div>
   <div class="build-badge" id="agent-demo-build">Demo 0.5.2</div>
   <div class="avatar-home" id="home">
     <agent-robot-avatar id="face" size="118" auto-sleep="18000"></agent-robot-avatar>
   </div>
-  <div class="status-pill" id="status">idle · 默认待机</div>
-  <label class="follow-control" title="控制眼睛和头部是否跟随鼠标">
+  <div class="status-pill demo-status" id="status">idle · 默认待机</div>
+  <label class="follow-control demo-original-follow" title="控制眼睛和头部是否跟随鼠标">
     <span>鼠标跟随</span>
     <input id="pointerFollow" type="checkbox" checked />
     <span class="follow-switch" aria-hidden="true"></span>
   </label>
 
+<div class="demo-control-stack">
+  <div class="demo-chat-entry-hint" id="demoChatEntryHint" role="note"></div>
   <div class="controls" aria-label="Avatar states">
     <button type="button" data-action="idle">正常</button>
     <button type="button" data-action="bored">发呆</button>
+    <button type="button" data-action="waiting">等待</button>
+    <button type="button" data-action="waiting-wrap">等待 · 环绕</button>
     <button type="button" data-action="input">输入</button>
     <button type="button" data-action="send">发送/点头</button>
     <button type="button" data-action="success">成功</button>
+    <button type="button" data-action="failure">失败</button>
     <button type="button" data-action="warning">警告</button>
+    <button type="button" data-action="inspect">审视</button>
     <button type="button" data-action="angry">内容阻止</button>
     <button type="button" data-action="error">系统错误</button>
     <button type="button" data-action="surprise">惊讶</button>
     <button type="button" data-action="sleep">睡着</button>
     <button type="button" data-action="wake">醒来</button>
+    <button type="button" data-action="love" class="is-new" data-new="NEW">喜欢</button>
+    <button type="button" data-action="random" class="is-new" data-new="NEW">随机</button>
   </div>
+  <div class="demo-options">
+    <div class="demo-panel-toolbar" id="demoPanelToolbar">
+      <button class="demo-panel-toggle" id="demoColorPanelToggle" type="button" aria-expanded="false" aria-controls="demoColorPanel">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"/><circle class="demo-palette-dot" cx="13.5" cy="6.5" r=".5"/><circle class="demo-palette-dot" cx="17.5" cy="10.5" r=".5"/><circle class="demo-palette-dot" cx="6.5" cy="12.5" r=".5"/><circle class="demo-palette-dot" cx="8.5" cy="7.5" r=".5"/></svg>
+      </button>
+      <button class="demo-panel-toggle" id="demoSettingsPanelToggle" type="button" aria-expanded="false" aria-controls="demoSettingsPanel">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h3M11 12h9M4 18h8M16 18h4"/><circle cx="16" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="14" cy="18" r="2"/></svg>
+      </button>
+      <button class="demo-panel-toggle" id="demoLanguagePanelToggle" type="button" aria-expanded="false" aria-controls="demoLanguagePanel">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.3 2.4 3.5 5.4 3.5 9S14.3 18.6 12 21M12 3C9.7 5.4 8.5 8.4 8.5 12S9.7 18.6 12 21"/></svg>
+      </button>
+    </div>
+    <div class="demo-options-group demo-color-group" id="demoColorPanel" hidden>
+      <label class="demo-option color-option"><span id="demoBgLabel"></span><input id="demoBgColor" type="color" value="#f8f8f6"></label>
+      <label class="demo-option color-option"><span id="demoHeadLabel"></span><input id="demoHeadColor" type="color" value="#08090b"></label>
+      <label class="demo-option demo-toggle"><span id="demoEyeThroughLabel"></span><input id="demoEyeThrough" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
+      <button class="demo-option demo-reset" id="demoReset" type="button"></button>
+    </div>
+    <div class="demo-options-group demo-behavior-group" id="demoSettingsPanel" hidden>
+      <label class="demo-option demo-toggle"><span id="demoAntennaLabel"></span><input id="demoAntenna" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
+      <label class="demo-option demo-toggle"><span id="demoAntennaFlashLabel"></span><input id="demoAntennaFlash" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
+      <label class="demo-option demo-toggle"><span id="demoLoopLabel"></span><input id="demoLoop" type="checkbox"><span class="demo-switch" aria-hidden="true"></span></label>
+      <label class="demo-option demo-toggle"><span id="demoPointerFollowLabel"></span><input id="demoPointerFollow" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
+    </div>
+    <div class="demo-options-group demo-language-group" id="demoLanguagePanel" hidden>
+      <button class="demo-language-option" type="button" data-lang="en">English</button>
+      <button class="demo-language-option" type="button" data-lang="zh-CN">简体中文</button>
+      <button class="demo-language-option" type="button" data-lang="zh-TW">繁體中文</button>
+      <button class="demo-language-option" type="button" data-lang="ja">日本語</button>
+      <button class="demo-language-option" type="button" data-lang="ko">한국어</button>
+      <button class="demo-language-option" type="button" data-lang="es">Español</button>
+      <button class="demo-language-option" type="button" data-lang="pt">Português</button>
+      <button class="demo-language-option" type="button" data-lang="de">Deutsch</button>
+      <button class="demo-language-option" type="button" data-lang="fr">Français</button>
+    </div>
+  </div>
+  <div class="demo-roundness-control">
+    <span class="demo-roundness-label" id="demoHeadRoundnessLabel"></span>
+    <span class="demo-roundness-mark square" aria-hidden="true"></span>
+    <input id="demoHeadRoundness" type="range" min="0" max="100" step="50" value="50" list="demoRoundnessStops">
+    <datalist id="demoRoundnessStops"><option value="0"></option><option value="50"></option><option value="100"></option></datalist>
+    <span class="demo-roundness-mark round" aria-hidden="true"></span>
+    <label class="demo-roundness-unlock">
+      <span id="demoHeadRoundnessUnlockLabel"></span>
+      <input id="demoHeadRoundnessUnlock" type="checkbox">
+      <span class="demo-roundness-switch" aria-hidden="true"></span>
+    </label>
+  </div>
+</div>
 
   <a class="support-link" href="https://ko-fi.com/P0E625WIOI" target="_blank" rel="noopener noreferrer" aria-label="Buy me a coffee on Ko-fi">
     <span class="support-cup">☕</span><span>Buy me a coffee</span>
@@ -130,6 +359,7 @@
 </div>
 
 <script type="module">
+try {
   const { VERSION } = await import('../agent-robot-avatar.js');
   window.AgentRobotAvatarDemoBuild = VERSION;
   const buildBadge = document.getElementById('agent-demo-build');
@@ -299,10 +529,23 @@
   await import('./agent-robot-avatar-demo-controls.js');
   await import('./agent-robot-avatar-demo-extras.js');
   await import('./agent-robot-avatar-demo-roundness.js');
-  await import('./agent-robot-avatar-demo-layout.js');
+  const { balanceControls } = await import('./agent-robot-avatar-demo-layout.js');
   await import('./agent-robot-avatar-demo-dialog-i18n.js');
   await import('./agent-robot-avatar-demo-chat-avatar-mode.js');
   await import('./agent-robot-avatar-demo-reply-loop.js');
+  // Apply the final language and row width before exposing interactive content.
+  await document.fonts.ready;
+  balanceControls();
+  await new Promise(resolve => requestAnimationFrame(resolve));
+  document.getElementById('canvas').inert = false;
+  document.getElementById('canvas').setAttribute('aria-busy', 'false');
+  document.documentElement.classList.remove('demo-initializing');
+  document.documentElement.dataset.demoReady = 'true';
+} catch (error) {
+  console.error('Demo initialization failed:', error);
+  document.getElementById('demoLoadStatus').textContent = 'The demo could not load. Please reload to try again.';
+}
 </script>
 </body>
 </html>
+
