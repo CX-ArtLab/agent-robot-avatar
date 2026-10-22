@@ -10,7 +10,10 @@ const browser = await ({chromium,firefox,webkit})[engine].launch({
   ...(process.env.PREVIEW_BROWSER_PATH ? { executablePath: process.env.PREVIEW_BROWSER_PATH,
     args: ['--no-sandbox','--disable-dev-shm-usage', ...(process.env.PREVIEW_BROWSER_ARGS ? JSON.parse(process.env.PREVIEW_BROWSER_ARGS) : [])] } : {})
 });
-const context = await browser.newContext({ viewport: {width:1180,height:1000}, offline:true });
+// Playwright's WebKit cannot open even file:// pages in an offline context,
+// so there the network is cut by aborting every web request instead.
+const context = await browser.newContext({ viewport: {width:1180,height:1000}, offline: engine !== 'webkit' });
+if (engine === 'webkit') await context.route(/^(https?|wss?):/, route => route.abort());
 const page = await context.newPage();
 const errors = [], external = [];
 page.on('pageerror', error => errors.push(error.message));
