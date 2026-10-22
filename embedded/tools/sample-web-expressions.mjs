@@ -121,6 +121,9 @@ for(let i=0;i<clips.length;i++){
 }
 lines.push('static const Clip CLIPS[] = {',...clips.map((clip,i)=>`  {ACTION_${i}, ${clip.samples.length}}, // ${clip.action}; idle at ${clip.endedAt}`),'};','} }');
 await writeFile(join(root,'embedded/lib/AgentRobotEyes/src/AgentRobotWebMotion.h'),lines.join('\n')+'\n');
-await writeFile(join(root,'embedded/tests/web-reference.json'),JSON.stringify({sourceHash,interval:20,scales,clips})+'\n');
+// Round to 1e-9 so the committed reference does not depend on the last bits of
+// a Node/V8 version's Math functions (CI regenerates it and compares).
+const stable=(key,value)=>typeof value==='number'&&!Number.isInteger(value)?Math.round(value*1e9)/1e9:value;
+await writeFile(join(root,'embedded/tests/web-reference.json'),JSON.stringify({sourceHash,interval:20,scales,clips},stable)+'\n');
 await writeFile(join(root,'embedded/tests/web-visual-reference.json'),JSON.stringify({sourceHash,frames:visual})+'\n');
 console.log(clips.map(clip=>`${clip.action}: ${clip.samples.length} poses, idle=${clip.endedAt}`).join('\n'));
