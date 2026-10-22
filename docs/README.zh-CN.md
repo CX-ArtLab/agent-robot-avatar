@@ -24,6 +24,12 @@ Agent Robot Avatar 还可作为 AG-UI 风格 Agent 界面的视觉反馈层。
   <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Agent Robot Avatar 交互动画演示" width="560">
 </p>
 
+## 嵌入式眼睛版本（实验性）
+
+同一项目新增独立 C++11 眼睛表情核心，面向已有外壳或屏幕的硬件与原生程序。首批参考构建包括 ESP32-S3＋ST7789、ESP32＋SSD1306，以及 Raspberry Pi Pico／RP2040＋ST7789。表情核心与屏幕驱动分开，当前尚未进行实机验证。
+
+[查看硬件接入说明](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/embedded/README.zh-CN.md)。现有 Web 组件与 Demo 保持不变。
+
 ## 在线 Demo
 
 [打开交互 Demo](https://cx-artlab.github.io/agent-robot-avatar/?lang=zh-CN)
@@ -188,3 +194,4 @@ MIT License。详见 [`LICENSE`](../LICENSE)。
 | Ko-fi | 支付宝 | 微信支付 |
 | --- | --- | --- |
 | <a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a> | <img src="../assets/support/alipay.png" alt="支付宝收款码" width="160"> | <img src="../assets/support/wechat-pay.png" alt="微信支付收款码" width="160"> |
+

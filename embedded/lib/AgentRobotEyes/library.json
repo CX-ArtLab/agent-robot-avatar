@@ -1,0 +1,11 @@
+{
+  "name": "AgentRobotEyes",
+  "version": "0.1.0",
+  "description": "Portable, allocation-free animated robot eyes with host-controlled expressions and a 1-bit framebuffer.",
+  "keywords": ["robot", "eyes", "animation", "esp32", "rp2040", "display"],
+  "repository": {"type": "git", "url": "https://github.com/CX-ArtLab/agent-robot-avatar.git"},
+  "authors": [{"name": "CX ArtLab"}],
+  "license": "MIT",
+  "frameworks": "*",
+  "platforms": "*"
+}

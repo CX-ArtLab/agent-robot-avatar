@@ -45,6 +45,12 @@ Built with SVG and vanilla JavaScript, it works as a native custom element with 
 - Optional antenna status flashing
 - TypeScript declarations included
 
+## Embedded eyes (experimental)
+
+An independent, allocation-free C++11 eyes-only engine is available for embedded products. Reference builds cover ESP32-S3 with ST7789, ESP32 with SSD1306, and Raspberry Pi Pico / RP2040 with ST7789. Display adapters are separate from the expression engine. Physical hardware validation is pending; this is not a claim of universal board compatibility.
+
+See the [embedded guide](https://github.com/CX-ArtLab/agent-robot-avatar/tree/main/embedded) and [中文说明](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/embedded/README.zh-CN.md). The Web component's installation and behavior are unchanged.
+
 ## Install
 
 ```bash
@@ -184,3 +190,4 @@ MIT License. See [`LICENSE`](./LICENSE).
 If this project is useful to you, you can buy me a coffee.
 
 <a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+

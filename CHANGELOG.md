@@ -6,6 +6,10 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ## [Unreleased]
 
+### Added
+
+- Added an experimental portable C++11 eyes-only engine, with ESP32 and RP2040 reference firmware, explicit program-controlled expressions, native safety tests and separate embedded build checks. Physical hardware verification is pending.
+
 ### Fixed
 
 - Prevented the demo from revealing intermediate layouts during startup, preloaded its modules in parallel, and moved its controls and critical styles into the initial HTML.
