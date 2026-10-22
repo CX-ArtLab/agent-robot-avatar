@@ -9,3 +9,4 @@ trap 'rm -rf "$output"' EXIT
   "$root/lib/AgentRobotEyes/src/AgentRobotEyes.cpp" "$root/tests/eyes_test.cpp" \
   -o "$output/eyes-test"
 "$output/eyes-test"
+

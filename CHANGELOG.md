@@ -8,6 +8,8 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ### Added
 
+- Added the offline C++/WebAssembly hardware preview with nine screen presets, custom resolutions, viewport fit/crop/zoom/circular clipping, configurable proximity gaze and the restored continuous hardware waiting-wave variant.
+
 - Added a collapsible Color themes panel next to Custom colors, with 17 named two-color presets inspired by brands, AI products and sports. Each option uses the existing color-control pill style and a split rounded swatch; clicking the active pair swaps foreground/background colors. The panel wraps within the demo width and scrolls on narrow screens. Settings/language remain grouped on the left.
 
 - Added the SVG `waiting-wave` action (等待 · 波动), approved and queued for a future batched release: three 1.1-second waves with a 10-unit vertical amplitude and staggered eye motion. `startWaiting({ variant: 'wave' })` loops continuously; the demo, TypeScript API, motion policy and action lifecycle support the new variant.
@@ -15,6 +17,8 @@ The project follows Semantic Versioning for public releases. Internal developmen
 - Added an experimental portable C++11 eyes-only engine, with ESP32 and RP2040 reference firmware, explicit program-controlled expressions, native safety tests and separate embedded build checks. Physical hardware verification is pending.
 
 ### Fixed
+
+- Restored the original 17 eye motions and timing in the embedded engine using sampled Web geometry, with independent SVG fidelity checks and native/WASM frame comparison. Hardware demo cycling now lets longer actions finish.
 
 - Prevented the demo from revealing intermediate layouts during startup, preloaded its modules in parallel, and moved its controls and critical styles into the initial HTML.
 

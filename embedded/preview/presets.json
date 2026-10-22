@@ -1,0 +1,106 @@
+[
+  {
+    "id": "tft",
+    "name": "ST7789 · 方形 TFT",
+    "width": 240,
+    "height": 240,
+    "frame": "tft",
+    "controller": "ST7789",
+    "type": "SPI · 彩屏",
+    "example": true,
+    "viewport": [
+      0,
+      40,
+      240,
+      160
+    ],
+    "source": "https://docs.espressif.com/projects/esp-board-manager/en/latest/references/boards/esp32_s3_eye.html"
+  },
+  {
+    "id": "oled",
+    "name": "SSD1306 · 横向 OLED",
+    "width": 128,
+    "height": 64,
+    "frame": "oled",
+    "controller": "SSD1306",
+    "type": "I²C · 单色",
+    "example": true,
+    "source": "https://learn.adafruit.com/monochrome-oled-breakouts"
+  },
+  {
+    "id": "oled-wide",
+    "name": "SSD1306 · 窄条 OLED",
+    "width": 128,
+    "height": 32,
+    "frame": "oled",
+    "controller": "SSD1306",
+    "type": "I²C · 单色",
+    "example": false,
+    "source": "https://www.adafruit.com/product/931"
+  },
+  {
+    "id": "mini",
+    "name": "ST7735S · 小型 TFT",
+    "width": 128,
+    "height": 160,
+    "frame": "tft",
+    "controller": "ST7735S",
+    "type": "SPI · 彩屏",
+    "example": false,
+    "source": "https://www.waveshare.com/wiki/1.8inch_LCD_Module"
+  },
+  {
+    "id": "landscape",
+    "name": "ST7789V · 横向 TFT",
+    "width": 320,
+    "height": 240,
+    "frame": "tft",
+    "controller": "ST7789V",
+    "type": "SPI · 彩屏 · 横向旋转",
+    "example": false,
+    "source": "https://www.waveshare.com/wiki/2inch_LCD_Module"
+  },
+  {
+    "id": "portrait",
+    "name": "ST7789V · 竖向 TFT",
+    "width": 240,
+    "height": 320,
+    "frame": "tft",
+    "controller": "ST7789V",
+    "type": "SPI · 彩屏",
+    "example": false,
+    "source": "https://www.waveshare.com/wiki/2inch_LCD_Module"
+  },
+  {
+    "id": "round",
+    "name": "GC9A01 · 圆形 TFT",
+    "width": 240,
+    "height": 240,
+    "frame": "round",
+    "controller": "GC9A01",
+    "type": "SPI · 彩屏 · 圆形",
+    "example": false,
+    "source": "https://www.waveshare.com/wiki/1.28inch_LCD_Module"
+  },
+  {
+    "id": "narrow",
+    "name": "ST7789 · 宽幅 TFT",
+    "width": 240,
+    "height": 135,
+    "frame": "tft",
+    "controller": "ST7789",
+    "type": "SPI · 彩屏",
+    "example": false,
+    "source": "https://www.waveshare.com/catalog/product/view/id/3872/s/2inch-lcd-module/category/346/"
+  },
+  {
+    "id": "eyes",
+    "name": "原始眼睛画布",
+    "width": 240,
+    "height": 160,
+    "frame": "eyes",
+    "controller": "GENERIC",
+    "type": "通用单色位图",
+    "example": false
+  }
+]

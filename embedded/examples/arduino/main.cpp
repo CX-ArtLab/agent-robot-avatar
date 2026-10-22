@@ -53,7 +53,7 @@ void present() {
 void help() {
   Serial.println("Agent Robot Eyes 0.1.0 (experimental)");
   Serial.println("Commands: idle bored waiting waiting-wrap input send success failure");
-  Serial.println("warning inspect blocked error surprise love random sleep wake");
+  Serial.println("warning inspect blocked error surprise love random sleep wake waiting-wave");
   Serial.println("Also: reset | demo | gaze -1..1 -1..1 | help");
 }
 
@@ -131,7 +131,10 @@ void loop() {
       else commandOverflow = true;
     }
   }
-  if (cycle && now - lastCycle >= 4000) {
+  const uint32_t actionMs = agent_robot::Eyes::actionDuration(
+      static_cast<agent_robot::Action>(cycleIndex));
+  const uint32_t cycleMs = actionMs + 500u > 4000u ? actionMs + 500u : 4000u;
+  if (cycle && now - lastCycle >= cycleMs) {
     cycleIndex = (cycleIndex + 1) % static_cast<unsigned>(agent_robot::Action::Count);
     eyes.play(static_cast<agent_robot::Action>(cycleIndex), now);
     lastCycle = now;

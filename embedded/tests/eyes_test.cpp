@@ -1,4 +1,5 @@
 #include "AgentRobotEyes.h"
+#include "AgentRobotGaze.h"
 #include <assert.h>
 #include <cmath>
 #include <cstdio>
@@ -96,7 +97,7 @@ static void timingAndSleep() {
   const unsigned open = lit(eyes);
   eyes.sleep(100);
   assert(eyes.update(100));
-  assert(eyes.update(400));
+  assert(eyes.update(3600));
   assert(eyes.isSleeping());
   assert(lit(eyes)<open/3);
   assert(!eyes.update(100000));
@@ -106,13 +107,13 @@ static void timingAndSleep() {
   assert(eyes.action()==Action::Idle);
   assert(lit(eyes)==open);
   eyes.play("success",102000);
-  eyes.update(103800);
+  eyes.update(104100);
   assert(eyes.action()==Action::Idle);
   // Completing an action must retain an explicit gaze without a one-frame snap.
   eyes.lookAt(1,0);
   eyes.reset(104000); eyes.update(105000);
   const uint32_t gaze = hash(eyes);
-  eyes.play("success",106000); eyes.update(107800);
+  eyes.play("success",106000); eyes.update(108100);
   assert(hash(eyes)==gaze);
   // Both the frame limiter and expression deadline survive 32-bit millis rollover.
   const uint32_t start = std::numeric_limits<uint32_t>::max()-100;
@@ -123,7 +124,7 @@ static void timingAndSleep() {
   assert(eyes.play("success",start+50));
   assert(eyes.update(start+400));
   assert(eyes.action()==Action::Success);
-  assert(eyes.update(start+1900));
+  assert(eyes.update(start+2100));
   assert(eyes.action()==Action::Idle);
 }
 
@@ -179,11 +180,95 @@ static void independentInstances() {
   assert(second.action()==Action::Idle);
 }
 
+static void restoredWaitingWave() {
+  EyesConfig config; config.autoBlink=false; config.transitionMs=0; config.maxFps=60;
+  std::vector<uint8_t> pixels(Eyes::requiredBytes(config.width,config.height));
+  Eyes eyes; assert(eyes.begin(config,pixels.data(),pixels.size(),0));
+  assert(eyes.play("waiting-wave",0));
+  assert(eyes.isWaiting());
+  assert(Eyes::actionDuration(Action::WaitingWave)==0);
+  uint32_t first=0;
+  for (uint32_t t: {0u,350u,700u,1050u,1400u,5600u}) {
+    assert(eyes.update(t));
+    const double phase=(t%1400)*2*3.141592653589793/1400;
+    for (unsigned side=0;side<2;++side) {
+      double sum=0; unsigned count=0;
+      for (unsigned y=0;y<config.height;++y)
+        for (unsigned x=side*120;x<(side+1)*120;++x)
+          if(pixels[y*eyes.stride()+(x>>3)]&(0x80>>(x&7))) {sum+=y+.5;count++;}
+      assert(count>5000); // The restored eyes remain full ellipses.
+      const double expected=80+15*std::sin(phase+side*.7);
+      assert(std::fabs(sum/count-expected)<.15); // Amplitude and staggered phase.
+    }
+    if(!t)first=hash(eyes);
+    if(t==1400||t==5600)assert(hash(eyes)==first);
+  }
+  // Repeating the persistent command must not reset its phase.
+  assert(eyes.play("waiting-wave",5700));eyes.update(5700);
+  const uint32_t repeated=hash(eyes);
+  Eyes reference;std::vector<uint8_t> other(pixels.size());
+  assert(reference.begin(config,other.data(),other.size(),0));
+  reference.play("waiting-wave",0);reference.update(5700);
+  assert(hash(reference)==repeated);
+  eyes.stopWaiting(5800);assert(eyes.action()==Action::Idle);
+}
+
+static void layoutsAndProximity() {
+  uint8_t pixels[7200];
+  Eyes eyes;EyesConfig config;config.width=config.height=240;config.autoBlink=false;
+  assert(eyes.begin(config,pixels,sizeof pixels,0));
+  agent_robot::EyesLayout layout;
+  layout.y=40;layout.width=240;layout.height=160;
+  assert(eyes.setLayout(layout));eyes.update(0);
+  for(unsigned y=0;y<240;y++)if(y<40||y>=200)
+    for(unsigned x=0;x<30;x++)assert(!pixels[y*30+x]);
+  const uint32_t contain=hash(eyes);
+  layout.y=0;layout.height=240;layout.fit=agent_robot::FitMode::Cover;
+  assert(eyes.setLayout(layout));eyes.update(1);assert(hash(eyes)!=contain);
+  eyes.play("waiting",100);
+  layout.shape=agent_robot::ScreenShape::Circle;layout.zoom=3;
+  assert(eyes.setLayout(layout));eyes.update(500);assert(eyes.isWaiting());
+  for(int y=0;y<240;y++)for(int x=0;x<240;x++) {
+    const float dx=x+.5f-120,dy=y+.5f-120;
+    if(dx*dx+dy*dy>120*120)assert(!(pixels[y*30+(x>>3)]&(0x80>>(x&7))));
+  }
+  layout.x=240;assert(!eyes.setLayout(layout));
+  layout.x=0;layout.zoom=NAN;assert(!eyes.setLayout(layout));
+  agent_robot::GazeTracker gaze;agent_robot::GazeConfig gc;
+  assert(gaze.begin(gc,0));
+  agent_robot::GazeTarget target;target.detected=true;target.x=1;target.y=-1;target.proximity=.49f;
+  gaze.observe(target,0);gaze.update(100);assert(!gaze.tracking()&&gaze.x()==0);
+  target.proximity=.6f;gaze.observe(target,100);gaze.update(140);
+  assert(gaze.tracking()&&gaze.x()>0&&gaze.x()<1&&gaze.y()<0);
+  target.proximity=.45f;gaze.observe(target,500);gaze.update(1000);
+  assert(gaze.tracking()); // hysteresis preserves the current target
+  target.proximity=.1f;gaze.observe(target,1000);gaze.update(1200);
+  assert(!gaze.tracking());const float returning=gaze.x();
+  gaze.update(2000);assert(gaze.x()<returning);
+  target.proximity=.8f;target.x=NAN;gaze.observe(target,2100);assert(!gaze.tracking());
+  gc.enterThreshold=.2f;gc.exitThreshold=.3f;assert(!gaze.begin(gc,0));
+  gc=agent_robot::GazeConfig();const uint32_t start=0xffffff00u;
+  assert(gaze.begin(gc,start));target.x=1;target.proximity=.8f;
+  gaze.observe(target,start);gaze.update(start+100);assert(gaze.tracking());
+  gaze.update(start+800);assert(!gaze.tracking());
+  gc.movingOnly=true;assert(gaze.begin(gc,0));
+  target.moving=false;gaze.observe(target,0);gaze.update(100);
+  assert(!gaze.tracking()&&gaze.x()==0);
+  target.moving=true;gaze.observe(target,120);gaze.update(160);assert(gaze.tracking());
+  target.moving=false;gaze.observe(target,500);gaze.update(721);
+  assert(!gaze.tracking()); // stationary targets don't refresh moving-only lock
+  gc.movingOnly=false;gc.holdMs=1500;assert(gaze.setConfig(gc));
+  gaze.observe(target,800);gaze.update(2000);assert(gaze.tracking());
+}
+
 int main() {
   bufferContract();
   namesAndCancellation();
   timingAndSleep();
   renderSafetyAndIdentity();
   independentInstances();
+  restoredWaitingWave();
+  layoutsAndProximity();
   puts("Eyes core: buffer guards, all actions, cancellation, frame limits, rollover, sleep and isolation passed.");
 }
+

@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'">
+<title>Agent Robot Avatar — Hardware Eyes Preview</title>
+<style>
+/* Project-owned styles copied from our demo/index.html. */
+/*__PROJECT_CSS__*/
+.stage{min-height:490px;flex-direction:column;gap:24px;background-color:#e9ece5;background-image:radial-gradient(#99a29455 .7px,transparent .7px);background-size:16px 16px}.device{position:relative;flex-shrink:0;transition:none;width:560px;max-width:100%;padding:46px 30px 54px;border-radius:10px;background:#234e79;border:1px solid #173652;box-shadow:0 3px 0 #16344e,0 18px 30px #172d3c25,inset 0 0 0 2px #42729a55}.glass{position:relative;background:#090c0b;padding:9px;border:1px solid #101a1b;border-radius:4px;box-shadow:0 0 0 2px #77909d55,inset 0 1px 2px #ffffff22}canvas{border-radius:0;max-width:100%;height:auto!important}.screw{position:absolute;width:12px;height:12px;border-radius:50%;background:#e9ece5;border:3px solid #b6a258;box-shadow:0 0 0 2px #172e4666}.screw:nth-of-type(1){top:12px;left:12px}.screw:nth-of-type(2){top:12px;right:12px}.screw:nth-of-type(3){bottom:12px;left:12px}.screw:nth-of-type(4){bottom:12px;right:12px}.silk{position:absolute;top:15px;left:34px;right:34px;text-align:center;font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.12em;color:#e6eff0;white-space:nowrap}.connector{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:42%;height:17px;background:repeating-linear-gradient(90deg,#ddbc60 0 7px,transparent 7px 13px);border-top:3px solid #162a3f}.pin-label{position:absolute;bottom:24px;left:30px;right:30px;text-align:center;color:#d4e4ed;font-family:ui-monospace,monospace;font-size:8px;letter-spacing:.08em}.device[data-profile=oled]{background:#1e4374;padding:55px 28px 35px}.device[data-profile=oled] .silk{top:auto;bottom:11px;font-size:9px}.device[data-profile=oled] .connector{top:0;bottom:auto;width:29%;height:14px;border-top:0;border-bottom:3px solid #12253c}.device[data-profile=oled] .pin-label{top:24px;bottom:auto;font-size:8px}.device[data-profile=oled] .glass{padding:6px;border:3px solid #0b1016;box-shadow:0 0 0 1px #c4cbd180}.device[data-profile=eyes]{background:#242c29;border-color:#131a16;padding:12px;border-radius:12px;box-shadow:0 4px 0 #151d18,0 15px 28px #172d3c20}.device[data-profile=eyes] .screw,.device[data-profile=eyes] .silk,.device[data-profile=eyes] .connector,.device[data-profile=eyes] .pin-label{display:none}.device[data-profile=eyes] .glass{border:0;padding:0;box-shadow:none}.device.bare{background:transparent;padding:0;border:0;border-radius:0;box-shadow:none}.device.bare .glass{padding:0;border:0;box-shadow:none}.device.bare .screw,.device.bare .silk,.device.bare .connector,.device.bare .pin-label{display:none}.stage-caption{font-size:10px;letter-spacing:.12em;color:#64706a;text-align:center;line-height:1.8}.download{font-size:12px;padding:8px 12px}.draft{color:#846839;background:#faf4e4;border-color:#e8dcc1}@media(max-width:450px){.stage{min-height:375px}.device{padding:38px 22px 46px}.device[data-profile=oled]{padding:48px 22px 32px}.silk{font-size:9px}.pin-label{font-size:7px;left:20px;right:20px}.screw{width:10px;height:10px}}
+
+/* Hardware-only layout, retaining our Demo's centered canvas and compact controls. */
+.hardware-demo{position:relative;display:flex;flex-direction:column;align-items:center;gap:15px;min-height:100vh;padding:82px 28px 30px}
+.hardware-home{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;width:100%;max-width:820px;min-height:380px;padding:24px 0}
+.hardware-demo .demo-control-stack{position:relative;left:auto!important;top:auto!important;transform:none!important;gap:10px;width:760px!important;max-width:calc(100vw - 32px)!important;justify-items:center}
+.hardware-demo .status-pill.demo-status{position:static;left:auto!important;top:auto!important;bottom:auto!important;transform:none!important;margin:0;pointer-events:none}
+.hardware-demo .controls button[aria-pressed=true]{background:#dfe1e4;color:#202327}
+.hardware-demo .controls button small{display:none}.hardware-demo .controls button span{font:inherit}
+.hardware-demo .controls button{border:0;text-align:center}.hardware-demo .demo-options-group{font-size:11px;color:#72777e;gap:7px;justify-content:center}
+.hardware-demo .demo-options-group button[aria-pressed=true]{background:#dfe1e4;color:#25282c}
+.hardware-demo .demo-option select,.hardware-demo .demo-option input[type=number]{font:inherit;background:transparent;border:0;color:#565b62;max-width:230px;cursor:pointer}
+.hardware-demo .demo-option input[type=number]{width:54px}.hardware-demo .demo-option input[type=range]{width:104px;accent-color:#666b72}
+.hardware-demo input:focus-visible,.hardware-demo select:focus-visible,.hardware-demo button:focus-visible{outline:2px solid #aeb2b8;outline-offset:3px}
+.hardware-demo button:disabled,.hardware-demo input:disabled,.hardware-demo select:disabled{opacity:.45;cursor:not-allowed}
+.hardware-demo [hidden]{display:none!important}#settings-panel{display:grid;gap:8px;max-width:100%}
+.hardware-demo .device{max-width:min(100%,600px);flex-shrink:0}.hardware-demo canvas{display:block;background:#000;image-rendering:pixelated;max-width:100%;height:auto!important}
+.hardware-demo .device[data-profile=round]{border-radius:50%;padding:22px;background:#202c32;border:1px solid #53626a;box-shadow:0 3px 0 #11191c,0 16px 30px #172d3c22}
+.hardware-demo .device[data-profile=round] .glass{padding:4px;border-radius:50%;box-shadow:0 0 0 2px #79838955;overflow:hidden}
+.hardware-demo .device[data-profile=round] canvas{border-radius:50%}
+.hardware-demo .device[data-profile=round] .screw,.hardware-demo .device[data-profile=round] .connector,.hardware-demo .device[data-profile=round] .pin-label,.hardware-demo .device[data-profile=round] .silk{display:none}
+.hardware-demo .device.bare{padding:0;border:0;background:transparent;box-shadow:none}
+.hardware-demo .device.bare .glass{padding:0;border:0;box-shadow:none}
+.hardware-demo .stage-caption{font-size:9px;color:#8f949b;letter-spacing:.02em;text-align:center;position:relative}
+.hardware-demo .profile-note,.hardware-demo .usage-note{font-size:10px;line-height:1.8;color:#8f949b;text-align:center;max-width:700px;margin:0}
+.hardware-demo .clock{font:10px/1.2 ui-monospace,monospace;font-variant-numeric:tabular-nums;padding:0 7px;color:#92969c}
+.hardware-demo output{min-width:28px;font-size:10px;font-variant-numeric:tabular-nums}
+.hardware-demo .preview-footer{font-size:9px;color:#999da4;text-align:center;line-height:1.8;margin-top:7px;max-width:760px}
+.hardware-demo details{margin-top:8px}.hardware-demo summary{cursor:pointer}.hardware-demo pre{white-space:pre-wrap;text-align:left;overflow-wrap:anywhere;font-size:10px;line-height:1.6}
+.hardware-demo .support-state{display:inline-block;padding:3px 7px;border:1px solid #e2e3e5;border-radius:999px;background:#ffffffaa;color:#858990}
+.hardware-demo .sense-zone{position:absolute;left:50%;top:50%;width:calc(100% + 144px);height:calc(100% + 144px);transform:translate(-50%,-50%);border:1px dashed #b1b6bc88;border-radius:50%;pointer-events:none}
+.hardware-demo .sense-zone.active{border-color:#7e9a8299}.hardware-demo .sensor-wrap{position:relative;max-width:min(100%,600px);display:flex;justify-content:center}
+.hardware-demo .target-dot{position:fixed;width:8px;height:8px;border-radius:50%;background:#8b9d8d;border:2px solid #fff;box-shadow:0 0 0 1px #8b9d8d;pointer-events:none;z-index:50}
+.hardware-demo .hardware-home .device{position:relative;z-index:1}
+#error{padding:12px 16px;background:#faecef;color:#9b626b;border-radius:12px;font-size:12px;max-width:680px}
+.hardware-demo .preset-list{display:grid;gap:5px;text-align:left;min-width:min(600px,80vw)}
+.hardware-demo .preset-item{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;padding:6px 2px;border-bottom:1px solid #e6e7e9;color:#72777e;font-size:10px}
+@media(max-width:600px){.hardware-demo{padding:85px 16px 26px;gap:14px}.hardware-home{min-height:335px}.hardware-demo .demo-control-stack{max-width:calc(100vw - 24px)!important}.hardware-demo .demo-options-group{max-width:calc(100vw - 24px)!important}.hardware-demo .preview-footer{max-width:calc(100vw - 32px)}.hardware-demo .demo-option input[type=range]{width:72px}.hardware-demo .sense-zone{width:calc(100% + 80px);height:calc(100% + 80px)}.hardware-demo .demo-option select{max-width:205px}.hardware-demo .sensor-wrap{max-width:calc(100vw - 56px)}.canvas{overflow:hidden}}
+</style>
+</head>
+<body>
+<div class="canvas" id="demo-canvas">
+<div class="title demo-title"><span>Agent Robot Avatar</span><span>C++ + WebAssembly</span><span>Hardware Eyes</span></div>
+<div class="build-badge">本地草稿 · 未发布</div>
+<main class="hardware-demo">
+<noscript>此预览需要启用 JavaScript。</noscript><div id="error" role="alert" hidden></div>
+<div class="hardware-home" id="hardware-home">
+<div class="sensor-wrap" id="sensor-wrap">
+<div class="sense-zone" id="sense-zone" aria-hidden="true"></div>
+<div class="device" id="device" data-profile="tft">
+<i class="screw" aria-hidden="true"></i><i class="screw" aria-hidden="true"></i><i class="screw" aria-hidden="true"></i><i class="screw" aria-hidden="true"></i>
+<span class="silk" id="module-label" aria-hidden="true">ST7789 · TFT DISPLAY</span>
+<div class="glass"><canvas id="screen" width="240" height="240" role="img" aria-label="嵌入式眼睛动画预览"></canvas></div>
+<span class="pin-label" id="pin-label" aria-hidden="true">模块接口示意</span><span class="connector" aria-hidden="true"></span>
+</div></div>
+<div class="stage-caption" id="stage-caption">通用模块外观示意 · 非实物尺寸</div>
+</div>
+<div class="status-pill demo-status" id="current" role="status">正常 · idle</div>
+<div class="demo-control-stack">
+<div class="controls" id="actions" role="group" aria-label="选择表情"></div>
+<div class="demo-options-group">
+<button id="pause" disabled>暂停</button><button id="step" disabled>下一帧</button><button id="demo" aria-pressed="false" disabled>自动轮播</button><button id="reset" disabled>重置</button><span class="clock" id="clock" aria-hidden="true">0.00 s</span>
+</div>
+<div class="demo-options-group">
+<label class="demo-option">屏幕<select id="profile" aria-label="屏幕预设" disabled></select></label>
+<label class="demo-option demo-toggle"><span>边框</span><input id="housing" type="checkbox" checked disabled><span class="demo-switch" aria-hidden="true"></span></label>
+<label class="demo-option demo-toggle"><span>靠近注视</span><input id="tracking" type="checkbox" checked disabled><span class="demo-switch" aria-hidden="true"></span></label>
+<button class="demo-panel-toggle" id="settings-toggle" type="button" aria-label="预览设置" aria-expanded="false" aria-controls="settings-panel" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h3M11 12h9M4 18h8M16 18h4"/><circle cx="16" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="14" cy="18" r="2"/></svg></button>
+<button id="download" class="demo-reset" disabled>下载离线版</button>
+</div>
+<div class="demo-options-group" id="custom-size" hidden><label class="demo-option">宽<input id="custom-width" type="number" min="16" max="512" value="240"></label><label class="demo-option">高<input id="custom-height" type="number" min="16" max="512" value="160"></label><label class="demo-option">形状<select id="custom-shape"><option value="0">矩形</option><option value="1">圆形（正方形像素区域）</option></select></label><button id="apply-size">应用</button><span id="size-error" role="status"></span></div>
+<div id="settings-panel" hidden>
+<div class="demo-options-group">
+<label class="demo-option">感应扩展范围<input id="sense-radius" type="range" min="16" max="200" step="4" value="72"><output id="sense-value">72 px</output></label>
+<label class="demo-option demo-toggle"><span>只看移动目标</span><input id="moving-only" type="checkbox"><span class="demo-switch" aria-hidden="true"></span></label>
+<label class="demo-option">移动灵敏度<select id="motion-sensitivity"><option value="1">高</option><option value="3" selected>中</option><option value="8">低</option></select></label>
+<label class="demo-option">跟随速度<select id="response"><option value="60">快</option><option value="140" selected>正常</option><option value="320">慢</option></select></label>
+<label class="demo-option">离开后停留<select id="hold"><option value="0">立即回正</option><option value="600" selected>0.6 秒</option><option value="1500">1.5 秒</option><option value="3000">3 秒</option></select></label>
+</div>
+<div class="demo-options-group">
+<label class="demo-option">布局<select id="fit"><option value="preset">预设布局</option><option value="contain">完整适配</option><option value="cover">铺满裁切</option></select></label>
+<label class="demo-option">显示倍率<select id="zoom"><option value="1" selected>1×</option><option value="2">2×</option><option value="3">3×</option></select></label>
+<label class="demo-option">帧率上限<select id="fps"><option value="15">15 FPS</option><option value="25" selected>25 FPS</option><option value="30">30 FPS</option><option value="60">60 FPS</option></select></label>
+<label class="demo-option">速度<select id="speed"><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option></select></label>
+<label class="demo-option demo-toggle"><span>眨眼</span><input id="blink" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
+<label class="demo-option demo-toggle"><span>打断过渡</span><input id="transitions" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
+</div>
+<div class="demo-options-group">
+<label class="demo-option">表情大小<input id="face-scale" type="range" min=".25" max="3" step=".05" value="1"><output id="scale-value">1.00</output></label>
+<label class="demo-option">布局左右<input id="offset-x" type="range" min="-1" max="1" step=".05" value="0"></label><label class="demo-option">布局上下<input id="offset-y" type="range" min="-1" max="1" step=".05" value="0"></label>
+</div>
+<div class="demo-options-group">
+<label class="demo-option">手动注视左右<input id="gx" type="range" min="-1" max="1" step=".05" value="0"><output id="gx-value">0.00</output></label>
+<label class="demo-option">上下<input id="gy" type="range" min="-1" max="1" step=".05" value="0"><output id="gy-value">0.00</output></label><button id="center" class="demo-reset">回到正中</button>
+</div></div>
+<div class="profile-note"><span id="screen-label">240 × 240 · 1-bit</span> · <span id="support-state" class="support-state"></span></div>
+<p class="profile-note" id="profile-note"></p>
+<p class="usage-note" id="tracking-note" role="status">鼠标进入虚线范围后注视，离开后稍作停留并回正。</p>
+</div>
+<footer class="preview-footer">
+<span id="status" role="status">正在初始化…</span> · 核心 v0.1.0 · Space 暂停／继续<br><span id="fingerprint"></span>
+<details><summary>屏幕预设库</summary><div id="preset-list" class="preset-list"></div><p>可预览表示按对应像素绘制；外框为通用示意。提供参考例程的屏幕也尚未完成实机验证。</p></details>
+<details><summary>说明与开源许可</summary><p>屏幕、帧率、眨眼或过渡更改会重置表情；布局和边框更改保留动画。靠近注视仅模拟目标输入，不访问摄像头。输入、等待、睡眠持续到新命令，其余动作结束后回到正常。切到后台冻结时间。</p><pre>__LICENSE__</pre><pre>__THIRD_PARTY__</pre></details>
+</footer>
+<div class="target-dot" id="target-dot" aria-hidden="true" hidden></div>
+</main></div>
+<script>
+/*__WASM__*/
+/*__PRESETS__*/
+/*__UI__*/
+</script>
+</body>
+</html>
