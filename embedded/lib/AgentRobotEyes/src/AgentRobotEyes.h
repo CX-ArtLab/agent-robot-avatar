@@ -67,7 +67,7 @@ class Eyes {
 
  private:
   struct Eye {
-    float x, y, rx, ry, angle, top, bottom, topSlope, bottomSlope, corner;
+    float x, y, rx, ry, angle, top, bottom, topSlope, bottomSlope, corner, cornerY;
   };
   struct Pose { Eye left, right; };
   static Pose neutral();

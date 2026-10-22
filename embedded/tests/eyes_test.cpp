@@ -180,6 +180,61 @@ static void independentInstances() {
   assert(second.action()==Action::Idle);
 }
 
+static unsigned changedPixels(const std::vector<uint8_t>& before, const Eyes& eyes) {
+  unsigned count = 0;
+  for (size_t i = 0; i < before.size(); ++i) {
+    uint8_t bits = before[i] ^ eyes.data()[i];
+    while (bits) { count += bits & 1u; bits >>= 1; }
+  }
+  return count;
+}
+
+static void inputExitContinuity() {
+  EyesConfig config;
+  config.width=480; config.height=300; config.maxFps=60; config.autoBlink=false;
+  std::vector<uint8_t> pixels(Eyes::requiredBytes(config.width,config.height));
+  Eyes eyes; assert(eyes.begin(config,pixels.data(),pixels.size(),0));
+  assert(eyes.play(Action::Input,0));
+  assert(eyes.update(700)); // Settled cursor, during its visible blink half.
+  const uint32_t cursor = hash(eyes);
+  assert(eyes.play(Action::Idle,700));
+  assert(eyes.update(700));
+  assert(hash(eyes)==cursor); // The command's first frame retains the source shape.
+  std::vector<uint8_t> previous(pixels);
+  for (uint32_t dt=20;dt<=240;dt+=20) {
+    assert(eyes.update(700+dt));
+    if (dt==240) {
+      // At the end, only residual motion/rounding may remain. Keeping a square
+      // until this frame removes large corner regions at once (over 20%).
+      assert(changedPixels(previous,eyes)<lit(eyes)/25);
+    }
+    previous=pixels;
+  }
+  Eyes reference;std::vector<uint8_t> target(pixels.size());
+  assert(reference.begin(config,target.data(),target.size(),0));reference.update(940);
+  assert(hash(eyes)==hash(reference)); // Still reaches the exact original idle.
+
+  // Leaving either cursor blink half reaches each target's unmodified pose.
+  for (const uint32_t start: {700u,900u}) {
+    for (const Action action: {Action::Idle,Action::Send,Action::Love,Action::Wake,Action::WaitingWave}) {
+      assert(eyes.begin(config,pixels.data(),pixels.size(),0));
+      eyes.play(Action::Input,0);eyes.update(start);
+      const uint32_t source=hash(eyes);
+      if (start==900) assert(lit(eyes)==0);
+      eyes.play(action,start);eyes.update(start);assert(hash(eyes)==source);
+      eyes.update(start+240);
+      assert(reference.begin(config,target.data(),target.size(),start));
+      reference.play(action,start);reference.update(start+240);
+      assert(hash(eyes)==hash(reference));
+    }
+  }
+  // Interrupting a partial shape morph must start from that in-between shape.
+  assert(eyes.begin(config,pixels.data(),pixels.size(),0));
+  eyes.play(Action::Input,0);eyes.update(700);eyes.play(Action::Idle,700);eyes.update(820);
+  const uint32_t middle=hash(eyes);
+  eyes.play(Action::Love,820);eyes.update(820);assert(hash(eyes)==middle);
+}
+
 static void restoredWaitingWave() {
   EyesConfig config; config.autoBlink=false; config.transitionMs=0; config.maxFps=60;
   std::vector<uint8_t> pixels(Eyes::requiredBytes(config.width,config.height));
@@ -267,6 +322,7 @@ int main() {
   timingAndSleep();
   renderSafetyAndIdentity();
   independentInstances();
+  inputExitContinuity();
   restoredWaitingWave();
   layoutsAndProximity();
   puts("Eyes core: buffer guards, all actions, cancellation, frame limits, rollover, sleep and isolation passed.");

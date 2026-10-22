@@ -38,7 +38,8 @@ Eyes::Pose Eyes::webPose(Action action, uint32_t elapsed) {
       const float second = clip.values[b * 20 + side * 10 + j] / scale;
       v[j] = j == 9 ? first : lerp(first,second,t);
     }
-    *eyes[side] = {v[0],v[1],v[2],v[3],v[4],v[5],v[6],v[7],v[8],v[9]};
+    const float corner = v[9] < 0 ? -1 : fminf(v[9],fminf(v[2],v[3]));
+    *eyes[side] = {v[0],v[1],v[2],v[3],v[4],v[5],v[6],v[7],v[8],corner,corner};
   }
   return result;
 }
@@ -105,7 +106,9 @@ bool Eyes::play(Action action, uint32_t now) {
   // Sample at the command timestamp, even if the last display flush was delayed.
   from_ = poseAt(now);
   current_ = from_;
-  crossfade_ = (action_ != Action::Idle || action == Action::WaitingWave) && action != Action::Wake;
+  const bool cursorShape = from_.left.corner >= 0 || from_.right.corner >= 0;
+  crossfade_ = (action_ != Action::Idle || action == Action::WaitingWave || cursorShape)
+      && (action != Action::Wake || cursorShape);
   action_ = action;
   started_ = now;
   force_ = true;
@@ -149,9 +152,20 @@ bool Eyes::setLayout(const EyesLayout& layout) {
 }
 
 Eyes::Eye Eyes::mixEye(const Eye& a, const Eye& b, float t) {
+  if (t <= 0) return a;
+  if (t >= 1) return b;
+  // A full-radius rounded rectangle is an ellipse. Interpolate both corner
+  // axes along with the bounds instead of holding the old primitive until
+  // the final frame. Keep the ellipse fast path for ellipse-only transitions.
+  const bool ellipses = a.corner < 0 && b.corner < 0;
+  const float ax = a.corner < 0 ? a.rx : fminf(a.corner,a.rx);
+  const float ay = a.corner < 0 ? a.ry : fminf(a.cornerY,a.ry);
+  const float bx = b.corner < 0 ? b.rx : fminf(b.corner,b.rx);
+  const float by = b.corner < 0 ? b.ry : fminf(b.cornerY,b.ry);
   return {lerp(a.x,b.x,t), lerp(a.y,b.y,t), lerp(a.rx,b.rx,t), lerp(a.ry,b.ry,t),
           lerp(a.angle,b.angle,t), lerp(a.top,b.top,t), lerp(a.bottom,b.bottom,t),
-          lerp(a.topSlope,b.topSlope,t), lerp(a.bottomSlope,b.bottomSlope,t), t < 1 ? a.corner : b.corner};
+          lerp(a.topSlope,b.topSlope,t), lerp(a.bottomSlope,b.bottomSlope,t),
+          ellipses ? -1 : lerp(ax,bx,t), ellipses ? -1 : lerp(ay,by,t)};
 }
 Eyes::Pose Eyes::mix(const Pose& a, const Pose& b, float t) {
   return {mixEye(a.left,b.left,t), mixEye(a.right,b.right,t)};
@@ -169,8 +183,8 @@ Eyes::Pose Eyes::poseAt(uint32_t now) const {
     // Source: e600f7e3b22dd792c3fc7b26994fa6bae39f1e66, poseAt/Waiting.
     // Legacy neutral geometry is intentional; original Web actions stay intact.
     const float phase = (elapsed % 1400) * 2 * PI / 1400;
-    p = {{46, 50 + sinf(phase) * 10, 27, 29, 0, -100, 100, 0, 0, -1},
-         {114, 50 + sinf(phase + .7f) * 10, 27, 29, 0, -100, 100, 0, 0, -1}};
+    p = {{46, 50 + sinf(phase) * 10, 27, 29, 0, -100, 100, 0, 0, -1, -1},
+         {114, 50 + sinf(phase + .7f) * 10, 27, 29, 0, -100, 100, 0, 0, -1, -1}};
   } else {
     p = webPose(selected,elapsed);
   }
@@ -242,6 +256,9 @@ void Eyes::drawEye(const Eye& e, float scale, float ox, float oy) {
   const int y1 = static_cast<int>(fminf(config_.height - 1.f, ceilf(cy + extentY)));
   const bool noClip = e.top <= -e.ry - fabsf(e.topSlope) * e.rx
       && e.bottom >= e.ry + fabsf(e.bottomSlope) * e.rx;
+  const float cornerX = fminf(e.corner*scale,rx), cornerY = fminf(e.cornerY*scale,ry);
+  const float cornerIx = cornerX > 0 ? 1/(cornerX*cornerX) : 0;
+  const float cornerIy = cornerY > 0 ? 1/(cornerY*cornerY) : 0;
   for (int y = y0; y <= y1; ++y) {
     const float dy = y + .5f - cy;
     const float b = 2 * c * s * dy * (ix - iy);
@@ -256,10 +273,12 @@ void Eyes::drawEye(const Eye& e, float scale, float ox, float oy) {
       if (e.corner >= 0) {
         const float dx = x+.5f-cx;
         const float lx = fabsf(c*dx+s*dy), ly = fabsf(-s*dx+c*dy);
-        const float radius = fminf(e.corner*scale,fminf(rx,ry));
         if (lx > rx || ly > ry) continue;
-        const float qx = fmaxf(0,lx-(rx-radius)), qy = fmaxf(0,ly-(ry-radius));
-        if (qx*qx+qy*qy > radius*radius) continue;
+        const float qx = fmaxf(0,lx-(rx-cornerX)), qy = fmaxf(0,ly-(ry-cornerY));
+        // Preserve the original circular-corner rasterization for the input
+        // cursor, with elliptical corners used only during a shape morph.
+        if (cornerX == cornerY ? qx*qx+qy*qy > cornerX*cornerX
+            : qx*qx*cornerIx+qy*qy*cornerIy > 1) continue;
       }
       if (!noClip) {
         const float dx = x + .5f - cx;

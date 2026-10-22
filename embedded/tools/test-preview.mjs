@@ -91,6 +91,16 @@ for(const preset of presets) {
   command('motion',-.7,.8,.8,1,1,5300);command('update',5400);
   command('motion',-.7,.8,.8,1,0,5600);command('update',6000);command('update',6500);
 }
+// Exercise cursor-to-ellipse morphs from both visible and hidden blink halves,
+// including a command that interrupts the shape while it is still changing.
+for(const start of [700,900])for(let action=0;action<18;action++) {
+  if(action===4)continue;
+  command('init',240,160,60,0,240,0);
+  command('play',4,0);command('update',start);command('play',action,start);
+  for(const dt of [0,40,80,120,160,200,220,240,260])command('update',start+dt);
+  command('play',4,start+300);command('update',start+420);
+  command('play',13,start+420);command('update',start+420);command('update',start+660);
+}
 const temp = await mkdtemp(join(tmpdir(),'eyes-preview-test-'));
 try {
   const binary = join(temp,'oracle');

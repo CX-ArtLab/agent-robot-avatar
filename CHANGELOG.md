@@ -20,6 +20,8 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ### Fixed
 
+- Smoothed embedded input-cursor exits by interpolating both corner radii into the target ellipse instead of changing primitives on the final frame. Preserve the current shape through repeated interruptions and allow the same handoff into wake; retain original target poses and motion timings.
+
 - Restored the original 17 eye motions and timing in the embedded engine using sampled Web geometry, with independent SVG fidelity checks and native/WASM frame comparison. Hardware demo cycling now lets longer actions finish.
 
 - Prevented the demo from revealing intermediate layouts during startup, preloaded its modules in parallel, and moved its controls and critical styles into the initial HTML.
