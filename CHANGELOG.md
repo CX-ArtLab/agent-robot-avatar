@@ -8,6 +8,8 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ### Added
 
+- Added seven SVG reference-module housings based on official product photographs and dimensions, with model names/source links, correctly rotated portrait/landscape assemblies and responsive screen alignment. Custom sizes retain a generic frame.
+
 - Added the offline C++/WebAssembly hardware preview with nine screen presets, custom resolutions, viewport fit/crop/zoom/circular clipping, configurable proximity gaze and the restored continuous hardware waiting-wave variant.
 
 - Added a collapsible Color themes panel next to Custom colors, with 17 named two-color presets inspired by brands, AI products and sports. Each option uses the existing color-control pill style and a split rounded swatch; clicking the active pair swaps foreground/background colors. The panel wraps within the demo width and scrolls on narrow screens. Settings/language remain grouped on the left.

@@ -89,24 +89,53 @@
     if(!api.eyes_play(index,now()))throw new Error('Invalid action');
     draw();
   }
+  let frameKey = '';
   function resizeDisplay() {
-    const framed=$('housing').checked;
-    const frame=preset.frame;
-    const extra=framed?(frame==='round'?44:frame==='eyes'?24:80):0;
-    const width=screen.width*Number($('zoom').value)+extra;
-    $('sensor-wrap').style.width=width+'px';
-    $('device').style.width='100%';
+    const framed=$('housing').checked, device=$('device'), glass=$('glass');
+    const model=preset.id!=='custom'&&DISPLAY_FRAMES[preset.module];
+    const rotated=model&&preset.rotation===90;
+    let w=screen.width, h=screen.height, display=[0,0,w,h];
+    const key=framed&&model?preset.module+':'+(rotated?90:0):'';
+    if(framed&&model) {
+      const [x,y,dw,dh]=model.display;
+      w=rotated?model.height:model.width; h=rotated?model.width:model.height;
+      display=rotated?[model.height-y-dh,x,dh,dw]:model.display;
+      if(frameKey!==key) {
+        // The same physical module rotates as a whole; framebuffer coordinates do not.
+        const parser=new DOMParser();
+        const svg=parser.parseFromString(model.svg,'image/svg+xml').documentElement;
+        if(rotated) {
+          const group=document.createElementNS('http://www.w3.org/2000/svg','g');
+          group.setAttribute('transform','translate('+model.height+' 0) rotate(90)');
+          while(svg.firstChild)group.append(svg.firstChild);
+          svg.append(group);svg.setAttribute('viewBox','0 0 '+w+' '+h);
+        }
+        $('frame-art').replaceChildren(document.importNode(svg,true));
+      }
+    } else if(frameKey) $('frame-art').replaceChildren();
+    frameKey=key;
+    const [x,y,dw,dh]=display;
+    $('sensor-wrap').style.width=(screen.width*Number($('zoom').value)*w/dw)+'px';
+    device.style.width='100%';device.style.aspectRatio=w+' / '+h;
+    device.dataset.profile=preset.frame;
+    device.dataset.module=framed&&model?preset.module:'';
+    device.dataset.rotation=String(rotated?90:0);
+    device.classList.toggle('bare',!framed||!model);
+    device.classList.toggle('generic',framed&&!model&&preset.frame!=='eyes');
+    glass.style.left=x/w*100+'%';glass.style.top=y/h*100+'%';
+    glass.style.width=dw/w*100+'%';glass.style.height=dh/h*100+'%';
+    // Retain the requested pixel-width scale; responsive fitting scales board and screen together.
     screen.style.width=(screen.width*Number($('zoom').value))+'px';
-    $('device').dataset.profile=frame;
-    $('device').classList.toggle('bare',!framed);
     $('sense-zone').hidden=!$('tracking').checked;
     const radius=Number($('sense-radius').value);
     $('sense-zone').style.width='calc(100% + '+radius*2+'px)';
     $('sense-zone').style.height='calc(100% + '+radius*2+'px)';
     $('sense-value').value=radius+' px';
-    $('module-label').textContent=preset.controller+' · '+(frame==='oled'?'OLED':'TFT DISPLAY');
-    $('pin-label').textContent=frame==='oled'?'GND  VCC  SCL  SDA':'SPI DISPLAY MODULE';
-    $('stage-caption').textContent=preset.name+' / '+screen.width+' × '+screen.height+' · 通用外观示意';
+    const reference=model?model.name+(model.revision?' · '+model.revision:'')+(rotated?' · 旋转 90°':''):preset.name;
+    $('stage-caption').textContent=reference+' / '+screen.width+' × '+screen.height+
+      (framed&&model?' · PCB '+w+' × '+h+' mm':framed&&preset.frame!=='eyes'?' · 通用外框':' · 仅屏幕');
+    const source=$('frame-source');source.hidden=!model;
+    if(model)source.href=model.source;else source.removeAttribute('href');
     $('target-dot').hidden=true;
   }
   function applyLayout() {
@@ -117,7 +146,7 @@
     if(!api.eyes_layout(...view,mode==='cover'?1:0,shape,scale,
       Number($('offset-x').value),Number($('offset-y').value)))throw new Error('Invalid layout');
     $('scale-value').value=scale.toFixed(2);
-    $('profile-note').textContent=(preset.type||'自定义画布')+
+    $('profile-note').textContent=(preset.controller?preset.controller+' · ':'')+(preset.type||'自定义画布')+
       (preset.viewport&&mode==='preset'?' · 240 × 160 表情区域居中，与现有 TFT 例程一致'
         :mode==='cover'?' · 等比铺满，超出区域裁切':' · 按实际分辨率等比适配');
     draw(true);
@@ -134,7 +163,7 @@
     $('gx').value=$('gy').value='0';$('gx-value').value=$('gy-value').value='0.00';
     $('screen-label').textContent=preset.width+' × '+preset.height+' · 1-bit';
     $('support-state').textContent=preset.example?'可预览 · 有参考例程 · 未实机验证':'可预览 · 未提供此配置的驱动例程';
-    $('profile-note').textContent=(preset.type||'自定义画布')+
+    $('profile-note').textContent=(preset.controller?preset.controller+' · ':'')+(preset.type||'自定义画布')+
       (preset.viewport&&$('fit').value==='preset'?' · 240 × 160 表情区域居中，与现有 TFT 例程一致':' · 按实际分辨率重新绘制');
     $('custom-size').hidden=$('profile').value!=='custom';
     resizeDisplay();applyLayout();setPaused(paused);
@@ -222,7 +251,7 @@
         else{
           $('custom-width').value=preset.width;$('custom-height').value=preset.height;
           $('custom-shape').value=preset.frame==='round'?'1':'0';
-          configure({...preset,id:'custom',name:'自定义屏幕',example:false});
+          configure({...preset,id:'custom',name:'自定义屏幕',module:null,rotation:0,example:false});
         }
       };
       $('apply-size').onclick=()=>{

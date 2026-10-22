@@ -8,7 +8,17 @@
 <style>
 /* Project-owned styles copied from our demo/index.html. */
 /*__PROJECT_CSS__*/
-.stage{min-height:490px;flex-direction:column;gap:24px;background-color:#e9ece5;background-image:radial-gradient(#99a29455 .7px,transparent .7px);background-size:16px 16px}.device{position:relative;flex-shrink:0;transition:none;width:560px;max-width:100%;padding:46px 30px 54px;border-radius:10px;background:#234e79;border:1px solid #173652;box-shadow:0 3px 0 #16344e,0 18px 30px #172d3c25,inset 0 0 0 2px #42729a55}.glass{position:relative;background:#090c0b;padding:9px;border:1px solid #101a1b;border-radius:4px;box-shadow:0 0 0 2px #77909d55,inset 0 1px 2px #ffffff22}canvas{border-radius:0;max-width:100%;height:auto!important}.screw{position:absolute;width:12px;height:12px;border-radius:50%;background:#e9ece5;border:3px solid #b6a258;box-shadow:0 0 0 2px #172e4666}.screw:nth-of-type(1){top:12px;left:12px}.screw:nth-of-type(2){top:12px;right:12px}.screw:nth-of-type(3){bottom:12px;left:12px}.screw:nth-of-type(4){bottom:12px;right:12px}.silk{position:absolute;top:15px;left:34px;right:34px;text-align:center;font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.12em;color:#e6eff0;white-space:nowrap}.connector{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:42%;height:17px;background:repeating-linear-gradient(90deg,#ddbc60 0 7px,transparent 7px 13px);border-top:3px solid #162a3f}.pin-label{position:absolute;bottom:24px;left:30px;right:30px;text-align:center;color:#d4e4ed;font-family:ui-monospace,monospace;font-size:8px;letter-spacing:.08em}.device[data-profile=oled]{background:#1e4374;padding:55px 28px 35px}.device[data-profile=oled] .silk{top:auto;bottom:11px;font-size:9px}.device[data-profile=oled] .connector{top:0;bottom:auto;width:29%;height:14px;border-top:0;border-bottom:3px solid #12253c}.device[data-profile=oled] .pin-label{top:24px;bottom:auto;font-size:8px}.device[data-profile=oled] .glass{padding:6px;border:3px solid #0b1016;box-shadow:0 0 0 1px #c4cbd180}.device[data-profile=eyes]{background:#242c29;border-color:#131a16;padding:12px;border-radius:12px;box-shadow:0 4px 0 #151d18,0 15px 28px #172d3c20}.device[data-profile=eyes] .screw,.device[data-profile=eyes] .silk,.device[data-profile=eyes] .connector,.device[data-profile=eyes] .pin-label{display:none}.device[data-profile=eyes] .glass{border:0;padding:0;box-shadow:none}.device.bare{background:transparent;padding:0;border:0;border-radius:0;box-shadow:none}.device.bare .glass{padding:0;border:0;box-shadow:none}.device.bare .screw,.device.bare .silk,.device.bare .connector,.device.bare .pin-label{display:none}.stage-caption{font-size:10px;letter-spacing:.12em;color:#64706a;text-align:center;line-height:1.8}.download{font-size:12px;padding:8px 12px}.draft{color:#846839;background:#faf4e4;border-color:#e8dcc1}@media(max-width:450px){.stage{min-height:375px}.device{padding:38px 22px 46px}.device[data-profile=oled]{padding:48px 22px 32px}.silk{font-size:9px}.pin-label{font-size:7px;left:20px;right:20px}.screw{width:10px;height:10px}}
+/* Module artwork uses manufacturer board/display proportions. */
+.device{position:relative;flex-shrink:0;isolation:isolate;padding:0;border:0;background:transparent;box-shadow:none}
+.frame-art{position:absolute;inset:0;pointer-events:none;filter:drop-shadow(0 2px 1px #12203733) drop-shadow(0 12px 12px #182e3c1f)}
+.frame-art svg{display:block;width:100%;height:100%}
+.glass{position:absolute;overflow:hidden;background:#000;padding:0;border:0;border-radius:0;box-shadow:none}
+.device[data-profile=round] .glass{border-radius:50%}
+.device.bare .frame-art{display:none}
+.device.generic .glass{outline:6px solid #222a2e;box-shadow:0 5px 12px #172d3c22}
+.frame-source{font-size:10px;color:#838c95;text-decoration:none;display:inline-block;margin-left:8px}
+.frame-source:hover{text-decoration:underline;color:#52606d}
+.frame-source:focus-visible{outline:2px solid #aeb2b8;outline-offset:3px}
 
 /* Hardware-only layout, retaining our Demo's centered canvas and compact controls. */
 .hardware-demo{position:relative;display:flex;flex-direction:column;align-items:center;gap:15px;min-height:100vh;padding:82px 28px 30px}
@@ -24,13 +34,8 @@
 .hardware-demo input:focus-visible,.hardware-demo select:focus-visible,.hardware-demo button:focus-visible{outline:2px solid #aeb2b8;outline-offset:3px}
 .hardware-demo button:disabled,.hardware-demo input:disabled,.hardware-demo select:disabled{opacity:.45;cursor:not-allowed}
 .hardware-demo [hidden]{display:none!important}#settings-panel{display:grid;gap:8px;max-width:100%}
-.hardware-demo .device{max-width:min(100%,600px);flex-shrink:0}.hardware-demo canvas{display:block;background:#000;image-rendering:pixelated;max-width:100%;height:auto!important}
-.hardware-demo .device[data-profile=round]{border-radius:50%;padding:22px;background:#202c32;border:1px solid #53626a;box-shadow:0 3px 0 #11191c,0 16px 30px #172d3c22}
-.hardware-demo .device[data-profile=round] .glass{padding:4px;border-radius:50%;box-shadow:0 0 0 2px #79838955;overflow:hidden}
-.hardware-demo .device[data-profile=round] canvas{border-radius:50%}
-.hardware-demo .device[data-profile=round] .screw,.hardware-demo .device[data-profile=round] .connector,.hardware-demo .device[data-profile=round] .pin-label,.hardware-demo .device[data-profile=round] .silk{display:none}
-.hardware-demo .device.bare{padding:0;border:0;background:transparent;box-shadow:none}
-.hardware-demo .device.bare .glass{padding:0;border:0;box-shadow:none}
+.hardware-demo .device{max-width:100%;flex-shrink:0}
+.hardware-demo canvas{display:block;background:#000;image-rendering:pixelated;max-width:none;width:100%!important;height:100%!important}
 .hardware-demo .stage-caption{font-size:9px;color:#8f949b;letter-spacing:.02em;text-align:center;position:relative}
 .hardware-demo .profile-note,.hardware-demo .usage-note{font-size:10px;line-height:1.8;color:#8f949b;text-align:center;max-width:700px;margin:0}
 .hardware-demo .clock{font:10px/1.2 ui-monospace,monospace;font-variant-numeric:tabular-nums;padding:0 7px;color:#92969c}
@@ -58,12 +63,10 @@
 <div class="sensor-wrap" id="sensor-wrap">
 <div class="sense-zone" id="sense-zone" aria-hidden="true"></div>
 <div class="device" id="device" data-profile="tft">
-<i class="screw" aria-hidden="true"></i><i class="screw" aria-hidden="true"></i><i class="screw" aria-hidden="true"></i><i class="screw" aria-hidden="true"></i>
-<span class="silk" id="module-label" aria-hidden="true">ST7789 · TFT DISPLAY</span>
-<div class="glass"><canvas id="screen" width="240" height="240" role="img" aria-label="嵌入式眼睛动画预览"></canvas></div>
-<span class="pin-label" id="pin-label" aria-hidden="true">模块接口示意</span><span class="connector" aria-hidden="true"></span>
+<div class="frame-art" id="frame-art" aria-hidden="true"></div>
+<div class="glass" id="glass"><canvas id="screen" width="240" height="240" role="img" aria-label="嵌入式眼睛动画预览"></canvas></div>
 </div></div>
-<div class="stage-caption" id="stage-caption">通用模块外观示意 · 非实物尺寸</div>
+<div class="stage-caption"><span id="stage-caption">正在载入屏幕模组…</span><a class="frame-source" id="frame-source" target="_blank" rel="noopener noreferrer" hidden>模组资料 ↗</a></div>
 </div>
 <div class="status-pill demo-status" id="current" role="status">正常 · idle</div>
 <div class="demo-control-stack">
@@ -117,6 +120,7 @@
 <script>
 /*__WASM__*/
 /*__PRESETS__*/
+/*__FRAMES__*/
 /*__UI__*/
 </script>
 </body>
