@@ -1,4 +1,5 @@
 import { loadPreviewFrames } from './load-preview-frames.mjs';
+import { loadPreviewScript } from './load-preview-script.mjs';
 import assert from 'node:assert/strict';
 import { readFile, mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -25,7 +26,7 @@ const hash = createHash('sha256');
 for (const path of sourcePaths) hash.update(await readFile(join(root, path)));
 const sourceHash = hash.digest('hex');
 assert(html.includes(sourceHash), 'rebuild preview after modifying core/bridge');
-const ui = await readFile(join(root, 'preview/ui.js'), 'utf8');
+const ui = await loadPreviewScript(join(root, 'preview'));
 const template = await readFile(join(root, 'preview/index.template.html'), 'utf8');
 const escape = text => text.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
 const license = await readFile(join(root, 'lib/AgentRobotEyes/LICENSE'), 'utf8').catch(() => readFile(join(root, '../LICENSE'), 'utf8'));
@@ -127,5 +128,5 @@ try {
     assert(different <= 8, `${commands[i]}: ${different} differing pixels`);
     maxDifferent = Math.max(maxDifferent,different); totalDifferent+=different;
   }
-  console.log(`Preview parity: ${frames} native/WASM frames, all 18 actions, 9 screen presets, layout/circle clipping, proximity, gaze, interruption, sleep, rollover; max ${maxDifferent} differing boundary pixels (${totalDifferent} total).`);
+  console.log(`Preview parity: ${frames} native/WASM frames, all 18 actions, ${presets.length} screen presets, layout/circle clipping, proximity, gaze, interruption, sleep, rollover; max ${maxDifferent} differing boundary pixels (${totalDifferent} total).`);
 } finally { await rm(temp,{recursive:true,force:true}); }

@@ -6,7 +6,7 @@ Download **`agent-robot-eyes-preview.html`** and open it in a browser. The file 
 
 ## Controls / 使用
 
-Desktop uses a two-column workspace: the module preview and all expression buttons stay on the left; screen, playback, layout, proximity and manual-gaze controls are always expanded on the right. The settings column scrolls independently when needed. On narrow screens the same sections stack below the preview. / 桌面采用左右结构：左侧预览和表情选择，右侧集中显示所有功能选项；窄屏自动改为上下排列。
+Desktop uses a two-column workspace: the module preview, expression buttons and playback (pause, step, cycling, speed) stay on the left; screen, layout, proximity and manual gaze, animation, colour and display controls are always expanded on the right, with ‹ › buttons stepping through the screen list. The settings column scrolls independently when needed. On narrow screens the same sections stack below the preview. / 桌面采用左右结构：左侧预览、表情选择和播放控制，右侧集中显示所有功能选项，‹ › 逐个切换屏幕；窄屏自动改为上下排列。
 
 - **等待 · 波动 / `waiting-wave`** restores the earlier experimental waiting animation as an additional action: full elliptical eyes move vertically with amplitude 10 in the 160×100 face space, a 1400 ms period and a 0.7 rad right-eye phase offset. It loops until replaced; `stopWaiting()` also stops it. Existing original `waiting` and `waiting-wrap` actions are retained. The preview and C++ core now offer 18 actions. The SVG component also has a separately tuned waiting-wave variant (three 1100 ms cycles); this hardware preview retains the earlier continuous 1400 ms motion.
 - **等待 · 波动**作为新增动作保留旧实验版的双眼错相上下起伏；原版等待、环绕不变。硬件版保留 1400 毫秒持续循环；SVG 版另有调校过的三个 1100 毫秒循环。
@@ -30,11 +30,18 @@ The draft additionally includes SSD1306 128×32, ST7735S 128×160, ST7789VW 320�
 
 Layout offers preset/contain/cover, face scale and X/Y offsets. Layout and frame changes preserve animation; changing resolution restarts it. Circle clipping is performed by the C++ rasterizer, not just a CSS border. The original TFT preset retains a centered 240×160 eye viewport; contain uses the whole screen. / 布局支持预设、完整适配、铺满裁切、表情大小与位置；圆屏的可视区域直接在C++位图中裁切。
 
-This is a **renderer preview**, not a CPU/display emulator. Actual board speed, memory consumption, wiring, colors, bus transfer, flicker and screen initialization still require physical testing. Display scaling is pixelated intentionally. / 这只是表情绘制预览，不模拟芯片和屏幕电路；真机速度、内存、接线、颜色、传输、闪烁和屏幕初始化仍需实测。放大时保留原始像素。
+### Screens and display / 屏幕与显示
+
+- Besides the reference modules, the list adds common boards and kits (round GC9A01/AMOLED, ST7789/ST7735 modules, T-Display, M5Stack, ESP32-S3-BOX-3, SSD1306/SH1106, CYD, 3.5″ and 4″ panels), grouped by shape. Their housings are drawn from typical board dimensions by `board.js` and labelled as generic outlines; boards marked 通用 are no-brand modules. None of them adds driver support. Displays above the core's 512 × 512 limit are not listed. / 在参考模组之外补充常见开发板和套件，按形状分组；外框由 `board.js` 按常见尺寸绘制，标注为通用示意，不代表新增驱动支持。超过核心 512 × 512 上限的屏幕不列出。
+- Panel character is applied on display only, by `panel.js` (WebGL): pixel grid and RGB sub-pixels when enlarged, backlight black level and glow for IPS/TN LCDs, true black for AMOLED, and 1-bit OLED dots in white, blue or yellow-blue. "原始像素" shows plain enlarged pixels instead. The core framebuffer is never altered. / 面板效果（像素颗粒、子像素、背光黑位与发光、OLED 发光颜色）只作用于显示，不改变核心输出的像素；"原始像素"直接放大显示。
+- Zoom is physical: "实物大小" uses the panel's pixel pitch at 96 CSS px per inch (an estimate; monitors differ), plus 2× and 4×. A dashed outline marks the active pixel area, which is useful on OLEDs whose unlit pixels match the glass. / 放大按实物比例计算；虚线标出真正有像素的区域。
+- Layout is remembered per screen (and per orientation) in the browser. Rectangular modules can be rotated 90°: the framebuffer is re-rendered at the swapped resolution and the housing turns with it. Eye and background colours apply to colour panels. / 每块屏单独记住眼睛布局；矩形模组可旋转 90°，核心按新方向重新绘制；彩屏可设置眼睛和底色。
+
+This is a **renderer preview**, not a CPU/display emulator. Actual board speed, memory consumption, wiring, colors, bus transfer, flicker and screen initialization still require physical testing. / 这只是表情绘制预览，不模拟芯片和屏幕电路；真机速度、内存、接线、颜色、传输、闪烁和屏幕初始化仍需实测。
 
 ## One source of truth / 同源代码
 
-`bridge.cpp` exposes a small C ABI. The build compiles the checked-out `../lib/AgentRobotEyes/src/AgentRobotEyes.cpp`, its header and `AgentRobotGaze.h` with Zig 0.13.0 to WebAssembly. `ui.js` maps its MSB-first 1-bit mask to canvas and supplies simulated target observations; it has no expression geometry or smoothing implementation. The footer SHA-256 covers the engine source/header, gaze header, generated Web motion header and bridge.
+`bridge.cpp` exposes a small C ABI. The build compiles the checked-out `../lib/AgentRobotEyes/src/AgentRobotEyes.cpp`, its header and `AgentRobotGaze.h` with Zig 0.13.0 to WebAssembly. `ui.js` maps its MSB-first 1-bit mask to canvas and supplies simulated target observations; it has no expression geometry or smoothing implementation. `board.js` and `panel.js` only draw housings and panel appearance around that bitmap; the build inlines all three scripts. The footer SHA-256 covers the engine source/header, gaze header, generated Web motion header and bridge.
 
 `bridge.cpp` 仅暴露接口；表情和时间逻辑来自开发板使用的原始 C++ 源文件，没有复制成 JavaScript。页面底部的源码指纹涵盖核心头文件、实现文件及桥接代码。
 

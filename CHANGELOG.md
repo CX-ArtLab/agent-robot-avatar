@@ -8,6 +8,8 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ### Added
 
+- Added display-only panel rendering to the hardware preview (pixel grid and sub-pixels, IPS/TN backlight, AMOLED black, OLED tints, glass glare, active-area outline, raw-pixel switch), 24 more boards and kits with generic housings, physical actual-size zoom, per-screen remembered layouts, 90° rotation and eye/background colours. The core framebuffer is unchanged.
+
 - Added seven SVG reference-module housings based on official product photographs and dimensions, with model names/source links, correctly rotated portrait/landscape assemblies and responsive screen alignment. Custom sizes retain a generic frame.
 
 - Added the offline C++/WebAssembly hardware preview with nine screen presets, custom resolutions, viewport fit/crop/zoom/circular clipping, configurable proximity gaze and the restored continuous hardware waiting-wave variant.

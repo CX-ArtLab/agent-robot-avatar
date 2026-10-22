@@ -17,3 +17,7 @@ The `viewBox`, board envelope and active-area sizes use millimetres. Active-area
 The mini TFT preset rotates the 1.8-inch module 90°. The portrait TFT preset rotates the same 2-inch module used by the landscape preset, including its PCB, holes, glass and labels. The framebuffer itself is rendered in the selected orientation; a frame change never rotates or resamples the native pixels. Custom resolutions use an explicitly generic housing, and the raw eyes canvas has no hardware model.
 
 The viewer scales the entire module together, including the screen opening. Display zoom is a browser preview scale, not a physical-size calibration. Framebuffer resolution, layout, animation and sensor behaviour are unchanged. A module appearance is not a claim of new display-driver support or physical-board verification. Brand/model names identify the references; no manufacturer logo artwork is bundled.
+
+## Generic housings
+
+Presets without a reference module (the boards and kits added after the list above) carry a `board` description in `presets.json`: outline, glass, active-area offset and decorations in millimetres. `board.js` draws them at runtime in the same viewBox convention as these SVG files. Their dimensions are typical values for such boards, not measurements of a specific supplier's PCB, and the viewer labels them as generic outlines.

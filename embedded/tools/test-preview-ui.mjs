@@ -85,8 +85,40 @@ try {
     assert((await page.locator('#current').textContent()).endsWith(action));
   }
   await page.locator('#profile').selectOption('eyes');
-  await page.locator('#zoom').selectOption('3');
-  assert.equal(await page.locator('#screen').evaluate(c=>c.style.width),'720px');
+  await page.locator('[data-zoom="1"]').click();
+  // Actual size: 240 px at the default 0.15 mm pitch, 96 CSS px per inch.
+  const glassWidth=await page.locator('#glass').evaluate(el=>el.getBoundingClientRect().width);
+  assert(Math.abs(glassWidth-240*.15*96/25.4)<.5,'actual-size zoom uses physical pixel pitch');
+  await page.locator('[data-zoom="fit"]').click();
+  // Panel character is display-only: the core framebuffer stays identical.
+  const native=await frame();
+  await page.locator('#raw-pixels').check(); await page.locator('#pixel-grid').uncheck();
+  assert.equal((await frame()).hash,native.hash,'panel effects must not change native pixels');
+  await page.locator('#raw-pixels').uncheck(); await page.locator('#pixel-grid').check();
+  // Layout is remembered per screen.
+  await page.locator('#profile').selectOption('landscape');
+  await page.locator('#face-scale').fill('1.5');
+  await page.locator('#profile').selectOption('portrait');
+  assert.equal(await page.locator('#face-scale').inputValue(),'1');
+  await page.locator('#profile').selectOption('landscape');
+  assert.equal(await page.locator('#face-scale').inputValue(),'1.5');
+  await page.locator('#layout-reset').click();
+  assert.equal(await page.locator('#face-scale').inputValue(),'1');
+  // Rotating a rectangular module re-renders the framebuffer in the new orientation.
+  await page.locator('#profile').selectOption('t-display-s3');
+  assert.deepEqual([(await frame()).width,(await frame()).height],[320,170]);
+  await page.locator('#rotate').click();
+  assert.deepEqual([(await frame()).width,(await frame()).height],[170,320]);
+  await page.locator('#next-profile').click();
+  assert.equal(await page.locator('#profile').inputValue(),'t-display-114');
+  await page.locator('#prev-profile').click();
+  assert.equal(await page.locator('#profile').inputValue(),'t-display-s3');
+  // Every preset, reference or generic housing, renders its native framebuffer.
+  for(const item of await page.locator('#profile option').evaluateAll(options=>options.map(o=>o.value).filter(v=>v!=='custom'))) {
+    await page.locator('#profile').selectOption(item);
+    assert((await frame()).lit>0,'eyes visible on '+item);
+  }
+  await page.locator('#profile').selectOption('eyes');
   await page.setViewportSize({width:390,height:844});
   const overflowing=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth);
   assert.equal(overflowing,false,'mobile layout must not overflow');
@@ -101,5 +133,5 @@ try {
   assert.equal((await frame()).width,172,'invalid custom size leaves valid framebuffer intact');
   if(process.env.PREVIEW_SCREENSHOT) await page.screenshot({path:process.env.PREVIEW_SCREENSHOT,fullPage:true});
   assert.deepEqual(errors,[]); assert.deepEqual(external,[]);
-  console.log(`Offline ${engine} UI passed: all controls, pause/step, native animation, cycling/manual interruption, sleep/wake, OLED/TFT, gaze, reset, responsive layout; no network requests.`);
+  console.log(`Offline ${engine} UI passed: all controls, pause/step, native animation, cycling/manual interruption, sleep/wake, OLED/TFT, gaze, reset, actual size, display-only panel effects, per-screen layout, rotation, every preset, responsive layout; no network requests.`);
 } finally { await browser.close(); }

@@ -1,4 +1,5 @@
 import { loadPreviewFrames } from './load-preview-frames.mjs';
+import { loadPreviewScript } from './load-preview-script.mjs';
 import { mkdtemp, readFile, writeFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
@@ -32,7 +33,7 @@ try {
   const hash = createHash('sha256');
   for (const path of sourcePaths) hash.update(await readFile(join(root, path)));
   const sourceHash = hash.digest('hex');
-  const ui = await readFile(join(preview, 'ui.js'), 'utf8');
+  const ui = await loadPreviewScript(preview);
   const demoCSS = await readFile(join(preview, 'project-demo.css'), 'utf8');
   const presets = JSON.parse(await readFile(join(preview, 'presets.json'), 'utf8'));
   const frames = await loadPreviewFrames(preview);
