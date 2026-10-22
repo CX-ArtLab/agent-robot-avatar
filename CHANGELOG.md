@@ -8,6 +8,8 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ### Added
 
+- Added always-visible default, McDonald's-inspired red/gold, IKEA-inspired blue/yellow and Lakers-inspired purple/gold demo palette previews. Settings/language and color controls now form separate left/right toolbar groups; custom color controls and preset selection stay synchronized.
+
 - Added the SVG `waiting-wave` action (等待 · 波动), approved and queued for a future batched release: three 1.1-second waves with a 10-unit vertical amplitude and staggered eye motion. `startWaiting({ variant: 'wave' })` loops continuously; the demo, TypeScript API, motion policy and action lifecycle support the new variant.
 
 - Added an experimental portable C++11 eyes-only engine, with ESP32 and RP2040 reference firmware, explicit program-controlled expressions, native safety tests and separate embedded build checks. Physical hardware verification is pending.

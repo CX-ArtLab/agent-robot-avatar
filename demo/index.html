@@ -87,8 +87,15 @@
     .demo-control-stack{position:absolute;left:50%;top:calc(39% + 128px);transform:translateX(-50%);width:min(900px,calc(100% - 56px));z-index:20;display:grid;gap:8px}
     .demo-control-stack>.controls{position:static;left:auto;top:auto;transform:none;max-width:none;width:100%;margin:0;overflow:visible;display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
     .demo-control-stack>.controls button{width:auto!important;min-width:0;flex:0 0 auto!important}
-    .demo-options{display:grid;gap:7px;width:max-content;max-width:100%;justify-items:center;padding:0;border:0;background:transparent;box-shadow:none;color:#72777e;font-size:11px}
-    .demo-panel-toolbar{display:flex;align-items:center;justify-content:center;gap:6px;padding:5px;border:1px solid rgba(0,0,0,.055);border-radius:12px;background:rgba(255,255,255,.82);box-shadow:0 6px 22px rgba(0,0,0,.055);backdrop-filter:blur(14px)}
+    .demo-options{display:grid;gap:7px;width:100%;max-width:100%;justify-items:center;padding:0;border:0;background:transparent;box-shadow:none;color:#72777e;font-size:11px}
+    .demo-panel-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-width:276px}
+    .demo-toolbar-group{display:flex;align-items:center;gap:6px;padding:5px;border:1px solid rgba(0,0,0,.055);border-radius:12px;background:rgba(255,255,255,.82);box-shadow:0 6px 22px rgba(0,0,0,.055);backdrop-filter:blur(14px)}
+    .demo-color-presets{display:flex;align-items:center;gap:4px}
+    .demo-preset{width:28px;height:34px;padding:2px;border:0;border-radius:8px;display:grid;place-items:center;background:var(--preset-bg);cursor:pointer;box-shadow:inset 0 0 0 1px rgba(0,0,0,.06)}
+    .demo-preset svg{display:block;width:24px;height:28px}
+    .demo-preset:hover{transform:translateY(-1px)}
+    .demo-preset[aria-pressed=true]{outline:2px solid #72777e;outline-offset:2px}
+    .demo-preset:focus-visible{outline:2px solid #25282c;outline-offset:2px}
     .demo-panel-toggle{width:34px!important;height:34px!important;padding:0!important;border:0!important;border-radius:9px!important;background:#f4f5f6!important;color:#72777e!important;display:grid!important;place-items:center!important;cursor:pointer!important}
     .demo-panel-toggle:hover{background:#e9eaec!important}
     .demo-panel-toggle.demo-panel-open{background:#dfe1e4!important;color:#25282c!important}
@@ -177,7 +184,7 @@
     .demo-control-stack>.controls button{
       width:auto!important;min-width:0!important;max-width:none!important;flex:0 0 auto!important;padding:8px 11px!important;
     }
-    .demo-options{width:max-content!important;max-width:calc(100vw - 20px)!important;margin:0!important;justify-self:center!important}
+    .demo-options{width:100%!important;max-width:calc(100vw - 20px)!important;margin:0!important;justify-self:center!important}
     .demo-options-group{width:max-content!important;max-width:calc(100vw - 20px)!important;margin-inline:auto!important}
     @media(max-width:600px){
       .demo-control-stack{max-width:calc(100vw - 16px)!important}
@@ -284,15 +291,20 @@
   </div>
   <div class="demo-options">
     <div class="demo-panel-toolbar" id="demoPanelToolbar">
-      <button class="demo-panel-toggle" id="demoColorPanelToggle" type="button" aria-expanded="false" aria-controls="demoColorPanel">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"/><circle class="demo-palette-dot" cx="13.5" cy="6.5" r=".5"/><circle class="demo-palette-dot" cx="17.5" cy="10.5" r=".5"/><circle class="demo-palette-dot" cx="6.5" cy="12.5" r=".5"/><circle class="demo-palette-dot" cx="8.5" cy="7.5" r=".5"/></svg>
-      </button>
+      <div class="demo-toolbar-group" id="demoNavigationGroup">
       <button class="demo-panel-toggle" id="demoSettingsPanelToggle" type="button" aria-expanded="false" aria-controls="demoSettingsPanel">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h3M11 12h9M4 18h8M16 18h4"/><circle cx="16" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="14" cy="18" r="2"/></svg>
       </button>
       <button class="demo-panel-toggle" id="demoLanguagePanelToggle" type="button" aria-expanded="false" aria-controls="demoLanguagePanel">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.3 2.4 3.5 5.4 3.5 9S14.3 18.6 12 21M12 3C9.7 5.4 8.5 8.4 8.5 12S9.7 18.6 12 21"/></svg>
       </button>
+      </div>
+      <div class="demo-toolbar-group" id="demoColorsGroup">
+        <button class="demo-panel-toggle" id="demoColorPanelToggle" type="button" aria-expanded="false" aria-controls="demoColorPanel">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"/><circle class="demo-palette-dot" cx="13.5" cy="6.5" r=".5"/><circle class="demo-palette-dot" cx="17.5" cy="10.5" r=".5"/><circle class="demo-palette-dot" cx="6.5" cy="12.5" r=".5"/><circle class="demo-palette-dot" cx="8.5" cy="7.5" r=".5"/></svg>
+        </button>
+        <div class="demo-color-presets" id="demoColorPresets" role="group"></div>
+      </div>
     </div>
     <div class="demo-options-group demo-color-group" id="demoColorPanel" hidden>
       <label class="demo-option color-option"><span id="demoBgLabel"></span><input id="demoBgColor" type="color" value="#f8f8f6"></label>

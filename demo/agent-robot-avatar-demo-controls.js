@@ -1,3 +1,11 @@
+// Brand-inspired demo palettes; these are visual examples, not official themes.
+const COLOR_PRESETS = Object.freeze([
+  { id:'default', background:'#f8f8f6', head:'#08090b', zh:'默认配色', en:'Default colors' },
+  { id:'mcdonalds', background:'#ffc72c', head:'#da291c', zh:'麦当劳灵感 · 红黄', en:"McDonald's inspired · Red & gold" },
+  { id:'ikea', background:'#ffda1a', head:'#0058a3', zh:'宜家灵感 · 蓝黄', en:'IKEA inspired · Blue & yellow' },
+  { id:'lakers', background:'#fdb927', head:'#552583', zh:'湖人灵感 · 紫金', en:'Lakers inspired · Purple & gold' },
+]);
+
 const DEFAULTS = Object.freeze({
   background: '#f8f8f6',
   head: '#08090b',
@@ -169,6 +177,25 @@ function mountDemoControls() {
   const loopToggle = options.querySelector('#demoLoop');
   const pointerToggle = options.querySelector('#demoPointerFollow');
   const resetButton = options.querySelector('#demoReset');
+  const presets = options.querySelector('#demoColorPresets');
+  for (const preset of COLOR_PRESETS) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'demo-preset';
+    button.dataset.preset = preset.id;
+    button.style.setProperty('--preset-bg', preset.background);
+    button.setAttribute('aria-pressed', 'false');
+    button.innerHTML = `<svg viewBox="0 0 32 36" aria-hidden="true"><circle cx="16" cy="3.5" r="1.7" fill="${preset.head}"/><rect x="2" y="8" width="28" height="26" rx="10" fill="${preset.head}"/><ellipse cx="11" cy="21" rx="3.6" ry="4.1" fill="${preset.background}"/><ellipse cx="21" cy="21" rx="3.6" ry="4.1" fill="${preset.background}"/></svg>`;
+    button.addEventListener('click', () => {
+      bgColor.value = preset.background;
+      headColor.value = preset.head;
+      eyeThrough.checked = true;
+      applyBackground();
+      applyHeadColor();
+      applyEyeColor();
+    });
+    presets.appendChild(button);
+  }
 
   let currentLanguage = initialLanguage();
   let currentState = 'idle';
@@ -217,6 +244,13 @@ function mountDemoControls() {
     languagePanelToggle.title = t.language;
     languagePanelToggle.setAttribute('aria-label', t.language);
     colorPanel.setAttribute('aria-label', t.colorSettings);
+    presets.setAttribute('aria-label', t.colorSettings);
+    presets.querySelectorAll('[data-preset]').forEach((button, index) => {
+      const preset = COLOR_PRESETS[index];
+      const name = currentLanguage.startsWith('zh') ? preset.zh : preset.en;
+      button.title = name;
+      button.setAttribute('aria-label', name);
+    });
     settingsPanel.setAttribute('aria-label', t.otherSettings);
     languagePanel.setAttribute('aria-label', t.languageSettings);
 
@@ -261,6 +295,16 @@ function mountDemoControls() {
       const el = shadow.getElementById(id);
       if (el) el.setAttribute('fill', color);
     });
+    syncPresetSelection();
+  }
+
+  function syncPresetSelection() {
+    presets.querySelectorAll('[data-preset]').forEach((button, index) => {
+      const preset = COLOR_PRESETS[index];
+      button.setAttribute('aria-pressed', String(eyeThrough.checked
+        && bgColor.value.toLowerCase() === preset.background
+        && headColor.value.toLowerCase() === preset.head));
+    });
   }
 
   function applyBackground() {
@@ -280,6 +324,7 @@ function mountDemoControls() {
       const el = shadow.getElementById(id);
       if (el) el.setAttribute('fill', color);
     });
+    syncPresetSelection();
   }
 
   function applyAntennaVisibility() {
