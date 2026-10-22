@@ -58,17 +58,6 @@ function activeLanguage() {
   return lang.startsWith('zh') ? 'zh-CN' : 'en';
 }
 
-function injectStyles() {
-  if (document.getElementById('agent-demo-reply-loop-style-r64')) return;
-  const style = document.createElement('style');
-  style.id = 'agent-demo-reply-loop-style-r64';
-  style.textContent = `
-    .expression-tag.failure{background:#f7ecec;border-color:#ead8d8;color:#9b7474}
-    .expression-tag.inspect{background:#eef0f7;border-color:#dde1ee;color:#737e9b}
-  `;
-  document.head.appendChild(style);
-}
-
 function stateFromTag(tag) {
   if (!tag) return null;
   return [...RESULT_STATES, ...NON_DIALOG_STATES].find(state => tag.classList.contains(state)) || null;
@@ -173,7 +162,6 @@ function onPointerMove(event) {
   if (moved >= 8 && pointerInsideInfluence(event)) stopReplyLoop(true);
 }
 
-injectStyles();
 scanReplies();
 
 if (chat) {
@@ -225,3 +213,4 @@ window.AgentRobotAvatarDemoReplyLoop = {
   stop: () => stopReplyLoop(true),
 };
 export { startReplyLoop, stopReplyLoop };
+

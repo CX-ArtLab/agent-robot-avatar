@@ -10,7 +10,7 @@ await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });
 
 const html = await readFile(path.join(demo, 'index.html'), 'utf8');
-const pagesHtml = html.replace("../agent-robot-avatar.js", "./agent-robot-avatar.js");
+const pagesHtml = html.replaceAll("../agent-robot-avatar.js", "./agent-robot-avatar.js");
 
 if (pagesHtml === html) {
   throw new Error('Demo entry import was not found while building GitHub Pages.');
@@ -27,3 +27,4 @@ for (const entry of await readdir(demo, { withFileTypes: true })) {
 }
 
 console.log(`GitHub Pages demo built at ${output}`);
+
