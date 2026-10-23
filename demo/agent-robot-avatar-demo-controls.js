@@ -583,15 +583,21 @@ function mountDemoControls() {
   setPanel(null);
   applyLanguage(currentLanguage);
 
-  // Opening show. Two scenes are being compared (a temporary switch picks one):
-  // - reel: the stage rolls down through the palettes like a slot reel, dark to
-  //   light, in step with a slower, longer spin of the eyes;
-  // - ribbons: a dark stage, the eyes power on, then light ribbons in the palette
-  //   colors burst from behind the avatar toward the viewer, faster and faster, until
-  //   a sweep of light turns the stage back to the chosen colors.
-  // Both end with the success pose once the scene and the eyes have come to rest.
-  // Only transforms, opacity and colors animate, on short-lived elements. Any click,
-  // key, scroll or other action ends the show at once, and reduced motion skips it.
+  // Opening show. Several scenes are being compared (a temporary switch picks one):
+  // - zoom: an extreme close-up of one eye pulls back to the whole avatar while
+  //   brand colors swirl away behind it;
+  // - aurora: soft glows in the brand colors drift behind the avatar, then gather
+  //   into its eyes as the stage turns white;
+  // - flip: the stage is a wall of tiles that flip in diagonal waves through the
+  //   brand colors and end white;
+  // - particles: points of light fly in and gather into the avatar, which appears
+  //   with a ring of light;
+  // - reel: the stage rolls down through the palettes like a slot reel, in step
+  //   with a slower, longer spin of the eyes.
+  // All end with the success pose once the scene (and the eyes, for the reel) are
+  // at rest. Only transforms, opacity and colors animate, on short-lived elements.
+  // Any click, key, scroll or other action ends the show at once, and reduced
+  // motion skips it.
 
   // [palette, swapped]: backgrounds grow lighter, and once they are white the heads
   // grow darker, ending next to the default black on white. Swapped palettes give
@@ -603,13 +609,32 @@ function mountDemoControls() {
   ];
   // A slower, longer reel spin than the random button: more turns, each one calmer.
   const INTRO_REEL = Object.freeze({ speed: 0.4, spin: 3400 });
-  const RIBBON_COLORS = ['#e50914', '#1ed760', '#f2ff59', '#ffc72c', '#5865f2', '#229ed9', '#e95420',
+  const BRAND_COLORS = ['#e50914', '#1ed760', '#f2ff59', '#ffc72c', '#5865f2', '#229ed9', '#e95420',
     '#ea4c89', '#fdb927', '#fffc00', '#0fa578', '#d97757', '#6cabdd', '#a50044'];
+  const INTRO_STYLES = [['zoom', '镜头'], ['aurora', '极光'], ['flip', '翻牌'], ['particles', '粒子'], ['reel', '转轮']];
   const INTRO_STYLE_KEY = 'agentRobotAvatarDemoIntro';
 
   let stopIntro = null;
-  let introStyle = 'ribbons';
-  try { introStyle = localStorage.getItem(INTRO_STYLE_KEY) === 'reel' ? 'reel' : 'ribbons'; } catch (_) {}
+  let introStyle = 'zoom';
+  try {
+    const saved = localStorage.getItem(INTRO_STYLE_KEY);
+    if (INTRO_STYLES.some(([id]) => id === saved)) introStyle = saved;
+  } catch (_) {}
+
+  // A layer that covers the stage behind the avatar, clipped to its corners.
+  const stageLayer = className => {
+    const layer = document.createElement('div');
+    layer.className = `demo-intro-layer ${className}`;
+    stage.insertBefore(layer, stage.querySelector('.avatar-home'));
+    return layer;
+  };
+  const sceneTimers = () => {
+    const timers = [];
+    return {
+      after(ms, fn, isEnded) { timers.push(setTimeout(() => { if (!isEnded()) fn(); }, ms)); },
+      clear() { timers.forEach(clearTimeout); },
+    };
+  };
 
   function reelScene({ chosen, eyesFor, play, done, isEnded }) {
     const label = stage.querySelector('.demo-stage-label');
@@ -702,82 +727,223 @@ function mountDemoControls() {
     };
   }
 
-  function ribbonScene({ chosen, eyesFor, play, done, isEnded }) {
-    const dark = '#05060a';
-    const silhouette = '#1d1e24';
-    const width = stage.clientWidth;
-    const layer = document.createElement('div');
-    layer.className = 'demo-intro-ribbons';
-    const sweep = document.createElement('div');
-    sweep.className = 'demo-intro-sweep';
-    sweep.style.background = chosen.background;
-    const flare = document.createElement('div');
-    flare.className = 'demo-intro-flare';
-    const timers = [];
-    const after = (ms, fn) => timers.push(setTimeout(() => { if (!isEnded()) fn(); }, ms));
-    let glow = null;
-
-    // Ribbons leave sooner, travel faster and come closer (wider, brighter) as the
-    // show goes on. Each is a light tube: a white core fading out to its color.
-    const burst = () => {
-      const count = 44;
-      for (let i = 0; i < count; i++) {
-        const t = i / (count - 1);
-        after(1900 * (1 - (1 - t) ** 1.8), () => {
-          const ribbon = document.createElement('span');
-          const color = RIBBON_COLORS[(i * 5) % RIBBON_COLORS.length];
-          const side = i % 2 ? 1 : -1;
-          const reach = side * width * (0.25 + Math.random() * 0.55);
-          const near = 0.35 + 0.65 * t;
-          ribbon.style.width = `${2 + (4 + Math.random() * 10) * near}px`;
-          ribbon.style.background = `linear-gradient(90deg, transparent, ${color} 30%, #fff 50%, ${color} 70%, transparent)`;
-          layer.insertBefore(ribbon, sweep);
-          const animation = ribbon.animate([
-            { transform: 'translateX(-50%) scaleX(.3)', opacity: 0 },
-            { opacity: 0.45 + 0.55 * near, offset: 0.2 },
-            { transform: `translateX(calc(-50% + ${reach}px)) scaleX(${1.5 + (1 + Math.random() * 3) * near})`, opacity: 0.6 + 0.4 * near },
-          ], { duration: 950 - 550 * t, easing: 'cubic-bezier(.55,0,.85,.4)', fill: 'forwards' });
-          animation.onfinish = () => ribbon.remove();
-        });
-      }
-    };
-    // A bar of light crosses the stage, and the chosen colors open up behind it.
-    const sweepIn = () => {
-      fadeColors(chosen.background, chosen.head, eyesFor(chosen.background), 420);
-      const timing = { duration: 520, easing: 'cubic-bezier(.7,0,.2,1)', fill: 'forwards' };
-      flare.animate([{ transform: 'translateX(-30%)', opacity: 1 }, { transform: `translateX(${width}px)`, opacity: 0.6 }], timing);
-      sweep.animate([{ clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0 0 0)' }], timing).onfinish = () => {
-        glow?.reverse();
-        done('scene');
-      };
-    };
+  function zoomScene({ chosen, eyesFor, done, isEnded }) {
+    const timers = sceneTimers();
+    const swirl = document.createElement('div');
+    swirl.className = 'demo-intro-layer demo-intro-swirl';
+    swirl.style.background = `conic-gradient(from 0deg, ${BRAND_COLORS.join(', ')}, ${BRAND_COLORS[0]})`;
+    const animations = [];
     return {
       start() {
-        stageOverride = dark;
-        paintColors(dark, silhouette, dark);
-        layer.append(sweep, flare);
-        stage.insertBefore(layer, stage.querySelector('.avatar-home'));
-        // The eyes power on with a glow, then spin while the ribbons fly.
-        after(150, () => {
-          fadeColors(dark, silhouette, '#ffffff', 450);
-          glow = face.animate([
-            { filter: 'drop-shadow(0 0 0 rgba(255,255,255,0))' },
-            { filter: 'drop-shadow(0 0 14px rgba(255,255,255,.6))' },
-          ], { duration: 450, fill: 'forwards' });
+        done('eyes');
+        stage.style.overflow = 'hidden';
+        // A square wider than the stage diagonal, so no corner shows while it turns.
+        const side = Math.ceil(Math.hypot(stage.clientWidth, stage.clientHeight)) + 4;
+        Object.assign(swirl.style, {
+          width: `${side}px`, height: `${side}px`,
+          left: `${(stage.clientWidth - side) / 2}px`, top: `${(stage.clientHeight - side) / 2}px`,
         });
-        after(600, () => {
-          play('random');
-          layer.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.08)' }], { duration: 2200, easing: 'ease-in', fill: 'forwards' });
-          burst();
-        });
-        after(2650, sweepIn);
-        // Should the eyes never start (an older component), finish anyway.
-        after(1800, () => { if (!face._randomFx) done('eyes'); });
+        stage.insertBefore(swirl, stage.querySelector('.avatar-home'));
+        stageOverride = chosen.background;
+        paintColors(chosen.background, chosen.head, '#ffffff');
+        // Start inside the left eye, then pull back to the whole avatar.
+        face.style.transformOrigin = '36% 53%';
+        animations.push(face.animate([
+          { transform: 'scale(9) rotate(-14deg)' },
+          { transform: 'scale(9) rotate(-14deg)', offset: 0.35, easing: 'cubic-bezier(.16,1,.3,1)' },
+          { transform: 'scale(.94) rotate(2deg)', offset: 0.86, easing: 'cubic-bezier(.4,0,.2,1)' },
+          { transform: 'scale(1) rotate(0deg)' },
+        ], { duration: 2000, fill: 'forwards' }));
+        animations.push(swirl.animate([
+          { transform: 'scale(1.3) rotate(0deg)', opacity: 1 },
+          { transform: 'scale(1.3) rotate(40deg)', opacity: 1, offset: 0.35 },
+          { transform: 'scale(1) rotate(160deg)', opacity: 0 },
+        ], { duration: 2000, easing: 'cubic-bezier(.5,0,.3,1)', fill: 'forwards' }));
+        timers.after(1100, () => fadeColors(chosen.background, chosen.head, eyesFor(chosen.background), 500), isEnded);
+        animations[0].onfinish = () => done('scene');
       },
       teardown() {
-        timers.forEach(clearTimeout);
+        timers.clear();
+        animations.forEach(animation => animation.cancel());
+        face.style.transformOrigin = '';
+        stage.style.overflow = '';
+        swirl.remove();
+      },
+    };
+  }
+
+  function auroraScene({ chosen, eyesFor, done, isEnded }) {
+    const timers = sceneTimers();
+    const night = '#0a0d1a';
+    let layer = null;
+    let wash = null;
+    let glow = null;
+    return {
+      start() {
+        done('eyes');
+        stageOverride = night;
+        paintColors(night, '#20232d', '#ffffff');
+        layer = stageLayer('demo-intro-aurora');
+        const blobs = [0, 1, 2, 3, 4].map(i => {
+          const blob = document.createElement('span');
+          const color = BRAND_COLORS[(i * 3) % BRAND_COLORS.length];
+          blob.style.background = `radial-gradient(circle, ${color} 0%, transparent 62%)`;
+          layer.appendChild(blob);
+          return blob;
+        });
+        wash = document.createElement('span');
+        wash.className = 'demo-intro-wash';
+        wash.style.background = chosen.background;
+        layer.appendChild(wash);
+        glow = face.animate([
+          { filter: 'drop-shadow(0 0 0 rgba(255,255,255,0))' },
+          { filter: 'drop-shadow(0 0 16px rgba(255,255,255,.55))' },
+        ], { duration: 900, fill: 'forwards' });
+        // Each glow circles the avatar on its own orbit, then is drawn into the eyes.
+        blobs.forEach((blob, i) => {
+          const angle = (i / blobs.length) * Math.PI * 2;
+          const x = Math.cos(angle) * 34;
+          const y = Math.sin(angle) * 26;
+          blob.animate([
+            { transform: `translate(${x}%, ${y}%) scale(.9) rotate(0deg)`, opacity: 0 },
+            { transform: `translate(${-y}%, ${x * 0.8}%) scale(1.15) rotate(90deg)`, opacity: 0.95, offset: 0.35 },
+            { transform: `translate(${-x * 0.7}%, ${-y}%) scale(1) rotate(200deg)`, opacity: 0.9, offset: 0.72 },
+            { transform: 'translate(0%, 0%) scale(.05) rotate(260deg)', opacity: 0 },
+          ], { duration: 3000, easing: 'cubic-bezier(.45,0,.4,1)', fill: 'forwards', delay: i * 60 });
+        });
+        timers.after(2700, () => {
+          glow.cancel();
+          glow = face.animate([
+            { filter: 'drop-shadow(0 0 16px rgba(255,255,255,.55))' },
+            { filter: 'drop-shadow(0 0 28px rgba(255,255,255,.95))', offset: 0.3 },
+            { filter: 'drop-shadow(0 0 0 rgba(255,255,255,0))' },
+          ], { duration: 700, fill: 'forwards' });
+          fadeColors(chosen.background, chosen.head, eyesFor(chosen.background), 600);
+          wash.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 600, easing: 'ease-out', fill: 'forwards' }).onfinish = () => done('scene');
+        }, isEnded);
+      },
+      teardown() {
+        timers.clear();
         glow?.cancel();
-        layer.remove();
+        layer?.remove();
+      },
+    };
+  }
+
+  function flipScene({ chosen, eyesFor, done, isEnded }) {
+    const timers = sceneTimers();
+    const waves = [
+      ['#141414', '#e50914'], ['#5865f2', '#ffffff'], ['#e95420', '#ffffff'],
+      ['#fdb927', '#552583'], ['#ffffff', '#0fa578'], [chosen.background, chosen.head],
+    ];
+    let layer = null;
+    return {
+      start() {
+        done('eyes');
+        stageOverride = 'transparent';
+        layer = stageLayer('demo-intro-flip');
+        const size = 46;
+        const cols = Math.ceil((stage.clientWidth + 2) / size);
+        const rows = Math.ceil((stage.clientHeight + 2) / size);
+        layer.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+        layer.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+        const tiles = [];
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            const tile = document.createElement('span');
+            tile.style.background = shown.background;
+            layer.appendChild(tile);
+            tiles.push([tile, r, c]);
+          }
+        }
+        let colors = shown.background;
+        const gap = 420;
+        waves.forEach(([background, head], w) => {
+          timers.after(w * gap, () => {
+            const from = colors;
+            colors = background;
+            // Diagonal wave: each tile flips edge-on, changes color, and flips back.
+            for (const [tile, r, c] of tiles) {
+              tile.animate([
+                { transform: 'perspective(240px) rotateX(0deg)', backgroundColor: from },
+                { transform: 'perspective(240px) rotateX(90deg)', backgroundColor: from, offset: 0.5 },
+                { transform: 'perspective(240px) rotateX(-90deg)', backgroundColor: background, offset: 0.5 },
+                { transform: 'perspective(240px) rotateX(0deg)', backgroundColor: background },
+              ], { duration: 420, delay: (r + c) * 26, easing: 'cubic-bezier(.45,0,.3,1)', fill: 'forwards' });
+            }
+            timers.after(180, () => fadeColors(background, head, eyesFor(background), 220), isEnded);
+            if (w === waves.length - 1) timers.after(420 + (rows + cols) * 26, () => done('scene'), isEnded);
+          }, isEnded);
+        });
+      },
+      teardown() {
+        timers.clear();
+        layer?.remove();
+      },
+    };
+  }
+
+  function particleScene({ chosen, eyesFor, done, isEnded }) {
+    const timers = sceneTimers();
+    const space = '#07080d';
+    const animations = [];
+    let layer = null;
+    return {
+      start() {
+        done('eyes');
+        stageOverride = space;
+        paintColors(space, chosen.head, eyesFor(chosen.background));
+        layer = stageLayer('demo-intro-particles');
+        const width = stage.clientWidth;
+        const height = stage.clientHeight;
+        // The avatar is hidden until the points of light arrive.
+        animations.push(face.animate([{ opacity: 0, transform: 'scale(.6)' }, { opacity: 0, transform: 'scale(.6)' }], { duration: 1, fill: 'forwards' }));
+        for (let i = 0; i < 70; i++) {
+          const dot = document.createElement('span');
+          const color = BRAND_COLORS[i % BRAND_COLORS.length];
+          const size = 4 + Math.random() * 6;
+          dot.style.width = dot.style.height = `${size}px`;
+          dot.style.background = `radial-gradient(circle, #fff 0%, ${color} 45%, transparent 70%)`;
+          layer.appendChild(dot);
+          const angle = Math.random() * Math.PI * 2;
+          const distance = 0.55 + Math.random() * 0.4;
+          const x = Math.cos(angle) * width * 0.5 * distance;
+          const y = Math.sin(angle) * height * 0.5 * distance;
+          const swirl = (Math.random() - 0.5) * 120;
+          dot.animate([
+            { transform: `translate(${x}px, ${y}px) scale(1)`, opacity: 0 },
+            { opacity: 1, offset: 0.12 },
+            { transform: `translate(${x * 0.45 + swirl}px, ${y * 0.45 - swirl * 0.3}px) scale(1.3)`, opacity: 1, offset: 0.7 },
+            { transform: 'translate(0px, 0px) scale(.2)', opacity: 0 },
+          ], { duration: 1500 + Math.random() * 500, delay: Math.random() * 300, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' });
+        }
+        timers.after(1900, () => {
+          animations.forEach(animation => animation.cancel());
+          animations.length = 0;
+          animations.push(face.animate([
+            { opacity: 0, transform: 'scale(.6)' },
+            { opacity: 1, transform: 'scale(1.12)', offset: 0.55 },
+            { opacity: 1, transform: 'scale(1)' },
+          ], { duration: 520, easing: 'cubic-bezier(.2,.8,.3,1)' }));
+          const ring = document.createElement('span');
+          ring.className = 'demo-intro-ring';
+          layer.appendChild(ring);
+          ring.animate([
+            { transform: 'translate(-50%, -50%) scale(.2)', opacity: 0.9 },
+            { transform: 'translate(-50%, -50%) scale(5)', opacity: 0 },
+          ], { duration: 900, easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'forwards' });
+          const wash = document.createElement('span');
+          wash.className = 'demo-intro-wash';
+          wash.style.background = chosen.background;
+          layer.appendChild(wash);
+          fadeColors(chosen.background, chosen.head, eyesFor(chosen.background), 600);
+          wash.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 700, delay: 150, easing: 'ease-out', fill: 'forwards' }).onfinish = () => done('scene');
+        }, isEnded);
+      },
+      teardown() {
+        timers.clear();
+        animations.forEach(animation => animation.cancel());
+        layer?.remove();
       },
     };
   }
@@ -800,7 +966,8 @@ function mountDemoControls() {
       pending.delete(part);
       land();
     };
-    const scene = (introStyle === 'reel' ? reelScene : ribbonScene)({ chosen, eyesFor, play, done, isEnded: () => ended });
+    const scenes = { zoom: zoomScene, aurora: auroraScene, flip: flipScene, particles: particleScene, reel: reelScene };
+    const scene = scenes[introStyle]({ chosen, eyesFor, play, done, isEnded: () => ended });
     const onEyes = event => {
       if (event.detail.action !== 'random' || event.detail.phase === 'start') return;
       done('eyes');
@@ -856,10 +1023,13 @@ function mountDemoControls() {
   // Temporary controls for tuning the opening show; remove before the release.
   const replayButton = stage.querySelector('#demoReplayIntro');
   const styleButton = stage.querySelector('#demoIntroStyle');
-  const showStyle = () => { if (styleButton) styleButton.textContent = introStyle === 'reel' ? '转轮' : '光带'; };
+  const showStyle = () => {
+    if (styleButton) styleButton.textContent = INTRO_STYLES.find(([id]) => id === introStyle)[1];
+  };
   replayButton?.addEventListener('click', () => playIntro({ force: true }));
   styleButton?.addEventListener('click', () => {
-    introStyle = introStyle === 'reel' ? 'ribbons' : 'reel';
+    const index = INTRO_STYLES.findIndex(([id]) => id === introStyle);
+    introStyle = INTRO_STYLES[(index + 1) % INTRO_STYLES.length][0];
     try { localStorage.setItem(INTRO_STYLE_KEY, introStyle); } catch (_) {}
     showStyle();
     playIntro({ force: true });
