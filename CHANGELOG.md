@@ -6,17 +6,48 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-10-23
+
+### Upgrading from 0.5.x
+
+Several actions are renamed after what the avatar does on screen, instead of the situation they were first written for. The old names keep working in 0.6 and print a one-time notice in the browser console; they stop working in 1.0. To upgrade, replace the old names in `play()` calls and in `action-state` or `face-state` listeners:
+
+| Old name | New name | What it looks like |
+| --- | --- | --- |
+| `send` | `affirm` | A nod |
+| `warning` | `wary` | Head turned, one eye close, a guarded up-and-down look |
+| `error`, `system-error`, `connection-error` | `refuse` | A head shake |
+| `blocked`, `policy-blocked` | `angry` | Lowered, glaring eyes |
+| `wait` | `waiting-spin` (or `waiting`) | The default waiting spin |
+| `failed`, `fail` | `failure` | |
+| `verify`, `review` | `inspect` | |
+| `slot` | `random` | |
+
+`action-state` now reports `affirm`, `wary`, `angry` and `refuse`, and `face-state` reports `wary` and `refuse`. A shake reads as "no", so use `refuse` when the Agent cannot or will not do something, and `failure` when a task or connection fails. Antenna blinking is removed: `setAntennaFlash()` now does nothing and prints a one-time notice, and it is deleted in 1.0. Packages that depend on `^0.5.x` do not pick up 0.6 automatically.
+
 ### Added
 
-- Added an experimental portable C++11 eyes-only engine, with ESP32 and RP2040 reference firmware, explicit program-controlled expressions, native safety tests and separate embedded build checks. Physical hardware verification is pending.
-
-### Fixed
-
-- Prevented the demo from revealing intermediate layouts during startup, preloaded its modules in parallel, and moved its controls and critical styles into the initial HTML.
+- Added the `waiting-wave` action: both eyes bob in staggered waves. `startWaiting({ variant: 'wave' })` loops it continuously.
+- Added `waiting-spin` as the explicit name of the default waiting motion, and `startWaiting({ variant: 'spin' })`.
+- Added brand-inspired color palettes to the demo. Colors apply to a stage card around the avatar; hovering a swatch previews it, a dice button picks a random palette, a swap button exchanges the background and head colors, and a reset button appears on the stage while the colors differ from the default. The page opens by rolling the stage through the palettes in step with the eyes' reel spin, ending with a faint rainbow ripple.
 
 ### Changed
 
-- Refined the warning expression with independently tilted eyes, adjusted eye proportions and eyelids, and a longer raised-head pause.
+- Renamed actions as listed above.
+- Demo labels now describe the expression: Waiting · Spin, Waiting · Scroll, Affirm, Wary, Angry and Refuse. The toolbar row is one card as wide as the actions, with Head shape and a random-colors button.
+- Refined the wary expression with independently tilted eyes, adjusted eye proportions and eyelids.
+
+### Also in this release
+
+- The embedded eyes engine for robot and dev-board screens is still in development. It will get its own version number and release; progress is tracked in [embedded/CHANGELOG.md](embedded/CHANGELOG.md).
+
+### Removed
+
+- Removed antenna blinking (`setAntennaFlash()`), which added little and is no longer shown in the demo.
+
+### Fixed
+
+- The demo no longer shows intermediate layouts while loading, keeps its action rows even and stable on phones and under browser page translators, and keeps an open panel on screen.
 
 ## [0.5.2] - 2026-10-06
 
@@ -164,6 +195,8 @@ First public release.
 - npm-compatible package metadata for later package publication
 - Contribution guide, issue templates, pull request template, MIT License, and Ko-fi funding metadata
 
+[0.6.0]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.6.0
+[0.5.2]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.5.2
 [0.4.3]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.4.3
 [0.4.2]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.4.2
 [0.3.2]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.3.2
@@ -172,4 +205,5 @@ First public release.
 [0.2.1]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.2.1
 [0.2.0]: https://github.com/CX-ARTLab/agent-robot-avatar/releases/tag/v0.2.0
 [0.1.0]: https://github.com/CX-ARTLab/agent-robot-avatar/releases/tag/v0.1.0
+
 

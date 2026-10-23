@@ -200,7 +200,7 @@ proto.error = async function() {
   const eyeDuration = 980;
   const headDuration = 1380;
   this._systemErrorShake = { start: performance.now(), duration: eyeDuration };
-  dispatchActionState(this, 'error');
+  dispatchActionState(this, 'refuse');
 
   centerHeadTransform(this);
   if (this._headMotion?.animate) {
@@ -234,7 +234,7 @@ proto.warning = async function() {
   const token = this._transitionToken;
   const duration = WARNING_PHASES.duration;
   this._warningFx = { start: performance.now(), duration };
-  dispatchActionState(this, 'warning');
+  dispatchActionState(this, 'wary');
 
   centerHeadTransform(this);
   if (this._headMotion?.animate) {

@@ -38,11 +38,11 @@ test('cancelling during replacement delay keeps the request cancelled', async ({
 test('a newer user request invalidates a delayed replacement start', async ({ page }) => {
   await page.evaluate(() => {
     document.querySelector('#replace-request').click();
-    document.querySelector('[data-request="error"]').click();
+    document.querySelector('[data-request="refuse"]').click();
   });
 
-  await expect(log(page)).toContainText('error:end:api', { timeout: 6000 });
-  await expect(status(page)).toHaveText('Connection problem.');
+  await expect(log(page)).toContainText('refuse:end:api', { timeout: 6000 });
+  await expect(status(page)).toHaveText('Request declined.');
   await expect(log(page)).toContainText('stale start ignored');
   await expect(log(page)).not.toContainText('success:start:api');
 });
@@ -91,7 +91,7 @@ test('business status is the only live region and terminal text survives animati
   for (const [outcome, message] of [
     ['success', 'Task completed.'],
     ['failure', 'Task failed.'],
-    ['error', 'Connection problem.'],
+    ['refuse', 'Request declined.'],
   ]) {
     await page.locator(`[data-request="${outcome}"]`).click();
     await expect(log(page)).toContainText(`${outcome}:end:api`, { timeout: 6000 });

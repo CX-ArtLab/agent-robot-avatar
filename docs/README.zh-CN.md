@@ -6,7 +6,7 @@
 
 [English](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/README.md) | [简体中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-CN.md) | [Español](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.es.md) | [Русский](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ru.md) | [Français](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.fr.md) | [Português](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.pt.md) | [Deutsch](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.de.md) | [日本語](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ja.md) | [한국어](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ko.md) | [繁體中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-TW.md)
 
-![Version](https://img.shields.io/badge/version-v0.5.2-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
+![Version](https://img.shields.io/badge/version-v0.6.0-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
 ![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square)
 
@@ -26,7 +26,7 @@ Agent Robot Avatar 还可作为 AG-UI 风格 Agent 界面的视觉反馈层。
 
 ## 嵌入式眼睛版本（实验性）
 
-同一项目新增独立 C++11 眼睛表情核心，面向已有外壳或屏幕的硬件与原生程序。首批参考构建包括 ESP32-S3＋ST7789、ESP32＋SSD1306，以及 Raspberry Pi Pico／RP2040＋ST7789。表情核心与屏幕驱动分开，当前尚未进行实机验证。
+独立的 C++11 眼睛表情核心，在机器人和开发板的屏幕上画出同样的 18 种表情。固件示例覆盖 26 种开发板与屏幕组合（ESP32、ESP32-S3、RP2040；ST7789、ST7735、GC9A01 圆屏、ILI9341/9342/9488、CO5300 AMOLED、ST7701S RGB 屏、SSD1306/SH1106 OLED，含 LilyGO、M5Stack、微雪、Seeed、乐鑫等开发板）。所有示例都在 CI 中编译通过，尚未实机验证；如果你在实物上试过，欢迎提交实机验证报告。
 
 [查看硬件接入说明](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/embedded/README.zh-CN.md)。现有 Web 组件与 Demo 保持不变。
 
@@ -81,17 +81,19 @@ import 'agent-robot-avatar';
 const avatar = document.querySelector('#avatar');
 
 avatar.play('success');
-avatar.play('warning');
-avatar.play('error');
+avatar.play('wary');
+avatar.play('refuse');
 
 avatar.reset();
 ```
 
 可用动作：
 
-`idle` · `bored` · `waiting` · `waiting-wrap` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `love` · `random` · `sleep` · `wake`
+`idle` · `bored` · `waiting-spin` · `waiting-wrap` · `waiting-wave` · `input` · `affirm` · `success` · `failure` · `wary` · `inspect` · `angry` · `refuse` · `surprise` · `love` · `random` · `sleep` · `wake`
 
-`failure` 用于表示任务执行完成但结果失败；`error` 用于连接、服务或系统错误。
+`waiting-wave`（等待 · 波动）：双眼错开节奏上下起伏，每轮周期 1.1 秒、振幅 10 SVG 单位。`play('waiting-wave')` 连续播放三轮并回正；`startWaiting({ variant: 'wave' })` 持续循环，直到被其他动作替换或调用 `stopWaiting()`。支持减少动态效果设置，动作生命周期事件统一使用 `waiting`。
+
+动作名描述的是头像做出的样子：`refuse` 是摇头，用于 Agent 不能或不会执行某个请求；`failure` 用于任务或连接没有成功；`wary` 是侧头、上下打量的警惕眼神，用于需要用户确认的操作。0.5 版的旧名字（`send`、`warning`、`error`、`blocked` 等）在 1.0 之前仍可使用，但会在控制台提示改名，详见[升级对照表](../CHANGELOG.md#upgrading-from-05x)。
 
 `love` 用于表达喜欢或感谢：两只眼睛向中间靠拢合成一颗爱心，跳动三下后恢复。
 
@@ -105,11 +107,14 @@ avatar.startWaiting();
 // 第二种等待：眼睛从一侧转出，再从另一侧转入。
 avatar.startWaiting({ variant: 'wrap' });
 
+// 另一种等待动作：双眼错开节奏上下波动。
+avatar.startWaiting({ variant: 'wave' });
+
 try {
   const result = await runAgentRequest();
   await avatar.play(result.ok ? 'success' : 'failure');
 } catch (error) {
-  await avatar.play('error');
+  await avatar.play('failure');
 }
 ```
 
@@ -140,7 +145,6 @@ try {
 ```js
 avatar.setPointerFollow(false);
 avatar.setHeadRoundness(75);
-avatar.setAntennaFlash(true);
 avatar.setPressSqueeze(true);
 avatar.setAntennaDrag(true);
 ```
@@ -167,7 +171,7 @@ avatar.setAntennaDrag(true);
 
 ## 项目状态
 
-**当前公开版本：v0.5.2**
+**当前公开版本：v0.6.0**
 
 公开 API 会在未来 `1.0.0` 稳定性承诺前继续保持精简并谨慎演进。
 
@@ -194,4 +198,5 @@ MIT License。详见 [`LICENSE`](../LICENSE)。
 | Ko-fi | 支付宝 | 微信支付 |
 | --- | --- | --- |
 | <a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a> | <img src="../assets/support/alipay.png" alt="支付宝收款码" width="160"> | <img src="../assets/support/wechat-pay.png" alt="微信支付收款码" width="160"> |
+
 

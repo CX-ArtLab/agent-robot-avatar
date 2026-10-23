@@ -19,6 +19,8 @@ void avatar.play(action);
 void avatar.startWaiting();
 void avatar.startWaiting({ variant: 'wrap' });
 void avatar.play('waiting-wrap');
+void avatar.startWaiting({ variant: 'wave' });
+void avatar.play('waiting-wave');
 void avatar.play('love');
 const loveState: AgentRobotAvatarState = 'love';
 const loveCanonical: AgentRobotAvatarCanonicalAction = 'love';
@@ -81,3 +83,4 @@ void wakeOn;
 void motion;
 void invalidWakeOn;
 void invalidMotion;
+

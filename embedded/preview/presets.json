@@ -1,0 +1,2079 @@
+[
+  {
+    "id": "tft",
+    "name": "Waveshare 1.3″ · 方形 TFT",
+    "width": 240,
+    "height": 240,
+    "frame": "tft",
+    "controller": "ST7789",
+    "type": "SPI · 彩屏",
+    "example": true,
+    "viewport": [
+      0,
+      40,
+      240,
+      160
+    ],
+    "source": "https://www.waveshare.net/shop/1.3inch-LCD-Module.htm",
+    "module": "waveshare-1.3",
+    "rotation": 0,
+    "group": "square",
+    "panel": "ips",
+    "bus": "spi",
+    "firmware": {
+      "env": "esp32-s3-st7789",
+      "board": "ESP32-S3-DevKitC",
+      "wiring": [
+        [
+          "SCK",
+          "GPIO 12"
+        ],
+        [
+          "MOSI / SDA",
+          "GPIO 11"
+        ],
+        [
+          "CS",
+          "GPIO 10"
+        ],
+        [
+          "DC",
+          "GPIO 9"
+        ],
+        [
+          "RST",
+          "GPIO 8"
+        ],
+        [
+          "VCC",
+          "3V3"
+        ],
+        [
+          "GND",
+          "GND"
+        ],
+        [
+          "BL / BLK",
+          "3V3（常亮）"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "oled",
+    "name": "Adafruit 326 · OLED",
+    "width": 128,
+    "height": 64,
+    "frame": "oled",
+    "controller": "SSD1306",
+    "type": "I²C · 单色",
+    "example": true,
+    "source": "https://www.adafruit.com/product/326",
+    "module": "adafruit-326",
+    "rotation": 0,
+    "group": "mono",
+    "panel": "oled",
+    "bus": "i2c",
+    "firmware": {
+      "env": "esp32-ssd1306",
+      "board": "ESP32 DevKit（ESP32-WROOM-32）",
+      "wiring": [
+        [
+          "SDA",
+          "GPIO 21"
+        ],
+        [
+          "SCL",
+          "GPIO 22"
+        ],
+        [
+          "VCC",
+          "3V3"
+        ],
+        [
+          "GND",
+          "GND"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "oled-wide",
+    "name": "Adafruit 931 · 窄条 OLED",
+    "width": 128,
+    "height": 32,
+    "frame": "oled",
+    "controller": "SSD1306",
+    "type": "I²C · 单色",
+    "example": true,
+    "source": "https://www.adafruit.com/product/931",
+    "module": "adafruit-931",
+    "rotation": 0,
+    "group": "mono",
+    "panel": "oled",
+    "bus": "i2c",
+    "firmware": {
+      "env": "esp32-ssd1306-128x32",
+      "board": "ESP32 DevKit（ESP32-WROOM-32）",
+      "wiring": [
+        [
+          "SDA",
+          "GPIO 21"
+        ],
+        [
+          "SCL",
+          "GPIO 22"
+        ],
+        [
+          "VCC",
+          "3V3"
+        ],
+        [
+          "GND",
+          "GND"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "mini",
+    "name": "Waveshare 1.8″ · 小型 TFT",
+    "width": 128,
+    "height": 160,
+    "frame": "tft",
+    "controller": "ST7735S",
+    "type": "SPI · 彩屏",
+    "example": true,
+    "source": "https://www.waveshare.net/shop/1.8inch-LCD-Module.htm",
+    "module": "waveshare-1.8",
+    "rotation": 90,
+    "group": "square",
+    "panel": "tn",
+    "bus": "spi",
+    "firmware": {
+      "env": "esp32-s3-st7735-128x160",
+      "board": "ESP32-S3-DevKitC",
+      "wiring": [
+        [
+          "SCK",
+          "GPIO 12"
+        ],
+        [
+          "MOSI / SDA",
+          "GPIO 11"
+        ],
+        [
+          "CS",
+          "GPIO 10"
+        ],
+        [
+          "DC",
+          "GPIO 9"
+        ],
+        [
+          "RST",
+          "GPIO 8"
+        ],
+        [
+          "VCC",
+          "3V3"
+        ],
+        [
+          "GND",
+          "GND"
+        ],
+        [
+          "BL / BLK",
+          "3V3（常亮）"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "landscape",
+    "name": "Waveshare 2″ · 横向 TFT",
+    "width": 320,
+    "height": 240,
+    "frame": "tft",
+    "controller": "ST7789VW",
+    "type": "SPI · 彩屏 · 横向旋转",
+    "example": true,
+    "source": "https://www.waveshare.net/shop/2inch-LCD-Module.htm",
+    "module": "waveshare-2",
+    "rotation": 0,
+    "group": "square",
+    "panel": "ips",
+    "bus": "spi",
+    "firmware": {
+      "env": "esp32-s3-st7789-320x240",
+      "board": "ESP32-S3-DevKitC",
+      "wiring": [
+        [
+          "SCK",
+          "GPIO 12"
+        ],
+        [
+          "MOSI / SDA",
+          "GPIO 11"
+        ],
+        [
+          "CS",
+          "GPIO 10"
+        ],
+        [
+          "DC",
+          "GPIO 9"
+        ],
+        [
+          "RST",
+          "GPIO 8"
+        ],
+        [
+          "VCC",
+          "3V3"
+        ],
+        [
+          "GND",
+          "GND"
+        ],
+        [
+          "BL / BLK",
+          "3V3（常亮）"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "portrait",
+    "name": "Waveshare 2″ · 竖向 TFT",
+    "width": 240,
+    "height": 320,
+    "frame": "tft",
+    "controller": "ST7789VW",
+    "type": "SPI · 彩屏",
+    "example": true,
+    "source": "https://www.waveshare.net/shop/2inch-LCD-Module.htm",
+    "module": "waveshare-2",
+    "rotation": 90,
+    "group": "square",
+    "panel": "ips",
+    "bus": "spi",
+    "firmware": {
+      "env": "esp32-s3-st7789-240x320",
+      "board": "ESP32-S3-DevKitC",
+      "wiring": [
+        [
+          "SCK",
+          "GPIO 12"
+        ],
+        [
+          "MOSI / SDA",
+          "GPIO 11"
+        ],
+        [
+          "CS",
+          "GPIO 10"
+        ],
+        [
+          "DC",
+          "GPIO 9"
+        ],
+        [
+          "RST",
+          "GPIO 8"
+        ],
+        [
+          "VCC",
+          "3V3"
+        ],
+        [
+          "GND",
+          "GND"
+        ],
+        [
+          "BL / BLK",
+          "3V3（常亮）"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "round",
+    "name": "Waveshare 1.28″ · 圆形 TFT",
+    "width": 240,
+    "height": 240,
+    "frame": "round",
+    "controller": "GC9A01",
+    "type": "SPI · 彩屏 · 圆形",
+    "example": true,
+    "source": "https://www.waveshare.net/shop/1.28inch-LCD-Module.htm",
+    "module": "waveshare-1.28",
+    "rotation": 0,
+    "group": "round",
+    "panel": "ips",
+    "bus": "spi",
+    "firmware": {
+      "env": "esp32-s3-gc9a01",
+      "board": "ESP32-S3-DevKitC",
+      "wiring": [
+        [
+          "SCK",
+          "GPIO 12"
+        ],
+        [
+          "MOSI / SDA",
+          "GPIO 11"
+        ],
+        [
+          "CS",
+          "GPIO 10"
+        ],
+        [
+          "DC",
+          "GPIO 9"
+        ],
+        [
+          "RST",
+          "GPIO 8"
+        ],
+        [
+          "VCC",
+          "3V3"
+        ],
+        [
+          "GND",
+          "GND"
+        ],
+        [
+          "BL / BLK",
+          "3V3（常亮）"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "narrow",
+    "name": "Waveshare 1.14″ · 宽幅 TFT",
+    "width": 240,
+    "height": 135,
+    "frame": "tft",
+    "controller": "ST7789",
+    "type": "SPI · 彩屏",
+    "example": true,
+    "source": "https://www.waveshare.net/shop/1.14inch-LCD-Module.htm",
+    "module": "waveshare-1.14",
+    "rotation": 0,
+    "group": "bar",
+    "panel": "ips",
+    "bus": "spi",
+    "firmware": {
+      "env": "esp32-s3-st7789-240x135",
+      "board": "ESP32-S3-DevKitC",
+      "wiring": [
+        [
+          "SCK",
+          "GPIO 12"
+        ],
+        [
+          "MOSI / SDA",
+          "GPIO 11"
+        ],
+        [
+          "CS",
+          "GPIO 10"
+        ],
+        [
+          "DC",
+          "GPIO 9"
+        ],
+        [
+          "RST",
+          "GPIO 8"
+        ],
+        [
+          "VCC",
+          "3V3"
+        ],
+        [
+          "GND",
+          "GND"
+        ],
+        [
+          "BL / BLK",
+          "3V3（常亮）"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "eyes",
+    "name": "原始眼睛画布",
+    "width": 240,
+    "height": 160,
+    "frame": "eyes",
+    "controller": "GENERIC",
+    "type": "通用单色位图",
+    "example": false,
+    "group": "other"
+  },
+  {
+    "id": "gc9a01-128",
+    "name": "通用 GC9A01 1.28″ 圆屏模块",
+    "width": 240,
+    "height": 240,
+    "frame": "round",
+    "controller": "GC9A01",
+    "type": "SPI · 彩屏",
+    "example": true,
+    "group": "round",
+    "panel": "ips",
+    "diag": 1.28,
+    "board": {
+      "box": [
+        38,
+        49
+      ],
+      "body": {
+        "shape": "circle",
+        "d": 38,
+        "y": -5.5,
+        "color": "#1b2233",
+        "tab": {
+          "w": 20,
+          "h": 12,
+          "y": 18.5
+        }
+      },
+      "glass": {
+        "shape": "circle",
+        "d": 35.4,
+        "y": -5.5
+      },
+      "parts": [
+        {
+          "t": "pins",
+          "n": 7,
+          "x": 0,
+          "y": 21,
+          "dir": "h",
+          "labels": [
+            "GND",
+            "VCC",
+            "SCL",
+            "SDA",
+            "RES",
+            "DC",
+            "CS"
+          ]
+        }
+      ]
+    },
+    "bus": "spi",
+    "firmware": {
+      "env": "esp32-s3-gc9a01",
+      "board": "ESP32-S3-DevKitC",
+      "wiring": [
+        [
+          "SCK",
+          "GPIO 12"
+        ],
+        [
+          "MOSI / SDA",
+          "GPIO 11"
+        ],
+        [
+          "CS",
+          "GPIO 10"
+        ],
+        [
+          "DC",
+          "GPIO 9"
+        ],
+        [
+          "RST",
+          "GPIO 8"
+        ],
+        [
+          "VCC",
+          "3V3"
+        ],
+        [
+          "GND",
+          "GND"
+        ],
+        [
+          "BL / BLK",
+          "3V3（常亮）"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "esp32s3-round-128",
+    "name": "ESP32-S3 1.28″ 圆形触摸板",
+    "width": 240,
+    "height": 240,
+    "frame": "round",
+    "controller": "GC9A01 + CST816S",
+    "type": "SPI · 彩屏",
+    "example": true,
+    "group": "round",
+    "panel": "ips",
+    "diag": 1.28,
+    "board": {
+      "box": [
+        40,
+        40
+      ],
+      "body": {
+        "shape": "circle",
+        "d": 40,
+        "color": "#141518"
+      },
+      "glass": {
+        "shape": "circle",
+        "d": 36.6
+      },
+      "parts": [
+        {
+          "t": "usb",
+          "x": 0,
+          "y": 19.2,
+          "rot": 0
+        }
+      ]
+    },
+    "bus": "spi",
+    "firmware": {
+      "env": "waveshare-s3-round-128",
+      "board": "Waveshare ESP32-S3-Touch-LCD-1.28"
+    }
+  },
+  {
+    "id": "m5-dial",
+    "name": "M5Stack Dial(旋钮)",
+    "width": 240,
+    "height": 240,
+    "frame": "round",
+    "controller": "GC9A01 + FT3267",
+    "type": "SPI · 彩屏",
+    "example": true,
+    "group": "round",
+    "panel": "ips",
+    "diag": 1.28,
+    "board": {
+      "box": [
+        45,
+        45
+      ],
+      "body": {
+        "shape": "circle",
+        "d": 45,
+        "color": "#2a2c31",
+        "ring": {
+          "d": 45,
+          "w": 4.2,
+          "color": "#ff6b1a"
+        }
+      },
+      "glass": {
+        "shape": "circle",
+        "d": 35.2
+      },
+      "parts": []
+    },
+    "bus": "spi",
+    "firmware": {
+      "env": "m5-dial",
+      "board": "M5Stack Dial"
+    }
+  },
+  {
+    "id": "xiao-round-128",
+    "name": "Seeed XIAO 圆形扩展屏",
+    "width": 240,
+    "height": 240,
+    "frame": "round",
+    "controller": "GC9A01 + CHSC6X",
+    "type": "SPI · 彩屏",
+    "example": true,
+    "group": "round",
+    "panel": "ips",
+    "diag": 1.28,
+    "board": {
+      "box": [
+        39,
+        39
+      ],
+      "body": {
+        "shape": "circle",
+        "d": 39,
+        "color": "#16171a"
+      },
+      "glass": {
+        "shape": "circle",
+        "d": 35.4
+      },
+      "parts": [
+        {
+          "t": "button",
+          "x": -14.5,
+          "y": -6,
+          "w": 2.4,
+          "h": 3.6,
+          "color": "#3a3d42"
+        }
+      ]
+    },
+    "bus": "spi",
+    "firmware": {
+      "env": "xiao-round-display",
+      "board": "Seeed XIAO ESP32S3（插在圆屏扩展板上）"
+    }
+  },
+  {
+    "id": "t-rgb-21",
+    "name": "LilyGO T-RGB 2.1″ 圆屏",
+    "width": 480,
+    "height": 480,
+    "frame": "round",
+    "controller": "ST7701S",
+    "type": "SPI · 彩屏",
+    "example": true,
+    "group": "round",
+    "panel": "ips",
+    "diag": 2.1,
+    "board": {
+      "box": [
+        62,
+        62
+      ],
+      "body": {
+        "shape": "circle",
+        "d": 62,
+        "color": "#121316"
+      },
+      "glass": {
+        "shape": "circle",
+        "d": 57
+      },
+      "parts": []
+    },
+    "bus": "rgb",
+    "firmware": {
+      "env": "t-rgb-21",
+      "board": "LilyGO T-RGB 2.1″"
+    }
+  },
+  {
+    "id": "amoled-175",
+    "name": "ESP32-S3 1.75″ AMOLED 圆屏",
+    "width": 466,
+    "height": 466,
+    "frame": "round",
+    "controller": "CO5300",
+    "type": "SPI · 彩屏",
+    "example": true,
+    "group": "round",
+    "panel": "amoled",
+    "diag": 1.75,
+    "board": {
+      "box": [
+        49,
+        49
+      ],
+      "body": {
+        "shape": "circle",
+        "d": 49,
+        "color": "#151618"
+      },
+      "glass": {
+        "shape": "circle",
+        "d": 46.2
+      },
+      "parts": []
+    },
+    "bus": "qspi",
+    "firmware": {
+      "env": "waveshare-amoled-175",
+      "board": "Waveshare ESP32-S3-Touch-AMOLED-1.75"
+    }
+  },
+  {
+    "id": "st7789-13",
+    "name": "通用 ST7789 1.3″ IPS 模块",
+    "width": 240,
+    "height": 240,
+    "frame": "tft",
+    "controller": "ST7789",
+    "type": "SPI · 彩屏",
+    "example": true,
+    "group": "square",
+    "panel": "ips",
+    "diag": 1.3,
+    "board": {
+      "box": [
+        28,
+        39
+      ],
+      "body": {
+        "shape": "rect",
+        "w": 28,
+        "h": 39,
+        "r": 1,
+        "color": "#1d4f9f"
+      },
+      "glass": {
+        "w": 26.2,
+        "h": 29.6,
+        "y": 3.6,
+        "activeOffset": [
+          0,
+          -1.6
+        ]
+      },
+      "parts": [
+        {
+          "t": "pins",
+          "n": 7,
+          "x": 0,
+          "y": -16.6,
+          "dir": "h",
+          "labels": [
+            "GND",
+            "VCC",
+            "SCL",
+            "SDA",
+            "RES",
+            "DC",
+            "BLK"
+          ]
+        },
+        {
+          "t": "fpc",
+          "x": 0,
+          "y": 18.2,
+          "w": 12,
+          "h": 1.6
+        }
+      ]
+    },
+    "bus": "spi",
+    "firmware": {
+      "env": "esp32-s3-st7789",
+      "board": "ESP32-S3-DevKitC",
+      "wiring": [
+        [
+          "SCK",
+          "GPIO 12"
+        ],
+        [
+          "MOSI / SDA",
+          "GPIO 11"
+        ],
+        [
+          "CS",
+          "GPIO 10"
+        ],
+        [
+          "DC",
+          "GPIO 9"
+        ],
+        [
+          "RST",
+          "GPIO 8"
+        ],
+        [
+          "VCC",
+          "3V3"
+        ],
+        [
+          "GND",
+          "GND"
+        ],
+        [
+          "BL / BLK",
+          "3V3（常亮）"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "st7789-154",
+    "name": "通用 ST7789 1.54″ IPS 模块",
+    "width": 240,
+    "height": 240,
+    "frame": "tft",
+    "controller": "ST7789",
+    "type": "SPI · 彩屏",
+    "example": true,
+    "group": "square",
+    "panel": "ips",
+    "diag": 1.54,
+    "board": {
+      "box": [
+        33,
+        44
+      ],
+      "body": {
+        "shape": "rect",
+        "w": 33,
+        "h": 44,
+        "r": 1,
+        "color": "#16191f"
+      },
+      "glass": {
+        "w": 31.5,
+        "h": 34,
+        "y": 3.4,
+        "activeOffset": [
+          0,
+          -1.8
+        ]
+      },
+      "parts": [
+        {
+          "t": "pins",
+          "n": 8,
+          "x": 0,
+          "y": -18.8,
+          "dir": "h",
+          "labels": [
+            "GND",
+            "VCC",
+            "SCL",
+            "SDA",
+            "RES",
+            "DC",
+            "CS",
+            "BL"
+          ]
+        },
+        {
+          "t": "holes",
+          "d": 2.2,
+          "pts": [
+            [
+              -14,
+              -19
+            ],
+            [
+              14,
+              -19
+            ]
+          ]
+        }
+      ]
+    },
+    "bus": "spi",
+    "firmware": {
+      "env": "esp32-s3-st7789",
+      "board": "ESP32-S3-DevKitC",
+      "wiring": [
+        [
+          "SCK",
+          "GPIO 12"
+        ],
+        [
+          "MOSI / SDA",
+          "GPIO 11"
+        ],
+        [
+          "CS",
+          "GPIO 10"
+        ],
+        [
+          "DC",
+          "GPIO 9"
+        ],
+        [
+          "RST",
+          "GPIO 8"
+        ],
+        [
+          "VCC",
+          "3V3"
+        ],
+        [
+          "GND",
+          "GND"
+        ],
+        [
+          "BL / BLK",
+          "3V3（常亮）"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "st7789v2-169",
+    "name": "通用 ST7789V2 1.69″ 圆角屏",
+    "width": 240,
+    "height": 280,
+    "frame": "tft",
+    "controller": "ST7789V2",
+    "type": "SPI · 彩屏",
+    "example": true,
+    "group": "square",
+    "panel": "ips",
+    "diag": 1.69,
+    "corner": 34,
+    "board": {
+      "box": [
+        33,
+        44
+      ],
+      "body": {
+        "shape": "rect",
+        "w": 33,
+        "h": 44,
+        "r": 1,
+        "color": "#16191f"
+      },
+      "glass": {
+        "w": 30.1,
+        "h": 37.4,
+        "r": 4.6,
+        "y": 2.4
+      },
+      "parts": [
+        {
+          "t": "pins",
+          "n": 8,
+          "x": 0,
+          "y": -19.4,
+          "dir": "h",
+          "labels": null
+        }
+      ]
+    },
+    "bus": "spi",
+    "firmware": {
+      "env": "esp32-s3-st7789-240x280",
+      "board": "ESP32-S3-DevKitC",
+      "wiring": [
+        [
+          "SCK",
+          "GPIO 12"
+        ],
+        [
+          "MOSI / SDA",
+          "GPIO 11"
+        ],
+        [
+          "CS",
+          "GPIO 10"
+        ],
+        [
+          "DC",
+          "GPIO 9"
+        ],
+        [
+          "RST",
+          "GPIO 8"
+        ],
+        [
+          "VCC",
+          "3V3"
+        ],
+        [
+          "GND",
+          "GND"
+        ],
+        [
+          "BL / BLK",
+          "3V3（常亮）"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "st7789-20",
+    "name": "通用 ST7789 2.0″ IPS 模块",
+    "width": 240,
+    "height": 320,
+    "frame": "tft",
+    "controller": "ST7789",
+    "type": "SPI · 彩屏",
+    "example": true,
+    "group": "square",
+    "panel": "ips",
+    "diag": 2,
+    "board": {
+      "box": [
+        36,
+        58
+      ],
+      "body": {
+        "shape": "rect",
+        "w": 36,
+        "h": 58,
+        "r": 1,
+        "color": "#16191f"
+      },
+      "glass": {
+        "w": 34.4,
+        "h": 47,
+        "y": 4.2,
+        "activeOffset": [
+          0,
+          -1.8
+        ]
+      },
+      "parts": [
+        {
+          "t": "pins",
+          "n": 8,
+          "x": 0,
+          "y": -24.8,
+          "dir": "h",
+          "labels": null
+        },
+        {
+          "t": "holes",
+          "d": 2.6,
+          "pts": [
+            [
+              -15.5,
+              -25.5
+            ],
+            [
+              15.5,
+              -25.5
+            ]
+          ]
+        }
+      ]
+    },
+    "bus": "spi",
+    "firmware": {
+      "env": "esp32-s3-st7789-240x320",
+      "board": "ESP32-S3-DevKitC",
+      "wiring": [
+        [
+          "SCK",
+          "GPIO 12"
+        ],
+        [
+          "MOSI / SDA",
+          "GPIO 11"
+        ],
+        [
+          "CS",
+          "GPIO 10"
+        ],
+        [
+          "DC",
+          "GPIO 9"
+        ],
+        [
+          "RST",
+          "GPIO 8"
+        ],
+        [
+          "VCC",
+          "3V3"
+        ],
+        [
+          "GND",
+          "GND"
+        ],
+        [
+          "BL / BLK",
+          "3V3（常亮）"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "st7735-18",
+    "name": "通用 ST7735 1.8″ TFT(红板)",
+    "width": 128,
+    "height": 160,
+    "frame": "tft",
+    "controller": "ST7735S",
+    "type": "SPI · 彩屏",
+    "example": true,
+    "group": "square",
+    "panel": "tn",
+    "diag": 1.8,
+    "board": {
+      "box": [
+        34,
+        57
+      ],
+      "body": {
+        "shape": "rect",
+        "w": 34,
+        "h": 57,
+        "r": 1,
+        "color": "#a8231c"
+      },
+      "glass": {
+        "w": 31.4,
+        "h": 41,
+        "y": -1.5,
+        "activeOffset": [
+          0,
+          -1.4
+        ]
+      },
+      "parts": [
+        {
+          "t": "pins",
+          "n": 8,
+          "x": 0,
+          "y": -25.6,
+          "dir": "h",
+          "labels": [
+            "LED",
+            "SCK",
+            "SDA",
+            "A0",
+            "RST",
+            "CS",
+            "GND",
+            "VCC"
+          ]
+        },
+        {
+          "t": "holes",
+          "d": 3,
+          "pts": [
+            [
+              -13.5,
+              24.5
+            ],
+            [
+              13.5,
+              24.5
+            ]
+          ]
+        },
+        {
+          "t": "label",
+          "text": "1.8 TFT SPI 128*160",
+          "x": 0,
+          "y": 25.2,
+          "size": 1.7,
+          "color": "rgba(255,255,255,.72)"
+        }
+      ]
+    },
+    "bus": "spi",
+    "firmware": {
+      "env": "esp32-s3-st7735-128x160",
+      "board": "ESP32-S3-DevKitC",
+      "wiring": [
+        [
+          "SCK",
+          "GPIO 12"
+        ],
+        [
+          "MOSI / SDA",
+          "GPIO 11"
+        ],
+        [
+          "CS",
+          "GPIO 10"
+        ],
+        [
+          "DC",
+          "GPIO 9"
+        ],
+        [
+          "RST",
+          "GPIO 8"
+        ],
+        [
+          "VCC",
+          "3V3"
+        ],
+        [
+          "GND",
+          "GND"
+        ],
+        [
+          "BL / BLK",
+          "3V3（常亮）"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "st7735-096",
+    "name": "通用 ST7735 0.96″ IPS 长条",
+    "width": 160,
+    "height": 80,
+    "frame": "tft",
+    "controller": "ST7735S",
+    "type": "SPI · 彩屏",
+    "example": true,
+    "group": "bar",
+    "panel": "ips",
+    "diag": 0.96,
+    "board": {
+      "box": [
+        30,
+        24
+      ],
+      "body": {
+        "shape": "rect",
+        "w": 30,
+        "h": 24,
+        "r": 1,
+        "color": "#16191f"
+      },
+      "glass": {
+        "w": 25,
+        "h": 13.6,
+        "y": 3,
+        "activeOffset": [
+          -0.6,
+          0
+        ]
+      },
+      "parts": [
+        {
+          "t": "pins",
+          "n": 8,
+          "x": 0,
+          "y": -9.4,
+          "dir": "h",
+          "labels": null
+        }
+      ]
+    },
+    "bus": "spi",
+    "firmware": {
+      "env": "esp32-s3-st7735-160x80",
+      "board": "ESP32-S3-DevKitC",
+      "wiring": [
+        [
+          "SCK",
+          "GPIO 12"
+        ],
+        [
+          "MOSI / SDA",
+          "GPIO 11"
+        ],
+        [
+          "CS",
+          "GPIO 10"
+        ],
+        [
+          "DC",
+          "GPIO 9"
+        ],
+        [
+          "RST",
+          "GPIO 8"
+        ],
+        [
+          "VCC",
+          "3V3"
+        ],
+        [
+          "GND",
+          "GND"
+        ],
+        [
+          "BL / BLK",
+          "3V3（常亮）"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "t-display-s3",
+    "name": "LilyGO T-Display-S3 1.9″",
+    "width": 320,
+    "height": 170,
+    "frame": "tft",
+    "controller": "ST7789",
+    "type": "SPI · 彩屏",
+    "example": true,
+    "group": "bar",
+    "panel": "ips",
+    "diag": 1.9,
+    "board": {
+      "box": [
+        62,
+        26
+      ],
+      "body": {
+        "shape": "rect",
+        "w": 62,
+        "h": 26,
+        "r": 2,
+        "color": "#121316"
+      },
+      "glass": {
+        "w": 47,
+        "h": 24.2,
+        "x": -2.4
+      },
+      "parts": [
+        {
+          "t": "usb",
+          "x": -29.2,
+          "y": 0,
+          "rot": 90
+        },
+        {
+          "t": "button",
+          "x": 27.6,
+          "y": -7,
+          "w": 2.8,
+          "h": 4.2,
+          "color": "#3a3d42"
+        },
+        {
+          "t": "button",
+          "x": 27.6,
+          "y": 7,
+          "w": 2.8,
+          "h": 4.2,
+          "color": "#3a3d42"
+        }
+      ]
+    },
+    "bus": "i8080",
+    "firmware": {
+      "env": "t-display-s3",
+      "board": "LilyGO T-Display-S3"
+    }
+  },
+  {
+    "id": "t-display-114",
+    "name": "LilyGO T-Display 1.14″",
+    "width": 240,
+    "height": 135,
+    "frame": "tft",
+    "controller": "ST7789",
+    "type": "SPI · 彩屏",
+    "example": true,
+    "group": "bar",
+    "panel": "ips",
+    "diag": 1.14,
+    "board": {
+      "box": [
+        51.5,
+        25
+      ],
+      "body": {
+        "shape": "rect",
+        "w": 51.5,
+        "h": 25,
+        "r": 2,
+        "color": "#121316"
+      },
+      "glass": {
+        "w": 30.2,
+        "h": 17.6,
+        "x": -4,
+        "activeOffset": [
+          -1.2,
+          0
+        ]
+      },
+      "parts": [
+        {
+          "t": "usb",
+          "x": -24.2,
+          "y": 0,
+          "rot": 90
+        },
+        {
+          "t": "button",
+          "x": 21.4,
+          "y": -7,
+          "w": 2.6,
+          "h": 3.6,
+          "color": "#3a3d42"
+        },
+        {
+          "t": "button",
+          "x": 21.4,
+          "y": 7,
+          "w": 2.6,
+          "h": 3.6,
+          "color": "#3a3d42"
+        },
+        {
+          "t": "chip",
+          "x": 13,
+          "y": 0,
+          "w": 7,
+          "h": 7
+        }
+      ]
+    },
+    "bus": "spi",
+    "firmware": {
+      "env": "t-display-st7789",
+      "board": "LilyGO T-Display"
+    }
+  },
+  {
+    "id": "m5stickc-plus2",
+    "name": "M5StickC Plus2",
+    "width": 135,
+    "height": 240,
+    "frame": "tft",
+    "controller": "ST7789V2",
+    "type": "开发套件 · 彩屏",
+    "example": true,
+    "group": "kit",
+    "panel": "ips",
+    "diag": 1.14,
+    "board": {
+      "box": [
+        24,
+        48
+      ],
+      "body": {
+        "shape": "rect",
+        "w": 24,
+        "h": 48,
+        "r": 4,
+        "color": "#f26a1f",
+        "plastic": true
+      },
+      "glass": {
+        "w": 20.6,
+        "h": 31,
+        "y": -6.6,
+        "r": 1.6
+      },
+      "parts": [
+        {
+          "t": "button",
+          "x": 0,
+          "y": 15,
+          "w": 10,
+          "h": 6.4,
+          "color": "#e4e5e8"
+        },
+        {
+          "t": "label",
+          "text": "M5",
+          "x": 0,
+          "y": 15.6,
+          "size": 2.4,
+          "color": "rgba(0,0,0,.55)"
+        }
+      ]
+    },
+    "bus": "spi",
+    "firmware": {
+      "env": "m5-stickc-plus2",
+      "board": "M5StickC Plus2"
+    }
+  },
+  {
+    "id": "m5-atoms3",
+    "name": "M5Stack AtomS3",
+    "width": 128,
+    "height": 128,
+    "frame": "tft",
+    "controller": "GC9107",
+    "type": "开发套件 · 彩屏",
+    "example": true,
+    "group": "kit",
+    "panel": "ips",
+    "diag": 0.85,
+    "board": {
+      "box": [
+        24,
+        24
+      ],
+      "body": {
+        "shape": "rect",
+        "w": 24,
+        "h": 24,
+        "r": 3.2,
+        "color": "#2a2c30",
+        "plastic": true
+      },
+      "glass": {
+        "w": 19.4,
+        "h": 19.4,
+        "r": 1.2
+      },
+      "parts": []
+    },
+    "bus": "spi",
+    "firmware": {
+      "env": "m5-atoms3",
+      "board": "M5Stack AtomS3"
+    }
+  },
+  {
+    "id": "m5-cores3",
+    "name": "M5Stack CoreS3",
+    "width": 320,
+    "height": 240,
+    "frame": "tft",
+    "controller": "ILI9342C",
+    "type": "开发套件 · 彩屏",
+    "example": true,
+    "group": "kit",
+    "panel": "ips",
+    "diag": 2,
+    "board": {
+      "box": [
+        54,
+        54
+      ],
+      "body": {
+        "shape": "rect",
+        "w": 54,
+        "h": 54,
+        "r": 4,
+        "color": "#2a2c30",
+        "plastic": true
+      },
+      "glass": {
+        "w": 48.6,
+        "h": 39,
+        "y": -2.6,
+        "r": 1.2
+      },
+      "parts": [
+        {
+          "t": "chip",
+          "x": 0,
+          "y": 21.8,
+          "w": 6,
+          "h": 2.4
+        }
+      ]
+    },
+    "bus": "spi",
+    "firmware": {
+      "env": "m5-cores3",
+      "board": "M5Stack CoreS3"
+    }
+  },
+  {
+    "id": "esp32-s3-box-3",
+    "name": "ESP32-S3-BOX-3",
+    "width": 320,
+    "height": 240,
+    "frame": "tft",
+    "controller": "ILI9342C",
+    "type": "开发套件 · 彩屏",
+    "example": true,
+    "group": "kit",
+    "panel": "ips",
+    "diag": 2.4,
+    "board": {
+      "box": [
+        64,
+        60
+      ],
+      "body": {
+        "shape": "rect",
+        "w": 64,
+        "h": 60,
+        "r": 8,
+        "color": "#e8eaee",
+        "plastic": true
+      },
+      "glass": {
+        "w": 56,
+        "h": 45,
+        "y": -3,
+        "r": 3
+      },
+      "parts": [
+        {
+          "t": "dot",
+          "x": 0,
+          "y": 24.8,
+          "d": 2.6,
+          "color": "#d4253a"
+        }
+      ]
+    },
+    "bus": "spi",
+    "firmware": {
+      "env": "esp32-s3-box-3",
+      "board": "Espressif ESP32-S3-BOX-3"
+    }
+  },
+  {
+    "id": "ssd1306-096",
+    "name": "通用 SSD1306 0.96″ OLED",
+    "width": 128,
+    "height": 64,
+    "frame": "oled",
+    "controller": "SSD1306",
+    "type": "I²C · 单色",
+    "example": true,
+    "group": "mono",
+    "panel": "oled",
+    "diag": 0.96,
+    "board": {
+      "box": [
+        27.3,
+        27.8
+      ],
+      "body": {
+        "shape": "rect",
+        "w": 27.3,
+        "h": 27.8,
+        "r": 1,
+        "color": "#1b4f9c"
+      },
+      "glass": {
+        "w": 26.7,
+        "h": 19.3,
+        "y": 1.2,
+        "activeOffset": [
+          0,
+          -1.2
+        ]
+      },
+      "parts": [
+        {
+          "t": "pins",
+          "n": 4,
+          "x": 0,
+          "y": -11.8,
+          "dir": "h",
+          "labels": [
+            "GND",
+            "VCC",
+            "SCL",
+            "SDA"
+          ]
+        },
+        {
+          "t": "holes",
+          "d": 2,
+          "pts": [
+            [
+              -11.6,
+              -12.2
+            ],
+            [
+              11.6,
+              -12.2
+            ],
+            [
+              -11.6,
+              12.2
+            ],
+            [
+              11.6,
+              12.2
+            ]
+          ]
+        }
+      ]
+    },
+    "bus": "i2c",
+    "firmware": {
+      "env": "esp32-ssd1306",
+      "board": "ESP32 DevKit（ESP32-WROOM-32）",
+      "wiring": [
+        [
+          "SDA",
+          "GPIO 21"
+        ],
+        [
+          "SCL",
+          "GPIO 22"
+        ],
+        [
+          "VCC",
+          "3V3"
+        ],
+        [
+          "GND",
+          "GND"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "ssd1306-091",
+    "name": "通用 SSD1306 0.91″ OLED",
+    "width": 128,
+    "height": 32,
+    "frame": "oled",
+    "controller": "SSD1306",
+    "type": "I²C · 单色",
+    "example": true,
+    "group": "mono",
+    "panel": "oled",
+    "diag": 0.91,
+    "board": {
+      "box": [
+        38,
+        12
+      ],
+      "body": {
+        "shape": "rect",
+        "w": 38,
+        "h": 12,
+        "r": 1,
+        "color": "#1b4f9c"
+      },
+      "glass": {
+        "w": 30,
+        "h": 11.5,
+        "x": 3,
+        "activeOffset": [
+          -1.6,
+          0
+        ]
+      },
+      "parts": [
+        {
+          "t": "pins",
+          "n": 4,
+          "x": -16.4,
+          "y": 0,
+          "dir": "v",
+          "labels": [
+            "GND",
+            "VCC",
+            "SCL",
+            "SDA"
+          ]
+        }
+      ]
+    },
+    "bus": "i2c",
+    "firmware": {
+      "env": "esp32-ssd1306-128x32",
+      "board": "ESP32 DevKit（ESP32-WROOM-32）",
+      "wiring": [
+        [
+          "SDA",
+          "GPIO 21"
+        ],
+        [
+          "SCL",
+          "GPIO 22"
+        ],
+        [
+          "VCC",
+          "3V3"
+        ],
+        [
+          "GND",
+          "GND"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "sh1106-13",
+    "name": "通用 SH1106 1.3″ OLED",
+    "width": 128,
+    "height": 64,
+    "frame": "oled",
+    "controller": "SH1106",
+    "type": "I²C · 单色",
+    "example": true,
+    "group": "mono",
+    "panel": "oled",
+    "diag": 1.3,
+    "board": {
+      "box": [
+        35.4,
+        33.5
+      ],
+      "body": {
+        "shape": "rect",
+        "w": 35.4,
+        "h": 33.5,
+        "r": 1,
+        "color": "#16191f"
+      },
+      "glass": {
+        "w": 34.5,
+        "h": 23,
+        "y": 2.4,
+        "activeOffset": [
+          0,
+          -1.4
+        ]
+      },
+      "parts": [
+        {
+          "t": "pins",
+          "n": 4,
+          "x": 0,
+          "y": -14.2,
+          "dir": "h",
+          "labels": [
+            "GND",
+            "VCC",
+            "SCL",
+            "SDA"
+          ]
+        },
+        {
+          "t": "holes",
+          "d": 2.6,
+          "pts": [
+            [
+              -15.2,
+              -14.4
+            ],
+            [
+              15.2,
+              -14.4
+            ],
+            [
+              -15.2,
+              14.4
+            ],
+            [
+              15.2,
+              14.4
+            ]
+          ]
+        }
+      ]
+    },
+    "bus": "i2c",
+    "firmware": {
+      "env": "esp32-sh1106",
+      "board": "ESP32 DevKit（ESP32-WROOM-32）",
+      "wiring": [
+        [
+          "SDA",
+          "GPIO 21"
+        ],
+        [
+          "SCL",
+          "GPIO 22"
+        ],
+        [
+          "VCC",
+          "3V3"
+        ],
+        [
+          "GND",
+          "GND"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "ili9341-cyd-28",
+    "name": "ESP32-2432S028 2.8″(黄板)",
+    "width": 320,
+    "height": 240,
+    "frame": "tft",
+    "controller": "ILI9341 + XPT2046",
+    "type": "SPI · 彩屏",
+    "example": true,
+    "group": "square",
+    "panel": "tn",
+    "diag": 2.8,
+    "board": {
+      "box": [
+        86,
+        50
+      ],
+      "body": {
+        "shape": "rect",
+        "w": 86,
+        "h": 50,
+        "r": 1.4,
+        "color": "#e2bd23"
+      },
+      "glass": {
+        "w": 69.2,
+        "h": 50,
+        "x": -5.6,
+        "activeOffset": [
+          -1.6,
+          0
+        ]
+      },
+      "parts": [
+        {
+          "t": "usb",
+          "x": 40.8,
+          "y": 14,
+          "rot": 90
+        },
+        {
+          "t": "holes",
+          "d": 3,
+          "pts": [
+            [
+              39.6,
+              -21.6
+            ]
+          ]
+        },
+        {
+          "t": "button",
+          "x": 37.6,
+          "y": -6,
+          "w": 3.4,
+          "h": 3,
+          "color": "#3a3d42"
+        },
+        {
+          "t": "button",
+          "x": 37.6,
+          "y": 2,
+          "w": 3.4,
+          "h": 3,
+          "color": "#3a3d42"
+        }
+      ]
+    },
+    "bus": "spi",
+    "firmware": {
+      "env": "cyd-ili9341",
+      "board": "ESP32-2432S028（CYD）"
+    }
+  },
+  {
+    "id": "ili9488-35",
+    "name": "通用 3.5″ SPI 屏 480×320",
+    "width": 480,
+    "height": 320,
+    "frame": "tft",
+    "controller": "ILI9488",
+    "type": "SPI · 彩屏",
+    "example": true,
+    "group": "square",
+    "panel": "ips",
+    "diag": 3.5,
+    "board": {
+      "box": [
+        98,
+        56
+      ],
+      "body": {
+        "shape": "rect",
+        "w": 98,
+        "h": 56,
+        "r": 1.4,
+        "color": "#1d4f9f"
+      },
+      "glass": {
+        "w": 85,
+        "h": 55,
+        "x": -3,
+        "activeOffset": [
+          -1.6,
+          0
+        ]
+      },
+      "parts": [
+        {
+          "t": "pins",
+          "n": 14,
+          "x": 45.4,
+          "y": 0,
+          "dir": "v",
+          "labels": null
+        },
+        {
+          "t": "holes",
+          "d": 3,
+          "pts": [
+            [
+              -45.6,
+              -24.6
+            ],
+            [
+              -45.6,
+              24.6
+            ]
+          ]
+        }
+      ]
+    },
+    "bus": "spi18",
+    "firmware": {
+      "env": "esp32-s3-ili9488",
+      "board": "ESP32-S3-DevKitC",
+      "wiring": [
+        [
+          "SCK",
+          "GPIO 12"
+        ],
+        [
+          "MOSI / SDA",
+          "GPIO 11"
+        ],
+        [
+          "CS",
+          "GPIO 10"
+        ],
+        [
+          "DC",
+          "GPIO 9"
+        ],
+        [
+          "RST",
+          "GPIO 8"
+        ],
+        [
+          "VCC",
+          "3V3"
+        ],
+        [
+          "GND",
+          "GND"
+        ],
+        [
+          "BL / BLK",
+          "3V3（常亮）"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "st7701-40-86",
+    "name": "通用 4.0″ 480×480 方屏(86 面板)",
+    "width": 480,
+    "height": 480,
+    "frame": "tft",
+    "controller": "ST7701S + GT911",
+    "type": "SPI · 彩屏",
+    "example": true,
+    "group": "square",
+    "panel": "ips",
+    "diag": 4,
+    "board": {
+      "box": [
+        86,
+        86
+      ],
+      "body": {
+        "shape": "rect",
+        "w": 86,
+        "h": 86,
+        "r": 3,
+        "color": "#121316",
+        "plastic": true
+      },
+      "glass": {
+        "w": 84,
+        "h": 84,
+        "r": 2.4
+      },
+      "parts": []
+    },
+    "bus": "rgb",
+    "firmware": {
+      "env": "guition-4848s040",
+      "board": "Guition ESP32-4848S040（86 面板）"
+    }
+  }
+]

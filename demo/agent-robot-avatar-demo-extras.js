@@ -47,8 +47,13 @@ const RANDOM_LABELS = Object.freeze({
 });
 
 const WRAP_WAITING_LABELS = Object.freeze({
-  'zh-CN':'等待 · 环绕', 'zh-TW':'等待 · 環繞', en:'Waiting · Wrap', ja:'待機 · 回り込み',
-  ko:'대기 · 감싸기', es:'Espera · Envoltura', pt:'Espera · Contorno', de:'Warten · Umlauf', fr:'Attente · Enveloppement',
+  'zh-CN':'等待 · 滚动', 'zh-TW':'等待 · 滾動', en:'Waiting · Scroll', ja:'待機 · 回り込み',
+  ko:'대기 · 감싸기', es:'Espera · Envoltura', pt:'Espera · Contorno', de:'Warten · Umlauf', fr:'Attente · Boucle',
+});
+
+const WAVE_WAITING_LABELS = Object.freeze({
+  'zh-CN':'等待 · 波动', 'zh-TW':'等待 · 波動', en:'Waiting · Wave', ja:'待機 · ウェーブ',
+  ko:'대기 · 물결', es:'Espera · Onda', pt:'Espera · Onda', de:'Warten · Welle', fr:'Attente · Vague',
 });
 
 function activeLanguage(table) {
@@ -82,9 +87,10 @@ function syncActionLabels() {
   const failure = FAILURE_LABELS[activeLanguage(FAILURE_LABELS)];
   const love = LOVE_LABELS[activeLanguage(LOVE_LABELS)];
   const random = RANDOM_LABELS[activeLanguage(RANDOM_LABELS)];
-  const inspectButton = ensureActionButton('inspect', 'warning');
+  const inspectButton = ensureActionButton('inspect', 'wary');
   const failureButton = ensureActionButton('failure', 'success');
-  const wrapButton = ensureActionButton('waiting-wrap', 'waiting');
+  const wrapButton = ensureActionButton('waiting-wrap', 'waiting-spin');
+  const waveButton = ensureActionButton('waiting-wave', 'waiting-wrap');
   // New actions go at the very end of the row, in the order they were added.
   const loveButton = ensureActionButton('love', 'wake');
   const randomButton = ensureActionButton('random', 'love');
@@ -94,16 +100,10 @@ function syncActionLabels() {
   if (loveButton) loveButton.textContent = love.action;
   if (randomButton) randomButton.textContent = random.action;
   if (wrapButton) wrapButton.textContent = WRAP_WAITING_LABELS[activeLanguage(WRAP_WAITING_LABELS)];
-}
-
-function applyDefaultAntennaFlashOff() {
-  const toggle = document.getElementById('demoAntennaFlash');
-  if (!toggle) return;
-  toggle.checked = false;
-  const face = document.getElementById('face');
-  face?.setAntennaFlash?.(false);
-  const dot = face?.shadowRoot?.getElementById('antennaDot');
-  if (dot) dot.style.opacity = '1';
+  if (waveButton) {
+    waveButton.textContent = WAVE_WAITING_LABELS[activeLanguage(WAVE_WAITING_LABELS)];
+    markAsNew(waveButton);
+  }
 }
 
 function mountWaitingSync() {
@@ -125,6 +125,7 @@ function mountStateLabels() {
   const status = document.getElementById('status');
   if (!face || !status) return;
   face.addEventListener('face-state', event => {
+    if (document.documentElement.dataset.demoIntro) return;
     const state = event.detail?.state;
     if (state === 'inspect') {
       const t = INSPECT_LABELS[activeLanguage(INSPECT_LABELS)];
@@ -144,17 +145,16 @@ function mountStateLabels() {
 
 function mountExtras() {
   syncActionLabels();
-  applyDefaultAntennaFlashOff();
   mountWaitingSync();
   mountStateLabels();
 
   new MutationObserver(() => {
     syncActionLabels();
   }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
-
 }
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mountExtras, { once: true });
 else mountExtras();
 
 export { mountExtras };
+

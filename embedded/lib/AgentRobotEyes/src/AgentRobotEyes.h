@@ -7,9 +7,15 @@
 namespace agent_robot {
 
 enum class Action : uint8_t {
-  Idle, Bored, Waiting, WaitingWrap, Input, Send, Success, Failure,
-  Warning, Inspect, Blocked, Error, Surprise, Love, Random, Sleep, Wake, Count
+  Idle, Bored, WaitingSpin, WaitingWrap, Input, Affirm, Success, Failure,
+  Wary, Inspect, Angry, Refuse, Surprise, Love, Random, Sleep, Wake,
+  WaitingWave, Count // Append new actions to preserve existing numeric IDs.
 };
+
+// How far idle gaze moves the eyes in the 160 x 100 face area. Small is the
+// original reach (8 x 6). Medium reaches the edge of the face area. Large goes
+// slightly past it, narrowing the eyes near the edge like the Web avatar does.
+enum class GazeRange : uint8_t { Small, Medium, Large };
 
 struct EyesConfig {
   uint16_t width = 240;
@@ -17,6 +23,18 @@ struct EyesConfig {
   uint8_t maxFps = 30;
   bool autoBlink = true;
   uint16_t transitionMs = 240;
+  GazeRange gazeRange = GazeRange::Medium;
+};
+
+enum class FitMode : uint8_t { Contain, Cover };
+enum class ScreenShape : uint8_t { Rectangle, Circle };
+struct EyesLayout {
+  // Zero width/height uses the remaining framebuffer area from x/y.
+  uint16_t x = 0, y = 0, width = 0, height = 0;
+  FitMode fit = FitMode::Contain;
+  ScreenShape shape = ScreenShape::Rectangle;
+  float zoom = 1; // [0.25, 3], applied after automatic aspect-ratio fit
+  float offsetX = 0, offsetY = 0; // [-1, 1], relative to half the viewport
 };
 
 class Eyes {
@@ -34,11 +52,20 @@ class Eyes {
   void wake(uint32_t now);
   // Explicit host-controlled gaze. This never installs pointer/touch listeners.
   void lookAt(float x, float y); // normalized [-1, 1]
+  // Changes how far lookAt() moves the eyes; keeps the current animation.
+  bool setGazeRange(GazeRange range);
+  // Changes frame rate, blinking and transition time without restarting the
+  // current action (begin() resets everything). Same limits as begin().
+  bool setTiming(uint8_t maxFps, bool autoBlink, uint16_t transitionMs);
+  // Layout changes preserve the current animation. Circle requires a square
+  // framebuffer; pixels outside the visible circle are cleared in the bitmap.
+  bool setLayout(const EyesLayout& layout);
+  static uint32_t actionDuration(Action action) { return duration(action); }
   // Non-blocking; returns true only when a new bitmap is available to flush.
   bool update(uint32_t now);
 
   Action action() const { return action_; }
-  bool isWaiting() const { return action_ == Action::Waiting || action_ == Action::WaitingWrap; }
+  bool isWaiting() const { return action_ == Action::WaitingSpin || action_ == Action::WaitingWrap || action_ == Action::WaitingWave; }
   bool isSleeping() const { return action_ == Action::Sleep; }
   const uint8_t* data() const { return buffer_; }
   uint16_t width() const { return config_.width; }
@@ -51,10 +78,11 @@ class Eyes {
 
  private:
   struct Eye {
-    float x, y, rx, ry, angle, top, bottom, topSlope, bottomSlope;
+    float x, y, rx, ry, angle, top, bottom, topSlope, bottomSlope, corner, cornerY;
   };
   struct Pose { Eye left, right; };
   static Pose neutral();
+  static Pose webPose(Action action, uint32_t elapsed);
   static Eye mixEye(const Eye& a, const Eye& b, float t);
   static Pose mix(const Pose& a, const Pose& b, float t);
   static uint32_t duration(Action action);
@@ -64,6 +92,7 @@ class Eyes {
   void setPixel(int x, int y);
 
   EyesConfig config_;
+  EyesLayout layout_;
   uint8_t* buffer_ = nullptr;
   size_t bytes_ = 0;
   uint16_t stride_ = 0;
@@ -72,6 +101,8 @@ class Eyes {
   Pose from_ = neutral(), current_ = neutral();
   float lookX_ = 0, lookY_ = 0;
   bool force_ = true, sleepRendered_ = false;
+  bool crossfade_ = false;
 };
 
 } // namespace agent_robot
+

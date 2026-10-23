@@ -2,30 +2,42 @@ export type AgentRobotAvatarAction =
   | 'idle'
   | 'bored'
   | 'waiting'
-  | 'wait'
+  | 'waiting-spin'
   | 'waiting-wrap'
+  | 'waiting-wave'
   | 'input'
-  | 'send'
+  | 'affirm'
   | 'success'
   | 'failure'
+  | 'wary'
+  | 'inspect'
+  | 'angry'
+  | 'refuse'
+  | 'surprise'
+  | 'love'
+  | 'random'
+  | 'sleep'
+  | 'wake'
+  | AgentRobotAvatarDeprecatedAction;
+
+/**
+ * Older names that still play the same action but log a one-time deprecation
+ * notice. They are removed in 1.0.
+ */
+export type AgentRobotAvatarDeprecatedAction =
+  | 'wait'
+  | 'send'
   | 'failed'
   | 'fail'
   | 'warning'
-  | 'inspect'
   | 'verify'
   | 'review'
-  | 'angry'
   | 'blocked'
   | 'policy-blocked'
   | 'error'
   | 'system-error'
   | 'connection-error'
-  | 'surprise'
-  | 'love'
-  | 'random'
-  | 'slot'
-  | 'sleep'
-  | 'wake';
+  | 'slot';
 
 export type AgentRobotAvatarState =
   | 'idle'
@@ -39,8 +51,8 @@ export type AgentRobotAvatarState =
   | 'love'
   | 'random'
   | 'waiting'
-  | 'warning'
-  | 'error'
+  | 'wary'
+  | 'refuse'
   | 'inspect'
   | 'failure'
   | 'squeeze'
@@ -51,14 +63,13 @@ export type AgentRobotAvatarCanonicalAction =
   | 'bored'
   | 'waiting'
   | 'input'
-  | 'send'
+  | 'affirm'
   | 'success'
   | 'failure'
-  | 'warning'
+  | 'wary'
   | 'inspect'
   | 'angry'
-  | 'blocked'
-  | 'error'
+  | 'refuse'
   | 'surprise'
   | 'love'
   | 'random'
@@ -73,7 +84,7 @@ export type AgentRobotAvatarActionSource = 'api' | 'interaction' | 'automatic';
 export type AgentRobotAvatarWakeOn = 'activity' | 'interaction' | 'manual';
 export type AgentRobotAvatarMotion = 'auto' | 'reduce' | 'full';
 export interface AgentRobotAvatarWaitingOptions {
-  variant?: 'default' | 'wrap';
+  variant?: 'default' | 'spin' | 'wrap' | 'wave';
 }
 
 export interface AgentRobotAvatarActionStateDetail {
@@ -97,6 +108,7 @@ export declare class AgentRobotAvatar extends HTMLElement {
   startWaiting(options?: AgentRobotAvatarWaitingOptions): Promise<this>;
   stopWaiting(): this;
   setPointerFollow(enabled?: boolean): this;
+  /** @deprecated Removed in 0.6; does nothing and logs a one-time notice. Deleted in 1.0. */
   setAntennaFlash(enabled?: boolean): this;
   setPressSqueeze(enabled?: boolean): this;
   setAntennaDrag(enabled?: boolean): this;
@@ -126,3 +138,4 @@ declare global {
     'agent-robot-avatar': AgentRobotAvatar;
   }
 }
+

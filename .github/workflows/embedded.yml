@@ -3,9 +3,9 @@ name: Embedded Eyes
 on:
   push:
     branches: [main]
-    paths: ['embedded/**', '.github/workflows/embedded.yml']
+    paths: ['embedded/**', 'src/**', '.github/workflows/embedded.yml']
   pull_request:
-    paths: ['embedded/**', '.github/workflows/embedded.yml']
+    paths: ['embedded/**', 'src/**', '.github/workflows/embedded.yml']
 
 permissions:
   contents: read
@@ -24,7 +24,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        environment: [esp32-s3-st7789, pico-st7789, esp32-ssd1306]
+        environment: [esp32-s3-st7789, pico-st7789, esp32-ssd1306, esp32-s3-gc9a01, waveshare-s3-round-128,
+          esp32-s3-st7789-240x280, esp32-s3-st7789-240x320, cyd-ili9341, t-display-st7789, t-display-s3,
+          m5-dial, m5-atoms3, m5-cores3, m5-stickc-plus2, esp32-ssd1306-128x32, esp32-sh1106,
+          esp32-s3-st7789-240x135, esp32-s3-st7789-320x240, esp32-s3-st7735-128x160, esp32-s3-st7735-160x80,
+          esp32-s3-ili9488, xiao-round-display, esp32-s3-box-3, waveshare-amoled-175, t-rgb-21, guition-4848s040]
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v5
@@ -42,3 +46,45 @@ jobs:
             embedded/.pio/build/${{ matrix.environment }}/firmware.bin
             embedded/.pio/build/${{ matrix.environment }}/firmware.uf2
           if-no-files-found: error
+
+  offline-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pinned build-only WASM toolchain
+        run: |
+          python -m pip install ziglang==0.13.0
+          python -c "import pathlib, ziglang, os; p=pathlib.Path(ziglang.__file__).parent/'zig'; open(os.environ['GITHUB_ENV'],'a').write('ZIG='+str(p)+'\n')"
+      - name: Check committed preview source freshness and native/WASM parity
+        run: node embedded/tools/test-preview.mjs
+      - name: Rebuild self-contained preview
+        run: |
+          node embedded/tools/build-preview.mjs
+          git diff --exit-code -- embedded/preview/agent-robot-eyes-preview.html
+      - name: Install browser test dependencies
+        run: |
+          npm ci
+          npm install --no-save --package-lock=false @resvg/resvg-js@2.6.2
+          npx playwright install --with-deps chromium firefox webkit
+      - name: Compare against the original Web expression SVGs
+        run: |
+          node embedded/tools/sample-web-expressions.mjs
+          git diff --exit-code -- embedded/lib/AgentRobotEyes/src/AgentRobotWebMotion.h embedded/tests/web-reference.json embedded/tests/web-visual-reference.json
+          node embedded/tools/test-web-fidelity.mjs
+      - name: Test local file offline in Chromium, Firefox and WebKit
+        run: |
+          node embedded/tools/test-preview-ui.mjs
+          PREVIEW_BROWSER=firefox node embedded/tools/test-preview-ui.mjs
+          PREVIEW_BROWSER=webkit node embedded/tools/test-preview-ui.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: offline-eyes-preview
+          path: embedded/preview/agent-robot-eyes-preview.html
+

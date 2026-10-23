@@ -1,15 +1,15 @@
 const PRESET_VALUES = Object.freeze([0, 50, 100]);
 
 const LABELS = Object.freeze({
-  'zh-CN': { roundness: '头部圆角', free: '自由' },
-  'zh-TW': { roundness: '頭部圓角', free: '自由' },
-  en: { roundness: 'Head roundness', free: 'Free' },
-  ja: { roundness: 'ヘッドの丸み', free: '自由' },
-  ko: { roundness: '머리 둥글기', free: '자유' },
-  es: { roundness: 'Redondez', free: 'Libre' },
-  pt: { roundness: 'Arredondamento', free: 'Livre' },
-  de: { roundness: 'Kopfrundung', free: 'Frei' },
-  fr: { roundness: 'Arrondi', free: 'Libre' },
+  'zh-CN': { roundness: '头部外观', free: '自由' },
+  'zh-TW': { roundness: '頭部外觀', free: '自由' },
+  en: { roundness: 'Head shape', free: 'Free' },
+  ja: { roundness: 'ヘッドの形', free: '自由' },
+  ko: { roundness: '머리 모양', free: '자유' },
+  es: { roundness: 'Forma de la cabeza', free: 'Libre' },
+  pt: { roundness: 'Formato da cabeça', free: 'Livre' },
+  de: { roundness: 'Kopfform', free: 'Frei' },
+  fr: { roundness: 'Forme de la tête', free: 'Libre' },
 });
 
 function activeLanguage() {

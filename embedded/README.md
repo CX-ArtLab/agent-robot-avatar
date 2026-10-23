@@ -2,7 +2,7 @@
 
 [简体中文](README.zh-CN.md) · [Main project](../README.md)
 
-An **experimental**, portable C++11 implementation of the Agent Robot Avatar eye expressions. It renders eyes only, with no head, antenna, dragging, squeezing, pointer listeners, network client or AI model. The Web component and demo are unchanged.
+An **experimental**, portable C++11 implementation of the Agent Robot Avatar eye expressions. It renders eyes only, with no head, antenna, dragging, squeezing, pointer listeners, network client or AI model. The embedded package is independent of the SVG component and its Demo UI.
 
 The expression engine is independent of ESP32, Arduino and the display driver. ESP32 and Raspberry Pi Pico are reference integrations, not a promise of compatibility with every board or display. **Compilation and host tests do not certify physical hardware performance, wiring or visual fidelity.** No physical-board testing has been performed for this preview.
 
@@ -14,7 +14,13 @@ The expression engine is independent of ESP32, Arduino and the display driver. E
 - `tests/`: native engine tests, including framebuffer guards and 32-bit clock rollover.
 - `tools/render-frame.cpp`: host-only PBM frame renderer for inspecting the actual engine output.
 
-The Web and embedded implementations share expression names and visual design. They have **separate renderers**. This preview adapts eye motion for a small 1-bit raster surface; animation timing, anti-aliasing and head-dependent movements are not identical to the Web version.
+The Web and embedded implementations share expression names and visual design. They have **separate renderers**. The embedded engine interpolates geometry sampled from the original Web actions at 20 ms intervals, preserving their eye motion and timing on a small 1-bit raster surface. Anti-aliasing, head rendering and head-dependent silhouette clipping are excluded. See preview/README.md for the source-fidelity checks.
+
+## Offline animation preview (no hardware)
+
+Download [`preview/agent-robot-eyes-preview.html`](preview/agent-robot-eyes-preview.html) as a raw file and open it in a current browser, or double-click it in a local checkout. No server, compiler, Python, Node.js, CDN or network is needed to run the built file. Saving GitHub's file-view page is not the same as downloading the raw HTML.
+
+The preview runs **this exact embedded C++ engine compiled to WebAssembly**, not the separate Web avatar renderer. It offers 18 actions (17 original expressions plus the added waiting-wave variant), cycling/manual interruption, pause/step, playback speed, explicit gaze, blink/transition switches, and nine screen presets plus custom resolutions from 16 to 512 pixels per axis. Layout controls include aspect-preserving fit, crop-to-fill, zoom, offsets and circular clipping. Named presets use SVG front views of specific reference modules; see [artwork sources](preview/frames/README.md). TFT mode centers a 240×160 mask inside a 240×240 canvas, matching the Arduino example. OLED mode renders a 128×64 mask; it does not emulate the display driver's page conversion. Configuration changes restart the simulation, and hidden tabs freeze its clock. This validates animation, not board performance or screen electronics. See [preview/README.md](preview/README.md) for rebuilding and tests.
 
 ## Reference configurations
 
@@ -23,6 +29,26 @@ The Web and embedded implementations share expression names and visual design. T
 | `esp32-s3-st7789` | ESP32-S3-DevKitC-1 | ST7789, 240×240 SPI TFT | Build target; physical verification pending |
 | `pico-st7789` | Raspberry Pi Pico / RP2040 | ST7789, 240×240 SPI TFT | Build target; physical verification pending |
 | `esp32-ssd1306` | ESP32 Dev Module | SSD1306, 128×64 I²C OLED, address `0x3C` | Build target; physical verification pending |
+| `esp32-ssd1306-128x32` | ESP32 Dev Module | SSD1306, 128×32 I²C OLED, address `0x3C` | Build target; physical verification pending |
+| `esp32-sh1106` | ESP32 Dev Module | SH1106, 128×64 I²C OLED, address `0x3C` | Build target; physical verification pending |
+| `esp32-s3-gc9a01` | ESP32-S3-DevKitC-1 | GC9A01, 240×240 round SPI TFT (same wiring as `esp32-s3-st7789`) | Build target; physical verification pending |
+| `esp32-s3-st7789-240x280` | ESP32-S3-DevKitC-1 | ST7789, 240×280 SPI TFT (1.69″, same wiring) | Build target; physical verification pending |
+| `esp32-s3-st7789-240x320` | ESP32-S3-DevKitC-1 | ST7789, 240×320 SPI TFT (2.0″, same wiring) | Build target; physical verification pending |
+| `waveshare-s3-round-128` | Waveshare ESP32-S3-Touch-LCD-1.28 | GC9A01 on board (CLK 10, MOSI 11, CS 9, DC 8, RST 14, BL 2) | Build target; physical verification pending |
+| `cyd-ili9341` | ESP32-2432S028 “Cheap Yellow Display” | ILI9341 on HSPI (SCK 14, MOSI 13, MISO 12, CS 15, DC 2, BL 21) | Build target; physical verification pending |
+| `t-display-st7789` | LilyGO T-Display (ESP32) | ST7789 135×240 (SCK 18, MOSI 19, CS 5, DC 16, RST 23, BL 4), landscape | Build target; physical verification pending |
+| `t-display-s3` | LilyGO T-Display-S3 | ST7789 170×320, 8-bit parallel (Arduino_GFX), landscape | Build target; physical verification pending |
+| `m5-dial`, `m5-atoms3`, `m5-cores3`, `m5-stickc-plus2` | M5Stack Dial / AtomS3 / CoreS3 / StickC Plus2 | Built-in panels through M5Unified, which detects the board | Build target; physical verification pending |
+| `esp32-s3-st7789-240x135`, `esp32-s3-st7789-320x240` | ESP32-S3-DevKitC-1 | ST7789 1.14″ 240×135 and 2.0″ 320×240 modules, landscape (same wiring) | Build target; physical verification pending |
+| `esp32-s3-st7735-128x160`, `esp32-s3-st7735-160x80` | ESP32-S3-DevKitC-1 | ST7735 1.8″ 128×160 and 0.96″ 160×80 modules (same wiring) | Build target; physical verification pending |
+| `esp32-s3-ili9488` | ESP32-S3-DevKitC-1 | ILI9488 3.5″ 480×320, 18-bit SPI via Arduino_GFX (same wiring) | Build target; physical verification pending |
+| `xiao-round-display` | Seeed XIAO ESP32S3 + Round Display for XIAO | GC9A01 (CS D1, DC D3, BL D6) | Build target; physical verification pending |
+| `esp32-s3-box-3` | Espressif ESP32-S3-BOX-3 | ILI9342C 320×240 (pins from esp-bsp) | Build target; physical verification pending |
+| `waveshare-amoled-175` | Waveshare ESP32-S3-Touch-AMOLED-1.75 | CO5300 466×466 on quad SPI (pins from the ESPHome device page) | Build target; physical verification pending |
+| `t-rgb-21` | LilyGO T-RGB 2.1″ | ST7701S 480×480 RGB panel via XL9535, octal PSRAM | Build target; physical verification pending |
+| `guition-4848s040` | Guition ESP32-4848S040 (86 box) | ST7701S 480×480 RGB panel, octal PSRAM | Build target; physical verification pending |
+
+`examples/arduino/boards.h` holds one small display adapter per configuration; the main program is shared. Pin numbers follow the vendors' documentation (Waveshare wiki, LilyGO `pin_config.h`, the CYD community pin list). The Dial and StickC Plus2 build on the StampS3 and M5Stick-C board definitions of the pinned PlatformIO platform; M5Unified identifies the actual board at runtime. Round panels enable the core's circular layout. T-RGB, the Guition panel and the BOX-3 follow the device configurations bundled with Arduino_GFX 1.4.9; the AMOLED pins come from the ESPHome device page rather than a vendor file. Known things to check on real hardware: ST7735 boards come in several variants (try `INITR_GREENTAB` if the picture is offset or garbled); the CO5300 may need a small column offset; T-RGB revisions differ in their ST7701 init sequence. The eyes are white on black, so a swapped red/blue order does not show. If you run one of these on real hardware, please open a *Hardware report* issue so the preview can mark it as community-verified.
 
 The TFT example reserves a centered 240×160 eye viewport. Its mask is 4,800 bytes plus a 480-byte RGB565 conversion row. The OLED mask is 1,024 bytes; its driver also owns a display buffer. These numbers exclude the engine, driver and framework overhead. No PSRAM is required by the core. Actual frame rate depends on the CPU, screen and bus; the example's 25 FPS setting is a ceiling, not a measured throughput claim.
 
@@ -77,7 +103,7 @@ reset
 
 ## Embed the engine in another product
 
-Copy `lib/AgentRobotEyes` into an Arduino `libraries` folder, or compile its two source files into your C++11 application. For non-Arduino projects, no Arduino library is needed.
+Copy `lib/AgentRobotEyes` into an Arduino `libraries` folder, or compile its source directory into your C++11 application. For non-Arduino projects, no Arduino library is needed.
 
 ```cpp
 #include <AgentRobotEyes.h>
@@ -108,9 +134,11 @@ The application provides an advancing `uint32_t` millisecond clock. A clock roll
 
 ## Actions and lifecycle
 
-`idle`, `bored`, `waiting`, `waiting-wrap`, `input`, `send`, `success`, `failure`, `warning`, `inspect`, `blocked`, `error`, `surprise`, `love`, `random`, `sleep`, `wake`.
+`idle`, `bored`, `waiting-spin`, `waiting-wrap`, `input`, `affirm`, `success`, `failure`, `wary`, `inspect`, `angry`, `refuse`, `surprise`, `love`, `random`, `sleep`, `wake`, `waiting-wave`.
 
-Aliases: `angry` / `policy-blocked` → `blocked`; `system-error` / `connection-error` → `error`; `slot` → `random`.
+`waiting-wave` is an additional persistent waiting variant restored from the first experimental C++ implementation: two elliptical eyes bob with a 1400 ms period and staggered phase. The original waiting variants remain available. The SVG waiting-wave variant is separately tuned to three 1100 ms cycles; this hardware variant retains its earlier continuous 1400 ms motion. Its numeric ID is appended after `wake` to retain existing command IDs.
+
+The names match the Web avatar and describe what the eyes do. `waiting` also starts `waiting-spin`. Names from 0.5 still parse until 1.0: `wait` → `waiting-spin`; `send` → `affirm`; `warning` → `wary`; `blocked` / `policy-blocked` → `angry`; `error` / `system-error` / `connection-error` → `refuse`; `failed` / `fail` → `failure`; `verify` / `review` → `inspect`; `slot` → `random`. `Action::Affirm`, `Wary`, `Angry`, `Refuse` and `WaitingSpin` keep the numeric IDs of the old enumerators.
 
 - `play(name, nowMs)` returns false for an invalid command and leaves the active action unchanged.
 - One-shot expressions return to idle. Idle, waiting, input and sleep persist until another command.
@@ -118,7 +146,9 @@ Aliases: `angry` / `policy-blocked` → `blocked`; `system-error` / `connection-
 - Repeating the current waiting, input or sleep action does not restart it.
 - `stopWaiting(nowMs)` only stops waiting; it leaves other actions alone.
 - Settled sleep stops drawing. `wake(nowMs)` only acts when sleeping.
-- `lookAt(x,y)` clamps finite coordinates, normalizes non-finite input to zero, and does not wake sleeping eyes. Gaze is deliberately ignored during sleep, input and love.
+- `lookAt(x,y)` clamps finite coordinates, normalizes non-finite input to zero, and does not wake sleeping eyes. Gaze applies only to idle, preserving the original eye motion of active expressions.
+- `setTiming(maxFps, autoBlink, transitionMs)` changes frame rate, blinking and transition time without restarting the current action; it accepts the same ranges as `begin()`.
+- `EyesConfig::gazeRange` (or `setGazeRange()` at runtime) sets how far `lookAt(±1, ±1)` moves the eyes in the 160 × 100 face area: `Small` 8 × 6 (the original reach), `Medium` 20 × 18 (default; reaches the edge of the face area) and `Large` 30 × 21 (slightly past it). Near the edge the eyes narrow and shift inward with the Web avatar's formula, so a sideways look reads as turning. A centred gaze draws exactly the same pose at every range.
 - Dragging, head deformation, antenna controls and Web DOM events are not part of this API.
 
 ## Checks
@@ -146,3 +176,4 @@ g++ -std=c++11 -I embedded/lib/AgentRobotEyes/src \
 - [Adafruit GFX canvas and bitmap formats](https://learn.adafruit.com/adafruit-gfx-graphics-library/minimizing-redraw-flicker)
 
 The library is an original adaptation of this project's own expressions. Third-party display drivers remain under their own licenses; they are not copied into this library. Project support: [Ko-fi](https://ko-fi.com/P0E625WIOI).
+

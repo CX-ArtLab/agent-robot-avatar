@@ -6,7 +6,7 @@
 
 [English](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/README.md) | [简体中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-CN.md) | [Español](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.es.md) | [Русский](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ru.md) | [Français](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.fr.md) | [Português](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.pt.md) | [Deutsch](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.de.md) | [日本語](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ja.md) | [한국어](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ko.md) | [繁體中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-TW.md)
 
-![Version](https://img.shields.io/badge/version-v0.5.2-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](./LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
+![Version](https://img.shields.io/badge/version-v0.6.0-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](./LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
 ![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square)
 
@@ -47,7 +47,7 @@ Built with SVG and vanilla JavaScript, it works as a native custom element with 
 
 ## Embedded eyes (experimental)
 
-An independent, allocation-free C++11 eyes-only engine is available for embedded products. Reference builds cover ESP32-S3 with ST7789, ESP32 with SSD1306, and Raspberry Pi Pico / RP2040 with ST7789. Display adapters are separate from the expression engine. Physical hardware validation is pending; this is not a claim of universal board compatibility.
+An independent, allocation-free C++11 eyes-only engine draws the same 18 expressions on robot and dev-board screens. Firmware examples cover 26 board and screen configurations across ESP32, ESP32-S3 and RP2040 — ST7789, ST7735, GC9A01 round, ILI9341/9342/9488, CO5300 AMOLED, ST7701S RGB panels and SSD1306/SH1106 OLEDs, including LilyGO, M5Stack, Waveshare, Seeed and Espressif boards. Every example compiles in CI; none is verified on real hardware yet, so please send a hardware report if you try one.
 
 See the [embedded guide](https://github.com/CX-ArtLab/agent-robot-avatar/tree/main/embedded) and [中文说明](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/embedded/README.zh-CN.md). The Web component's installation and behavior are unchanged.
 
@@ -81,17 +81,19 @@ No initialization code is required. The avatar enters its default idle behavior 
 const avatar = document.querySelector('#avatar');
 
 avatar.play('success');
-avatar.play('warning');
-avatar.play('error');
+avatar.play('wary');
+avatar.play('refuse');
 
 avatar.reset();
 ```
 
 Available actions:
 
-`idle` · `bored` · `waiting` · `waiting-wrap` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `love` · `random` · `sleep` · `wake`
+`idle` · `bored` · `waiting-spin` · `waiting-wrap` · `waiting-wave` · `input` · `affirm` · `success` · `failure` · `wary` · `inspect` · `angry` · `refuse` · `surprise` · `love` · `random` · `sleep` · `wake`
 
-`failure` is intended for a task that completed unsuccessfully, while `error` is intended for connection, service, or system failures.
+`waiting-wave` plays three 1.1-second waves: the eyes bob vertically with a staggered rhythm and amplitude of 10 SVG units, then settle. Use `startWaiting({ variant: 'wave' })` for seamless continuous waiting, and `stopWaiting()` to stop. It honors the component's reduced-motion setting and reports the canonical `waiting` action lifecycle.
+
+Action names describe what the avatar does. `refuse` shakes the head, for a request the Agent cannot or will not carry out; `failure` is for a task or connection that did not succeed; `wary` turns the head and gives a guarded up-and-down look, for an action that needs confirmation. Names from 0.5 (`send`, `warning`, `error`, `blocked` and others) still work with a console notice until 1.0; see the [upgrade table](CHANGELOG.md#upgrading-from-05x).
 
 `love` expresses affection or thanks: the two eyes lean together into a single heart, beat three times, then return.
 
@@ -105,11 +107,14 @@ avatar.startWaiting();
 // Alternative waiting motion: eyes turn out through one side and return through the other.
 avatar.startWaiting({ variant: 'wrap' });
 
+// Alternative waiting motion: staggered vertical eye waves.
+avatar.startWaiting({ variant: 'wave' });
+
 try {
   const result = await runAgentRequest();
   await avatar.play(result.ok ? 'success' : 'failure');
 } catch (error) {
-  await avatar.play('error');
+  await avatar.play('failure');
 }
 ```
 
@@ -140,7 +145,6 @@ Common runtime controls:
 ```js
 avatar.setPointerFollow(false);
 avatar.setHeadRoundness(75);
-avatar.setAntennaFlash(true);
 avatar.setPressSqueeze(true);
 avatar.setAntennaDrag(true);
 ```
@@ -167,7 +171,7 @@ Issues and pull requests are welcome. See [`CONTRIBUTING.md`](./CONTRIBUTING.md)
 
 ## Project status
 
-**Current public version: v0.5.2**
+**Current public version: v0.6.0**
 
 The public API is intentionally kept compact while the project evolves toward a future `1.0.0` stability commitment.
 
@@ -190,4 +194,5 @@ MIT License. See [`LICENSE`](./LICENSE).
 If this project is useful to you, you can buy me a coffee.
 
 <a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+
 

@@ -6,7 +6,7 @@
 
 [English](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/README.md) | [简体中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-CN.md) | [Español](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.es.md) | [Русский](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ru.md) | [Français](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.fr.md) | [Português](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.pt.md) | [Deutsch](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.de.md) | [日本語](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ja.md) | [한국어](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ko.md) | [繁體中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-TW.md)
 
-![Version](https://img.shields.io/badge/version-v0.5.2-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
+![Version](https://img.shields.io/badge/version-v0.6.0-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
 ![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square)
 
@@ -75,17 +75,17 @@ import 'agent-robot-avatar';
 const avatar = document.querySelector('#avatar');
 
 avatar.play('success');
-avatar.play('warning');
-avatar.play('error');
+avatar.play('wary');
+avatar.play('refuse');
 
 avatar.reset();
 ```
 
 可用動作：
 
-`idle` · `bored` · `waiting` · `waiting-wrap` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `love` · `random` · `sleep` · `wake`
+`idle` · `bored` · `waiting-spin` · `waiting-wrap` · `waiting-wave` · `input` · `affirm` · `success` · `failure` · `wary` · `inspect` · `angry` · `refuse` · `surprise` · `love` · `random` · `sleep` · `wake`
 
-`failure` 用於表示任務執行完成但結果失敗；`error` 用於連線、服務或系統錯誤。
+動作名描述的是頭像做出的樣子：`refuse` 是搖頭，用於 Agent 不能或不會執行某個請求；`failure` 用於任務或連線沒有成功；`wary` 是側頭、上下打量的警惕眼神，用於需要使用者確認的操作。0.5 版的舊名字（`send`、`warning`、`error`、`blocked` 等）在 1.0 之前仍可使用，但會在主控台提示改名，詳見[升級對照表](../CHANGELOG.md#upgrading-from-05x)。
 
 `love` 用於表達喜歡或感謝：兩隻眼睛向中間靠攏合成一顆愛心，跳動三下後恢復。
 
@@ -103,7 +103,7 @@ try {
   const result = await runAgentRequest();
   await avatar.play(result.ok ? 'success' : 'failure');
 } catch (error) {
-  await avatar.play('error');
+  await avatar.play('failure');
 }
 ```
 
@@ -134,7 +134,6 @@ try {
 ```js
 avatar.setPointerFollow(false);
 avatar.setHeadRoundness(75);
-avatar.setAntennaFlash(true);
 avatar.setPressSqueeze(true);
 avatar.setAntennaDrag(true);
 ```
@@ -161,7 +160,7 @@ avatar.setAntennaDrag(true);
 
 ## 專案狀態
 
-**目前公開版本：v0.5.2**
+**目前公開版本：v0.6.0**
 
 公開 API 會在未來 `1.0.0` 穩定性承諾前繼續保持精簡並謹慎演進。
 

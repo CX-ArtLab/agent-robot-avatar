@@ -1,8 +1,9 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" translate="no">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="google" content="notranslate" />
 <title>Agent Robot Avatar — Interactive Demo</title>
 <script>document.documentElement.classList.add("demo-initializing");</script>
 <link rel="modulepreload" href="../agent-robot-avatar.js">
@@ -27,7 +28,9 @@
   button{border:0;background:#f1f2f3;padding:8px 11px;border-radius:10px;font-size:12px;color:#333;cursor:pointer;white-space:nowrap}
   button:hover{background:#e7e8ea} button:active{transform:translateY(1px)}
   .controls button.is-new{position:relative}
-  .controls button.is-new::after{content:attr(data-new);position:absolute;top:-6px;right:-6px;padding:2px 5px;border-radius:999px;background:#e5484d;color:#fff;font:700 8px/1 Inter,system-ui,sans-serif;letter-spacing:.05em;pointer-events:none;box-shadow:0 2px 6px rgba(229,72,77,.35)}
+  /* New features are marked with a small red dot in the corner. */
+  .controls button.is-new::after,.demo-panel-toggle.is-new::after{content:'';position:absolute;top:3px;right:3px;width:7px;height:7px;border-radius:50%;background:#e5484d;box-shadow:0 0 0 2px rgba(255,255,255,.95);pointer-events:none}
+  .demo-panel-toggle.is-new{position:relative}
   .status-pill{position:absolute;left:28px;bottom:25px;font-size:11px;color:#858990;background:#fff;border:1px solid #ececec;border-radius:999px;padding:6px 10px}
   .follow-control{position:absolute;right:28px;bottom:24px;display:inline-flex;align-items:center;gap:9px;padding:6px 9px 6px 11px;border:1px solid #e2e3e5;border-radius:999px;background:rgba(255,255,255,.92);color:#777c83;font-size:11px;font-weight:600;white-space:nowrap;user-select:none}
   .follow-control input{position:absolute;opacity:0;pointer-events:none}
@@ -61,9 +64,9 @@
   .expression-tag{display:inline-flex;align-items:center;gap:5px;margin:9px 0 0;padding:4px 8px;border-radius:999px;font-size:10px;line-height:1.1;font-weight:650;letter-spacing:.01em;border:1px solid transparent}
   .expression-tag::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.62}
   .expression-tag.success{background:#e9f5ec;border-color:#d4ead9;color:#6e9277}
-  .expression-tag.warning{background:#fff5dc;border-color:#efe0b6;color:#9a7c38}
+  .expression-tag.wary{background:#fff5dc;border-color:#efe0b6;color:#9a7c38}
   .expression-tag.angry{background:#faecef;border-color:#f1d7dd;color:#a36f78}
-  .expression-tag.error{background:#eaf1f6;border-color:#d8e3ea;color:#718897}
+  .expression-tag.refuse{background:#eaf1f6;border-color:#d8e3ea;color:#718897}
   .expression-tag.surprise{background:#eaf2fa;border-color:#d5e3f0;color:#6f89a2}
   .expression-tag.bored{background:#f0edf7;border-color:#e2dced;color:#86799a}
   .typing .bubble{color:#9a9da2;letter-spacing:.14em;min-width:52px;text-align:center}
@@ -87,13 +90,37 @@
     .demo-control-stack{position:absolute;left:50%;top:calc(39% + 128px);transform:translateX(-50%);width:min(900px,calc(100% - 56px));z-index:20;display:grid;gap:8px}
     .demo-control-stack>.controls{position:static;left:auto;top:auto;transform:none;max-width:none;width:100%;margin:0;overflow:visible;display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
     .demo-control-stack>.controls button{width:auto!important;min-width:0;flex:0 0 auto!important}
-    .demo-options{display:grid;gap:7px;width:max-content;max-width:100%;justify-items:center;padding:0;border:0;background:transparent;box-shadow:none;color:#72777e;font-size:11px}
-    .demo-panel-toolbar{display:flex;align-items:center;justify-content:center;gap:6px;padding:5px;border:1px solid rgba(0,0,0,.055);border-radius:12px;background:rgba(255,255,255,.82);box-shadow:0 6px 22px rgba(0,0,0,.055);backdrop-filter:blur(14px)}
+    .demo-options{display:grid;gap:7px;width:100%;max-width:100%;justify-items:center;padding:0;border:0;background:transparent;box-shadow:none;color:#72777e;font-size:11px}
+    /* One card for the toolbar row: groups spread with the card, icons keep their spacing. */
+    .demo-panel-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-width:276px;padding:6px 8px;border-radius:16px;background:rgba(255,255,255,.88);box-shadow:0 7px 30px rgba(0,0,0,.08);backdrop-filter:blur(14px)}
+    .demo-toolbar-group{display:flex;align-items:center;gap:6px}
+    /* Color panel: one strip of brand swatches; hovering previews, the caption names it. */
+    .demo-options-group.demo-color-group{display:grid;gap:8px;width:100%!important;contain:inline-size;padding:10px 12px 8px}
+    .demo-swatches{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 4px}
+    /* Each swatch is the background with a small head-colored block in the middle. */
+    .demo-swatch{--swatch-top:var(--swatch-bg);--swatch-bottom:var(--swatch-head);position:relative;width:26px;height:26px;padding:0;border-radius:7px;background:var(--swatch-top);box-shadow:inset 0 0 0 1px rgba(0,0,0,.1);transition:transform .15s ease,box-shadow .15s ease}
+    .demo-swatch::before{content:'';position:absolute;left:50%;top:50%;width:12px;height:11px;margin:-5.5px 0 0 -6px;border-radius:3.5px;background:var(--swatch-bottom)}
+    .demo-swatch:hover{background:var(--swatch-top);transform:translateY(-2px) scale(1.08)}
+    .demo-swatch:active{transform:none}
+    .demo-swatch:focus-visible{outline:2px solid #aeb2b8;outline-offset:2px}
+    .demo-swatch[aria-pressed=true]{box-shadow:0 0 0 2px #25282c}
+    .demo-swatch[aria-pressed=true]:hover{transform:none}
+    .demo-palette-caption{margin:0;min-height:14px;color:#5f646a;font:600 11px/14px Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;text-align:center}
+    .demo-caption-extra{color:#a0a4aa;font-weight:500}
+    .demo-palette-caption.demo-caption-hint{color:#a0a4aa;font-weight:500}
+    .demo-color-custom{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px;padding-top:8px;border-top:1px solid rgba(0,0,0,.06)}
+    .demo-icon-option{border:0;color:#656a70;font:600 11px/1 Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;cursor:pointer}
+    .demo-icon-option:hover{background:#e9eaec}
+    .demo-swap-button{padding:4px 7px!important}
+    .demo-icon-option svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .demo-palette-note{margin:0;color:#a0a4aa;font-size:9px;line-height:1.4;text-align:center}
+    @media(prefers-reduced-motion:reduce){.demo-swatch{transition:none}}
     .demo-panel-toggle{width:34px!important;height:34px!important;padding:0!important;border:0!important;border-radius:9px!important;background:#f4f5f6!important;color:#72777e!important;display:grid!important;place-items:center!important;cursor:pointer!important}
     .demo-panel-toggle:hover{background:#e9eaec!important}
     .demo-panel-toggle.demo-panel-open{background:#dfe1e4!important;color:#25282c!important}
     .demo-panel-toggle svg{width:18px;height:18px;display:block;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
     .demo-panel-toggle svg .demo-palette-dot{fill:currentColor}
+    .demo-panel-toggle svg .demo-dice-dot{fill:currentColor;stroke:none}
     .demo-options-group{display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap;width:max-content;max-width:100%;padding:7px 9px;border:1px solid rgba(0,0,0,.055);border-radius:14px;background:rgba(255,255,255,.82);box-shadow:0 6px 22px rgba(0,0,0,.055);backdrop-filter:blur(14px)}
     .demo-options-group[hidden]{display:none!important}
     .demo-option{min-height:30px;display:inline-flex;align-items:center;gap:7px;padding:4px 8px;border-radius:9px;background:#f4f5f6;white-space:nowrap;user-select:none;width:auto!important;flex:0 0 auto!important}
@@ -131,9 +158,8 @@
       .demo-options-group{gap:5px}.demo-option,.demo-reset{font-size:10px!important;padding:4px 5px!important;gap:4px!important}
     }
     .demo-roundness-control{
-      display:flex;align-items:center;justify-content:center;gap:8px;justify-self:center;
-      width:max-content;max-width:100%;padding:6px 10px;border:1px solid rgba(0,0,0,.055);border-radius:13px;
-      background:rgba(255,255,255,.84);box-shadow:0 6px 22px rgba(0,0,0,.05);backdrop-filter:blur(14px);
+      display:flex;align-items:center;justify-content:center;gap:8px;
+      min-width:0;padding:0 4px;
       color:#747980;font:600 10px/1 Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
       user-select:none
     }
@@ -142,7 +168,7 @@
     .demo-roundness-mark.square{border-radius:3px}
     .demo-roundness-mark.round{border-radius:7px}
     .demo-roundness-control input[type=range]{
-      width:150px;max-width:34vw;height:18px;margin:0;padding:0;accent-color:#666b72;cursor:pointer
+      width:96px;min-width:60px;flex:0 1 96px;height:18px;margin:0;padding:0;accent-color:#666b72;cursor:pointer
     }
     .demo-roundness-control input[type=range]:focus-visible{outline:2px solid #aeb2b8;outline-offset:2px;border-radius:999px}
     .demo-roundness-unlock{display:inline-flex;align-items:center;gap:5px;padding-left:3px;white-space:nowrap;cursor:pointer}
@@ -152,36 +178,45 @@
     .demo-roundness-unlock input:checked+.demo-roundness-switch{background:#666b72}
     .demo-roundness-unlock input:checked+.demo-roundness-switch::after{transform:translateX(12px)}
     .demo-roundness-unlock input:focus-visible+.demo-roundness-switch{outline:2px solid #aeb2b8;outline-offset:2px}
+    /* The toolbar stays one row: on narrow screens the slider shrinks and the text
+       labels give way to the square/round marks (the full name stays as a tooltip). */
     @media(max-width:600px){
-      .demo-roundness-control{gap:7px;padding:6px 8px}
-      .demo-roundness-control input[type=range]{width:132px;max-width:36vw}
+      .demo-panel-toolbar{gap:8px;padding:6px}
+      .demo-roundness-control{flex:1 1 auto;gap:6px;padding:0}
+      .demo-roundness-control input[type=range]{width:auto;min-width:36px;max-width:120px;flex:1 1 96px}
+      .demo-roundness-label{display:none}
+    }
+    @media(max-width:360px){
+      .demo-roundness-unlock>span:first-child{display:none}
     }
     @media(max-width:390px){
       .demo-roundness-control{gap:5px;font-size:9px}
-      .demo-roundness-control input[type=range]{width:104px;max-width:31vw}
       .demo-roundness-unlock{gap:4px;padding-left:1px}
     }
     .demo-control-stack{
       left:50%!important;
       transform:translateX(-50%)!important;
-      width:max-content!important;
+      width:var(--demo-stack-width,max-content)!important;
       max-width:calc(100vw - 20px)!important;
       justify-items:center!important;
+      /* One column as wide as the stack, so a long hint wraps instead of widening it. */
+      grid-template-columns:minmax(0,1fr)!important;
     }
     .demo-control-stack>.controls{
       position:static!important;left:auto!important;top:auto!important;transform:none!important;
-      width:var(--demo-controls-width,min(760px,calc(100vw - 20px)))!important;max-width:calc(100vw - 20px)!important;margin:0!important;
+      width:100%!important;max-width:calc(100vw - 20px)!important;margin:0!important;contain:inline-size;
       display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:center!important;
       flex-wrap:wrap!important;gap:9px 6px!important;overflow:visible!important;padding:9px 8px 8px!important;
+      padding-inline:calc((100% - var(--demo-controls-width,100%)) / 2 + 8px)!important;
     }
     .demo-control-stack>.controls button{
       width:auto!important;min-width:0!important;max-width:none!important;flex:0 0 auto!important;padding:8px 11px!important;
     }
-    .demo-options{width:max-content!important;max-width:calc(100vw - 20px)!important;margin:0!important;justify-self:center!important}
-    .demo-options-group{width:max-content!important;max-width:calc(100vw - 20px)!important;margin-inline:auto!important}
+    .demo-options{width:100%!important;max-width:calc(100vw - 20px)!important;margin:0!important;justify-self:center!important}
+    .demo-options-group{width:100%!important;contain:inline-size;max-width:calc(100vw - 20px)!important;margin-inline:auto!important}
     @media(max-width:600px){
       .demo-control-stack{max-width:calc(100vw - 16px)!important}
-      .demo-control-stack>.controls{width:var(--demo-controls-width,calc(100vw - 16px))!important;max-width:calc(100vw - 16px)!important;gap:9px 5px!important;padding:9px 7px 7px!important}
+      .demo-control-stack>.controls{max-width:calc(100vw - 16px)!important;gap:9px 5px!important}
       .demo-control-stack>.controls button{font-size:11px!important;padding:8px 7px!important}
       .demo-options,.demo-options-group{max-width:calc(100vw - 16px)!important}
     }
@@ -238,6 +273,26 @@
     }
     .expression-tag.failure{background:#f7ecec;border-color:#ead8d8;color:#9b7474}
     .expression-tag.inspect{background:#eef0f7;border-color:#dde1ee;color:#737e9b}
+  /* The avatar sits in a stage card as wide as the panels below, with the same corners;
+     palettes color only the stage. The whole group is placed by placeComposition(). */
+  .demo-stage{position:relative;display:grid;place-items:center;width:100%;contain:inline-size;height:clamp(190px,30vh,280px);border:1px solid rgba(0,0,0,.055);border-radius:16px;background:var(--demo-stage-bg,#fff);box-shadow:0 7px 30px rgba(0,0,0,.08)}
+  .demo-stage-reel{position:absolute;inset:-1px;border-radius:inherit;overflow:hidden;pointer-events:none}
+  .demo-stage-reel-strip{position:absolute;inset:0 0 auto;will-change:transform}
+  .demo-intro-finale{position:absolute;inset:-1px;border-radius:inherit;overflow:hidden;pointer-events:none}
+  .demo-intro-finale>div{position:absolute;border-radius:50%;-webkit-mask-image:radial-gradient(circle,transparent 26%,#000 44%,#000 52%,transparent 70%);mask-image:radial-gradient(circle,transparent 26%,#000 44%,#000 52%,transparent 70%);will-change:transform,opacity}
+    /* Shown on the stage only while the colors differ from the default. */
+  .demo-stage-reset{position:absolute;right:10px;bottom:10px;z-index:6;display:grid;place-items:center;width:26px;height:26px;padding:0;border-radius:50%;background:rgba(255,255,255,.4);color:rgba(0,0,0,.45);backdrop-filter:blur(6px);transition:background .15s ease,color .15s ease;animation:demo-reset-in .2s cubic-bezier(.2,.8,.3,1)}
+  .demo-stage-reset:hover{background:rgba(255,255,255,.9);color:#3f4449}
+  .demo-stage-reset[hidden]{display:none}
+  .demo-stage-reset svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  @keyframes demo-reset-in{from{opacity:0;transform:scale(.85)}}
+  @media(prefers-reduced-motion:reduce){.demo-stage-reset{animation:none}}
+  .demo-stage .avatar-home{position:relative!important;left:auto!important;top:auto!important;transform:none!important}
+  /* The expression name sits quietly at the bottom of the stage. */
+  .demo-stage .status-pill.demo-status{position:absolute!important;left:50%!important;top:auto!important;bottom:10px!important;transform:translateX(-50%)!important;z-index:6;padding:4px 9px;border:0;background:rgba(255,255,255,.55);backdrop-filter:blur(6px);color:rgba(0,0,0,.5);font-size:10px}
+  .demo-control-stack{top:var(--demo-stack-top,12%)!important}
+  [data-demo-ready] .demo-control-stack{transition:top .35s cubic-bezier(.16,1,.3,1)}
+  @media(prefers-reduced-motion:reduce){[data-demo-ready] .demo-control-stack{transition:none}}
   /* Never paint intermediate controls, translations or a desktop-only position. */
   .demo-initializing .canvas{visibility:hidden}
   .demo-load-status{display:none;position:fixed;left:50%;top:40%;transform:translate(-50%,-50%);margin:0;color:#777c83;font:12px/1.5 system-ui,sans-serif;text-align:center}
@@ -249,11 +304,7 @@
 <noscript>This interactive demo requires JavaScript.</noscript>
 <div class="canvas" id="canvas" aria-busy="true" inert>
   <div class="title demo-title"><span>Agent Robot Avatar</span><span>SVG + Vanilla JS</span><span>Web Component</span></div>
-  <div class="build-badge" id="agent-demo-build">Demo 0.5.2</div>
-  <div class="avatar-home" id="home">
-    <agent-robot-avatar id="face" size="118" auto-sleep="18000"></agent-robot-avatar>
-  </div>
-  <div class="status-pill demo-status" id="status">idle · 默认待机</div>
+  <div class="build-badge" id="agent-demo-build">Demo 0.6.0</div>
   <label class="follow-control demo-original-follow" title="控制眼睛和头部是否跟随鼠标">
     <span>鼠标跟随</span>
     <input id="pointerFollow" type="checkbox" checked />
@@ -261,20 +312,28 @@
   </label>
 
 <div class="demo-control-stack">
+  <div class="demo-stage" id="demoStage">
+    <div class="avatar-home" id="home">
+      <agent-robot-avatar id="face" size="118" auto-sleep="18000"></agent-robot-avatar>
+    </div>
+    <div class="status-pill demo-status" id="status">idle · 默认待机</div>
+    <button class="demo-stage-reset" id="demoStageReset" type="button" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4h4"/></svg></button>
+  </div>
   <div class="demo-chat-entry-hint" id="demoChatEntryHint" role="note"></div>
   <div class="controls" aria-label="Avatar states">
     <button type="button" data-action="idle">正常</button>
     <button type="button" data-action="bored">发呆</button>
-    <button type="button" data-action="waiting">等待</button>
+    <button type="button" data-action="waiting-spin">等待 · 旋转</button>
     <button type="button" data-action="waiting-wrap">等待 · 环绕</button>
+    <button type="button" data-action="waiting-wave">等待 · 波动</button>
     <button type="button" data-action="input">输入</button>
-    <button type="button" data-action="send">发送/点头</button>
+    <button type="button" data-action="affirm">肯定</button>
     <button type="button" data-action="success">成功</button>
     <button type="button" data-action="failure">失败</button>
-    <button type="button" data-action="warning">警告</button>
+    <button type="button" data-action="wary">警惕</button>
     <button type="button" data-action="inspect">审视</button>
-    <button type="button" data-action="angry">内容阻止</button>
-    <button type="button" data-action="error">系统错误</button>
+    <button type="button" data-action="angry">生气</button>
+    <button type="button" data-action="refuse">拒绝</button>
     <button type="button" data-action="surprise">惊讶</button>
     <button type="button" data-action="sleep">睡着</button>
     <button type="button" data-action="wake">醒来</button>
@@ -283,25 +342,49 @@
   </div>
   <div class="demo-options">
     <div class="demo-panel-toolbar" id="demoPanelToolbar">
-      <button class="demo-panel-toggle" id="demoColorPanelToggle" type="button" aria-expanded="false" aria-controls="demoColorPanel">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"/><circle class="demo-palette-dot" cx="13.5" cy="6.5" r=".5"/><circle class="demo-palette-dot" cx="17.5" cy="10.5" r=".5"/><circle class="demo-palette-dot" cx="6.5" cy="12.5" r=".5"/><circle class="demo-palette-dot" cx="8.5" cy="7.5" r=".5"/></svg>
-      </button>
+      <div class="demo-toolbar-group" id="demoNavigationGroup">
       <button class="demo-panel-toggle" id="demoSettingsPanelToggle" type="button" aria-expanded="false" aria-controls="demoSettingsPanel">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h3M11 12h9M4 18h8M16 18h4"/><circle cx="16" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="14" cy="18" r="2"/></svg>
       </button>
       <button class="demo-panel-toggle" id="demoLanguagePanelToggle" type="button" aria-expanded="false" aria-controls="demoLanguagePanel">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.3 2.4 3.5 5.4 3.5 9S14.3 18.6 12 21M12 3C9.7 5.4 8.5 8.4 8.5 12S9.7 18.6 12 21"/></svg>
       </button>
+      </div>
+      <div class="demo-roundness-control">
+        <span class="demo-roundness-label" id="demoHeadRoundnessLabel"></span>
+        <span class="demo-roundness-mark square" aria-hidden="true"></span>
+        <input id="demoHeadRoundness" type="range" min="0" max="100" step="50" value="50" list="demoRoundnessStops">
+        <datalist id="demoRoundnessStops"><option value="0"></option><option value="50"></option><option value="100"></option></datalist>
+        <span class="demo-roundness-mark round" aria-hidden="true"></span>
+        <label class="demo-roundness-unlock">
+          <span id="demoHeadRoundnessUnlockLabel"></span>
+          <input id="demoHeadRoundnessUnlock" type="checkbox">
+          <span class="demo-roundness-switch" aria-hidden="true"></span>
+        </label>
+      </div>
+      <div class="demo-toolbar-group" id="demoColorsGroup">
+        <button class="demo-panel-toggle is-new" id="demoRandomColors" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3.5"/><circle class="demo-dice-dot" cx="8.6" cy="8.6" r="1.4"/><circle class="demo-dice-dot" cx="15.4" cy="8.6" r="1.4"/><circle class="demo-dice-dot" cx="12" cy="12" r="1.4"/><circle class="demo-dice-dot" cx="8.6" cy="15.4" r="1.4"/><circle class="demo-dice-dot" cx="15.4" cy="15.4" r="1.4"/></svg>
+        </button>
+        <button class="demo-panel-toggle is-new" id="demoColorPanelToggle" type="button" aria-expanded="false" aria-controls="demoColorPanel">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"/><circle class="demo-palette-dot" cx="13.5" cy="6.5" r=".5"/><circle class="demo-palette-dot" cx="17.5" cy="10.5" r=".5"/><circle class="demo-palette-dot" cx="6.5" cy="12.5" r=".5"/><circle class="demo-palette-dot" cx="8.5" cy="7.5" r=".5"/></svg>
+        </button>
+      </div>
     </div>
     <div class="demo-options-group demo-color-group" id="demoColorPanel" hidden>
-      <label class="demo-option color-option"><span id="demoBgLabel"></span><input id="demoBgColor" type="color" value="#f8f8f6"></label>
-      <label class="demo-option color-option"><span id="demoHeadLabel"></span><input id="demoHeadColor" type="color" value="#08090b"></label>
-      <label class="demo-option demo-toggle"><span id="demoEyeThroughLabel"></span><input id="demoEyeThrough" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
-      <button class="demo-option demo-reset" id="demoReset" type="button"></button>
+      <div class="demo-swatches" id="demoColorPresets"></div>
+      <p class="demo-palette-caption" id="demoPaletteCaption"></p>
+      <div class="demo-color-custom">
+        <label class="demo-option color-option"><span id="demoBgLabel"></span><input id="demoBgColor" type="color" value="#ffffff"></label>
+        <button class="demo-option demo-icon-option demo-swap-button" id="demoSwapColors" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h15l-4-4M20 16H5l4 4"/></svg></button>
+        <label class="demo-option color-option"><span id="demoHeadLabel"></span><input id="demoHeadColor" type="color" value="#08090b"></label>
+        <label class="demo-option demo-toggle"><span id="demoEyeThroughLabel"></span><input id="demoEyeThrough" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
+        <button class="demo-option demo-reset" id="demoReset" type="button"></button>
+      </div>
+      <p class="demo-palette-note" id="demoPaletteNote"></p>
     </div>
     <div class="demo-options-group demo-behavior-group" id="demoSettingsPanel" hidden>
       <label class="demo-option demo-toggle"><span id="demoAntennaLabel"></span><input id="demoAntenna" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
-      <label class="demo-option demo-toggle"><span id="demoAntennaFlashLabel"></span><input id="demoAntennaFlash" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
       <label class="demo-option demo-toggle"><span id="demoLoopLabel"></span><input id="demoLoop" type="checkbox"><span class="demo-switch" aria-hidden="true"></span></label>
       <label class="demo-option demo-toggle"><span id="demoPointerFollowLabel"></span><input id="demoPointerFollow" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
     </div>
@@ -317,19 +400,8 @@
       <button class="demo-language-option" type="button" data-lang="fr">Français</button>
     </div>
   </div>
-  <div class="demo-roundness-control">
-    <span class="demo-roundness-label" id="demoHeadRoundnessLabel"></span>
-    <span class="demo-roundness-mark square" aria-hidden="true"></span>
-    <input id="demoHeadRoundness" type="range" min="0" max="100" step="50" value="50" list="demoRoundnessStops">
-    <datalist id="demoRoundnessStops"><option value="0"></option><option value="50"></option><option value="100"></option></datalist>
-    <span class="demo-roundness-mark round" aria-hidden="true"></span>
-    <label class="demo-roundness-unlock">
-      <span id="demoHeadRoundnessUnlockLabel"></span>
-      <input id="demoHeadRoundnessUnlock" type="checkbox">
-      <span class="demo-roundness-switch" aria-hidden="true"></span>
-    </label>
-  </div>
 </div>
+
 
   <a class="support-link" href="https://ko-fi.com/P0E625WIOI" target="_blank" rel="noopener noreferrer" aria-label="Buy me a coffee on Ko-fi">
     <span class="support-cup">☕</span><span>Buy me a coffee</span>
@@ -344,7 +416,7 @@
       <button type="button" class="close" id="close" aria-label="关闭">×</button>
     </div>
     <div class="chat" id="chat">
-      <div class="message agent"><div class="bubble">这是一个模拟 Agent。输入任意内容后，会随机模拟成功、风险确认、内容阻止、系统错误等回复，并在正文下方标注对应表情。</div></div>
+      <div class="message agent"><div class="bubble">这是一个模拟 Agent。输入任意内容后，会随机模拟成功、风险确认、生气、拒绝等回复，并在正文下方标注对应表情。</div></div>
     </div>
     <div class="composer-wrap">
       <div class="composer">
@@ -380,15 +452,15 @@ try {
 
   const stateNames = {
     idle: '默认待机', bored: '发呆', input: '输入中', happy: '成功',
-    warning: '警告确认', angry: '内容阻止', error: '系统错误',
+    wary: '警惕', angry: '生气', refuse: '拒绝',
     surprise: '惊讶', sleepy: '困倦', sleep: '睡眠'
   };
 
   const replies = [
     {state:'success', label:'演示表情 · 成功 / success', texts:['任务已经完成，结果看起来不错。','处理完成，没有发现需要你继续操作的问题。','完成了。这次执行很顺利。']},
-    {state:'warning', label:'演示表情 · 警告确认 / warning', texts:['这个操作会覆盖现有内容。确认要继续吗？','这一步可能造成不可逆的修改，你确定要执行吗？','即将进行高影响操作，请再次确认是否继续。']},
-    {state:'angry', label:'演示表情 · 内容阻止 / angry', texts:['这条内容不允许继续发送，操作已被阻止。','当前请求违反了允许范围，我不能执行。','这个操作不符合当前规则，已停止继续处理。']},
-    {state:'error', label:'演示表情 · 系统错误 / error', texts:['连接服务失败，请检查网络后重试。','系统暂时无法完成请求，稍后再试一次。','与服务端的连接中断了，这次操作没有完成。']},
+    {state:'wary', label:'演示表情 · 警惕 / wary', texts:['这个操作会覆盖现有内容。确认要继续吗？','这一步可能造成不可逆的修改，你确定要执行吗？','即将进行高影响操作，请再次确认是否继续。']},
+    {state:'angry', label:'演示表情 · 生气 / angry', texts:['这条内容不允许继续发送，操作已被阻止。','当前请求违反了允许范围，我不能执行。','这个操作不符合当前规则，已停止继续处理。']},
+    {state:'refuse', label:'演示表情 · 拒绝 / refuse', texts:['抱歉，这个请求我不能执行。','这件事超出了我能做的范围，我只能拒绝。','这个操作我不能帮你完成。']},
     {state:'surprise', label:'演示表情 · 意外 / surprise', texts:['有点意外，我发现了一个和预期不同的结果。','这个结果比预想中更特别，我需要重新判断一下。','发现了一个意外情况，不过信息已经保留下来了。']},
     {state:'bored', label:'演示表情 · 等待 / bored', texts:['还在等外部结果返回，这一步比平时慢一点。','暂时没有新的变化，我还在等待。','任务还没有结束，目前处于等待状态。']}
   ];
@@ -399,6 +471,7 @@ try {
   });
 
   face.addEventListener('face-state', (event) => {
+    if (document.documentElement.dataset.demoIntro) return;
     const state = event.detail.state;
     status.textContent = `${state} · ${stateNames[state] || '状态切换'}`;
   });
@@ -420,7 +493,7 @@ try {
   async function openAgent(){
     if(inPanel) return;
     inPanel = true;
-    face.play('send');
+    face.play('affirm');
     overlay.classList.add('open');
     overlay.setAttribute('aria-hidden','false');
     await new Promise(resolve => setTimeout(resolve,70));
@@ -485,7 +558,7 @@ try {
     addMessage('user',text);
     input.value='';
     face.reset();
-    await face.play('send');
+    await face.play('affirm');
     if(token !== replyToken || !inPanel) return;
 
     const typing = addMessage('agent','•••','typing');
@@ -529,13 +602,14 @@ try {
   await import('./agent-robot-avatar-demo-controls.js');
   await import('./agent-robot-avatar-demo-extras.js');
   await import('./agent-robot-avatar-demo-roundness.js');
-  const { balanceControls } = await import('./agent-robot-avatar-demo-layout.js');
+  const { balanceControls, placeComposition } = await import('./agent-robot-avatar-demo-layout.js');
   await import('./agent-robot-avatar-demo-dialog-i18n.js');
   await import('./agent-robot-avatar-demo-chat-avatar-mode.js');
   await import('./agent-robot-avatar-demo-reply-loop.js');
   // Apply the final language and row width before exposing interactive content.
   await document.fonts.ready;
   balanceControls();
+  placeComposition();
   await new Promise(resolve => requestAnimationFrame(resolve));
   document.getElementById('canvas').inert = false;
   document.getElementById('canvas').setAttribute('aria-busy', 'false');
@@ -548,4 +622,5 @@ try {
 </script>
 </body>
 </html>
+
 

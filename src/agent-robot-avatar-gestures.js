@@ -42,6 +42,15 @@ proto.setPressSqueeze=function(enabled=true){
   if(!enabled && this._gestureFx?.kind==='squeeze')this._cancelGesture();
   return this;
 };
+// Antenna blinking was removed in 0.6. The method stays so existing calls keep working.
+let warnedAntennaFlash=false;
+proto.setAntennaFlash=function(){
+  if(!warnedAntennaFlash){
+    warnedAntennaFlash=true;
+    console.warn('agent-robot-avatar: setAntennaFlash() was removed in 0.6 and does nothing. It will be deleted in 1.0.');
+  }
+  return this;
+};
 proto.setAntennaDrag=function(enabled=true){
   this.setAttribute('antenna-drag',String(Boolean(enabled)));
   if(!enabled && this._gestureFx?.kind==='antenna-drag')this._cancelGesture();

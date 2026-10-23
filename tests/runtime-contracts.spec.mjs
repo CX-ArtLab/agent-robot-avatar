@@ -227,6 +227,33 @@ test('action-state canonical lifecycle covers replacement, aliases, stop and res
   ]);
 });
 
+test('deprecated action names report the new canonical action and warn once each', async ({ page }) => {
+  const warnings = [];
+  page.on('console', message => {
+    if (message.type() === 'warning') warnings.push(message.text());
+  });
+  const avatar = await loadWithClock(page);
+  await installRecorders(avatar);
+
+  for (const [name, canonical] of [
+    ['send', 'affirm'], ['send', 'affirm'], ['warning', 'wary'], ['error', 'refuse'],
+    ['connection-error', 'refuse'], ['blocked', 'angry'], ['affirm', 'affirm'], ['refuse', 'refuse'],
+  ]) {
+    await avatar.evaluate(element => { element.reset(); element._testActionStates.length = 0; });
+    await avatar.evaluate((element, action) => { void element.play(action); }, name);
+    await advance(page, 80);
+    expect(await avatar.evaluate(element => element._testActionStates[0])).toBe(`${canonical}:start:api`);
+  }
+
+  expect(warnings.filter(text => text.startsWith('agent-robot-avatar:'))).toEqual([
+    'agent-robot-avatar: action "send" is deprecated, use "affirm". Old names stop working in 1.0.',
+    'agent-robot-avatar: action "warning" is deprecated, use "wary". Old names stop working in 1.0.',
+    'agent-robot-avatar: action "error" is deprecated, use "refuse". Old names stop working in 1.0.',
+    'agent-robot-avatar: action "connection-error" is deprecated, use "refuse". Old names stop working in 1.0.',
+    'agent-robot-avatar: action "blocked" is deprecated, use "angry". Old names stop working in 1.0.',
+  ]);
+});
+
 test('action-state bubbles and crosses the custom element boundary', async ({ page }) => {
   const avatar = await loadWithClock(page);
   await page.evaluate(() => {

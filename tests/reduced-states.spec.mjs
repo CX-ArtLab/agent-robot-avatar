@@ -49,12 +49,12 @@ test('reduced motion keeps success and failure recognizable with normal lifecycl
   ]);
 });
 
-test('reduced error, warning and inspect expose static effects without continuous head motion', async ({ page }) => {
+test('reduced refuse, wary and inspect expose static effects without continuous head motion', async ({ page }) => {
   const avatar = await setup(page);
 
   for (const [action, delay, effect] of [
-    ['error', 560, '_systemErrorShake'],
-    ['warning', 620, '_warningFx'],
+    ['refuse', 560, '_systemErrorShake'],
+    ['wary', 620, '_warningFx'],
     ['inspect', 420, '_inspectFx'],
   ]) {
     await avatar.evaluate((element, name) => {

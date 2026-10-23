@@ -24,28 +24,36 @@ const baseStopWaiting = proto.stopWaiting;
 const baseDraw = proto._draw;
 
 const DEFAULT_SIZE = 112;
+// Canonical action names describe what the avatar does on screen. Older names that
+// described a situation (send, warning, blocked, error, ...) still resolve to the same
+// action, but print a one-time deprecation notice; they are removed in 1.0.
 const ACTION_ALIASES = Object.freeze({
   idle: 'idle',
   bored: 'bored',
   waiting: 'waiting',
+  'waiting-spin': 'waiting',
   wait: 'waiting',
   'waiting-wrap': 'waiting',
+  'waiting-wave': 'waiting',
   input: 'input',
-  send: 'send',
+  affirm: 'affirm',
+  send: 'affirm',
   success: 'success',
   failure: 'failure',
   failed: 'failure',
   fail: 'failure',
-  warning: 'warning',
+  wary: 'wary',
+  warning: 'wary',
   inspect: 'inspect',
   verify: 'inspect',
   review: 'inspect',
   angry: 'angry',
-  blocked: 'blocked',
-  'policy-blocked': 'blocked',
-  error: 'error',
-  'system-error': 'error',
-  'connection-error': 'error',
+  blocked: 'angry',
+  'policy-blocked': 'angry',
+  refuse: 'refuse',
+  error: 'refuse',
+  'system-error': 'refuse',
+  'connection-error': 'refuse',
   surprise: 'surprise',
   love: 'love',
   random: 'random',
@@ -54,10 +62,44 @@ const ACTION_ALIASES = Object.freeze({
   wake: 'wake',
 });
 
+const DEPRECATED_ACTIONS = Object.freeze({
+  wait: 'waiting-spin',
+  send: 'affirm',
+  failed: 'failure',
+  fail: 'failure',
+  warning: 'wary',
+  verify: 'inspect',
+  review: 'inspect',
+  blocked: 'angry',
+  'policy-blocked': 'angry',
+  error: 'refuse',
+  'system-error': 'refuse',
+  'connection-error': 'refuse',
+  slot: 'random',
+});
+
+// The renamed actions still run on the original implementations.
+const ACTION_IMPLEMENTATIONS = Object.freeze({
+  'waiting-spin': 'waiting',
+  affirm: 'send',
+  wary: 'warning',
+  refuse: 'error',
+});
+
+const warnedDeprecations = new Set();
+
+function warnDeprecatedAction(raw) {
+  const replacement = DEPRECATED_ACTIONS[raw];
+  if (!replacement || warnedDeprecations.has(raw)) return;
+  warnedDeprecations.add(raw);
+  console.warn(`agent-robot-avatar: action "${raw}" is deprecated, use "${replacement}". Old names stop working in 1.0.`);
+}
+
 function normalizeAction(name) {
   const raw = String(name || '').trim().toLowerCase();
   const canonical = Object.hasOwn(ACTION_ALIASES, raw) ? ACTION_ALIASES[raw] : null;
-  return { raw, canonical };
+  if (canonical) warnDeprecatedAction(raw);
+  return { raw, canonical, implementation: ACTION_IMPLEMENTATIONS[raw] ?? raw };
 }
 
 function wakePolicy(instance) {
@@ -717,17 +759,17 @@ function prepareReplacement(instance, canonical) {
 
 proto.play = function(name) {
   ensureRuntime(this);
-  const { raw, canonical } = normalizeAction(name);
+  const { canonical, implementation } = normalizeAction(name);
   if (!canonical) throw new Error(`Unknown Agent Robot Avatar action: ${name}`);
   if (playNoOp(this, canonical)) return this;
-  if (canonical === 'idle') return basePlay.call(this, raw);
+  if (canonical === 'idle') return basePlay.call(this, implementation);
 
   prepareReplacement(this, canonical);
 
   let result;
   this._runtimeInPlay = true;
   try {
-    result = basePlay.call(this, raw);
+    result = basePlay.call(this, implementation);
   } finally {
     this._runtimeInPlay = false;
   }
@@ -903,3 +945,4 @@ export {
   DEFAULT_SIZE,
 };
 export default AgentRobotAvatar;
+
