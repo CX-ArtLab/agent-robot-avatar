@@ -30,16 +30,16 @@ Several actions are renamed after what the avatar does on screen, instead of the
 - Added the `waiting-wave` action: both eyes bob in staggered waves. `startWaiting({ variant: 'wave' })` loops it continuously.
 - Added `waiting-spin` as the explicit name of the default waiting motion, and `startWaiting({ variant: 'spin' })`.
 - Added brand-inspired color palettes to the demo. Colors apply to a stage card around the avatar; hovering a swatch previews it, a dice button picks a random palette, a swap button exchanges the background and head colors, and a reset button appears on the stage while the colors differ from the default. The page opens by rolling the stage through the palettes in step with the eyes' reel spin, ending with a faint rainbow ripple.
-- Added an experimental embedded eyes engine: a portable, allocation-free C++11 library that draws the same 18 expressions on 1-bit framebuffers from 16 to 512 pixels, with fit/fill/zoom layouts, round-screen clipping, proximity gaze with selectable range, and runtime timing changes.
-- Added firmware examples for 26 board and screen configurations (ESP32, ESP32-S3 and RP2040; ST7789, ST7735, GC9A01, ILI9341, ILI9342C, ILI9488, CO5300 AMOLED, ST7701S RGB panels, SSD1306 and SH1106 OLEDs; LilyGO, M5Stack, Waveshare, Seeed, Espressif and Guition boards). All compile in CI; none is verified on real hardware yet.
-- Added the hardware preview, an offline single-file page that runs the same C++ engine compiled to WebAssembly on 33 simulated screens, with panel-accurate display, module housings, actual-size zoom, wiring tables and a proximity-gaze simulator. It is also available online with the demo.
-- Added a Hardware report issue form so users can confirm board examples on real hardware.
 
 ### Changed
 
-- Renamed actions as listed above. The C++ engine uses the same names: `Action::Affirm`, `Wary`, `Angry`, `Refuse` and `WaitingSpin` keep the previous numeric IDs, and the old names still parse.
+- Renamed actions as listed above.
 - Demo labels now describe the expression: Waiting · Spin, Waiting · Scroll, Affirm, Wary, Angry and Refuse. The toolbar row is one card as wide as the actions, with Head shape and a random-colors button.
 - Refined the wary expression with independently tilted eyes, adjusted eye proportions and eyelids.
+
+### Also in this release
+
+- The embedded eyes engine for robot and dev-board screens is released separately as [AgentRobotEyes 0.1.0](https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/eyes-v0.1.0), with its own version number; see [embedded/CHANGELOG.md](embedded/CHANGELOG.md).
 
 ### Removed
 

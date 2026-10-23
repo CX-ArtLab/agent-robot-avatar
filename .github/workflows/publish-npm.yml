@@ -19,7 +19,9 @@ concurrency:
 
 jobs:
   publish:
-    if: github.repository == 'CX-ArtLab/agent-robot-avatar'
+    # Only Web component releases (tags like v0.6.0) go to npm; the embedded
+    # eyes library is released under eyes-v* tags and never published here.
+    if: github.repository == 'CX-ArtLab/agent-robot-avatar' && startsWith(inputs.tag || github.event.release.tag_name, 'v')
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
