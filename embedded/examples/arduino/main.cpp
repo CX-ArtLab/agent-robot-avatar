@@ -3,24 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#if defined(EYES_TFT)
-#include <SPI.h>
-#include <Adafruit_ST7789.h>
-#if defined(EYES_ESP32_S3)
-constexpr int TFT_CS = 10, TFT_DC = 9, TFT_RST = 8;
-#else
-constexpr int TFT_CS = 17, TFT_DC = 20, TFT_RST = 21;
-#endif
-Adafruit_ST7789 display(&SPI, TFT_CS, TFT_DC, TFT_RST);
-constexpr uint16_t WIDTH = 240, HEIGHT = 160;
-constexpr uint16_t INK = 0xFFFF, BACKGROUND = 0x0000;
-uint16_t rowPixels[WIDTH];
-#else
-#include <Wire.h>
-#include <Adafruit_SSD1306.h>
-Adafruit_SSD1306 display(128, 64, &Wire, -1);
-constexpr uint16_t WIDTH = 128, HEIGHT = 64;
-#endif
+#include "boards.h"
 
 agent_robot::Eyes eyes;
 uint8_t bitmap[((WIDTH + 7) / 8) * HEIGHT];
@@ -30,25 +13,7 @@ size_t commandSize = 0;
 uint32_t lastCycle = 0;
 unsigned cycleIndex = 0;
 
-void present() {
-#if defined(EYES_TFT)
-  // Stream one RGB565 row at a time: no full-screen 16-bit framebuffer needed.
-  display.startWrite();
-  display.setAddrWindow(0, 40, WIDTH, HEIGHT);
-  for (uint16_t y = 0; y < HEIGHT; ++y) {
-    const uint8_t* source = eyes.data() + y * eyes.stride();
-    for (uint16_t x = 0; x < WIDTH; ++x) {
-      rowPixels[x] = source[x >> 3] & (0x80u >> (x & 7)) ? INK : BACKGROUND;
-    }
-    display.writePixels(rowPixels, WIDTH, true);
-  }
-  display.endWrite();
-#else
-  display.clearDisplay();
-  display.drawBitmap(0, 0, eyes.data(), WIDTH, HEIGHT, SSD1306_WHITE);
-  display.display();
-#endif
-}
+void present() { displayPresent(eyes); }
 
 void help() {
   Serial.println("Agent Robot Eyes 0.1.0 (experimental)");
@@ -87,29 +52,18 @@ void executeCommand(uint32_t now) {
 
 void setup() {
   Serial.begin(115200);
-#if defined(EYES_TFT)
-#if defined(EYES_ESP32_S3)
-  SPI.begin(12, -1, 11, TFT_CS); // SCK, MISO (unused), MOSI, CS
-#else
-  SPI.begin(); // Pico defaults: SCK GP18, MOSI GP19, MISO GP16 (unused)
-#endif
-  display.init(240, 240);
-  display.setRotation(0);
-  display.setSPISpeed(24000000);
-  display.fillScreen(BACKGROUND);
-#else
-  Wire.begin(21, 22);
-  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
-    Serial.println("SSD1306 initialization failed."); return;
-  }
-  Wire.setClock(400000);
-#endif
+  if (!displayBegin()) { Serial.println("Display initialization failed."); return; }
   agent_robot::EyesConfig config;
   config.width = WIDTH;
   config.height = HEIGHT;
   config.maxFps = 25; // ceiling; actual frame rate depends on the device and bus
   ready = eyes.begin(config, bitmap, sizeof(bitmap), millis());
   if (!ready) { Serial.println("Eyes buffer/configuration is invalid."); return; }
+  if (ROUND) {
+    agent_robot::EyesLayout layout;
+    layout.shape = agent_robot::ScreenShape::Circle; // keep the eyes inside the round glass
+    eyes.setLayout(layout);
+  }
   help();
 }
 

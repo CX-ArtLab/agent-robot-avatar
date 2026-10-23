@@ -13,6 +13,18 @@
 | `esp32-s3-st7789` | ESP32-S3-DevKitC-1 | ST7789，240×240，SPI |
 | `pico-st7789` | Raspberry Pi Pico / RP2040 | ST7789，240×240，SPI |
 | `esp32-ssd1306` | ESP32 Dev Module | SSD1306，128×64，I²C，地址 `0x3C` |
+| `esp32-ssd1306-128x32` | ESP32 Dev Module | SSD1306，128×32，I²C，地址 `0x3C` |
+| `esp32-sh1106` | ESP32 Dev Module | SH1106，128×64，I²C，地址 `0x3C` |
+| `esp32-s3-gc9a01` | ESP32-S3-DevKitC-1 | GC9A01 圆屏，240×240，SPI（接线同 `esp32-s3-st7789`） |
+| `esp32-s3-st7789-240x280` | ESP32-S3-DevKitC-1 | ST7789 1.69″，240×280，SPI（接线同上） |
+| `esp32-s3-st7789-240x320` | ESP32-S3-DevKitC-1 | ST7789 2.0″，240×320，SPI（接线同上） |
+| `waveshare-s3-round-128` | 微雪 ESP32-S3-Touch-LCD-1.28 | 板载 GC9A01 圆屏，无需接线 |
+| `cyd-ili9341` | ESP32-2432S028（CYD 黄板） | 板载 ILI9341，无需接线 |
+| `t-display-st7789` | LilyGO T-Display | 板载 ST7789 1.14″，横屏 |
+| `t-display-s3` | LilyGO T-Display-S3 | 板载 ST7789 1.9″，8 位并口，横屏 |
+| `m5-dial` / `m5-atoms3` / `m5-cores3` / `m5-stickc-plus2` | M5Stack 对应型号 | 板载屏幕，由 M5Unified 自动识别 |
+
+每个配置的屏幕驱动在 `examples/arduino/boards.h` 中各占一小段，主程序共用。引脚依据厂商资料。所有配置都在 CI 中编译通过，尚未实机验证；如果你在实物上运行过，欢迎提交"实机验证报告"Issue，预览器里会标记为"社区已实机验证"。
 
 **本版尚未进行实机测试。编译通过和电脑端测试，不代表已经确认屏幕接线、实际帧率或设备上的显示效果。** Web 与嵌入式版本共用表情名称和设计，但采用不同绘制器；嵌入式版每 20 毫秒采样原版几何参数并插值，保留原有眼部动作和时间过程；不绘制头部、天线及头部轮廓裁切，低分辨率边缘会有像素化差异。
 

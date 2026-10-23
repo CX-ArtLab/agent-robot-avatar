@@ -335,7 +335,29 @@
     $('spec-fps').textContent=bus?'最高约 '+screenLimit()+' FPS':'帧率不限';
     $('screen-spec').textContent=[base.id==='custom'?'自定义尺寸':base.id==='eyes'?'原始眼睛画布':base.controller,
       PANEL_NAMES[base.panel],bus&&bus[0]].filter(Boolean).join(' · ');
-    $('screen-support').textContent=base.example?'有参考例程（未实机验证）':'暂无驱动例程';
+    $('screen-support').textContent=base.verified==='community'?'有接线示例 · 社区已实机验证'
+      :base.example?'有接线示例（编译通过，未实机验证）':'仅效果预览 · 需自行接入屏幕驱动';
+    renderWiring();
+  }
+  // Which firmware build drives this screen and how to wire it.
+  function renderWiring() {
+    const fw=base.firmware;
+    $('wiring').hidden=!fw;
+    if(!fw)return;
+    const text=(tag,content)=>{const el=document.createElement(tag);el.textContent=content;return el;};
+    const build=document.createElement('div');build.append('编译：',text('code','pio run -e '+fw.env));
+    const parts=[text('div','开发板：'+fw.board),build];
+    if(fw.wiring){
+      const table=document.createElement('table');
+      for(const [pin,to] of fw.wiring){const row=table.insertRow();row.insertCell().textContent='屏幕 '+pin;row.insertCell().textContent=to;}
+      parts.push(table);
+    } else parts.push(text('div','屏幕已集成在开发板上，无需接线。'));
+    const note=document.createElement('div');note.className='meta';
+    const link=document.createElement('a');link.href='https://github.com/CX-ArtLab/agent-robot-avatar/issues/new?template=hardware_report.yml';
+    link.target='_blank';link.rel='noopener noreferrer';link.textContent='提交实机验证报告';
+    note.append('引脚依据厂商资料，固件已编译通过，尚未在实物上验证。在实物上试过的话，欢迎',link,'。');
+    parts.push(note);
+    $('wiring-body').replaceChildren(...parts);
   }
   function syncControls() {
     const oled=base.panel==='oled';
@@ -476,7 +498,7 @@
         items.forEach(item=>{
           const row=document.createElement('div');row.className='preset-item';
           const name=document.createElement('span');name.textContent=item.name+' · '+item.width+'×'+item.height;
-          const state=document.createElement('span');state.textContent=item.example?'可预览 / 有参考例程':'可预览';
+          const state=document.createElement('span');state.textContent=item.example?'有接线示例':'仅效果预览';
           row.append(name,state);$('preset-list').append(row);
         });
       }
