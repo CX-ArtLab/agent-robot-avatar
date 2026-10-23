@@ -696,27 +696,28 @@ function mountDemoControls() {
     };
   }
 
-  // Ending burst: a conic gradient of brand colors, larger than the stage diagonal so
-  // no corner shows while it turns, flares up behind the avatar and swirls away.
+  // Ending halo: a soft ring of pastel brand colors behind the avatar that turns
+  // slowly, widens and fades. Its edge fades out, so it never fills the stage.
   function playFinale() {
     finale?.remove();
     const clip = document.createElement('div');
     clip.className = 'demo-intro-finale';
-    const swirl = document.createElement('div');
-    const side = Math.ceil(Math.hypot(stage.clientWidth, stage.clientHeight)) + 4;
-    Object.assign(swirl.style, {
-      width: `${side}px`, height: `${side}px`,
-      left: `${(stage.clientWidth - side) / 2}px`, top: `${(stage.clientHeight - side) / 2}px`,
-      background: `conic-gradient(from 0deg, ${BRAND_COLORS.join(', ')}, ${BRAND_COLORS[0]})`,
+    const halo = document.createElement('div');
+    const pastel = BRAND_COLORS.map(color => mixColor(color, '#ffffff', 0.45));
+    const size = 280;
+    Object.assign(halo.style, {
+      width: `${size}px`, height: `${size}px`,
+      left: `${(stage.clientWidth - size) / 2}px`, top: `${(stage.clientHeight - size) / 2}px`,
+      background: `conic-gradient(from 0deg, ${pastel.join(', ')}, ${pastel[0]})`,
     });
-    clip.appendChild(swirl);
+    clip.appendChild(halo);
     stage.insertBefore(clip, stage.querySelector('.avatar-home'));
     finale = clip;
-    swirl.animate([
-      { transform: 'scale(.4) rotate(0deg)', opacity: 0 },
-      { transform: 'scale(1.3) rotate(40deg)', opacity: 1, offset: 0.18 },
-      { transform: 'scale(1) rotate(160deg)', opacity: 0 },
-    ], { duration: 1500, easing: 'cubic-bezier(.3,0,.3,1)', fill: 'forwards' }).onfinish = () => {
+    halo.animate([
+      { transform: 'scale(.55) rotate(0deg)', opacity: 0 },
+      { transform: 'scale(.9) rotate(35deg)', opacity: 0.7, offset: 0.3 },
+      { transform: 'scale(1.25) rotate(110deg)', opacity: 0 },
+    ], { duration: 1800, easing: 'cubic-bezier(.4,0,.3,1)', fill: 'forwards' }).onfinish = () => {
       clip.remove();
       if (finale === clip) finale = null;
     };
