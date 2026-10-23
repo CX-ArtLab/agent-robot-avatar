@@ -22,6 +22,8 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ### Fixed
 
+- Reworked hardware-preview interaction: a stepless zoom that never exceeds the window, housing toggle that keeps the screen in place, a visible running state for auto-cycle, one-row screen-type tabs with direct custom sizes, a concise screen summary, a frame-rate cap that follows each screen's bus limit, one gaze source at a time, one-row colour and effect controls, and remembered settings. Frame rate, blink and transitions now change without restarting the current action through the core's new `setTiming()`.
+
 - Widened the embedded idle gaze, which moved the eyes only 8 × 6 face units (about a sixth of the Web avatar's reach). `GazeRange` now offers Small (the original), Medium (new default, 20 × 18, reaching the face-area edge) and Large (30 × 21); near the edge the eyes narrow and move inward with the Web avatar's formula. A centred gaze is unchanged. The hardware preview adds a 注视幅度 control.
 
 - Smoothed embedded input-cursor exits by interpolating both corner radii into the target ellipse instead of changing primitives on the final frame. Preserve the current shape through repeated interruptions and allow the same handoff into wake; retain original target poses and motion timings.

@@ -69,6 +69,12 @@ int eyes_play(int action, uint32_t now) {
   return eyes.play(static_cast<agent_robot::Action>(action), now);
 }
 void eyes_gaze(float x, float y) { eyes.lookAt(x, y); }
+int eyes_timing(int fps, int blink, int transition) {
+  if (fps < 1 || fps > 60 || transition < 0 || transition > 2000) return 0;
+  if (!eyes.setTiming(static_cast<uint8_t>(fps), blink != 0, static_cast<uint16_t>(transition))) return 0;
+  trackingInterval=(1000u+fps-1)/fps;
+  return 1;
+}
 int eyes_gaze_range(int range) {
   if (range < 0 || range > 2) return 0;
   return eyes.setGazeRange(static_cast<agent_robot::GazeRange>(range));

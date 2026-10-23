@@ -16,6 +16,7 @@ void eyes_target(float,float,float,int,uint32_t);
 void eyes_motion_target(float,float,float,int,int,uint32_t);
 int eyes_gaze_config(float,float,int,int,int);
 int eyes_gaze_range(int);
+int eyes_timing(int,int,int);
 }
 
 // A tiny line protocol used ONLY by test-preview.mjs to compare native and WASM
@@ -35,6 +36,10 @@ int main() {
       float x,y;
       if (std::scanf("%f%f", &x, &y) != 2) return 1;
       eyes_gaze(x,y); std::puts("ok");
+    } else if (!std::strcmp(command, "timing")) {
+      int fps, blink, transition;
+      if (std::scanf("%d%d%d", &fps, &blink, &transition) != 3) return 1;
+      std::printf("%d\n", eyes_timing(fps,blink,transition));
     } else if (!std::strcmp(command, "range")) {
       int range;
       if (std::scanf("%d", &range) != 1) return 1;
