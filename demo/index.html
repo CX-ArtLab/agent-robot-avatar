@@ -278,11 +278,10 @@
   .demo-stage{position:relative;display:grid;place-items:center;width:100%;contain:inline-size;height:clamp(190px,30vh,280px);border:1px solid rgba(0,0,0,.055);border-radius:16px;background:var(--demo-stage-bg,#fff);box-shadow:0 7px 30px rgba(0,0,0,.08)}
   .demo-stage-reel{position:absolute;inset:-1px;border-radius:inherit;overflow:hidden;pointer-events:none}
   .demo-stage-reel-strip{position:absolute;inset:0 0 auto;will-change:transform}
-  .demo-replay{position:absolute;top:10px;left:10px;z-index:6;width:26px;height:26px;padding:0;border-radius:999px;background:rgba(255,255,255,.9);box-shadow:0 2px 8px rgba(0,0,0,.08);color:#5f646a;font:600 14px/26px system-ui,sans-serif}
   .demo-intro-finale{position:absolute;inset:-1px;border-radius:inherit;overflow:hidden;pointer-events:none}
   .demo-intro-finale>div{position:absolute;border-radius:50%;-webkit-mask-image:radial-gradient(circle,transparent 26%,#000 44%,#000 52%,transparent 70%);mask-image:radial-gradient(circle,transparent 26%,#000 44%,#000 52%,transparent 70%);will-change:transform,opacity}
     /* Shown on the stage only while the colors differ from the default. */
-  .demo-stage-reset{position:absolute;top:10px;right:10px;z-index:6;display:grid;place-items:center;width:26px;height:26px;padding:0;border-radius:50%;background:rgba(255,255,255,.4);color:rgba(0,0,0,.45);backdrop-filter:blur(6px);transition:background .15s ease,color .15s ease;animation:demo-reset-in .2s cubic-bezier(.2,.8,.3,1)}
+  .demo-stage-reset{position:absolute;right:10px;bottom:10px;z-index:6;display:grid;place-items:center;width:26px;height:26px;padding:0;border-radius:50%;background:rgba(255,255,255,.4);color:rgba(0,0,0,.45);backdrop-filter:blur(6px);transition:background .15s ease,color .15s ease;animation:demo-reset-in .2s cubic-bezier(.2,.8,.3,1)}
   .demo-stage-reset:hover{background:rgba(255,255,255,.9);color:#3f4449}
   .demo-stage-reset[hidden]{display:none}
   .demo-stage-reset svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
@@ -319,8 +318,6 @@
     </div>
     <div class="status-pill demo-status" id="status">idle · 默认待机</div>
     <button class="demo-stage-reset" id="demoStageReset" type="button" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4h4"/></svg></button>
-    <!-- Temporary: replays the opening show while it is being tuned. Remove before the release. -->
-    <button class="demo-replay" id="demoReplayIntro" type="button" title="Replay intro" aria-label="Replay intro">↻</button>
   </div>
   <div class="demo-chat-entry-hint" id="demoChatEntryHint" role="note"></div>
   <div class="controls" aria-label="Avatar states">

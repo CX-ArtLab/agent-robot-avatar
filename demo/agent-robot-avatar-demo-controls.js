@@ -727,10 +727,10 @@ function mountDemoControls() {
     };
   }
 
-  function playIntro({ force = false } = {}) {
+  function playIntro() {
     stopIntro?.();
     finale?.remove();
-    if (reducedMotion.matches && !force) return;
+    if (reducedMotion.matches) return;
     const events = ['pointerdown', 'keydown', 'wheel', 'touchstart'];
     const chosen = { background: bgColor.value.toLowerCase(), head: headColor.value.toLowerCase() };
     const eyesFor = background => (eyeThrough.checked ? background : '#ffffff');
@@ -799,9 +799,6 @@ function mountDemoControls() {
     face.addEventListener('action-state', onEyes);
     scene.start();
   }
-
-  // Temporary replay button for tuning the opening show; remove before the release.
-  stage.querySelector('#demoReplayIntro')?.addEventListener('click', () => playIntro({ force: true }));
 
   if (document.documentElement.dataset.demoReady) playIntro();
   else {
