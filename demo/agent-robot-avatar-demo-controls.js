@@ -178,6 +178,7 @@ function mountDemoControls() {
 
   const canvas = document.getElementById('canvas');
   const stage = document.getElementById('demoStage');
+  const stageReset = document.getElementById('demoStageReset');
   const face = document.getElementById('face');
   const controls = document.querySelector('.controls');
   if (!canvas || !face || !controls) return;
@@ -315,6 +316,7 @@ function mountDemoControls() {
     options.querySelector('#demoLoopLabel').textContent = t.loop;
     options.querySelector('#demoPointerFollowLabel').textContent = t.pointerFollow;
     resetButton.textContent = t.reset;
+    stageReset.querySelector('span').textContent = t.reset;
     bgColor.setAttribute('aria-label', t.background);
     headColor.setAttribute('aria-label', t.head);
 
@@ -463,6 +465,7 @@ function mountDemoControls() {
       button.style.setProperty('--swatch-bottom', reversed ? palette.background : palette.head);
     }
     if (!previewing) showCaption();
+    stageReset.hidden = bg === DEFAULTS.background && head === DEFAULTS.head && eyeThrough.checked === DEFAULTS.eyeThrough;
   }
 
   function applyAntennaVisibility() {
@@ -571,6 +574,8 @@ function mountDemoControls() {
     const others = paletteButtons.filter(({ button }) => button.getAttribute('aria-pressed') !== 'true');
     choosePalette(others[Math.floor(Math.random() * others.length)]);
   });
+
+  stageReset.addEventListener('click', () => resetButton.click());
 
   resetButton.addEventListener('click', () => {
     bgColor.value = DEFAULTS.background;
