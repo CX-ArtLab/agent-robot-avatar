@@ -6,7 +6,7 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ## [Unreleased]
 
-## [0.6.0] - 2026-10-23
+## [0.5.3] - 2026-10-23
 
 ### Added
 
@@ -171,7 +171,7 @@ First public release.
 - npm-compatible package metadata for later package publication
 - Contribution guide, issue templates, pull request template, MIT License, and Ko-fi funding metadata
 
-[0.6.0]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.6.0
+[0.5.3]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.5.3
 [0.5.2]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.5.2
 [0.4.3]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.4.3
 [0.4.2]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.4.2
