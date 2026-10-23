@@ -585,21 +585,32 @@ function mountDemoControls() {
 
   // Opening show: the stage rolls down through the vivid palettes like a slot reel,
   // dark to light, in step with the eyes' reel spin, then lands on the chosen colors
-  // and the avatar nods. The reel is one strip of color blocks moved with a transform.
+  // and the avatar ends happy. The reel is one strip of color blocks moved with a transform.
   // Any click, key, scroll or other action ends the show at once, and reduced motion
   // skips it.
-  // Vivid palettes ordered by background luminance, dark to light.
-  const INTRO_PALETTES = ['spotify', 'netflix', 'comfyui', 'warriors', 'barca', 'celtics', 'discord',
-    'ubuntu', 'dribbble', 'telegram', 'lakers', 'snapchat', 'youtube', 'chatgpt'];
+  // [palette, swapped]: backgrounds grow lighter, and once they are white the heads
+  // grow darker, ending next to the default black on white. Swapped palettes give
+  // more light backgrounds.
+  const INTRO_SEQUENCE = [
+    ['netflix'], ['comfyui'], ['warriors'], ['barca'], ['discord'], ['ubuntu'], ['telegram'],
+    ['lakers'], ['snapchat'], ['claude'], ['telegram', true], ['chatgpt'], ['dribbble', true],
+    ['youtube'], ['discord', true], ['celtics', true],
+  ];
   // A slower, longer reel spin than the random button: more turns, each one calmer.
-  const INTRO_REEL = Object.freeze({ speed: 0.38, spin: 2600 });
+  const INTRO_REEL = Object.freeze({ speed: 0.4, spin: 3400 });
 
-  function playIntro() {
-    if (reducedMotion.matches) return;
+  let stopIntro = null;
+
+  function playIntro({ force = false } = {}) {
+    stopIntro?.();
+    if (reducedMotion.matches && !force) return;
     const label = stage.querySelector('.demo-stage-label');
     const events = ['pointerdown', 'keydown', 'wheel', 'touchstart'];
     const chosen = { background: bgColor.value.toLowerCase(), head: headColor.value.toLowerCase() };
-    const palettes = INTRO_PALETTES.map(id => PALETTES.find(palette => palette.id === id));
+    const palettes = INTRO_SEQUENCE.map(([id, swapped]) => {
+      const palette = PALETTES.find(item => item.id === id);
+      return swapped ? { ...palette, background: palette.head, head: palette.background } : palette;
+    });
     // Top to bottom: a filler for the landing bounce, the chosen colors, the palettes
     // from light back to dark, and the current colors, which show first.
     const blocks = [chosen, chosen, ...palettes.slice().reverse(), { background: shown.background, head: shown.head }];
@@ -630,6 +641,7 @@ function mountDemoControls() {
     };
     const cleanup = () => {
       ended = true;
+      stopIntro = null;
       cancelAnimationFrame(frame);
       events.forEach(type => window.removeEventListener(type, end, true));
       face.removeEventListener('action-state', onAction);
@@ -666,6 +678,7 @@ function mountDemoControls() {
       frame = requestAnimationFrame(follow);
     };
 
+    stopIntro = end;
     document.documentElement.dataset.demoIntro = 'true';
     events.forEach(type => window.addEventListener(type, end, { capture: true, passive: true }));
     face.addEventListener('action-state', onAction);
@@ -677,14 +690,15 @@ function mountDemoControls() {
     stage.insertBefore(reel, stage.querySelector('.avatar-home'));
 
     // The eyes' reel starts after the action's short preparation; roll the stage
-    // with it for the same time, and nod once both have come to rest.
+    // with it for the same time, and end once both have come to rest.
     let reelDone = false;
     let eyesDone = false;
     const land = () => {
       if (ended || !reelDone || !eyesDone) return;
       cleanup();
       showChosenColors();
-      play('affirm');
+      // Ending pose: happy eyes and a small hop, a "ta-da" after the spin.
+      play('success');
     };
     const roll = () => {
       if (ended || strip.getAnimations().length) return;
@@ -722,6 +736,9 @@ function mountDemoControls() {
       roll();
     }, 800);
   }
+
+  // Temporary replay button for tuning the opening show; remove before the release.
+  stage.querySelector('#demoReplayIntro')?.addEventListener('click', () => playIntro({ force: true }));
 
   if (document.documentElement.dataset.demoReady) playIntro();
   else {
