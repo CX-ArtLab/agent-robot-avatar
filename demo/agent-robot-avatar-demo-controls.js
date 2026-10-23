@@ -697,7 +697,18 @@ function mountDemoControls() {
       if (ended || !reelDone || !eyesDone) return;
       cleanup();
       showChosenColors();
-      // Ending pose: happy eyes and a small hop, a "ta-da" after the spin.
+      // Ending pose: happy eyes and a small hop, a "ta-da" after the spin. It is
+      // still part of the show, so the status label waits until it is over.
+      document.documentElement.dataset.demoIntro = 'true';
+      const release = event => {
+        if (event.detail.action === 'success' && event.detail.phase === 'start') return;
+        face.removeEventListener('action-state', release);
+        if (stopIntro) return; // a replay took over
+        delete document.documentElement.dataset.demoIntro;
+        currentState = String(face._state || 'idle');
+        updateStatus();
+      };
+      face.addEventListener('action-state', release);
       play('success');
     };
     const roll = () => {
