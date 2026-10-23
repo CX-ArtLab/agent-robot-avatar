@@ -2,23 +2,24 @@
 // text names only (no logos or brand fonts), with a visible disclaimer.
 // Colors follow each brand's own assets where published (Claude, ComfyUI, Telegram).
 // Every pair keeps about 3:1 contrast or more because the eyes take the background color.
+// Ordered around the color wheel, dark to light, so the swatch strip reads as one band.
 const PALETTES = Object.freeze([
-  { id:'claude', background:'#faf9f5', head:'#d97757', name:'Claude' },
-  { id:'chatgpt', background:'#ffffff', head:'#0fa578', name:'ChatGPT' },
+  { id:'spotify', background:'#121212', head:'#1ed760', name:'Spotify' },
+  { id:'celtics', background:'#007a33', head:'#ffffff', name:'Celtics', 'zh-CN':'凯尔特人', 'zh-TW':'塞爾提克' },
+  { id:'netflix', background:'#141414', head:'#e50914', name:'Netflix' },
+  { id:'barca', background:'#a50044', head:'#edbb00', name:'Barça', 'zh-CN':'巴萨', 'zh-TW':'巴薩' },
   { id:'comfyui', background:'#211927', head:'#f2ff59', name:'ComfyUI' },
-  { id:'ubuntu', background:'#e95420', head:'#ffffff', name:'Ubuntu' },
-  { id:'dribbble', background:'#ea4c89', head:'#ffffff', name:'Dribbble' },
+  { id:'warriors', background:'#1d428a', head:'#ffc72c', name:'Warriors', 'zh-CN':'勇士', 'zh-TW':'勇士' },
   { id:'discord', background:'#5865f2', head:'#ffffff', name:'Discord' },
   { id:'telegram', background:'#229ed9', head:'#ffffff', name:'Telegram' },
-  { id:'snapchat', background:'#fffc00', head:'#000000', name:'Snapchat' },
-  { id:'youtube', background:'#ffffff', head:'#ff0000', name:'YouTube' },
-  { id:'netflix', background:'#141414', head:'#e50914', name:'Netflix' },
-  { id:'spotify', background:'#121212', head:'#1ed760', name:'Spotify' },
-  { id:'lakers', background:'#fdb927', head:'#552583', name:'Lakers', 'zh-CN':'湖人', 'zh-TW':'湖人' },
-  { id:'warriors', background:'#1d428a', head:'#ffc72c', name:'Warriors', 'zh-CN':'勇士', 'zh-TW':'勇士' },
-  { id:'celtics', background:'#007a33', head:'#ffffff', name:'Celtics', 'zh-CN':'凯尔特人', 'zh-TW':'塞爾提克' },
-  { id:'barca', background:'#a50044', head:'#edbb00', name:'Barça', 'zh-CN':'巴萨', 'zh-TW':'巴薩' },
   { id:'man-city', background:'#6cabdd', head:'#1c2c5b', name:'Man City', 'zh-CN':'曼城', 'zh-TW':'曼城' },
+  { id:'dribbble', background:'#ea4c89', head:'#ffffff', name:'Dribbble' },
+  { id:'ubuntu', background:'#e95420', head:'#ffffff', name:'Ubuntu' },
+  { id:'lakers', background:'#fdb927', head:'#552583', name:'Lakers', 'zh-CN':'湖人', 'zh-TW':'湖人' },
+  { id:'snapchat', background:'#fffc00', head:'#000000', name:'Snapchat' },
+  { id:'claude', background:'#faf9f5', head:'#d97757', name:'Claude' },
+  { id:'chatgpt', background:'#ffffff', head:'#0fa578', name:'ChatGPT' },
+  { id:'youtube', background:'#ffffff', head:'#ff0000', name:'YouTube' },
 ]);
 
 const PALETTE_UI = Object.freeze({

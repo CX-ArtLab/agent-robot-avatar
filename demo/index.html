@@ -95,8 +95,10 @@
     /* Color panel: one strip of brand swatches; hovering previews, the caption names it. */
     .demo-options-group.demo-color-group{display:grid;gap:8px;width:100%!important;contain:inline-size;padding:10px 12px 8px}
     .demo-swatches{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 4px}
-    .demo-swatch{--swatch-top:var(--swatch-bg);--swatch-bottom:var(--swatch-head);width:26px;height:26px;padding:0;border-radius:7px;background:linear-gradient(var(--swatch-top) 0 66%,var(--swatch-bottom) 66% 100%);box-shadow:inset 0 0 0 1px rgba(0,0,0,.1);transition:transform .15s ease,box-shadow .15s ease}
-    .demo-swatch:hover{background:linear-gradient(var(--swatch-top) 0 66%,var(--swatch-bottom) 66% 100%);transform:translateY(-2px) scale(1.08)}
+    /* Each swatch is the background with a small head-colored block in the middle. */
+    .demo-swatch{--swatch-top:var(--swatch-bg);--swatch-bottom:var(--swatch-head);position:relative;width:26px;height:26px;padding:0;border-radius:7px;background:var(--swatch-top);box-shadow:inset 0 0 0 1px rgba(0,0,0,.1);transition:transform .15s ease,box-shadow .15s ease}
+    .demo-swatch::before{content:'';position:absolute;left:50%;top:50%;width:12px;height:11px;margin:-5.5px 0 0 -6px;border-radius:3.5px;background:var(--swatch-bottom)}
+    .demo-swatch:hover{background:var(--swatch-top);transform:translateY(-2px) scale(1.08)}
     .demo-swatch:active{transform:none}
     .demo-swatch:focus-visible{outline:2px solid #aeb2b8;outline-offset:2px}
     .demo-swatch[aria-pressed=true]{box-shadow:0 0 0 2px #25282c}
