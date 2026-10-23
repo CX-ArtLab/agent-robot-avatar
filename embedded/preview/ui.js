@@ -11,7 +11,12 @@
     ['surprise','惊讶'],['love','喜欢'],['random','随机'],['sleep','睡着'],['wake','醒来'],
     ['waiting-wave','等待 · 波动']
   ];
-  const GROUPS = [['round','圆形屏'],['square','方形 / 矩形彩屏'],['bar','长条屏'],['kit','带外壳的开发套件'],['mono','黑白 OLED'],['other','其他']];
+  const GROUPS = [['round','圆形'],['square','方形 / 矩形'],['bar','长条'],['kit','开发套件'],['mono','黑白 OLED'],['other','其他']];
+  // Whole-frame bandwidth of the usual wiring: [label, bits per second, bits per pixel].
+  const BUSES = {
+    spi:['SPI 40 MHz',40e6,16], spi18:['SPI 40 MHz · 18 位色',40e6,24], qspi:['QSPI 4 线 40 MHz',160e6,16],
+    i8080:['8 位并口 20 MHz',160e6,16], rgb:['RGB 并口 16 MHz 像素时钟',256e6,16], i2c:['I²C 400 kHz',400e3*8/9,1]
+  };
   const PANEL_NAMES = {ips:'IPS LCD',tn:'TN LCD',amoled:'AMOLED',oled:'单色 OLED'};
   const ZOOMS = [['fit','适合窗口'],['1','实物大小'],['2','2×'],['4','4×']];
   const CSS_PX_PER_MM = 96 / 25.4, MAX_CANVAS_PX = 4096, MAX_DEVICE_CSS_PX = 6000;
@@ -27,7 +32,7 @@
   let api, image, base = SCREEN_PRESETS[0], preset = base, rotated = false, time = 0, paused = false;
   let cycling = false, cycleIndex = 0, nextCycle = 0, previous = null, active = -1;
   let pointer = {detected:false,x:0,y:0}, trackingText = '', lastMotion = -Infinity, motionAnchor = null;
-  let zoom = 'fit', fit = 'preset';
+  let zoom = 'fit', fit = 'preset', screenGroup = 'square';
   const layouts = store.get('layouts',{});
   let colors = {...DEFAULT_COLORS,...store.get('colors',{})}, mono = store.get('mono','white');
   let lit = [255,255,255], unlit = [0,0,0];
@@ -85,6 +90,27 @@
     if(zoom!=='fit')return CSS_PX_PER_MM*Number(zoom);
     const r=$('stage').getBoundingClientRect(), margin=40;
     return Math.max(.5,Math.min((r.width-margin)/g.w,(r.height-margin)/g.h,CSS_PX_PER_MM*16));
+  }
+
+  // Segmented button groups keep their value in data-value.
+  function segValue(id) { return Number($(id).dataset.value); }
+  function setSeg(id,value) {
+    $(id).dataset.value=String(value);
+    $(id).querySelectorAll('[data-value]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.value===String(value))));
+  }
+  function bindSeg(id,onchange) {
+    setSeg(id,$(id).dataset.value);
+    $(id).addEventListener('click',event=>{
+      const b=event.target.closest('[data-value]');
+      if(!b||b.disabled||b.dataset.value===$(id).dataset.value)return;
+      setSeg(id,b.dataset.value);onchange();
+    });
+  }
+  function busNote() {
+    const bus=BUSES[base.bus];
+    if(!bus)return '';
+    const fps=bus[1]/(preset.width*preset.height*bus[2]);
+    return bus[0]+' · 理论整屏刷新'+(fps>=60?'可达 60 FPS 以上':'约 '+Math.floor(fps)+' FPS');
   }
 
   // ---------- drawing ----------
@@ -246,15 +272,18 @@
     setCycling(false);time=0;previous=null;active=-1;pointer.detected=false;lastMotion=-Infinity;motionAnchor=null;
     screen.width=preset.width;screen.height=preset.height;
     image=ctx.createImageData(screen.width,screen.height);
-    if(!api.eyes_init(preset.width,preset.height,Number($('fps').value),
+    if(!api.eyes_init(preset.width,preset.height,segValue('fps'),
       $('blink').checked?1:0,$('transitions').checked?240:0,0))throw new Error('Core initialization failed');
     api.eyes_tracking($('tracking').checked?1:0,0);
     applyGazeConfig();
     $('gx').value=$('gy').value='0';$('gx-value').value=$('gy-value').value='0.00';
     $('screen-label').textContent=preset.width+' × '+preset.height+' · 1-bit';
     $('support-state').textContent=preset.example?'可预览 · 有参考例程 · 未实机验证':'可预览 · 未提供此配置的驱动例程';
-    if(base.id!=='custom'){$('profile').value=base.id;store.set('profile',base.id);}
-    $('custom-size').hidden=$('profile').value!=='custom';
+    screenGroup=base.id==='custom'?'other':base.group||'other';
+    renderProfiles();
+    if(base.id!=='custom')store.set('profile',base.id);
+    $('custom-size').hidden=base.id!=='custom';
+    $('bus-note').textContent=busNote();$('bus-note').hidden=!base.bus;
     syncControls();loadLayout();resizeDisplay();applyLayout();setPaused(paused);
   }
   function setTracking() {
@@ -265,7 +294,7 @@
     resizeDisplay();draw();
   }
   function applyGazeConfig() {
-    if(!api.eyes_gaze_config(.5,.4,Number($('hold').value),Number($('response').value),$('moving-only').checked?1:0))
+    if(!api.eyes_gaze_config(.5,.4,segValue('hold'),segValue('response'),$('moving-only').checked?1:0))
       throw new Error('Invalid gaze configuration');
   }
   function gaze() {
@@ -299,11 +328,25 @@
     $('custom-shape').value=preset.frame==='round'?'1':'0';
     configure({...preset,id:'custom',name:'自定义屏幕',module:null,board:null,rotation:0,example:false},false);
   }
+  // The picker lists one screen type at a time; the type chips switch it.
+  function groupPresets(group) { return SCREEN_PRESETS.filter(item=>(item.group||'other')===group); }
+  function renderProfiles() {
+    const items=groupPresets(screenGroup), select=$('profile');
+    select.replaceChildren(...items.map(item=>{
+      const option=document.createElement('option');option.value=item.id;option.textContent=item.name;return option;
+    }));
+    if(screenGroup==='other'){
+      const custom=document.createElement('option');custom.value='custom';custom.textContent='自定义分辨率…';select.append(custom);
+    }
+    select.value=base.id;
+    document.querySelectorAll('[data-group]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.group===screenGroup)));
+    const index=items.indexOf(base);
+    $('profile-index').textContent=index<0?'':(index+1)+' / '+items.length;
+  }
   function stepProfile(delta) {
-    const ids=[...$('profile').options].map(o=>o.value).filter(v=>v!=='custom');
-    const index=ids.indexOf(base.id);
-    $('profile').value=ids[(index+delta+ids.length)%ids.length];
-    selectProfile($('profile').value);
+    const items=groupPresets(screenGroup);
+    const index=items.indexOf(base);
+    selectProfile(items[(index+delta+items.length)%items.length].id);
   }
   // Narrows the action bar to the smallest width that keeps its row count,
   // so the buttons split evenly between rows.
@@ -337,21 +380,17 @@
         $('actions').append(button);buttons.push(button);
       });
       for(const [group,label] of GROUPS) {
-        const items=SCREEN_PRESETS.filter(item=>(item.group||'other')===group);
+        const items=groupPresets(group);
         if(!items.length)continue;
-        const optgroup=document.createElement('optgroup');optgroup.label=label;
+        const chip=document.createElement('button');chip.type='button';chip.className='chip';chip.dataset.group=group;
+        chip.textContent=label+' '+items.length;$('screen-groups').append(chip);
         items.forEach(item=>{
-          const option=document.createElement('option');option.value=item.id;
-          option.textContent=item.name+' · '+item.width+'×'+item.height;
-          optgroup.append(option);
           const row=document.createElement('div');row.className='preset-item';
-          const name=document.createElement('span');name.textContent=option.textContent;
+          const name=document.createElement('span');name.textContent=item.name+' · '+item.width+'×'+item.height;
           const state=document.createElement('span');state.textContent=item.example?'可预览 / 有参考例程':'可预览';
           row.append(name,state);$('preset-list').append(row);
         });
-        $('profile').append(optgroup);
       }
-      const custom=document.createElement('option');custom.value='custom';custom.textContent='自定义分辨率…';$('profile').append(custom);
       $('zoom').append(...ZOOMS.map(([value,label])=>{
         const b=document.createElement('button');b.type='button';b.className='chip';b.dataset.zoom=value;b.textContent=label;
         if(value==='1')b.title='按常见电脑屏幕估算，不同显示器会有偏差';return b;
@@ -361,17 +400,21 @@
       }));
       document.querySelectorAll('button,select,input').forEach(el=>{el.disabled=false;});
       const saved=SCREEN_PRESETS.find(item=>item.id===store.get('profile',''));
-      if(saved){base=saved;$('profile').value=saved.id;}
+      if(saved)base=saved;
       configure(base,false);setPaused(false);balanceActions();
       $('status').textContent='本机绘制 · C++ 核心 · 无外部请求'+(panel?'':' · 面板效果不可用');
       $('fingerprint').textContent='核心源码 SHA-256：'+CORE_SHA256.slice(0,16);
       $('pause').onclick=()=>setPaused(!paused);
-      $('step').onclick=()=>{if(paused)advance(Math.ceil(1000/Number($('fps').value)));};
+      $('step').onclick=()=>{if(paused)advance(Math.ceil(1000/segValue('fps')));};
       $('demo').onclick=()=>{setCycling(!cycling);if(cycling){cycleIndex=0;nextCycle=time+4000;play(0);}};
       $('reset').onclick=()=>configure();
       $('profile').onchange=()=>selectProfile($('profile').value);
       $('prev-profile').onclick=()=>stepProfile(-1);
       $('next-profile').onclick=()=>stepProfile(1);
+      $('screen-groups').onclick=event=>{
+        const b=event.target.closest('[data-group]');
+        if(b&&b.dataset.group!==screenGroup)selectProfile(groupPresets(b.dataset.group)[0].id);
+      };
       $('apply-size').onclick=()=>{
         const width=Number($('custom-width').value),height=Number($('custom-height').value),round=$('custom-shape').value==='1';
         if(!Number.isInteger(width)||!Number.isInteger(height)||width<16||height<16||width>512||height>512||(round&&width!==height)){
@@ -380,11 +423,13 @@
         $('size-error').textContent='';
         configure({id:'custom',name:'自定义屏幕',controller:'CUSTOM',width,height,frame:round?'round':'tft',example:false},false);
       };
-      for(const id of ['fps','blink','transitions'])$(id).onchange=()=>configure();
+      bindSeg('fps',()=>configure());
+      for(const id of ['blink','transitions'])$(id).onchange=()=>configure();
       $('housing').onchange=resizeDisplay;$('tracking').onchange=setTracking;
       $('sense-radius').oninput=resizeDisplay;
-      for(const id of ['hold','response','moving-only'])$(id).onchange=()=>{applyGazeConfig();updateTrackingStatus();};
-      $('motion-sensitivity').onchange=()=>{motionAnchor=null;lastMotion=-Infinity;};
+      for(const id of ['hold','response'])bindSeg(id,()=>{applyGazeConfig();updateTrackingStatus();});
+      $('moving-only').onchange=()=>{applyGazeConfig();updateTrackingStatus();};
+      bindSeg('motion-sensitivity',()=>{motionAnchor=null;lastMotion=-Infinity;});
       $('fit').onclick=event=>{const b=event.target.closest('[data-fit]');if(b){fit=b.dataset.fit;applyLayout(true);}};
       for(const id of ['face-scale','offset-x','offset-y'])$(id).oninput=()=>applyLayout(true);
       $('layout-reset').onclick=resetLayout;
@@ -407,7 +452,7 @@
       };
       const updatePointer=event=>{
         if(event.pointerType==='touch'&&event.buttons===0)return;
-        if(!motionAnchor||Math.hypot(event.clientX-motionAnchor.x,event.clientY-motionAnchor.y)>=Number($('motion-sensitivity').value)){
+        if(!motionAnchor||Math.hypot(event.clientX-motionAnchor.x,event.clientY-motionAnchor.y)>=segValue('motion-sensitivity')){
           if(motionAnchor)lastMotion=time;
           motionAnchor={x:event.clientX,y:event.clientY};
         }

@@ -18,7 +18,8 @@
     "module": "waveshare-1.3",
     "rotation": 0,
     "group": "square",
-    "panel": "ips"
+    "panel": "ips",
+    "bus": "spi"
   },
   {
     "id": "oled",
@@ -33,7 +34,8 @@
     "module": "adafruit-326",
     "rotation": 0,
     "group": "mono",
-    "panel": "oled"
+    "panel": "oled",
+    "bus": "i2c"
   },
   {
     "id": "oled-wide",
@@ -48,7 +50,8 @@
     "module": "adafruit-931",
     "rotation": 0,
     "group": "mono",
-    "panel": "oled"
+    "panel": "oled",
+    "bus": "i2c"
   },
   {
     "id": "mini",
@@ -63,7 +66,8 @@
     "module": "waveshare-1.8",
     "rotation": 90,
     "group": "square",
-    "panel": "tn"
+    "panel": "tn",
+    "bus": "spi"
   },
   {
     "id": "landscape",
@@ -78,7 +82,8 @@
     "module": "waveshare-2",
     "rotation": 0,
     "group": "square",
-    "panel": "ips"
+    "panel": "ips",
+    "bus": "spi"
   },
   {
     "id": "portrait",
@@ -93,7 +98,8 @@
     "module": "waveshare-2",
     "rotation": 90,
     "group": "square",
-    "panel": "ips"
+    "panel": "ips",
+    "bus": "spi"
   },
   {
     "id": "round",
@@ -108,7 +114,8 @@
     "module": "waveshare-1.28",
     "rotation": 0,
     "group": "round",
-    "panel": "ips"
+    "panel": "ips",
+    "bus": "spi"
   },
   {
     "id": "narrow",
@@ -123,7 +130,8 @@
     "module": "waveshare-1.14",
     "rotation": 0,
     "group": "bar",
-    "panel": "ips"
+    "panel": "ips",
+    "bus": "spi"
   },
   {
     "id": "eyes",
@@ -187,7 +195,8 @@
           ]
         }
       ]
-    }
+    },
+    "bus": "spi"
   },
   {
     "id": "esp32s3-round-128",
@@ -223,7 +232,8 @@
           "rot": 0
         }
       ]
-    }
+    },
+    "bus": "spi"
   },
   {
     "id": "m5-dial",
@@ -257,7 +267,8 @@
         "d": 35.2
       },
       "parts": []
-    }
+    },
+    "bus": "spi"
   },
   {
     "id": "xiao-round-128",
@@ -295,7 +306,8 @@
           "color": "#3a3d42"
         }
       ]
-    }
+    },
+    "bus": "spi"
   },
   {
     "id": "t-rgb-21",
@@ -324,7 +336,8 @@
         "d": 57
       },
       "parts": []
-    }
+    },
+    "bus": "rgb"
   },
   {
     "id": "amoled-175",
@@ -353,7 +366,8 @@
         "d": 46.2
       },
       "parts": []
-    }
+    },
+    "bus": "qspi"
   },
   {
     "id": "st7789-13",
@@ -413,7 +427,8 @@
           "h": 1.6
         }
       ]
-    }
+    },
+    "bus": "spi"
   },
   {
     "id": "st7789-154",
@@ -481,7 +496,8 @@
           ]
         }
       ]
-    }
+    },
+    "bus": "spi"
   },
   {
     "id": "st7789v2-169",
@@ -524,7 +540,8 @@
           "labels": null
         }
       ]
-    }
+    },
+    "bus": "spi"
   },
   {
     "id": "st7789-20",
@@ -583,7 +600,8 @@
           ]
         }
       ]
-    }
+    },
+    "bus": "spi"
   },
   {
     "id": "st7735-18",
@@ -659,7 +677,8 @@
           "color": "rgba(255,255,255,.72)"
         }
       ]
-    }
+    },
+    "bus": "spi"
   },
   {
     "id": "st7735-096",
@@ -704,7 +723,8 @@
           "labels": null
         }
       ]
-    }
+    },
+    "bus": "spi"
   },
   {
     "id": "t-display-s3",
@@ -759,7 +779,8 @@
           "color": "#3a3d42"
         }
       ]
-    }
+    },
+    "bus": "i8080"
   },
   {
     "id": "t-display-114",
@@ -825,7 +846,8 @@
           "h": 7
         }
       ]
-    }
+    },
+    "bus": "spi"
   },
   {
     "id": "m5stickc-plus2",
@@ -876,7 +898,8 @@
           "color": "rgba(0,0,0,.55)"
         }
       ]
-    }
+    },
+    "bus": "spi"
   },
   {
     "id": "m5-atoms3",
@@ -909,7 +932,8 @@
         "r": 1.2
       },
       "parts": []
-    }
+    },
+    "bus": "spi"
   },
   {
     "id": "m5-cores3",
@@ -951,7 +975,8 @@
           "h": 2.4
         }
       ]
-    }
+    },
+    "bus": "spi"
   },
   {
     "id": "esp32-s3-box-3",
@@ -993,7 +1018,8 @@
           "color": "#d4253a"
         }
       ]
-    }
+    },
+    "bus": "spi"
   },
   {
     "id": "ssd1306-096",
@@ -1065,7 +1091,8 @@
           ]
         }
       ]
-    }
+    },
+    "bus": "i2c"
   },
   {
     "id": "ssd1306-091",
@@ -1115,7 +1142,8 @@
           ]
         }
       ]
-    }
+    },
+    "bus": "i2c"
   },
   {
     "id": "sh1106-13",
@@ -1187,7 +1215,8 @@
           ]
         }
       ]
-    }
+    },
+    "bus": "i2c"
   },
   {
     "id": "ili9341-cyd-28",
@@ -1256,7 +1285,8 @@
           "color": "#3a3d42"
         }
       ]
-    }
+    },
+    "bus": "spi"
   },
   {
     "id": "ili9488-35",
@@ -1315,7 +1345,8 @@
           ]
         }
       ]
-    }
+    },
+    "bus": "spi18"
   },
   {
     "id": "st7701-40-86",
@@ -1348,6 +1379,7 @@
         "r": 2.4
       },
       "parts": []
-    }
+    },
+    "bus": "rgb"
   }
 ]
