@@ -6,7 +6,7 @@
 
 [English](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/README.md) | [简体中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-CN.md) | [Español](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.es.md) | [Русский](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ru.md) | [Français](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.fr.md) | [Português](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.pt.md) | [Deutsch](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.de.md) | [日本語](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ja.md) | [한국어](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ko.md) | [繁體中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-TW.md)
 
-![Version](https://img.shields.io/badge/version-v0.5.2-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](./LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
+![Version](https://img.shields.io/badge/version-v0.6.0-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](./LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
 ![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square)
 
@@ -47,9 +47,9 @@ Built with SVG and vanilla JavaScript, it works as a native custom element with 
 
 ## Embedded eyes (experimental)
 
-An independent, allocation-free C++11 eyes-only engine is available for embedded products. Reference builds cover ESP32-S3 with ST7789, ESP32 with SSD1306, and Raspberry Pi Pico / RP2040 with ST7789. Display adapters are separate from the expression engine. Physical hardware validation is pending; this is not a claim of universal board compatibility.
+An independent, allocation-free C++11 eyes-only engine draws the same 18 expressions on robot and dev-board screens. Firmware examples cover 26 board and screen configurations across ESP32, ESP32-S3 and RP2040 — ST7789, ST7735, GC9A01 round, ILI9341/9342/9488, CO5300 AMOLED, ST7701S RGB panels and SSD1306/SH1106 OLEDs, including LilyGO, M5Stack, Waveshare, Seeed and Espressif boards. Every example compiles in CI; none is verified on real hardware yet, so please send a hardware report if you try one.
 
-See the [embedded guide](https://github.com/CX-ArtLab/agent-robot-avatar/tree/main/embedded) and [中文说明](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/embedded/README.zh-CN.md). The Web component's installation and behavior are unchanged.
+[Try the hardware preview](https://cx-artlab.github.io/agent-robot-avatar/hardware/) — the same C++ engine compiled to WebAssembly, on 33 simulated screens with wiring tables. See the [embedded guide](https://github.com/CX-ArtLab/agent-robot-avatar/tree/main/embedded) and [中文说明](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/embedded/README.zh-CN.md). The Web component's installation and behavior are unchanged.
 
 ## Install
 
@@ -172,7 +172,7 @@ Issues and pull requests are welcome. See [`CONTRIBUTING.md`](./CONTRIBUTING.md)
 
 ## Project status
 
-**Current public version: v0.5.2**
+**Current public version: v0.6.0**
 
 The public API is intentionally kept compact while the project evolves toward a future `1.0.0` stability commitment.
 

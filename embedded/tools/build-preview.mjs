@@ -40,12 +40,13 @@ try {
   const template = await readFile(join(preview, 'index.template.html'), 'utf8');
   const license = await readFile(join(root, 'lib/AgentRobotEyes/LICENSE'), 'utf8').catch(() => readFile(join(root, '../LICENSE'), 'utf8'));
   const notices = await readFile(join(preview, 'third-party-notices.txt'), 'utf8');
+  const packageVersion = JSON.parse(await readFile(join(root, '../package.json'), 'utf8')).version;
   const escape = text => text.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
   const html = template.replace('/*__WASM__*/', `const WASM_BASE64 = '${wasm.toString('base64')}';\nconst CORE_SHA256 = '${sourceHash}';`)
     .replace('/*__PRESETS__*/', `const SCREEN_PRESETS = ${JSON.stringify(presets)};`)
     .replace('/*__FRAMES__*/', `const DISPLAY_FRAMES = ${JSON.stringify(frames)};`)
     .replace('/*__PROJECT_CSS__*/', demoCSS)
-    .replace('/*__UI__*/', ui).replace('__LICENSE__', escape(license)).replace('__THIRD_PARTY__', escape(notices));
+    .replace('/*__UI__*/', ui).replace('__VERSION__',packageVersion).replace('__LICENSE__', escape(license)).replace('__THIRD_PARTY__', escape(notices));
   const output = resolve(process.argv[2] || join(preview, 'agent-robot-eyes-preview.html'));
   await writeFile(output, html);
   console.log(`Built offline preview: ${output} (${html.length} characters; core ${sourceHash.slice(0,12)})`);

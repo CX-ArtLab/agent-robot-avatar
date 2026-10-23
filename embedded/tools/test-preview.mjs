@@ -31,6 +31,7 @@ const template = await readFile(join(root, 'preview/index.template.html'), 'utf8
 const escape = text => text.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
 const license = await readFile(join(root, 'lib/AgentRobotEyes/LICENSE'), 'utf8').catch(() => readFile(join(root, '../LICENSE'), 'utf8'));
 const notices = await readFile(join(root, 'preview/third-party-notices.txt'), 'utf8');
+const packageVersion = JSON.parse(await readFile(join(root, '../package.json'), 'utf8')).version;
 const demoCSS = await readFile(join(root,'preview/project-demo.css'),'utf8');
 const displayFrames = await loadPreviewFrames(join(root,'preview'));
 const presets = JSON.parse(await readFile(join(root,'preview/presets.json'),'utf8'));
@@ -38,7 +39,7 @@ assert.equal(html, template.replace('/*__WASM__*/', `const WASM_BASE64 = '${enco
   .replace('/*__PRESETS__*/',`const SCREEN_PRESETS = ${JSON.stringify(presets)};`)
   .replace('/*__FRAMES__*/',`const DISPLAY_FRAMES = ${JSON.stringify(displayFrames)};`)
   .replace('/*__PROJECT_CSS__*/',demoCSS)
-  .replace('/*__UI__*/',ui).replace('__LICENSE__',escape(license)).replace('__THIRD_PARTY__',escape(notices)),
+  .replace('/*__UI__*/',ui).replace('__VERSION__',packageVersion).replace('__LICENSE__',escape(license)).replace('__THIRD_PARTY__',escape(notices)),
   'rebuild preview after modifying HTML/UI/notices');
 
 const commands = [], expected = [];

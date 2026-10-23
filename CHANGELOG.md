@@ -6,41 +6,24 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-10-23
+
 ### Added
 
-- Added firmware examples for the remaining previewed screens: ST7789 1.14″ and 2.0″ landscape, ST7735 1.8″ and 0.96″, ILI9488 3.5″ modules, Seeed XIAO Round Display, ESP32-S3-BOX-3, Waveshare 1.75″ AMOLED (CO5300 QSPI), LilyGO T-RGB 2.1″ and Guition ESP32-4848S040 (ST7701S RGB panels). CI now builds 26 configurations and 32 of the 33 previewed screens have a wiring example. None is verified on real hardware.
-
-- Added compile-checked firmware examples for 13 more boards and screens (GC9A01 round modules, Waveshare ESP32-S3 1.28″ round, CYD ILI9341, LilyGO T-Display and T-Display-S3, M5Stack Dial / AtomS3 / CoreS3 / StickC Plus2, ST7789 240×280 and 240×320, SSD1306 128×32, SH1106) through per-board display adapters; CI builds all 16 configurations. The preview marks 21 screens as having a wiring example and shows the board, build command and wiring table, and a bilingual *Hardware report* issue template lets users confirm results on real hardware. None is physically verified yet.
-
-- Added display-only panel rendering to the hardware preview (pixel grid and sub-pixels, IPS/TN backlight, AMOLED black, OLED tints, glass glare, active-area outline, raw-pixel switch), 24 more boards and kits with generic housings, physical actual-size zoom, per-screen remembered layouts, 90° rotation and eye/background colours. The core framebuffer is unchanged.
-
-- Added seven SVG reference-module housings based on official product photographs and dimensions, with model names/source links, correctly rotated portrait/landscape assemblies and responsive screen alignment. Custom sizes retain a generic frame.
-
-- Added the offline C++/WebAssembly hardware preview with nine screen presets, custom resolutions, viewport fit/crop/zoom/circular clipping, configurable proximity gaze and the restored continuous hardware waiting-wave variant.
-
-- Added a collapsible Color themes panel next to Custom colors, with 17 named two-color presets inspired by brands, AI products and sports. Each option uses the existing color-control pill style and a split rounded swatch; clicking the active pair swaps foreground/background colors. The panel wraps within the demo width and scrolls on narrow screens. Settings/language remain grouped on the left.
-
-- Added the SVG `waiting-wave` action (等待 · 波动), approved and queued for a future batched release: three 1.1-second waves with a 10-unit vertical amplitude and staggered eye motion. `startWaiting({ variant: 'wave' })` loops continuously; the demo, TypeScript API, motion policy and action lifecycle support the new variant.
-
-- Added an experimental portable C++11 eyes-only engine, with ESP32 and RP2040 reference firmware, explicit program-controlled expressions, native safety tests and separate embedded build checks. Physical hardware verification is pending.
-
-### Fixed
-
-- Reworked hardware-preview interaction: a stepless zoom that never exceeds the window, housing toggle that keeps the screen in place, a visible running state for auto-cycle, one-row screen-type tabs with direct custom sizes, a concise screen summary, a frame-rate cap that follows each screen's bus limit, one gaze source at a time, one-row colour and effect controls, and remembered settings. Frame rate, blink and transitions now change without restarting the current action through the core's new `setTiming()`.
-
-- Widened the embedded idle gaze, which moved the eyes only 8 × 6 face units (about a sixth of the Web avatar's reach). `GazeRange` now offers Small (the original), Medium (new default, 20 × 18, reaching the face-area edge) and Large (30 × 21); near the edge the eyes narrow and move inward with the Web avatar's formula. A centred gaze is unchanged. The hardware preview adds a 注视幅度 control.
-
-- Smoothed embedded input-cursor exits by interpolating both corner radii into the target ellipse instead of changing primitives on the final frame. Preserve the current shape through repeated interruptions and allow the same handoff into wake; retain original target poses and motion timings.
-
-- Restored the original 17 eye motions and timing in the embedded engine using sampled Web geometry, with independent SVG fidelity checks and native/WASM frame comparison. Hardware demo cycling now lets longer actions finish.
-
-- Prevented the demo from revealing intermediate layouts during startup, preloaded its modules in parallel, and moved its controls and critical styles into the initial HTML.
+- Added the `waiting-wave` action (等待 · 波动): both eyes bob in staggered waves. `startWaiting({ variant: 'wave' })` loops it continuously.
+- Added a Color themes panel to the demo with 17 named two-color presets; clicking the active pair swaps foreground and background.
+- Added an experimental embedded eyes engine: a portable, allocation-free C++11 library that draws the same 18 expressions on 1-bit framebuffers from 16 to 512 pixels, with fit/fill/zoom layouts, round-screen clipping, proximity gaze with selectable range, and runtime timing changes.
+- Added firmware examples for 26 board and screen configurations (ESP32, ESP32-S3 and RP2040; ST7789, ST7735, GC9A01, ILI9341, ILI9342C, ILI9488, CO5300 AMOLED, ST7701S RGB panels, SSD1306 and SH1106 OLEDs; LilyGO, M5Stack, Waveshare, Seeed, Espressif and Guition boards). All compile in CI; none is verified on real hardware yet.
+- Added the hardware preview, an offline single-file page that runs the same C++ engine compiled to WebAssembly on 33 simulated screens, with panel-accurate display, module housings, actual-size zoom, wiring tables and a proximity-gaze simulator. It is also available online with the demo.
+- Added a Hardware report issue form so users can confirm board examples on real hardware.
 
 ### Changed
 
-- Reorganized the hardware preview into a two-column workspace: preview and expressions on the left, all function controls expanded on the right, with a stacked layout on narrow screens.
+- Refined the warning expression with independently tilted eyes, adjusted eye proportions and eyelids.
 
-- Refined the warning expression with independently tilted eyes, adjusted eye proportions and eyelids, and a longer raised-head pause.
+### Fixed
+
+- The demo no longer shows intermediate layouts while loading, and its action rows stay even on small phones.
 
 ## [0.5.2] - 2026-10-06
 
@@ -188,6 +171,8 @@ First public release.
 - npm-compatible package metadata for later package publication
 - Contribution guide, issue templates, pull request template, MIT License, and Ko-fi funding metadata
 
+[0.6.0]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.6.0
+[0.5.2]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.5.2
 [0.4.3]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.4.3
 [0.4.2]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.4.2
 [0.3.2]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.3.2

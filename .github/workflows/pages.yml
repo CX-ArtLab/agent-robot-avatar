@@ -7,6 +7,7 @@ on:
       - agent-robot-avatar.js
       - src/**
       - demo/**
+      - embedded/preview/agent-robot-eyes-preview.html
       - scripts/build-pages.mjs
       - .github/workflows/pages.yml
   workflow_dispatch:
