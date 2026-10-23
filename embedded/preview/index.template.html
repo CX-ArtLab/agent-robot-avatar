@@ -81,10 +81,16 @@ html,body{height:100%}
 .toggle .demo-switch{flex:0 0 auto}
 /* The transparent checkbox sits exactly over its switch, so it is the click target. */
 .toggle input{position:absolute;right:10px;top:50%;width:30px;height:18px;margin:-9px 0 0;opacity:0;pointer-events:auto;cursor:pointer;z-index:1}
-.picker{display:flex;gap:5px}
-.picker select{flex:1 1 0;width:0;height:38px;padding:0 10px;border-radius:9px;background:#f4f5f6;color:#202327;font-size:13px}
-.picker button{flex:0 0 38px;height:38px;padding:0;border-radius:9px;background:#f4f5f6;color:#5f646a;font-size:16px}
-.picker button:hover,.picker select:hover{background:#e9eaec}
+.head-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.head-row h2{margin:0}
+.stepper{display:flex;align-items:center;gap:2px;font-size:11px;color:#8a8f98;font-variant-numeric:tabular-nums}
+.stepper button{width:28px;height:26px;padding:0;border-radius:8px;background:#f4f5f6;color:#5f646a;font-size:14px}
+.stepper button:hover{background:#e9eaec}
+.stepper span{min-width:40px;text-align:center}
+.profile-select{width:100%;height:40px;padding:0 10px;border-radius:9px;background:#f4f5f6!important;color:#202327!important;font-size:13px!important}
+.profile-select:hover{background:#e9eaec!important}
+.field .seg{margin-left:auto;flex:0 1 auto;padding:2px;border-radius:8px;background:#e9eaec}
+.field .seg .chip{padding:5px 10px;font-size:11.5px;border-radius:7px}
 .meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;font-size:11px;line-height:1.6;color:#9a9ea4}
 .support-state{padding:2px 8px;border:1px solid #e2e3e5;border-radius:999px;background:#fff;color:#858990}
 .chip{background:#f4f5f6;color:#5f646a;border-radius:9px;padding:7px 10px;font-size:12px}
@@ -162,12 +168,12 @@ html,body{height:100%}
   <div class="side-head"><h1>功能选项</h1><button id="download" disabled>下载离线版 ↗</button></div>
 
   <section class="section">
-    <h2>屏幕</h2>
-    <div class="picker">
-      <button type="button" id="prev-profile" title="上一个型号" aria-label="上一个型号" disabled>‹</button>
-      <select id="profile" aria-label="屏幕预设" disabled></select>
-      <button type="button" id="next-profile" title="下一个型号" aria-label="下一个型号" disabled>›</button>
+    <div class="head-row">
+      <h2>屏幕</h2>
+      <div class="stepper"><button type="button" id="prev-profile" title="上一个型号" aria-label="上一个型号" disabled>‹</button><span id="profile-index"></span><button type="button" id="next-profile" title="下一个型号" aria-label="下一个型号" disabled>›</button></div>
     </div>
+    <div class="chips" id="screen-groups" role="group" aria-label="屏幕类型"></div>
+    <select id="profile" class="profile-select" aria-label="屏幕预设" disabled></select>
     <div id="custom-size" hidden>
       <div class="pair">
         <label class="field"><span>宽</span><input id="custom-width" type="number" min="16" max="512" value="240"></label>
@@ -180,6 +186,7 @@ html,body{height:100%}
       <span id="size-error" role="status"></span>
     </div>
     <div class="meta"><span id="support-state" class="support-state"></span><span id="screen-label">240 × 240 · 1-bit</span></div>
+    <div class="meta" id="bus-note" title="按连接总线带宽估算的整屏刷新上限，不含绘制时间；实际帧率还取决于芯片和驱动"></div>
     <div class="meta" id="profile-note"></div>
   </section>
 
@@ -202,12 +209,10 @@ html,body{height:100%}
     <h2>接近感应</h2>
     <label class="field toggle demo-toggle"><span>靠近注视（鼠标模拟物体）</span><input id="tracking" type="checkbox" checked disabled><span class="demo-switch" aria-hidden="true"></span></label>
     <label class="field"><span>感应扩展范围</span><input id="sense-radius" type="range" min="16" max="200" step="4" value="72"><output id="sense-value">72 px</output></label>
-    <div class="pair">
-      <label class="field toggle demo-toggle"><span>只看移动目标</span><input id="moving-only" type="checkbox"><span class="demo-switch" aria-hidden="true"></span></label>
-      <label class="field"><span>移动灵敏度</span><select id="motion-sensitivity"><option value="1">高</option><option value="3" selected>中</option><option value="8">低</option></select></label>
-      <label class="field"><span>跟随速度</span><select id="response"><option value="60">快</option><option value="140" selected>正常</option><option value="320">慢</option></select></label>
-      <label class="field"><span>离开后停留</span><select id="hold"><option value="0">立即回正</option><option value="600" selected>0.6 秒</option><option value="1500">1.5 秒</option><option value="3000">3 秒</option></select></label>
-    </div>
+    <label class="field toggle demo-toggle"><span>只看移动目标</span><input id="moving-only" type="checkbox"><span class="demo-switch" aria-hidden="true"></span></label>
+    <div class="field"><span>移动灵敏度</span><div class="seg" id="motion-sensitivity" data-value="3" role="group" aria-label="移动灵敏度"><button class="chip" type="button" data-value="1">高</button><button class="chip" type="button" data-value="3">中</button><button class="chip" type="button" data-value="8">低</button></div></div>
+    <div class="field"><span>跟随速度</span><div class="seg" id="response" data-value="140" role="group" aria-label="跟随速度"><button class="chip" type="button" data-value="60">快</button><button class="chip" type="button" data-value="140">正常</button><button class="chip" type="button" data-value="320">慢</button></div></div>
+    <div class="field"><span>离开后停留</span><div class="seg" id="hold" data-value="600" role="group" aria-label="离开后停留"><button class="chip" type="button" data-value="0">立即</button><button class="chip" type="button" data-value="600">0.6 秒</button><button class="chip" type="button" data-value="1500">1.5 秒</button><button class="chip" type="button" data-value="3000">3 秒</button></div></div>
     <div class="meta" id="tracking-note" role="status">鼠标进入虚线范围后注视，离开后稍作停留并回正。</div>
   </section>
 
@@ -222,7 +227,7 @@ html,body{height:100%}
 
   <section class="section">
     <h2>动画</h2>
-    <label class="field"><span>帧率上限</span><select id="fps"><option value="15">15 FPS</option><option value="25" selected>25 FPS</option><option value="30">30 FPS</option><option value="60">60 FPS</option></select></label>
+    <div class="field"><span>帧率上限</span><div class="seg" id="fps" data-value="25" role="group" aria-label="帧率上限"><button class="chip" type="button" data-value="15">15</button><button class="chip" type="button" data-value="25">25</button><button class="chip" type="button" data-value="30">30</button><button class="chip" type="button" data-value="60">60 FPS</button></div></div>
     <div class="pair">
       <label class="field toggle demo-toggle"><span>眨眼</span><input id="blink" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
       <label class="field toggle demo-toggle"><span>打断过渡</span><input id="transitions" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>

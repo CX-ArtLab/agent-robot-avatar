@@ -26,6 +26,12 @@ const frame = () => page.locator('#screen').evaluate(canvas => {
   for(let i=0;i<bytes.length;i+=4) { hash=Math.imul(hash^bytes[i],16777619)>>>0; if(bytes[i])lit++; }
   return { hash,lit,width:canvas.width,height:canvas.height };
 });
+const choose = async id => {
+  // The picker lists one screen type at a time: pick the type chip, then the screen.
+  const group = await page.evaluate(id => id === 'custom' ? 'other' : SCREEN_PRESETS.find(item => item.id === id).group || 'other', id);
+  await page.locator(`[data-group="${group}"]`).click();
+  await page.locator('#profile').selectOption(id);
+};
 try {
   await page.clock.install();
   await page.goto(file);
@@ -57,9 +63,9 @@ try {
   assert.equal((await frame()).hash,sleeping.hash);
   await page.locator('[data-action="wake"]').click(); await page.clock.runFor(1200);
   assert((await page.locator('#current').textContent()).includes('idle'));
-  await page.locator('#profile').selectOption('oled');
+  await choose('oled');
   assert.deepEqual([(await frame()).width,(await frame()).height],[128,64]);
-  await page.locator('#profile').selectOption('tft');
+  await choose('tft');
   const tft=await frame(); assert.deepEqual([tft.width,tft.height],[240,240]);
   const padding = await page.locator('#screen').evaluate(canvas => {
     const ctx=canvas.getContext('2d');
@@ -78,7 +84,7 @@ try {
   await page.locator('#gx').fill('1');
   assert.notEqual((await frame()).hash,centered.hash);
   await page.locator('#center').click(); assert.equal((await frame()).hash,centered.hash);
-  await page.locator('#fps').selectOption('60');
+  await page.locator('#fps [data-value="60"]').click();
   const before=Number.parseFloat(await clock());
   await page.locator('#step').click();
   assert(Math.abs(Number.parseFloat(await clock())-before-.02)<.001);
@@ -87,7 +93,7 @@ try {
     await page.locator(`[data-action="${action}"]`).click();
     assert((await page.locator('#current').textContent()).endsWith(action));
   }
-  await page.locator('#profile').selectOption('eyes');
+  await choose('eyes');
   await page.locator('[data-zoom="1"]').click();
   // Actual size: 240 px at the default 0.15 mm pitch, 96 CSS px per inch.
   const glassWidth=await page.locator('#glass').evaluate(el=>el.getBoundingClientRect().width);
@@ -99,16 +105,16 @@ try {
   assert.equal((await frame()).hash,native.hash,'panel effects must not change native pixels');
   await page.locator('#raw-pixels').uncheck(); await page.locator('#pixel-grid').check();
   // Layout is remembered per screen.
-  await page.locator('#profile').selectOption('landscape');
+  await choose('landscape');
   await page.locator('#face-scale').fill('1.5');
-  await page.locator('#profile').selectOption('portrait');
+  await choose('portrait');
   assert.equal(await page.locator('#face-scale').inputValue(),'1');
-  await page.locator('#profile').selectOption('landscape');
+  await choose('landscape');
   assert.equal(await page.locator('#face-scale').inputValue(),'1.5');
   await page.locator('#layout-reset').click();
   assert.equal(await page.locator('#face-scale').inputValue(),'1');
   // Rotating a rectangular module re-renders the framebuffer in the new orientation.
-  await page.locator('#profile').selectOption('t-display-s3');
+  await choose('t-display-s3');
   assert.deepEqual([(await frame()).width,(await frame()).height],[320,170]);
   await page.locator('#rotate').click();
   assert.deepEqual([(await frame()).width,(await frame()).height],[170,320]);
@@ -117,17 +123,23 @@ try {
   await page.locator('#prev-profile').click();
   assert.equal(await page.locator('#profile').inputValue(),'t-display-s3');
   // Every preset, reference or generic housing, renders its native framebuffer.
-  for(const item of await page.locator('#profile option').evaluateAll(options=>options.map(o=>o.value).filter(v=>v!=='custom'))) {
-    await page.locator('#profile').selectOption(item);
+  for(const item of await page.evaluate(()=>SCREEN_PRESETS.map(preset=>preset.id))) {
+    await choose(item);
     assert((await frame()).lit>0,'eyes visible on '+item);
   }
-  await page.locator('#profile').selectOption('eyes');
+  await choose('eyes');
   await page.setViewportSize({width:390,height:844});
   const overflowing=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth);
   assert.equal(overflowing,false,'mobile layout must not overflow');
-  await page.locator('#profile').selectOption('round');
+  await choose('round');
+  // A type chip narrows the picker to that type; the bus line estimates frame rate.
+  assert.deepEqual(await page.locator('#profile option').evaluateAll(options=>[...new Set(options.map(o=>SCREEN_PRESETS.find(p=>p.id===o.value).group))]),['round']);
+  assert((await page.locator('#bus-note').textContent()).startsWith('SPI'));
+  await choose('ssd1306-091');
+  assert.match(await page.locator('#bus-note').textContent(),/^I²C .*FPS/);
+  await choose('round');
   assert.deepEqual([(await frame()).width,(await frame()).height],[240,240]);
-  await page.locator('#profile').selectOption('custom');
+  await choose('custom');
   await page.locator('#custom-width').fill('172');await page.locator('#custom-height').fill('320');
   await page.locator('#custom-shape').selectOption('0');await page.locator('#apply-size').click();
   assert.deepEqual([(await frame()).width,(await frame()).height],[172,320]);
@@ -136,5 +148,5 @@ try {
   assert.equal((await frame()).width,172,'invalid custom size leaves valid framebuffer intact');
   if(process.env.PREVIEW_SCREENSHOT) await page.screenshot({path:process.env.PREVIEW_SCREENSHOT,fullPage:true});
   assert.deepEqual(errors,[]); assert.deepEqual(external,[]);
-  console.log(`Offline ${engine} UI passed: all controls, pause/step, native animation, cycling/manual interruption, sleep/wake, OLED/TFT, gaze, reset, actual size, display-only panel effects, per-screen layout, rotation, every preset, responsive layout; no network requests.`);
+  console.log(`Offline ${engine} UI passed: all controls, pause/step, native animation, cycling/manual interruption, sleep/wake, OLED/TFT, gaze, reset, actual size, display-only panel effects, per-screen layout, rotation, screen types, every preset, responsive layout; no network requests.`);
 } finally { await browser.close(); }
