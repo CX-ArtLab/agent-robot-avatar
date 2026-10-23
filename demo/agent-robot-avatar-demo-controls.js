@@ -588,8 +588,11 @@ function mountDemoControls() {
   // and the avatar nods. The reel is one strip of color blocks moved with a transform.
   // Any click, key, scroll or other action ends the show at once, and reduced motion
   // skips it.
-  const INTRO_PALETTES = ['netflix', 'comfyui', 'warriors', 'barca', 'discord', 'telegram',
-    'ubuntu', 'dribbble', 'lakers', 'snapchat', 'youtube', 'chatgpt'];
+  // Vivid palettes ordered by background luminance, dark to light.
+  const INTRO_PALETTES = ['spotify', 'netflix', 'comfyui', 'warriors', 'barca', 'celtics', 'discord',
+    'ubuntu', 'dribbble', 'telegram', 'lakers', 'snapchat', 'youtube', 'chatgpt'];
+  // A slower, longer reel spin than the random button: more turns, each one calmer.
+  const INTRO_REEL = Object.freeze({ speed: 0.38, spin: 2600 });
 
   function playIntro() {
     if (reducedMotion.matches) return;
@@ -606,17 +609,19 @@ function mountDemoControls() {
     let frame = 0;
     let shownBlock = blocks.length - 1;
 
+    // One gradient strip; soft seams keep a fast roll from looking torn.
     const reel = document.createElement('div');
     reel.className = 'demo-stage-reel';
     const strip = document.createElement('div');
     strip.className = 'demo-stage-reel-strip';
     const height = stage.clientHeight + 2;
-    for (const block of blocks) {
-      const cell = document.createElement('span');
-      cell.style.height = `${height}px`;
-      cell.style.background = block.background;
-      strip.appendChild(cell);
-    }
+    const seam = Math.round(height * 0.18);
+    strip.style.height = `${height * blocks.length}px`;
+    strip.style.background = `linear-gradient(${blocks.map((block, i) => {
+      const from = i * height + (i ? seam / 2 : 0);
+      const to = (i + 1) * height - (i < blocks.length - 1 ? seam / 2 : 0);
+      return `${block.background} ${from}px ${to}px`;
+    }).join(', ')})`;
     reel.appendChild(strip);
 
     const play = action => {
@@ -652,7 +657,7 @@ function mountDemoControls() {
       if (index !== shownBlock) {
         shownBlock = index;
         const block = blocks[index];
-        fadeColors(block.background, block.head, eyesFor(block.background), 120);
+        paintColors(block.background, block.head, eyesFor(block.background));
         if (block.name) {
           label.textContent = block[currentLanguage] || block.name;
           label.animate([{ opacity: 0 }, { opacity: 1, offset: 0.2 }, { opacity: 1, offset: 0.7 }, { opacity: 0 }], { duration: 420 });
@@ -664,30 +669,58 @@ function mountDemoControls() {
     document.documentElement.dataset.demoIntro = 'true';
     events.forEach(type => window.addEventListener(type, end, { capture: true, passive: true }));
     face.addEventListener('action-state', onAction);
-    play('random');
+    const reelConfig = window.AgentRobotAvatarRandomConfig;
+    const saved = reelConfig && { speed: reelConfig.speed, spin: reelConfig.spin };
+    if (reelConfig) Object.assign(reelConfig, INTRO_REEL);
+    try { play('random'); } finally { if (saved) Object.assign(reelConfig, saved); }
     stageOverride = 'transparent';
     stage.insertBefore(reel, stage.querySelector('.avatar-home'));
 
-    // Land with the eyes: the random action reports when its second reel settles.
-    const fx = face._randomFx;
-    const duration = fx ? Math.max(1600, fx.start + fx.duration - performance.now()) : 2300;
-    const startY = -(blocks.length - 1) * height;
-    const endY = -height;
-    const travel = endY - startY;
-    const animation = strip.animate([
-      { transform: `translateY(${startY}px)`, easing: 'cubic-bezier(.5,0,1,1)' },
-      { transform: `translateY(${startY + travel * 0.08}px)`, offset: 0.12 },
-      { transform: `translateY(${startY + travel * 0.72}px)`, offset: 0.55, easing: 'cubic-bezier(0,0,.35,1)' },
-      { transform: `translateY(${endY + height * 0.14}px)`, offset: 0.88, easing: 'cubic-bezier(.45,0,.4,1)' },
-      { transform: `translateY(${endY}px)` },
-    ], { duration, fill: 'forwards' });
-    frame = requestAnimationFrame(follow);
-    animation.onfinish = () => {
-      if (ended) return;
+    // The eyes' reel starts after the action's short preparation; roll the stage
+    // with it for the same time, and nod once both have come to rest.
+    let reelDone = false;
+    let eyesDone = false;
+    const land = () => {
+      if (ended || !reelDone || !eyesDone) return;
       cleanup();
       showChosenColors();
       play('affirm');
     };
+    const roll = () => {
+      if (ended || strip.getAnimations().length) return;
+      const startY = -(blocks.length - 1) * height;
+      const endY = -height;
+      const travel = endY - startY;
+      const animation = strip.animate([
+        { transform: `translateY(${startY}px)`, easing: 'cubic-bezier(.5,0,1,1)' },
+        { transform: `translateY(${startY + travel * 0.04}px)`, offset: 0.08 },
+        { transform: `translateY(${startY + travel * 0.8}px)`, offset: 0.7, easing: 'cubic-bezier(0,0,.35,1)' },
+        { transform: `translateY(${endY + height * 0.12}px)`, offset: 0.9, easing: 'cubic-bezier(.45,0,.4,1)' },
+        { transform: `translateY(${endY}px)` },
+      ], { duration: face._randomFx?.duration ?? 3400, fill: 'forwards' });
+      frame = requestAnimationFrame(follow);
+      animation.onfinish = () => {
+        reelDone = true;
+        land();
+      };
+    };
+    face.addEventListener('face-state', function onState(event) {
+      if (event.detail.state !== 'random') return;
+      face.removeEventListener('face-state', onState);
+      roll();
+    });
+    face.addEventListener('action-state', function onEnd(event) {
+      if (event.detail.action !== 'random' || event.detail.phase === 'start') return;
+      face.removeEventListener('action-state', onEnd);
+      eyesDone = true;
+      land();
+    });
+    // Should the eyes never start (an older component), roll anyway.
+    setTimeout(() => {
+      if (strip.getAnimations().length) return;
+      eyesDone = true;
+      roll();
+    }, 800);
   }
 
   if (document.documentElement.dataset.demoReady) playIntro();
