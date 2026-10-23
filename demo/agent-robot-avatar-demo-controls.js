@@ -1,38 +1,49 @@
-// Brand-inspired demo palettes; these are visual examples, not official themes.
-const COLOR_PRESETS = Object.freeze([
-  { id:'default', background:'#f8f8f6', head:'#08090b', zh:'默认', en:'Default' },
-  { id:'mcdonalds', background:'#ffc72c', head:'#da291c', zh:'麦当劳', en:"McDonald's" },
-  { id:'ikea', background:'#ffda1a', head:'#0058a3', zh:'宜家', en:'IKEA' },
-  { id:'lakers', background:'#fdb927', head:'#552583', zh:'湖人', en:'Lakers' },
-  { id:'starbucks', background:'#f1f8f4', head:'#00754a', zh:'星巴克', en:'Starbucks' },
-  { id:'claude', background:'#faf4ed', head:'#c96442', zh:'Claude', en:'Claude' },
-  { id:'chatgpt', background:'#ffffff', head:'#10a37f', zh:'ChatGPT', en:'ChatGPT' },
-  { id:'gemini', background:'#e9e6ff', head:'#4b61d1', zh:'Gemini', en:'Gemini' },
-  { id:'lululemon', background:'#ffffff', head:'#d31334', zh:'lululemon', en:'lululemon' },
-  { id:'adidas', background:'#ffffff', head:'#111111', zh:'阿迪达斯', en:'adidas' },
-  { id:'tiffany', background:'#81d8d0', head:'#182e2c', zh:'Tiffany', en:'Tiffany' },
-  { id:'hermes', background:'#f37021', head:'#3b2517', zh:'爱马仕', en:'Hermès' },
-  { id:'burberry', background:'#d6bd98', head:'#30261c', zh:'Burberry', en:'Burberry' },
-  { id:'fendi', background:'#f9d91c', head:'#242424', zh:'Fendi', en:'Fendi' },
-  { id:'spotify', background:'#1ed760', head:'#191414', zh:'Spotify', en:'Spotify' },
-  { id:'nintendo', background:'#e60012', head:'#ffffff', zh:'任天堂', en:'Nintendo' },
-  { id:'muji', background:'#f3efdf', head:'#7f0019', zh:'无印良品', en:'MUJI' },
+// Palettes inspired by public brand colors. Unofficial examples, shown as plain
+// text names only (no logos or brand fonts), with a visible disclaimer.
+// Colors follow each brand's own assets where published (Claude, ComfyUI, Telegram).
+// Every pair keeps about 3:1 contrast or more because the eyes take the background color.
+const PALETTES = Object.freeze([
+  { id:'claude', background:'#faf9f5', head:'#d97757', name:'Claude' },
+  { id:'chatgpt', background:'#ffffff', head:'#0fa578', name:'ChatGPT' },
+  { id:'comfyui', background:'#211927', head:'#f2ff59', name:'ComfyUI' },
+  { id:'ubuntu', background:'#e95420', head:'#ffffff', name:'Ubuntu' },
+  { id:'dribbble', background:'#ea4c89', head:'#ffffff', name:'Dribbble' },
+  { id:'discord', background:'#5865f2', head:'#ffffff', name:'Discord' },
+  { id:'telegram', background:'#229ed9', head:'#ffffff', name:'Telegram' },
+  { id:'snapchat', background:'#fffc00', head:'#000000', name:'Snapchat' },
+  { id:'youtube', background:'#ffffff', head:'#ff0000', name:'YouTube' },
+  { id:'netflix', background:'#141414', head:'#e50914', name:'Netflix' },
+  { id:'spotify', background:'#121212', head:'#1ed760', name:'Spotify' },
+  { id:'lakers', background:'#fdb927', head:'#552583', name:'Lakers', 'zh-CN':'湖人', 'zh-TW':'湖人' },
+  { id:'warriors', background:'#1d428a', head:'#ffc72c', name:'Warriors', 'zh-CN':'勇士', 'zh-TW':'勇士' },
+  { id:'celtics', background:'#007a33', head:'#ffffff', name:'Celtics', 'zh-CN':'凯尔特人', 'zh-TW':'塞爾提克' },
+  { id:'barca', background:'#a50044', head:'#edbb00', name:'Barça', 'zh-CN':'巴萨', 'zh-TW':'巴薩' },
+  { id:'man-city', background:'#6cabdd', head:'#1c2c5b', name:'Man City', 'zh-CN':'曼城', 'zh-TW':'曼城' },
 ]);
 
-const THEME_UI = Object.freeze({
-  'zh-CN': { custom:'自定义颜色', themes:'主题配色' },
-  'zh-TW': { custom:'自訂顏色', themes:'主題配色' },
-  en: { custom:'Custom colors', themes:'Color themes' },
-  ja: { custom:'カスタムカラー', themes:'配色テーマ' },
-  ko: { custom:'사용자 색상', themes:'색상 테마' },
-  es: { custom:'Colores personalizados', themes:'Temas de color' },
-  pt: { custom:'Cores personalizadas', themes:'Temas de cor' },
-  de: { custom:'Eigene Farben', themes:'Farbthemen' },
-  fr: { custom:'Couleurs personnalisées', themes:'Thèmes de couleurs' },
+const PALETTE_UI = Object.freeze({
+  'zh-CN': { swap:'互换背景色和头部颜色', swapHint:'再点一次互换', random:'随机', hint:'悬停预览，点击使用', tapHint:'点击色块使用',
+    note:'配色灵感来自各品牌公开形象，仅为非官方示例，与品牌方无关。' },
+  'zh-TW': { swap:'互換背景色和頭部顏色', swapHint:'再點一次互換', random:'隨機', hint:'懸停預覽，點擊使用', tapHint:'點擊色塊使用',
+    note:'配色靈感來自各品牌公開形象，僅為非官方示例，與品牌方無關。' },
+  en: { swap:'Swap background and head colors', swapHint:'click again to swap', random:'Random', hint:'Hover to preview, click to apply', tapHint:'Tap a swatch to apply',
+    note:'Palettes inspired by public brand colors. Unofficial examples, not affiliated with or endorsed by the brands.' },
+  ja: { swap:'背景色とヘッド色を入れ替え', swapHint:'もう一度で入れ替え', random:'ランダム', hint:'ホバーでプレビュー、クリックで適用', tapHint:'タップして適用',
+    note:'各ブランドの公開イメージに着想を得た非公式の配色例です。ブランドとは関係ありません。' },
+  ko: { swap:'배경색과 머리 색상 바꾸기', swapHint:'다시 누르면 반전', random:'랜덤', hint:'마우스를 올려 미리 보고 클릭해 적용', tapHint:'탭하여 적용',
+    note:'각 브랜드의 공개 이미지에서 영감을 받은 비공식 예시이며, 해당 브랜드와 관련이 없습니다.' },
+  es: { swap:'Intercambiar fondo y cabeza', swapHint:'otra vez para invertir', random:'Aleatorio', hint:'Pasa el cursor para ver, haz clic para aplicar', tapHint:'Toca un color para aplicarlo',
+    note:'Paletas inspiradas en colores públicos de marcas. Ejemplos no oficiales, sin relación ni respaldo de las marcas.' },
+  pt: { swap:'Trocar fundo e cabeça', swapHint:'de novo para inverter', random:'Aleatório', hint:'Passe o cursor para ver, clique para aplicar', tapHint:'Toque numa cor para aplicar',
+    note:'Paletas inspiradas nas cores públicas das marcas. Exemplos não oficiais, sem afiliação ou endosso das marcas.' },
+  de: { swap:'Hintergrund und Kopffarbe tauschen', swapHint:'erneut zum Tauschen', random:'Zufall', hint:'Zum Ansehen darüberfahren, zum Übernehmen klicken', tapHint:'Zum Übernehmen antippen',
+    note:'Paletten nach öffentlichen Markenfarben. Inoffizielle Beispiele, nicht mit den Marken verbunden oder von ihnen unterstützt.' },
+  fr: { swap:'Inverser fond et tête', swapHint:'encore pour inverser', random:'Aléatoire', hint:'Survolez pour voir, cliquez pour appliquer', tapHint:'Touchez pour appliquer',
+    note:'Palettes inspirées des couleurs publiques des marques. Exemples non officiels, sans lien ni approbation des marques.' },
 });
 
 const DEFAULTS = Object.freeze({
-  background: '#f8f8f6',
+  background: '#ffffff',
   head: '#08090b',
   eyeThrough: true,
   antenna: true,
@@ -90,72 +101,72 @@ const I18N = Object.freeze({
     colorSettings: '颜色设置', otherSettings: '其它功能', languageSettings: '页面语言',
     background: '背景色', head: '头部颜色', eyeThrough: '眼睛穿透', reset: '恢复默认',
     antenna: '天线', antennaFlash: '天线闪动', loop: '循环', pointerFollow: '鼠标跟随',
-    actions: { idle:'正常', bored:'发呆', waiting:'等待', input:'输入', send:'发送/点头', success:'成功', warning:'警告', angry:'内容阻止', error:'系统错误', surprise:'惊讶', sleep:'睡着', wake:'醒来' },
-    states: { idle:'默认待机', bored:'发呆', waiting:'等待', input:'输入中', send:'发送', success:'成功', happy:'成功', warning:'警告确认', angry:'内容阻止', error:'系统错误', surprise:'惊讶', sleepy:'困倦', sleep:'睡眠', wake:'醒来' },
+    actions: { idle:'正常', bored:'发呆', waiting:'等待 · 旋转', input:'输入', send:'肯定', success:'成功', warning:'警告', angry:'生气', error:'拒绝', surprise:'惊讶', sleep:'睡着', wake:'醒来' },
+    states: { idle:'默认待机', bored:'发呆', waiting:'等待', input:'输入中', send:'肯定', success:'成功', happy:'成功', warning:'警告确认', angry:'生气', error:'拒绝', surprise:'惊讶', sleepy:'困倦', sleep:'睡眠', wake:'醒来' },
   },
   'zh-TW': {
     webComponent: 'Web 元件', color: '顏色', settings: '設定', language: '語言',
     colorSettings: '顏色設定', otherSettings: '其他功能', languageSettings: '頁面語言',
     background: '背景色', head: '頭部顏色', eyeThrough: '眼睛穿透', reset: '恢復預設',
     antenna: '天線', antennaFlash: '天線閃動', loop: '循環', pointerFollow: '滑鼠跟隨',
-    actions: { idle:'正常', bored:'發呆', waiting:'等待', input:'輸入', send:'傳送/點頭', success:'成功', warning:'警告', angry:'內容阻止', error:'系統錯誤', surprise:'驚訝', sleep:'睡著', wake:'醒來' },
-    states: { idle:'預設待機', bored:'發呆', waiting:'等待', input:'輸入中', send:'傳送', success:'成功', happy:'成功', warning:'警告確認', angry:'內容阻止', error:'系統錯誤', surprise:'驚訝', sleepy:'睏倦', sleep:'睡眠', wake:'醒來' },
+    actions: { idle:'正常', bored:'發呆', waiting:'等待 · 旋轉', input:'輸入', send:'肯定', success:'成功', warning:'警告', angry:'生氣', error:'拒絕', surprise:'驚訝', sleep:'睡著', wake:'醒來' },
+    states: { idle:'預設待機', bored:'發呆', waiting:'等待', input:'輸入中', send:'肯定', success:'成功', happy:'成功', warning:'警告確認', angry:'生氣', error:'拒絕', surprise:'驚訝', sleepy:'睏倦', sleep:'睡眠', wake:'醒來' },
   },
   en: {
     webComponent: 'Web Component', color: 'Color', settings: 'Settings', language: 'Language',
     colorSettings: 'Color settings', otherSettings: 'Other settings', languageSettings: 'Page language',
     background: 'Background', head: 'Head color', eyeThrough: 'Transparent eyes', reset: 'Reset colors',
     antenna: 'Antenna', antennaFlash: 'Antenna blink', loop: 'Loop', pointerFollow: 'Pointer follow',
-    actions: { idle:'Normal', bored:'Bored', waiting:'Waiting', input:'Input', send:'Send/Nod', success:'Success', warning:'Warning', angry:'Blocked', error:'System Error', surprise:'Surprise', sleep:'Sleep', wake:'Wake' },
-    states: { idle:'Idle', bored:'Bored', waiting:'Waiting', input:'Input', send:'Sending', success:'Success', happy:'Success', warning:'Warning', angry:'Blocked', error:'System Error', surprise:'Surprise', sleepy:'Sleepy', sleep:'Sleeping', wake:'Awake' },
+    actions: { idle:'Normal', bored:'Bored', waiting:'Waiting · Spin', input:'Input', send:'Affirm', success:'Success', warning:'Warning', angry:'Angry', error:'Refuse', surprise:'Surprise', sleep:'Sleep', wake:'Wake' },
+    states: { idle:'Idle', bored:'Bored', waiting:'Waiting', input:'Input', send:'Affirm', success:'Success', happy:'Success', warning:'Warning', angry:'Angry', error:'Refuse', surprise:'Surprise', sleepy:'Sleepy', sleep:'Sleeping', wake:'Awake' },
   },
   ja: {
     webComponent: 'Web コンポーネント', color: 'カラー', settings: '設定', language: '言語',
     colorSettings: 'カラー設定', otherSettings: 'その他の設定', languageSettings: 'ページ言語',
     background: '背景色', head: 'ヘッド色', eyeThrough: '目を透過', reset: '色をリセット',
     antenna: 'アンテナ', antennaFlash: 'アンテナ点滅', loop: 'ループ', pointerFollow: 'マウス追従',
-    actions: { idle:'通常', bored:'退屈', waiting:'待機', input:'入力', send:'送信/うなずき', success:'成功', warning:'警告', angry:'ブロック', error:'システムエラー', surprise:'驚き', sleep:'睡眠', wake:'起床' },
-    states: { idle:'待機中', bored:'退屈', waiting:'待機', input:'入力中', send:'送信中', success:'成功', happy:'成功', warning:'警告', angry:'ブロック', error:'システムエラー', surprise:'驚き', sleepy:'眠い', sleep:'睡眠中', wake:'起床' },
+    actions: { idle:'通常', bored:'退屈', waiting:'待機 · 回転', input:'入力', send:'肯定', success:'成功', warning:'警告', angry:'怒り', error:'拒否', surprise:'驚き', sleep:'睡眠', wake:'起床' },
+    states: { idle:'待機中', bored:'退屈', waiting:'待機', input:'入力中', send:'肯定', success:'成功', happy:'成功', warning:'警告', angry:'怒り', error:'拒否', surprise:'驚き', sleepy:'眠い', sleep:'睡眠中', wake:'起床' },
   },
   ko: {
     webComponent: '웹 컴포넌트', color: '색상', settings: '설정', language: '언어',
     colorSettings: '색상 설정', otherSettings: '기타 설정', languageSettings: '페이지 언어',
     background: '배경색', head: '머리 색상', eyeThrough: '눈 투과', reset: '색상 초기화',
     antenna: '안테나', antennaFlash: '안테나 점멸', loop: '반복', pointerFollow: '마우스 추적',
-    actions: { idle:'정상', bored:'멍함', waiting:'대기', input:'입력', send:'전송/끄덕임', success:'성공', warning:'경고', angry:'차단', error:'시스템 오류', surprise:'놀람', sleep:'수면', wake:'깨우기' },
-    states: { idle:'대기 중', bored:'멍함', waiting:'대기', input:'입력 중', send:'전송 중', success:'성공', happy:'성공', warning:'경고', angry:'차단', error:'시스템 오류', surprise:'놀람', sleepy:'졸림', sleep:'수면 중', wake:'깨어남' },
+    actions: { idle:'정상', bored:'멍함', waiting:'대기 · 회전', input:'입력', send:'긍정', success:'성공', warning:'경고', angry:'화남', error:'거절', surprise:'놀람', sleep:'수면', wake:'깨우기' },
+    states: { idle:'대기 중', bored:'멍함', waiting:'대기', input:'입력 중', send:'긍정', success:'성공', happy:'성공', warning:'경고', angry:'화남', error:'거절', surprise:'놀람', sleepy:'졸림', sleep:'수면 중', wake:'깨어남' },
   },
   es: {
     webComponent: 'Componente Web', color: 'Color', settings: 'Ajustes', language: 'Idioma',
     colorSettings: 'Ajustes de color', otherSettings: 'Otros ajustes', languageSettings: 'Idioma de página',
     background: 'Fondo', head: 'Color de cabeza', eyeThrough: 'Ojos transparentes', reset: 'Restablecer colores',
     antenna: 'Antena', antennaFlash: 'Parpadeo antena', loop: 'Bucle', pointerFollow: 'Seguir cursor',
-    actions: { idle:'Normal', bored:'Aburrido', waiting:'Esperando', input:'Entrada', send:'Enviar/Asentir', success:'Éxito', warning:'Aviso', angry:'Bloqueado', error:'Error del sistema', surprise:'Sorpresa', sleep:'Dormir', wake:'Despertar' },
-    states: { idle:'En espera', bored:'Aburrido', waiting:'Esperando', input:'Introduciendo', send:'Enviando', success:'Éxito', happy:'Éxito', warning:'Aviso', angry:'Bloqueado', error:'Error del sistema', surprise:'Sorpresa', sleepy:'Somnoliento', sleep:'Durmiendo', wake:'Despierto' },
+    actions: { idle:'Normal', bored:'Aburrido', waiting:'Esperando · Giro', input:'Entrada', send:'Afirmar', success:'Éxito', warning:'Aviso', angry:'Enfado', error:'Rechazar', surprise:'Sorpresa', sleep:'Dormir', wake:'Despertar' },
+    states: { idle:'En espera', bored:'Aburrido', waiting:'Esperando', input:'Introduciendo', send:'Afirmar', success:'Éxito', happy:'Éxito', warning:'Aviso', angry:'Enfado', error:'Rechazar', surprise:'Sorpresa', sleepy:'Somnoliento', sleep:'Durmiendo', wake:'Despierto' },
   },
   pt: {
     webComponent: 'Componente Web', color: 'Cor', settings: 'Configurações', language: 'Idioma',
     colorSettings: 'Configurações de cor', otherSettings: 'Outras configurações', languageSettings: 'Idioma da página',
     background: 'Fundo', head: 'Cor da cabeça', eyeThrough: 'Olhos transparentes', reset: 'Redefinir cores',
     antenna: 'Antena', antennaFlash: 'Piscar antena', loop: 'Repetir', pointerFollow: 'Seguir cursor',
-    actions: { idle:'Normal', bored:'Entediado', waiting:'Aguardando', input:'Entrada', send:'Enviar/Acenar', success:'Sucesso', warning:'Aviso', angry:'Bloqueado', error:'Erro do sistema', surprise:'Surpresa', sleep:'Dormir', wake:'Acordar' },
-    states: { idle:'Em espera', bored:'Entediado', waiting:'Aguardando', input:'Digitando', send:'Enviando', success:'Sucesso', happy:'Sucesso', warning:'Aviso', angry:'Bloqueado', error:'Erro do sistema', surprise:'Surpresa', sleepy:'Sonolento', sleep:'Dormindo', wake:'Acordado' },
+    actions: { idle:'Normal', bored:'Entediado', waiting:'Aguardando · Giro', input:'Entrada', send:'Afirmar', success:'Sucesso', warning:'Aviso', angry:'Raiva', error:'Recusar', surprise:'Surpresa', sleep:'Dormir', wake:'Acordar' },
+    states: { idle:'Em espera', bored:'Entediado', waiting:'Aguardando', input:'Digitando', send:'Afirmar', success:'Sucesso', happy:'Sucesso', warning:'Aviso', angry:'Raiva', error:'Recusar', surprise:'Surpresa', sleepy:'Sonolento', sleep:'Dormindo', wake:'Acordado' },
   },
   de: {
     webComponent: 'Webkomponente', color: 'Farbe', settings: 'Einstellungen', language: 'Sprache',
     colorSettings: 'Farbeinstellungen', otherSettings: 'Weitere Einstellungen', languageSettings: 'Seitensprache',
     background: 'Hintergrund', head: 'Kopffarbe', eyeThrough: 'Augen transparent', reset: 'Farben zurücksetzen',
     antenna: 'Antenne', antennaFlash: 'Antenne blinken', loop: 'Schleife', pointerFollow: 'Maus folgen',
-    actions: { idle:'Normal', bored:'Gelangweilt', waiting:'Warten', input:'Eingabe', send:'Senden/Nicken', success:'Erfolg', warning:'Warnung', angry:'Blockiert', error:'Systemfehler', surprise:'Überrascht', sleep:'Schlafen', wake:'Aufwachen' },
-    states: { idle:'Bereit', bored:'Gelangweilt', waiting:'Warten', input:'Eingabe', send:'Senden', success:'Erfolg', happy:'Erfolg', warning:'Warnung', angry:'Blockiert', error:'Systemfehler', surprise:'Überrascht', sleepy:'Müde', sleep:'Schläft', wake:'Wach' },
+    actions: { idle:'Normal', bored:'Gelangweilt', waiting:'Warten · Drehen', input:'Eingabe', send:'Zustimmen', success:'Erfolg', warning:'Warnung', angry:'Wütend', error:'Ablehnen', surprise:'Überrascht', sleep:'Schlafen', wake:'Aufwachen' },
+    states: { idle:'Bereit', bored:'Gelangweilt', waiting:'Warten', input:'Eingabe', send:'Zustimmen', success:'Erfolg', happy:'Erfolg', warning:'Warnung', angry:'Wütend', error:'Ablehnen', surprise:'Überrascht', sleepy:'Müde', sleep:'Schläft', wake:'Wach' },
   },
   fr: {
     webComponent: 'Composant Web', color: 'Couleur', settings: 'Réglages', language: 'Langue',
     colorSettings: 'Réglages des couleurs', otherSettings: 'Autres réglages', languageSettings: 'Langue de la page',
     background: 'Arrière-plan', head: 'Couleur de tête', eyeThrough: 'Yeux transparents', reset: 'Réinitialiser couleurs',
     antenna: 'Antenne', antennaFlash: 'Clignotement antenne', loop: 'Boucle', pointerFollow: 'Suivre le curseur',
-    actions: { idle:'Normal', bored:'Ennui', waiting:'Attente', input:'Entrée', send:'Envoyer/Hochement', success:'Succès', warning:'Avertissement', angry:'Bloqué', error:'Erreur système', surprise:'Surprise', sleep:'Dormir', wake:'Réveil' },
-    states: { idle:'En veille', bored:'Ennui', waiting:'Attente', input:'Saisie', send:'Envoi', success:'Succès', happy:'Succès', warning:'Avertissement', angry:'Bloqué', error:'Erreur système', surprise:'Surprise', sleepy:'Somnolent', sleep:'Endormi', wake:'Réveillé' },
+    actions: { idle:'Normal', bored:'Ennui', waiting:'Attente · Rotation', input:'Entrée', send:'Approuver', success:'Succès', warning:'Avertissement', angry:'Colère', error:'Refuser', surprise:'Surprise', sleep:'Dormir', wake:'Réveil' },
+    states: { idle:'En veille', bored:'Ennui', waiting:'Attente', input:'Saisie', send:'Approuver', success:'Succès', happy:'Succès', warning:'Avertissement', angry:'Colère', error:'Refuser', surprise:'Surprise', sleepy:'Somnolent', sleep:'Endormi', wake:'Réveillé' },
   },
 });
 
@@ -166,6 +177,7 @@ function mountDemoControls() {
   if (!stack || stack.dataset.controlsMounted) return;
 
   const canvas = document.getElementById('canvas');
+  const stage = document.getElementById('demoStage');
   const face = document.getElementById('face');
   const controls = document.querySelector('.controls');
   if (!canvas || !face || !controls) return;
@@ -189,66 +201,66 @@ function mountDemoControls() {
   const options = stack.querySelector('.demo-options');
 
   const colorPanelToggle = options.querySelector('#demoColorPanelToggle');
-  const themePanelToggle = options.querySelector('#demoThemePanelToggle');
   const settingsPanelToggle = options.querySelector('#demoSettingsPanelToggle');
   const languagePanelToggle = options.querySelector('#demoLanguagePanelToggle');
   const colorPanel = options.querySelector('#demoColorPanel');
   const settingsPanel = options.querySelector('#demoSettingsPanel');
   const languagePanel = options.querySelector('#demoLanguagePanel');
-  const bgColor = options.querySelector('#demoBgColor');
-  const headColor = options.querySelector('#demoHeadColor');
-  const eyeThrough = options.querySelector('#demoEyeThrough');
+  const bgColor = colorPanel.querySelector('#demoBgColor');
+  const headColor = colorPanel.querySelector('#demoHeadColor');
+  const eyeThrough = colorPanel.querySelector('#demoEyeThrough');
   const antennaToggle = options.querySelector('#demoAntenna');
   const antennaFlashToggle = options.querySelector('#demoAntennaFlash');
   const loopToggle = options.querySelector('#demoLoop');
   const pointerToggle = options.querySelector('#demoPointerFollow');
-  const resetButton = options.querySelector('#demoReset');
-  const presets = options.querySelector('#demoColorPresets');
-  for (const preset of COLOR_PRESETS) {
+  const resetButton = colorPanel.querySelector('#demoReset');
+  const randomButton = colorPanel.querySelector('#demoRandomColors');
+  const swapButton = colorPanel.querySelector('#demoSwapColors');
+  const paletteNote = colorPanel.querySelector('#demoPaletteNote');
+  const presets = colorPanel.querySelector('#demoColorPresets');
+  const paletteCaption = colorPanel.querySelector('#demoPaletteCaption');
+  const canHover = window.matchMedia('(hover: hover)');
+  const paletteButtons = [];
+  for (const palette of PALETTES) {
     const button = document.createElement('button');
     button.type = 'button';
-    button.className = 'demo-option demo-theme';
-    button.dataset.preset = preset.id;
-    button.style.setProperty('--preset-bg', preset.background);
-    button.style.setProperty('--preset-head', preset.head);
+    button.className = 'demo-swatch';
+    button.dataset.preset = palette.id;
     button.setAttribute('aria-pressed', 'false');
-    const name = document.createElement('span');
-    name.className = 'demo-theme-name';
-    const swatch = document.createElement('span');
-    swatch.className = 'demo-theme-swatch';
-    swatch.setAttribute('aria-hidden', 'true');
-    button.append(name, swatch);
-    button.addEventListener('click', () => {
-      const reverse = bgColor.value.toLowerCase() === preset.background
-        && headColor.value.toLowerCase() === preset.head;
-      bgColor.value = reverse ? preset.head : preset.background;
-      headColor.value = reverse ? preset.background : preset.head;
-      eyeThrough.checked = true;
-      applyBackground();
-      applyHeadColor();
-      applyEyeColor();
+    button.style.setProperty('--swatch-bg', palette.background);
+    button.style.setProperty('--swatch-head', palette.head);
+    const entry = { button, palette };
+    // Hovering another palette previews it; the chosen one just shows the chosen colors.
+    // Leaving the swatches restores the chosen colors.
+    button.addEventListener('pointerenter', event => {
+      if (event.pointerType !== 'mouse') return;
+      if (!isChosen(entry)) previewPalette(entry);
+      else {
+        endPreview();
+        showCaption(entry);
+      }
     });
+    button.addEventListener('click', () => choosePalette(entry));
     presets.appendChild(button);
+    paletteButtons.push(entry);
   }
+  presets.addEventListener('pointerleave', () => endPreview());
 
   let currentLanguage = initialLanguage();
   let currentState = 'idle';
 
   function setPanel(openPanel) {
     const colorOpen = openPanel === 'color';
-    const themesOpen = openPanel === 'themes';
     const settingsOpen = openPanel === 'settings';
     const languageOpen = openPanel === 'language';
+    if (!colorOpen) endPreview();
     colorPanel.hidden = !colorOpen;
-    presets.hidden = !themesOpen;
     settingsPanel.hidden = !settingsOpen;
     languagePanel.hidden = !languageOpen;
     colorPanelToggle.classList.toggle('demo-panel-open', colorOpen);
-    themePanelToggle.classList.toggle('demo-panel-open', themesOpen);
     settingsPanelToggle.classList.toggle('demo-panel-open', settingsOpen);
     languagePanelToggle.classList.toggle('demo-panel-open', languageOpen);
     colorPanelToggle.setAttribute('aria-expanded', String(colorOpen));
-    themePanelToggle.setAttribute('aria-expanded', String(themesOpen));
     settingsPanelToggle.setAttribute('aria-expanded', String(settingsOpen));
     languagePanelToggle.setAttribute('aria-expanded', String(languageOpen));
   }
@@ -275,31 +287,30 @@ function mountDemoControls() {
 
     if (title) title.innerHTML = `<span>Agent Robot Avatar</span><span>SVG + Vanilla JS</span><span>${t.webComponent}</span>`;
 
-    const themeUI = THEME_UI[currentLanguage] || THEME_UI.en;
-    colorPanelToggle.title = themeUI.custom;
-    colorPanelToggle.setAttribute('aria-label', themeUI.custom);
-    themePanelToggle.title = themeUI.themes;
-    themePanelToggle.setAttribute('aria-label', themeUI.themes);
+    const paletteUI = PALETTE_UI[currentLanguage] || PALETTE_UI.en;
+    colorPanelToggle.title = t.colorSettings;
+    colorPanelToggle.setAttribute('aria-label', t.colorSettings);
     settingsPanelToggle.title = t.settings;
     settingsPanelToggle.setAttribute('aria-label', t.settings);
     languagePanelToggle.title = t.language;
     languagePanelToggle.setAttribute('aria-label', t.language);
     colorPanel.setAttribute('aria-label', t.colorSettings);
-    presets.setAttribute('aria-label', themeUI.themes);
-    presets.querySelectorAll('[data-preset]').forEach((button, index) => {
-      const preset = COLOR_PRESETS[index];
-      const name = currentLanguage.startsWith('zh') ? preset.zh : preset.en;
-      const hint = currentLanguage.startsWith('zh') ? '再次点击交换前景与背景' : 'Click again to swap foreground and background';
-      button.title = `${name} · ${hint}`;
-      button.setAttribute('aria-label', `${name} · ${hint}`);
-      button.querySelector('.demo-theme-name').textContent = name;
-    });
+    for (const { button, palette } of paletteButtons) {
+      const name = palette[currentLanguage] || palette.name;
+      button.title = name;
+      button.setAttribute('aria-label', name);
+    }
+    showCaption();
+    randomButton.querySelector('span').textContent = paletteUI.random;
+    swapButton.title = paletteUI.swap;
+    swapButton.setAttribute('aria-label', paletteUI.swap);
+    paletteNote.textContent = paletteUI.note;
     settingsPanel.setAttribute('aria-label', t.otherSettings);
     languagePanel.setAttribute('aria-label', t.languageSettings);
 
-    options.querySelector('#demoBgLabel').textContent = t.background;
-    options.querySelector('#demoHeadLabel').textContent = t.head;
-    options.querySelector('#demoEyeThroughLabel').textContent = t.eyeThrough;
+    colorPanel.querySelector('#demoBgLabel').textContent = t.background;
+    colorPanel.querySelector('#demoHeadLabel').textContent = t.head;
+    colorPanel.querySelector('#demoEyeThroughLabel').textContent = t.eyeThrough;
     options.querySelector('#demoAntennaLabel').textContent = t.antenna;
     options.querySelector('#demoAntennaFlashLabel').textContent = t.antennaFlash;
     options.querySelector('#demoLoopLabel').textContent = t.loop;
@@ -322,7 +333,6 @@ function mountDemoControls() {
   window.AgentRobotAvatarApplyDemoLanguage = () => applyLanguage(currentLanguage);
 
   colorPanelToggle.addEventListener('click', () => setPanel(colorPanel.hidden ? 'color' : null));
-  themePanelToggle.addEventListener('click', () => setPanel(presets.hidden ? 'themes' : null));
   settingsPanelToggle.addEventListener('click', () => setPanel(settingsPanel.hidden ? 'settings' : null));
   languagePanelToggle.addEventListener('click', () => setPanel(languagePanel.hidden ? 'language' : null));
   languagePanel.addEventListener('click', event => {
@@ -331,48 +341,127 @@ function mountDemoControls() {
     applyLanguage(button.dataset.lang, { remember: true, updateUrl: true });
   });
 
-  function applyEyeColor() {
-    const color = eyeThrough.checked ? bgColor.value : '#ffffff';
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const HEAD_PARTS = ['head', 'leftTop', 'rightTop', 'leftBottom', 'rightBottom', 'antennaDot'];
+  const EYE_PARTS = ['leftBase', 'rightBase', 'leftInputBase', 'rightInputBase'];
+  let shown = { background: bgColor.value, head: headColor.value, eyes: '#ffffff' };
+  let fadeFrame = 0;
+  let previewing = false;
+
+  function paintColors(background, head, eyes) {
+    shown = { background, head, eyes };
+    stage.style.setProperty('--demo-stage-bg', background);
+    face.setAttribute('color', head);
     const shadow = face.shadowRoot;
     if (!shadow) return;
-    ['leftBase', 'rightBase', 'leftInputBase', 'rightInputBase'].forEach(id => {
-      const el = shadow.getElementById(id);
-      if (el) el.setAttribute('fill', color);
-    });
+    HEAD_PARTS.forEach(id => shadow.getElementById(id)?.setAttribute('fill', head));
+    EYE_PARTS.forEach(id => shadow.getElementById(id)?.setAttribute('fill', eyes));
+  }
+
+  function mixColor(from, to, t) {
+    const channel = (hex, i) => parseInt(hex.slice(1 + i * 2, 3 + i * 2), 16);
+    return '#' + [0, 1, 2].map(i => {
+      const value = Math.round(channel(from, i) + (channel(to, i) - channel(from, i)) * t);
+      return value.toString(16).padStart(2, '0');
+    }).join('');
+  }
+
+  function fadeColors(background, head, eyes) {
+    cancelAnimationFrame(fadeFrame);
+    if (reducedMotion.matches) {
+      paintColors(background, head, eyes);
+      return;
+    }
+    const from = shown;
+    const start = performance.now();
+    const step = now => {
+      const t = Math.min(1, (now - start) / 320);
+      const eased = 1 - (1 - t) ** 3;
+      paintColors(
+        mixColor(from.background, background, eased),
+        mixColor(from.head, head, eased),
+        mixColor(from.eyes, eyes, eased),
+      );
+      if (t < 1) fadeFrame = requestAnimationFrame(step);
+    };
+    fadeFrame = requestAnimationFrame(step);
+  }
+
+  function showChosenColors({ fade = false } = {}) {
+    const background = bgColor.value.toLowerCase();
+    const head = headColor.value.toLowerCase();
+    const eyes = eyeThrough.checked ? background : '#ffffff';
+    if (fade) fadeColors(background, head, eyes);
+    else {
+      cancelAnimationFrame(fadeFrame);
+      paintColors(background, head, eyes);
+    }
     syncPresetSelection();
+  }
+
+  const isChosen = entry => entry.button.getAttribute('aria-pressed') === 'true';
+
+  // A click applies the palette; on the chosen swatch it swaps background and head instead.
+  function nextColors(entry) {
+    if (isChosen(entry)) return { background: headColor.value.toLowerCase(), head: bgColor.value.toLowerCase() };
+    return { background: entry.palette.background, head: entry.palette.head };
+  }
+
+  // The caption names the hovered palette, else the chosen one, else says how to use it.
+  // On the chosen palette it also says that clicking again swaps the colors.
+  function showCaption(entry = paletteButtons.find(isChosen)) {
+    const paletteUI = PALETTE_UI[currentLanguage] || PALETTE_UI.en;
+    paletteCaption.classList.toggle('demo-caption-hint', !entry);
+    if (!entry) {
+      paletteCaption.textContent = canHover.matches ? paletteUI.hint : paletteUI.tapHint;
+      return;
+    }
+    paletteCaption.textContent = entry.palette[currentLanguage] || entry.palette.name;
+    if (isChosen(entry)) {
+      const hint = document.createElement('span');
+      hint.className = 'demo-caption-extra';
+      hint.textContent = ` · ${paletteUI.swapHint}`;
+      paletteCaption.appendChild(hint);
+    }
+  }
+
+  function previewPalette(entry) {
+    const { background, head } = nextColors(entry);
+    previewing = true;
+    showCaption(entry);
+    fadeColors(background, head, background);
+  }
+
+  function endPreview() {
+    if (!previewing) return;
+    previewing = false;
+    showChosenColors({ fade: true });
+  }
+
+  function choosePalette(entry) {
+    const { background, head } = nextColors(entry);
+    previewing = false;
+    bgColor.value = background;
+    headColor.value = head;
+    eyeThrough.checked = true;
+    showChosenColors({ fade: true });
+    if (!loopEnabled) face.play('success');
   }
 
   function syncPresetSelection() {
-    presets.querySelectorAll('[data-preset]').forEach((button, index) => {
-      const preset = COLOR_PRESETS[index];
-      const forward = bgColor.value.toLowerCase() === preset.background
-        && headColor.value.toLowerCase() === preset.head;
-      const reverse = bgColor.value.toLowerCase() === preset.head
-        && headColor.value.toLowerCase() === preset.background;
-      button.setAttribute('aria-pressed', String(eyeThrough.checked && (forward || reverse)));
-      button.style.setProperty('--preset-bg', reverse ? preset.head : preset.background);
-      button.style.setProperty('--preset-head', reverse ? preset.background : preset.head);
-    });
-  }
-
-  function applyBackground() {
-    const color = bgColor.value;
-    canvas.style.backgroundColor = color;
-    document.documentElement.style.backgroundColor = color;
-    document.body.style.backgroundColor = color;
-    applyEyeColor();
-  }
-
-  function applyHeadColor() {
-    const color = headColor.value;
-    face.setAttribute('color', color);
-    const shadow = face.shadowRoot;
-    if (!shadow) return;
-    ['head', 'leftTop', 'rightTop', 'leftBottom', 'rightBottom', 'antennaDot'].forEach(id => {
-      const el = shadow.getElementById(id);
-      if (el) el.setAttribute('fill', color);
-    });
-    syncPresetSelection();
+    const bg = bgColor.value.toLowerCase();
+    const head = headColor.value.toLowerCase();
+    let found = false;
+    for (const { button, palette } of paletteButtons) {
+      const reversed = bg === palette.head && head === palette.background;
+      const matches = !found && eyeThrough.checked && (reversed || (bg === palette.background && head === palette.head));
+      found ||= matches;
+      button.setAttribute('aria-pressed', String(matches));
+      // The swatch shows the pair the way it is applied, top part the background.
+      button.style.setProperty('--swatch-top', reversed ? palette.head : palette.background);
+      button.style.setProperty('--swatch-bottom', reversed ? palette.background : palette.head);
+    }
+    if (!previewing) showCaption();
   }
 
   function applyAntennaVisibility() {
@@ -396,9 +485,9 @@ function mountDemoControls() {
     }
   }
 
-  bgColor.addEventListener('input', applyBackground);
-  headColor.addEventListener('input', applyHeadColor);
-  eyeThrough.addEventListener('change', applyEyeColor);
+  bgColor.addEventListener('input', () => showChosenColors());
+  headColor.addEventListener('input', () => showChosenColors());
+  eyeThrough.addEventListener('change', () => showChosenColors({ fade: true }));
   antennaToggle.addEventListener('change', syncAntennaVisibility);
   antennaFlashToggle.addEventListener('change', applyAntennaFlashSetting);
 
@@ -479,18 +568,24 @@ function mountDemoControls() {
     runAction(button.dataset.action);
   }, true);
 
+  swapButton.addEventListener('click', () => {
+    [bgColor.value, headColor.value] = [headColor.value, bgColor.value];
+    showChosenColors({ fade: true });
+  });
+
+  randomButton.addEventListener('click', () => {
+    const others = paletteButtons.filter(({ button }) => button.getAttribute('aria-pressed') !== 'true');
+    choosePalette(others[Math.floor(Math.random() * others.length)]);
+  });
+
   resetButton.addEventListener('click', () => {
     bgColor.value = DEFAULTS.background;
     headColor.value = DEFAULTS.head;
     eyeThrough.checked = DEFAULTS.eyeThrough;
-    applyBackground();
-    applyHeadColor();
-    applyEyeColor();
+    showChosenColors({ fade: true });
   });
 
-  applyBackground();
-  applyHeadColor();
-  applyEyeColor();
+  showChosenColors();
   syncAntennaVisibility();
   applyAntennaFlashSetting();
   setPanel(null);

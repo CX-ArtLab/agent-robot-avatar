@@ -48,7 +48,7 @@ const RANDOM_LABELS = Object.freeze({
 
 const WRAP_WAITING_LABELS = Object.freeze({
   'zh-CN':'等待 · 环绕', 'zh-TW':'等待 · 環繞', en:'Waiting · Wrap', ja:'待機 · 回り込み',
-  ko:'대기 · 감싸기', es:'Espera · Envoltura', pt:'Espera · Contorno', de:'Warten · Umlauf', fr:'Attente · Enveloppement',
+  ko:'대기 · 감싸기', es:'Espera · Envoltura', pt:'Espera · Contorno', de:'Warten · Umlauf', fr:'Attente · Boucle',
 });
 
 const WAVE_WAITING_LABELS = Object.freeze({
