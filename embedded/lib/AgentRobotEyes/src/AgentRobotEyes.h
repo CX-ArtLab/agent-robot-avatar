@@ -54,6 +54,9 @@ class Eyes {
   void lookAt(float x, float y); // normalized [-1, 1]
   // Changes how far lookAt() moves the eyes; keeps the current animation.
   bool setGazeRange(GazeRange range);
+  // Changes frame rate, blinking and transition time without restarting the
+  // current action (begin() resets everything). Same limits as begin().
+  bool setTiming(uint8_t maxFps, bool autoBlink, uint16_t transitionMs);
   // Layout changes preserve the current animation. Circle requires a square
   // framebuffer; pixels outside the visible circle are cleared in the bitmap.
   bool setLayout(const EyesLayout& layout);

@@ -373,6 +373,22 @@ static void gazeRanges() {
   assert(std::abs((up.x0 + up.x1) - (rest.x0 + rest.x1)) <= 2); // vertical gaze keeps x
 }
 
+// Changing timing keeps the running action and its elapsed time.
+static void timingWithoutRestart() {
+  EyesConfig config; config.autoBlink = false;
+  std::vector<uint8_t> pixels(Eyes::requiredBytes(config.width,config.height));
+  Eyes eyes; assert(!eyes.setTiming(30,true,240));
+  assert(eyes.begin(config,pixels.data(),pixels.size(),0));
+  assert(eyes.play(Action::Love,0)); eyes.update(500);
+  assert(!eyes.setTiming(0,true,240) && !eyes.setTiming(61,true,240) && !eyes.setTiming(30,true,2001));
+  assert(eyes.setTiming(60,false,0));
+  assert(eyes.action() == Action::Love);
+  std::vector<uint8_t> other(pixels.size());
+  Eyes fresh; assert(fresh.begin(config,other.data(),other.size(),0));
+  fresh.play(Action::Love,0); fresh.update(500);
+  assert(eyes.update(900) && fresh.update(900) && hash(eyes) == hash(fresh)); // same point in the heart
+}
+
 int main() {
   bufferContract();
   namesAndCancellation();
@@ -383,6 +399,7 @@ int main() {
   restoredWaitingWave();
   layoutsAndProximity();
   gazeRanges();
+  timingWithoutRestart();
   puts("Eyes core: buffer guards, all actions, cancellation, frame limits, rollover, sleep and isolation passed.");
 }
 

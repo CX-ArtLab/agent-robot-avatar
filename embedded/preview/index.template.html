@@ -23,8 +23,7 @@ html,body{height:100%}
 
 /* Left: stage, status, actions and quick controls */
 .left{min-width:0;min-height:0;display:grid;grid-template-rows:minmax(0,1fr) auto auto auto;gap:10px}
-.stage{min-height:0;overflow:auto;display:grid;scrollbar-width:thin}
-.stage.fit{overflow:hidden}
+.stage{min-height:0;overflow:hidden;display:grid}
 .sensor-wrap{position:relative;margin:auto}
 .sense-zone{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border:1px dashed #b1b6bc88;border-radius:50%;pointer-events:none}
 .sense-zone.active{border-color:#7e9a8299}
@@ -33,16 +32,19 @@ html,body{height:100%}
 .frame-art svg{display:block;width:100%;height:100%}
 .glass{position:absolute;overflow:hidden;background:#000}
 .device[data-profile=round] .glass{border-radius:50%}
-.device.bare .frame-art{display:none}
-.device.generic-frame .glass{outline:6px solid #222a2e;box-shadow:0 5px 12px #172d3c22}
+/* Housing off hides only the artwork; the screen keeps its size and place. */
+.device.bare .frame-art{visibility:hidden}
+.device.generic-frame:not(.bare) .glass{outline:6px solid #222a2e;box-shadow:0 5px 12px #172d3c22}
 .glass.show-area{overflow:visible;outline:1px dashed rgba(255,255,255,.34);outline-offset:1px}
-.device.generic-frame .glass.show-area{outline:6px solid #222a2e}
+.device.bare .glass.show-area{outline-color:rgba(120,126,134,.45)}
+.device.generic-frame:not(.bare) .glass.show-area{outline:6px solid #222a2e}
 #panel{position:absolute;inset:0;width:100%;height:100%;display:block;border-radius:inherit}
 #screen{display:none}
 .glare{position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(135deg,rgba(255,255,255,.11),rgba(255,255,255,.035) 38%,rgba(255,255,255,0) 39%,rgba(255,255,255,.02))}
 .target-dot{position:fixed;width:8px;height:8px;border-radius:50%;background:#8b9d8d;border:2px solid #fff;box-shadow:0 0 0 1px #8b9d8d;pointer-events:none;z-index:50}
-.status-row{display:flex;flex-direction:column;align-items:center;gap:5px}
+.status-row{display:flex;flex-direction:column;align-items:center;gap:4px}
 .preview .status-pill{position:static;white-space:nowrap}
+.stage-note{font-size:11px;color:#7e8a80;min-height:16px;text-align:center}
 .stage-caption{font-size:11px;color:#9a9ea4;letter-spacing:.02em;text-align:center;font-variant-numeric:tabular-nums}
 .frame-source{font-size:11px;color:#838c95;text-decoration:none;margin-left:6px}
 .frame-source:hover{text-decoration:underline;color:#52606d}
@@ -51,10 +53,19 @@ html,body{height:100%}
 .quick{justify-self:center;display:grid;gap:6px;max-width:100%;padding:6px}
 .quick-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:center}
 .quick-row + .quick-row{padding-top:6px;border-top:1px solid #f0f0f1}
-.quick select{height:34px;padding:0 8px;border-radius:10px;background:#f1f2f3}
 .quick .divider{width:1px;height:20px;background:#e6e7e9;margin:0 2px}
 .quick .pill{min-height:34px;padding:0 10px;border-radius:10px;background:#f1f2f3;font-size:12px;color:#333;gap:8px}
-.clock{font:11px/1.2 ui-monospace,monospace;font-variant-numeric:tabular-nums;padding:0 6px;color:#92969c;min-width:62px;text-align:right}
+.quick .seg{background:#f1f2f3;border-radius:10px}
+.quick .seg .chip{padding:6px 8px}
+.clock{font:11px/1.2 ui-monospace,monospace;font-variant-numeric:tabular-nums;padding:0 4px;color:#92969c;white-space:nowrap}
+/* Auto-cycle shows that it is running, not just pressed. */
+#demo[aria-pressed=true]{background:#666b72;color:#fff;display:inline-flex;align-items:center;gap:7px}
+#demo[aria-pressed=true]::before{content:'';width:7px;height:7px;border-radius:50%;background:#9be7a8;animation:live 1.2s ease-in-out infinite}
+@keyframes live{50%{opacity:.25}}
+@media(prefers-reduced-motion:reduce){#demo[aria-pressed=true]::before{animation:none}}
+.zoom-slider{display:flex;align-items:center;gap:8px;min-height:34px;padding:0 10px;border-radius:10px;background:#f1f2f3}
+.zoom-slider input{width:140px;margin:0;accent-color:#666b72;cursor:pointer}
+.zoom-slider output{min-width:38px;font-size:11px;color:#6b7078;font-variant-numeric:tabular-nums;text-align:right}
 #error{padding:12px 16px;background:#faecef;color:#9b626b;border-radius:12px;font-size:12px;justify-self:center}
 
 /* Right: options panel */
@@ -65,45 +76,59 @@ html,body{height:100%}
 .side-head button:hover{background:transparent;color:#15171a}
 .section{display:grid;gap:7px;padding:16px 0}
 .section + .section{border-top:1px solid #eef0f1}
-.section h2{margin:0 0 3px;font-size:13px;font-weight:650;color:#41474e}
+.section h2{margin:0;font-size:13px;font-weight:650;color:#41474e}
+.group{display:grid;gap:7px}
+.head-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:2px}
+.stepper{display:flex;align-items:center;gap:2px;font-size:11px;color:#8a8f98;font-variant-numeric:tabular-nums}
+.stepper button{width:28px;height:26px;padding:0;border-radius:8px;background:#f4f5f6;color:#5f646a;font-size:14px}
+.stepper button:hover{background:#e9eaec}
+.stepper span{min-width:40px;text-align:center}
 .pair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:7px}
 .field{position:relative;display:flex;align-items:center;gap:8px;min-height:36px;padding:5px 10px;border-radius:9px;background:#f4f5f6;font-size:12px;color:#5f646a;user-select:none;min-width:0}
 .field > span:first-child{flex:0 0 auto;white-space:nowrap}
 .field input[type=range]{flex:1;min-width:30px;height:18px;margin:0;accent-color:#666b72;cursor:pointer}
 .field output{flex:0 0 auto;min-width:34px;text-align:right;font-variant-numeric:tabular-nums;color:#8a8f98;font-size:11px}
-.field select{margin-left:auto;text-align:right}
-.field input[type=color]{margin-left:auto;width:28px;height:22px;padding:0;border:0;border-radius:6px;background:transparent;cursor:pointer}
+.field input[type=color]{width:28px;height:22px;padding:0;border:0;border-radius:6px;background:transparent;cursor:pointer}
 .field input[type=color]::-webkit-color-swatch-wrapper{padding:1px}
 .field input[type=color]::-webkit-color-swatch{border:1px solid rgba(0,0,0,.12);border-radius:5px}
-.field input[type=number]{width:64px;margin-left:auto;border:0;background:#fff;border-radius:6px;padding:4px 6px;font:inherit;color:#3f454c}
+.field input[type=number]{width:62px;border:0;background:#fff;border-radius:6px;padding:4px 6px;font:inherit;color:#3f454c}
+.field .push{margin-left:auto}
+.field .sep{width:1px;height:18px;background:#e2e4e7;flex:0 0 auto}
 .toggle{cursor:pointer;position:relative}
-.toggle > span:first-child{flex:1}
 .toggle .demo-switch{flex:0 0 auto}
 /* The transparent checkbox sits exactly over its switch, so it is the click target. */
-.toggle input{position:absolute;right:10px;top:50%;width:30px;height:18px;margin:-9px 0 0;opacity:0;pointer-events:auto;cursor:pointer;z-index:1}
-.head-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.head-row h2{margin:0}
-.stepper{display:flex;align-items:center;gap:2px;font-size:11px;color:#8a8f98;font-variant-numeric:tabular-nums}
-.stepper button{width:28px;height:26px;padding:0;border-radius:8px;background:#f4f5f6;color:#5f646a;font-size:14px}
-.stepper button:hover{background:#e9eaec}
-.stepper span{min-width:40px;text-align:center}
+.toggle > input{position:absolute;right:10px;top:50%;width:30px;height:18px;margin:-9px 0 0;opacity:0;pointer-events:auto;cursor:pointer;z-index:1}
+.toggle > span:first-child{flex:1}
+/* A switch embedded inside a wider row. */
+.inline-toggle{position:relative;display:flex;align-items:center;gap:8px;cursor:pointer}
+.inline-toggle > input{position:absolute;right:0;top:50%;width:30px;height:18px;margin:-9px 0 0;opacity:0;cursor:pointer;z-index:1}
 .profile-select{width:100%;height:40px;padding:0 10px;border-radius:9px;background:#f4f5f6!important;color:#202327!important;font-size:13px!important}
 .profile-select:hover{background:#e9eaec!important}
-.field .seg{margin-left:auto;flex:0 1 auto;padding:2px;border-radius:8px;background:#e9eaec}
-.field .seg .chip{padding:5px 10px;font-size:11.5px;border-radius:7px}
-.meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;font-size:11px;line-height:1.6;color:#9a9ea4}
-.support-state{padding:2px 8px;border:1px solid #e2e3e5;border-radius:999px;background:#fff;color:#858990}
+.tabs{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:3px;padding:3px;border-radius:11px;background:#f4f5f6}
+.tabs .chip{background:transparent;padding:7px 2px;font-size:12px;white-space:nowrap}
+.tabs .chip[aria-pressed=true]{background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.meta{font-size:11px;line-height:1.6;color:#8e939a}
 .chip{background:#f4f5f6;color:#5f646a;border-radius:9px;padding:7px 10px;font-size:12px}
 .chip:hover{background:#e9eaec}
 .chip[aria-pressed=true]{background:#dfe1e4;color:#202327;font-weight:650}
-.chips{display:flex;flex-wrap:wrap;gap:5px}
 .seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:4px;padding:3px;border-radius:11px;background:#f4f5f6}
 .seg .chip{background:transparent;padding:7px 4px}
 .seg .chip[aria-pressed=true]{background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.field .seg{flex:0 1 auto;padding:2px;border-radius:8px;background:#e9eaec;grid-auto-columns:auto}
+.field .seg .chip{padding:5px 10px;font-size:11.5px;border-radius:7px}
+.seg[aria-disabled=true]{opacity:.4;pointer-events:none}
 .row-end{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .row-end .note{font-size:11px;line-height:1.5;color:#9a9ea4}
-.row-end button{flex:0 0 auto;padding:7px 12px;border-radius:9px;font-size:12px}
-.sub{font-size:11px;color:#a3a7ad;font-weight:600;margin-top:2px}
+.row-end button,.small-button{flex:0 0 auto;padding:7px 12px;border-radius:9px;font-size:12px}
+/* Toggle chips: a whole row of on/off options. */
+.toggle-chips{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:6px}
+.chip-toggle{position:relative;display:flex;align-items:center;justify-content:center;gap:6px;min-height:36px;border-radius:9px;background:#f4f5f6;color:#7a8088;font-size:12px;cursor:pointer;user-select:none}
+.chip-toggle > input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
+.chip-toggle::before{content:'';width:7px;height:7px;border-radius:50%;background:#c9ccd1}
+.chip-toggle:has(input:checked){background:#e4e6e9;color:#202327;font-weight:600}
+.chip-toggle:has(input:checked)::before{background:#666b72}
+.chip-toggle:has(input:focus-visible){outline:2px solid #aeb2b8;outline-offset:2px}
+.colors-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:7px}
 #size-error{font-size:11px;color:#a36f78}
 .preview-footer{font-size:10px;color:#999da4;line-height:1.8;padding-top:14px;border-top:1px solid #eef0f1}
 .preview-footer details{margin-top:6px}.preview-footer summary{cursor:pointer}
@@ -122,7 +147,7 @@ html,body{height:100%}
   .stage{height:48vh;min-height:260px}
   .side{overflow:visible;padding:16px}
 }
-@media(max-width:420px){.pair{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:420px){.pair,.colors-row{grid-template-columns:minmax(0,1fr)}.zoom-slider input{width:100px}}
 </style>
 </head>
 <body>
@@ -131,7 +156,7 @@ html,body{height:100%}
 <div class="build-badge">本地草稿 · 未发布</div>
 
 <main class="left">
-  <div class="stage fit" id="stage">
+  <div class="stage" id="stage">
     <div class="sensor-wrap" id="sensor-wrap">
       <div class="sense-zone" id="sense-zone" aria-hidden="true"></div>
       <div class="device" id="device" data-profile="tft">
@@ -143,17 +168,20 @@ html,body{height:100%}
   <div class="status-row">
     <noscript>此预览需要启用 JavaScript。</noscript><div id="error" role="alert" hidden></div>
     <div class="status-pill" id="current" role="status">正常 · idle</div>
+    <div class="stage-note" id="tracking-note" role="status"></div>
     <div class="stage-caption"><span id="stage-caption">正在载入屏幕模组…</span><a class="frame-source" id="frame-source" target="_blank" rel="noopener noreferrer" hidden>模组资料 ↗</a></div>
   </div>
   <div class="controls" id="actions" role="group" aria-label="选择表情"></div>
   <div class="card quick" aria-label="播放与显示">
     <div class="quick-row">
-      <button id="pause" disabled>暂停</button><button id="step" disabled>下一帧</button><button id="demo" aria-pressed="false" disabled>自动轮播</button><button id="reset" disabled>重置</button>
-      <select id="speed" aria-label="播放速度" disabled><option value="0.25">0.25× 速</option><option value="0.5">0.5× 速</option><option value="1" selected>1× 速</option><option value="2">2× 速</option></select>
-      <span class="clock" id="clock" aria-hidden="true">0.00 s</span>
+      <button id="pause" title="也可以按空格键" disabled>暂停</button><button id="step" title="暂停后可逐帧查看" disabled>下一帧</button><button id="demo" aria-pressed="false" disabled>自动轮播</button><button id="reset" title="从“正常”重新开始，保留所有设置" disabled>重置</button>
+      <div class="seg" id="speed" data-value="1" role="group" aria-label="播放速度"><button class="chip" type="button" data-value="0.25">0.25×</button><button class="chip" type="button" data-value="0.5">0.5×</button><button class="chip" type="button" data-value="1">1×</button><button class="chip" type="button" data-value="2">2×</button></div>
+      <span class="clock" id="clock" title="模拟时间：暂停时停止，慢放时变慢">时间 0.0 s</span>
     </div>
     <div class="quick-row">
-      <span class="chips" id="zoom" role="group" aria-label="显示比例"></span>
+      <button class="chip" type="button" id="zoom-fit" data-zoom="fit">适合窗口</button>
+      <button class="chip" type="button" id="zoom-real" data-zoom="1">实物大小</button>
+      <label class="zoom-slider" title="缩放（相对实物大小），最大到放满窗口；在常用比例附近会轻轻吸附"><input id="zoom" type="range" min="0" max="1000" value="1000" aria-label="缩放"><output id="zoom-value">1.0×</output></label>
       <span class="divider" aria-hidden="true"></span>
       <button class="chip" type="button" id="rotate">旋转 90°</button>
       <label class="field toggle demo-toggle pill"><span>外框</span><input id="housing" type="checkbox" checked disabled><span class="demo-switch" aria-hidden="true"></span></label>
@@ -165,29 +193,21 @@ html,body{height:100%}
 </main>
 
 <aside class="card side" aria-label="功能选项">
-  <div class="side-head"><h1>功能选项</h1><button id="download" disabled>下载离线版 ↗</button></div>
+  <div class="side-head"><h1>功能选项</h1><button id="download" disabled>下载离线版</button></div>
 
   <section class="section">
     <div class="head-row">
       <h2>屏幕</h2>
-      <div class="stepper"><button type="button" id="prev-profile" title="上一个型号" aria-label="上一个型号" disabled>‹</button><span id="profile-index"></span><button type="button" id="next-profile" title="下一个型号" aria-label="下一个型号" disabled>›</button></div>
+      <div class="stepper" id="stepper"><button type="button" id="prev-profile" title="上一个型号" aria-label="上一个型号" disabled>‹</button><span id="profile-index"></span><button type="button" id="next-profile" title="下一个型号" aria-label="下一个型号" disabled>›</button></div>
     </div>
-    <div class="chips" id="screen-groups" role="group" aria-label="屏幕类型"></div>
+    <div class="tabs" id="screen-groups" role="group" aria-label="屏幕类型"></div>
     <select id="profile" class="profile-select" aria-label="屏幕预设" disabled></select>
-    <div id="custom-size" hidden>
-      <div class="pair">
-        <label class="field"><span>宽</span><input id="custom-width" type="number" min="16" max="512" value="240"></label>
-        <label class="field"><span>高</span><input id="custom-height" type="number" min="16" max="512" value="160"></label>
-      </div>
-      <div class="row-end" style="margin-top:7px">
-        <label class="field" style="flex:1"><span>形状</span><select id="custom-shape"><option value="0">矩形</option><option value="1">圆形（宽高相等）</option></select></label>
-        <button id="apply-size">应用</button>
-      </div>
+    <div id="custom-size" class="group" hidden>
+      <div class="field"><span>尺寸</span><input id="custom-width" type="number" min="16" max="512" value="240" aria-label="宽"><span>×</span><input id="custom-height" type="number" min="16" max="512" value="160" aria-label="高">
+        <div class="seg push" id="custom-shape" data-value="0" role="group" aria-label="形状"><button class="chip" type="button" data-value="0">矩形</button><button class="chip" type="button" data-value="1">圆形</button></div></div>
       <span id="size-error" role="status"></span>
     </div>
-    <div class="meta"><span id="support-state" class="support-state"></span><span id="screen-label">240 × 240 · 1-bit</span></div>
-    <div class="meta" id="bus-note" title="按连接总线带宽估算的整屏刷新上限，不含绘制时间；实际帧率还取决于芯片和驱动"></div>
-    <div class="meta" id="profile-note"></div>
+    <div class="meta"><span id="screen-spec"></span><br><span id="screen-support"></span></div>
   </section>
 
   <section class="section">
@@ -197,38 +217,37 @@ html,body{height:100%}
       <button class="chip" type="button" data-fit="contain">完整显示</button>
       <button class="chip" type="button" data-fit="cover">填满屏幕</button>
     </div>
+    <div class="meta" id="profile-note"></div>
     <label class="field"><span>表情大小</span><input id="face-scale" type="range" min=".25" max="3" step=".05" value="1"><output id="scale-value">1.00</output></label>
     <div class="pair">
-      <label class="field"><span>左右</span><input id="offset-x" type="range" min="-1" max="1" step=".05" value="0"><output id="offset-x-value">0.00</output></label>
-      <label class="field"><span>上下</span><input id="offset-y" type="range" min="-1" max="1" step=".05" value="0"><output id="offset-y-value">0.00</output></label>
+      <label class="field"><span>水平位置</span><input id="offset-x" type="range" min="-1" max="1" step=".05" value="0"><output id="offset-x-value">0.00</output></label>
+      <label class="field"><span>垂直位置</span><input id="offset-y" type="range" min="-1" max="1" step=".05" value="0"><output id="offset-y-value">0.00</output></label>
     </div>
     <div class="row-end"><span class="note">每块屏单独保存</span><button type="button" id="layout-reset">恢复默认布局</button></div>
   </section>
 
   <section class="section">
-    <h2>接近感应</h2>
-    <label class="field toggle demo-toggle"><span>靠近注视（鼠标模拟物体）</span><input id="tracking" type="checkbox" checked disabled><span class="demo-switch" aria-hidden="true"></span></label>
-    <label class="field"><span>感应扩展范围</span><input id="sense-radius" type="range" min="16" max="200" step="4" value="72"><output id="sense-value">72 px</output></label>
-    <div class="field"><span>注视幅度</span><div class="seg" id="gaze-range" data-value="1" role="group" aria-label="注视幅度" title="眼睛看向一侧时移动多远；“大”会稍微越过表情区域边缘，眼睛在边缘处变窄"><button class="chip" type="button" data-value="0">小</button><button class="chip" type="button" data-value="1">中</button><button class="chip" type="button" data-value="2">大</button></div></div>
-    <label class="field toggle demo-toggle"><span>只看移动目标</span><input id="moving-only" type="checkbox"><span class="demo-switch" aria-hidden="true"></span></label>
-    <div class="field"><span>移动灵敏度</span><div class="seg" id="motion-sensitivity" data-value="3" role="group" aria-label="移动灵敏度"><button class="chip" type="button" data-value="1">高</button><button class="chip" type="button" data-value="3">中</button><button class="chip" type="button" data-value="8">低</button></div></div>
-    <div class="field"><span>跟随速度</span><div class="seg" id="response" data-value="140" role="group" aria-label="跟随速度"><button class="chip" type="button" data-value="60">快</button><button class="chip" type="button" data-value="140">正常</button><button class="chip" type="button" data-value="320">慢</button></div></div>
-    <div class="field"><span>离开后停留</span><div class="seg" id="hold" data-value="600" role="group" aria-label="离开后停留"><button class="chip" type="button" data-value="0">立即</button><button class="chip" type="button" data-value="600">0.6 秒</button><button class="chip" type="button" data-value="1500">1.5 秒</button><button class="chip" type="button" data-value="3000">3 秒</button></div></div>
-    <div class="meta" id="tracking-note" role="status">鼠标进入虚线范围后注视，离开后稍作停留并回正。</div>
-  </section>
-
-  <section class="section">
-    <h2>手动注视</h2>
-    <div class="pair">
-      <label class="field"><span>左右</span><input id="gx" type="range" min="-1" max="1" step=".05" value="0"><output id="gx-value">0.00</output></label>
-      <label class="field"><span>上下</span><input id="gy" type="range" min="-1" max="1" step=".05" value="0"><output id="gy-value">0.00</output></label>
+    <h2>注视</h2>
+    <div class="seg" id="gaze-mode" data-value="track" role="group" aria-label="注视方式"><button class="chip" type="button" data-value="track" title="用鼠标模拟靠近的物体">跟随物体</button><button class="chip" type="button" data-value="manual">手动</button><button class="chip" type="button" data-value="off">关闭</button></div>
+    <div class="field"><span>注视幅度</span><div class="seg push" id="gaze-range" data-value="1" role="group" aria-label="注视幅度" title="眼睛看向一侧时移动多远；“大”会稍微越过表情区域边缘，眼睛在边缘处变窄"><button class="chip" type="button" data-value="0">小</button><button class="chip" type="button" data-value="1">中</button><button class="chip" type="button" data-value="2">大</button></div></div>
+    <div id="track-options" class="group">
+      <label class="field"><span>感应范围</span><input id="sense-radius" type="range" min="16" max="200" step="4" value="72"><output id="sense-value">72 px</output></label>
+      <div class="field"><label class="inline-toggle demo-toggle"><span>只看移动目标</span><input id="moving-only" type="checkbox"><span class="demo-switch" aria-hidden="true"></span></label>
+        <span class="sep push" aria-hidden="true"></span><span>灵敏度</span>
+        <div class="seg" id="motion-sensitivity" data-value="3" role="group" aria-label="移动灵敏度" title="打开“只看移动目标”后生效"><button class="chip" type="button" data-value="1">高</button><button class="chip" type="button" data-value="3">中</button><button class="chip" type="button" data-value="8">低</button></div></div>
+      <div class="field"><span>跟随速度</span><div class="seg push" id="response" data-value="140" role="group" aria-label="跟随速度"><button class="chip" type="button" data-value="60">快</button><button class="chip" type="button" data-value="140">正常</button><button class="chip" type="button" data-value="320">慢</button></div></div>
+      <div class="field"><span>离开后停留</span><div class="seg push" id="hold" data-value="600" role="group" aria-label="离开后停留"><button class="chip" type="button" data-value="0">立即</button><button class="chip" type="button" data-value="600">0.6 秒</button><button class="chip" type="button" data-value="1500">1.5 秒</button><button class="chip" type="button" data-value="3000">3 秒</button></div></div>
     </div>
-    <div class="row-end"><span class="note">拖动滑块会关闭靠近注视</span><button id="center">回到正中</button></div>
+    <div id="manual-options" class="group">
+      <label class="field"><span>看向左右</span><input id="gx" type="range" min="-1" max="1" step=".05" value="0"><output id="gx-value">0.00</output></label>
+      <label class="field"><span>看向上下</span><input id="gy" type="range" min="-1" max="1" step=".05" value="0"><output id="gy-value">0.00</output></label>
+      <div class="row-end"><span class="note"></span><button id="center">回到正中</button></div>
+    </div>
   </section>
 
   <section class="section">
     <h2>动画</h2>
-    <div class="field"><span>帧率上限</span><div class="seg" id="fps" data-value="25" role="group" aria-label="帧率上限"><button class="chip" type="button" data-value="15">15</button><button class="chip" type="button" data-value="25">25</button><button class="chip" type="button" data-value="30">30</button><button class="chip" type="button" data-value="60">60 FPS</button></div></div>
+    <div class="field"><span>帧率上限</span><div class="seg push" id="fps" role="group" aria-label="帧率上限"></div></div>
     <div class="pair">
       <label class="field toggle demo-toggle"><span>眨眼</span><input id="blink" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
       <label class="field toggle demo-toggle"><span>打断过渡</span><input id="transitions" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
@@ -237,30 +256,27 @@ html,body{height:100%}
 
   <section class="section">
     <h2>颜色</h2>
-    <div id="color-options" class="section" style="padding:0;border:0">
-      <div class="pair">
-        <label class="field"><span>眼睛</span><input id="eye-color" type="color" value="#ffffff"></label>
-        <label class="field"><span>屏幕底色</span><input id="bg-color" type="color" value="#000000"></label>
-      </div>
-      <div class="row-end"><span class="note">只对彩色屏有效</span><button type="button" id="color-reset">恢复默认颜色</button></div>
+    <div class="colors-row" id="color-options">
+      <label class="field"><span>眼睛</span><input class="push" id="eye-color" type="color" value="#ffffff"></label>
+      <label class="field"><span>底色</span><input class="push" id="bg-color" type="color" value="#000000"></label>
+      <button type="button" class="small-button" id="color-reset" title="恢复白眼睛、黑底色">恢复</button>
     </div>
-    <div id="mono-options" class="section" style="padding:0;border:0"><div class="sub">OLED 发光颜色</div><div class="chips" id="mono-chips"></div></div>
+    <div class="field" id="mono-options"><span>OLED 发光</span><div class="seg push" id="mono-chips" role="group" aria-label="OLED 发光颜色"></div></div>
   </section>
 
   <section class="section">
     <h2>屏幕效果</h2>
-    <div class="pair">
-      <label class="field toggle demo-toggle"><span>像素颗粒</span><input id="pixel-grid" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
-      <label class="field toggle demo-toggle"><span>背光与发光</span><input id="panel-glow" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
-      <label class="field toggle demo-toggle"><span>玻璃反光</span><input id="glass-glare" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
+    <div class="toggle-chips">
+      <label class="chip-toggle" title="放大后显示像素格和红绿蓝子像素"><input id="pixel-grid" type="checkbox" checked>像素颗粒</label>
+      <label class="chip-toggle" title="LCD 背光漏光与亮部发光"><input id="panel-glow" type="checkbox" checked>背光发光</label>
+      <label class="chip-toggle" title="外框玻璃的反光"><input id="glass-glare" type="checkbox" checked>玻璃反光</label>
     </div>
-    <div class="meta">只影响显示，不改变核心输出的像素。"实物大小"按常见电脑屏幕估算。</div>
   </section>
 
   <footer class="preview-footer">
-    <span id="status" role="status">正在初始化…</span> · 核心 v0.1.0 · Space 暂停／继续<br><span id="fingerprint"></span>
-    <details><summary>屏幕预设库</summary><div id="preset-list" class="preset-list"></div><p>可预览表示按对应像素绘制。标"通用"的型号外框按常见模块尺寸绘制，是示意；提供参考例程的屏幕也尚未完成实机验证。</p></details>
-    <details><summary>说明与开源许可</summary><p>屏幕、帧率、眨眼或过渡更改会重置表情；布局、外框和显示效果更改保留动画。靠近注视仅模拟目标输入，不访问摄像头。输入、等待、睡眠持续到新命令，其余动作结束后回到正常。切到后台冻结时间。</p><pre>__LICENSE__</pre><pre>__THIRD_PARTY__</pre></details>
+    <span id="status" role="status">正在初始化…</span> · 核心 v0.1.0 · 空格键暂停／继续<br><span id="fingerprint"></span>
+    <details><summary>屏幕预设库</summary><div id="preset-list" class="preset-list"></div><p>可预览表示按对应像素绘制。标"通用"的型号外框按常见模块尺寸绘制，是示意；提供参考例程的屏幕也尚未完成实机验证。帧率上限按连接总线带宽估算，不含绘制时间。</p></details>
+    <details><summary>说明与开源许可</summary><p>换屏幕或改尺寸会从"正常"重新开始；帧率、眨眼、过渡、布局、外框和显示效果的更改保留当前动画。跟随物体只模拟目标输入，不访问摄像头。输入、等待、睡眠持续到新命令，其余动作结束后回到正常。切到后台冻结时间。设置保存在本浏览器中。</p><pre>__LICENSE__</pre><pre>__THIRD_PARTY__</pre></details>
   </footer>
 </aside>
 <div class="target-dot" id="target-dot" aria-hidden="true" hidden></div>

@@ -19,7 +19,8 @@ const errors = [], external = [];
 page.on('pageerror', error => errors.push(error.message));
 page.on('request', request => { if (/^https?:/.test(request.url())) external.push(request.url()); });
 const file = pathToFileURL(resolve(root,'embedded/preview/agent-robot-eyes-preview.html')).href;
-const clock = () => page.locator('#clock').textContent();
+// Simulated time in seconds, as shown in the playback bar.
+const clock = async () => (await page.locator('#clock').textContent()).replace(/[^\d.]/g,'');
 const frame = () => page.locator('#screen').evaluate(canvas => {
   const bytes = canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height).data;
   let hash=2166136261, lit=0;
@@ -27,16 +28,18 @@ const frame = () => page.locator('#screen').evaluate(canvas => {
   return { hash,lit,width:canvas.width,height:canvas.height };
 });
 const choose = async id => {
-  // The picker lists one screen type at a time: pick the type chip, then the screen.
+  // The picker lists one screen type at a time: pick the type tab, then the
+  // screen. The 自定义 tab opens the raw canvas with editable size instead.
   const group = await page.evaluate(id => id === 'custom' ? 'other' : SCREEN_PRESETS.find(item => item.id === id).group || 'other', id);
   await page.locator(`[data-group="${group}"]`).click();
-  await page.locator('#profile').selectOption(id);
+  if (group !== 'other') await page.locator('#profile').selectOption(id);
 };
+const glassBox = () => page.locator('#glass').evaluate(el => { const r = el.getBoundingClientRect(); return [r.left, r.top, r.width, r.height].map(Math.round); });
 try {
   await page.clock.install();
   await page.goto(file);
   await page.waitForFunction(() => document.getElementById('status').textContent.includes('本机绘制'));
-  await page.locator('#tracking').uncheck();
+  await page.locator('#gaze-mode [data-value="off"]').click();
   assert.equal(await page.locator('.action').count(),18);
   assert((await frame()).lit>1000);
   assert.equal(await page.locator('#step').isDisabled(),true);
@@ -52,7 +55,10 @@ try {
   await page.locator('#pause').click();
   await page.clock.runFor(3500);
   assert((await page.locator('#current').textContent()).includes('idle'));
-  await page.locator('#demo').click(); await page.clock.runFor(4100);
+  await page.locator('#demo').click();
+  assert.equal(await page.locator('#demo').getAttribute('aria-pressed'),'true');
+  assert((await page.locator('#demo').textContent()).includes('轮播中'),'running cycle is labelled');
+  await page.clock.runFor(4100);
   assert((await page.locator('#current').textContent()).includes('bored'));
   await page.locator('[data-action="waiting"]').click();
   assert.equal(await page.locator('#demo').getAttribute('aria-pressed'),'false');
@@ -75,12 +81,14 @@ try {
   assert(padding,'TFT must center 160px eye area with 40px black padding');
   await page.locator('#pause').click();
   const centered=await frame();
-  const framingClock=await clock();
+  const framingClock=await clock(), framed=await glassBox();
   await page.locator('#housing').uncheck();
+  assert.deepEqual(await glassBox(),framed,'hiding the housing keeps the screen in place');
   assert.equal((await frame()).hash,centered.hash,'housing must not change native pixels');
   assert.equal(await clock(),framingClock,'housing must not restart simulation');
   assert.equal(await page.locator('#device').evaluate(el=>el.classList.contains('bare')),true);
   await page.locator('#housing').check();
+  await page.locator('#gaze-mode [data-value="manual"]').click();
   await page.locator('#gx').fill('1');
   assert.notEqual((await frame()).hash,centered.hash);
   // Gaze range changes how far the same gaze moves the eyes, not the centred pose.
@@ -90,11 +98,21 @@ try {
   await page.locator('#gaze-range [data-value="1"]').click();
   assert.equal((await frame()).hash,medium.hash);
   await page.locator('#center').click(); assert.equal((await frame()).hash,centered.hash);
-  await page.locator('#fps [data-value="60"]').click();
+  // The frame-rate cap follows the screen; changing timing keeps the animation.
+  assert.match(await page.locator('#fps [data-value="max"]').textContent(),/^屏幕上限 \d+$/);
+  assert.equal(await page.locator('#fps [data-value="60"]').count(),0,'tiers above the screen limit are not offered');
+  await page.locator('[data-action="love"]').click();
+  for(let i=0;i<5;i++) await page.locator('#step').click();
+  const loving=await clock();
+  await page.locator('#fps [data-value="15"]').click();
+  assert.equal(await clock(),loving,'changing the frame rate does not restart');
+  assert((await page.locator('#current').textContent()).endsWith('love'));
   const before=Number.parseFloat(await clock());
   await page.locator('#step').click();
-  assert(Math.abs(Number.parseFloat(await clock())-before-.02)<.001);
+  // One 15 FPS frame is 67 ms; the clock shows hundredths, so allow its rounding.
+  assert(Math.abs(Number.parseFloat(await clock())-before-.067)<=.011);
   await page.locator('#blink').uncheck(); await page.locator('#transitions').uncheck();
+  assert((await page.locator('#current').textContent()).endsWith('love'),'blink/transition switches keep the action');
   for(const action of ['input','blocked','random','surprise','waiting-wave']) {
     await page.locator(`[data-action="${action}"]`).click();
     assert((await page.locator('#current').textContent()).endsWith(action));
@@ -105,6 +123,13 @@ try {
   const glassWidth=await page.locator('#glass').evaluate(el=>el.getBoundingClientRect().width);
   assert(Math.abs(glassWidth-240*.15*96/25.4)<.5,'actual-size zoom uses physical pixel pitch');
   await page.locator('[data-zoom="fit"]').click();
+  // The zoom slider never makes the module larger than the stage.
+  const fitted=await glassBox();
+  await page.locator('#zoom').fill('0');
+  assert((await glassBox())[2]<fitted[2],'zoom slider shrinks the module');
+  await page.locator('#zoom').fill('1000');
+  assert.deepEqual(await glassBox(),fitted,'slider maximum is the fitted size');
+  assert(await page.locator('#stage').evaluate(el=>el.scrollWidth<=el.clientWidth&&el.scrollHeight<=el.clientHeight),'no scrolling');
   // Panel character is display-only: the core framebuffer stays identical.
   const native=await frame();
   await page.locator('#raw-pixels').check(); await page.locator('#pixel-grid').uncheck();
@@ -140,19 +165,20 @@ try {
   await choose('round');
   // A type chip narrows the picker to that type; the bus line estimates frame rate.
   assert.deepEqual(await page.locator('#profile option').evaluateAll(options=>[...new Set(options.map(o=>SCREEN_PRESETS.find(p=>p.id===o.value).group))]),['round']);
-  assert((await page.locator('#bus-note').textContent()).startsWith('SPI'));
+  assert.match(await page.locator('#screen-spec').textContent(),/SPI 40 MHz/);
   await choose('ssd1306-091');
-  assert.match(await page.locator('#bus-note').textContent(),/^I²C .*FPS/);
+  assert.match(await page.locator('#screen-spec').textContent(),/I²C/);
+  assert.match(await page.locator('#screen-support').textContent(),/屏幕上限约 \d+ FPS/);
   await choose('round');
   assert.deepEqual([(await frame()).width,(await frame()).height],[240,240]);
   await choose('custom');
   await page.locator('#custom-width').fill('172');await page.locator('#custom-height').fill('320');
-  await page.locator('#custom-shape').selectOption('0');await page.locator('#apply-size').click();
+  await page.locator('#custom-height').press('Enter');
   assert.deepEqual([(await frame()).width,(await frame()).height],[172,320]);
-  await page.locator('#custom-shape').selectOption('1');await page.locator('#apply-size').click();
+  await page.locator('#custom-shape [data-value="1"]').click();
   assert((await page.locator('#size-error').textContent()).length>0);
   assert.equal((await frame()).width,172,'invalid custom size leaves valid framebuffer intact');
   if(process.env.PREVIEW_SCREENSHOT) await page.screenshot({path:process.env.PREVIEW_SCREENSHOT,fullPage:true});
   assert.deepEqual(errors,[]); assert.deepEqual(external,[]);
-  console.log(`Offline ${engine} UI passed: all controls, pause/step, native animation, cycling/manual interruption, sleep/wake, OLED/TFT, gaze, reset, actual size, display-only panel effects, per-screen layout, rotation, screen types, every preset, responsive layout; no network requests.`);
+  console.log(`Offline ${engine} UI passed: all controls, pause/step, native animation, cycling/manual interruption, sleep/wake, OLED/TFT, gaze, reset, cycling state, housing in place, zoom without scrolling, timing without restart, actual size, display-only panel effects, per-screen layout, rotation, screen types, custom size, every preset, responsive layout; no network requests.`);
 } finally { await browser.close(); }

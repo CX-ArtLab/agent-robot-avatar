@@ -148,6 +148,15 @@ bool Eyes::setGazeRange(GazeRange range) {
   return true;
 }
 
+bool Eyes::setTiming(uint8_t maxFps, bool autoBlink, uint16_t transitionMs) {
+  if (!buffer_ || maxFps < 1 || maxFps > 60 || transitionMs > 2000) return false;
+  config_.maxFps = maxFps;
+  config_.autoBlink = autoBlink;
+  config_.transitionMs = transitionMs;
+  force_ = true;
+  return true;
+}
+
 bool Eyes::setLayout(const EyesLayout& layout) {
   if (!buffer_ || layout.x >= config_.width || layout.y >= config_.height ||
       (layout.width && layout.width > config_.width - layout.x) ||

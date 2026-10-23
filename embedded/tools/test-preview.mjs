@@ -54,6 +54,7 @@ function command(op, ...args) {
   if (op === 'motion') {api.eyes_motion_target(...args);expected.push({result:'ok'});}
   if (op === 'gazeconfig') expected.push({result:String(api.eyes_gaze_config(...args))});
   if (op === 'range') expected.push({result:String(api.eyes_gaze_range(...args))});
+  if (op === 'timing') expected.push({result:String(api.eyes_timing(...args))});
   if (op === 'update') {
     const changed = api.eyes_update(...args), action = api.eyes_action();
     const pixels = Buffer.from(new Uint8Array(api.memory.buffer, api.eyes_data(), api.eyes_size()));
@@ -92,6 +93,14 @@ for(const preset of presets) {
   command('motion',-.7,.8,.8,1,0,5100);command('update',5200);
   command('motion',-.7,.8,.8,1,1,5300);command('update',5400);
   command('motion',-.7,.8,.8,1,0,5600);command('update',6000);command('update',6500);
+}
+// Timing changes mid-action keep the action running; invalid values are rejected.
+for (const action of [4,6,13,15]) {
+  command('init',240,160,25,1,240,0); command('play',action,0);
+  for (const t of [40,300]) command('update',t);
+  command('timing',0,1,240); command('timing',61,1,240); command('timing',30,1,2001);
+  command('timing',60,0,0); for (const t of [320,340,700,1500]) command('update',t);
+  command('timing',15,1,600); command('play',2,1510); for (const t of [1520,1700,2200]) command('update',t);
 }
 // Gaze reach and Web-style edge narrowing at every range, including invalid ranges.
 for (const [w,h] of [[240,160],[128,64],[128,32]]) {
