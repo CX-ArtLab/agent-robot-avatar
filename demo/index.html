@@ -62,9 +62,9 @@
   .expression-tag{display:inline-flex;align-items:center;gap:5px;margin:9px 0 0;padding:4px 8px;border-radius:999px;font-size:10px;line-height:1.1;font-weight:650;letter-spacing:.01em;border:1px solid transparent}
   .expression-tag::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.62}
   .expression-tag.success{background:#e9f5ec;border-color:#d4ead9;color:#6e9277}
-  .expression-tag.warning{background:#fff5dc;border-color:#efe0b6;color:#9a7c38}
+  .expression-tag.wary{background:#fff5dc;border-color:#efe0b6;color:#9a7c38}
   .expression-tag.angry{background:#faecef;border-color:#f1d7dd;color:#a36f78}
-  .expression-tag.error{background:#eaf1f6;border-color:#d8e3ea;color:#718897}
+  .expression-tag.refuse{background:#eaf1f6;border-color:#d8e3ea;color:#718897}
   .expression-tag.surprise{background:#eaf2fa;border-color:#d5e3f0;color:#6f89a2}
   .expression-tag.bored{background:#f0edf7;border-color:#e2dced;color:#86799a}
   .typing .bubble{color:#9a9da2;letter-spacing:.14em;min-width:52px;text-align:center}
@@ -296,17 +296,17 @@
   <div class="controls" aria-label="Avatar states">
     <button type="button" data-action="idle">正常</button>
     <button type="button" data-action="bored">发呆</button>
-    <button type="button" data-action="waiting">等待 · 旋转</button>
+    <button type="button" data-action="waiting-spin">等待 · 旋转</button>
     <button type="button" data-action="waiting-wrap">等待 · 环绕</button>
     <button type="button" data-action="waiting-wave">等待 · 波动</button>
     <button type="button" data-action="input">输入</button>
-    <button type="button" data-action="send">肯定</button>
+    <button type="button" data-action="affirm">肯定</button>
     <button type="button" data-action="success">成功</button>
     <button type="button" data-action="failure">失败</button>
-    <button type="button" data-action="warning">警告</button>
+    <button type="button" data-action="wary">警惕</button>
     <button type="button" data-action="inspect">审视</button>
     <button type="button" data-action="angry">生气</button>
-    <button type="button" data-action="error">拒绝</button>
+    <button type="button" data-action="refuse">拒绝</button>
     <button type="button" data-action="surprise">惊讶</button>
     <button type="button" data-action="sleep">睡着</button>
     <button type="button" data-action="wake">醒来</button>
@@ -424,15 +424,15 @@ try {
 
   const stateNames = {
     idle: '默认待机', bored: '发呆', input: '输入中', happy: '成功',
-    warning: '警告确认', angry: '生气', error: '拒绝',
+    wary: '警惕', angry: '生气', refuse: '拒绝',
     surprise: '惊讶', sleepy: '困倦', sleep: '睡眠'
   };
 
   const replies = [
     {state:'success', label:'演示表情 · 成功 / success', texts:['任务已经完成，结果看起来不错。','处理完成，没有发现需要你继续操作的问题。','完成了。这次执行很顺利。']},
-    {state:'warning', label:'演示表情 · 警告确认 / warning', texts:['这个操作会覆盖现有内容。确认要继续吗？','这一步可能造成不可逆的修改，你确定要执行吗？','即将进行高影响操作，请再次确认是否继续。']},
+    {state:'wary', label:'演示表情 · 警惕 / wary', texts:['这个操作会覆盖现有内容。确认要继续吗？','这一步可能造成不可逆的修改，你确定要执行吗？','即将进行高影响操作，请再次确认是否继续。']},
     {state:'angry', label:'演示表情 · 生气 / angry', texts:['这条内容不允许继续发送，操作已被阻止。','当前请求违反了允许范围，我不能执行。','这个操作不符合当前规则，已停止继续处理。']},
-    {state:'error', label:'演示表情 · 拒绝 / error', texts:['抱歉，这个请求我不能执行。','这件事超出了我能做的范围，我只能拒绝。','这个操作我不能帮你完成。']},
+    {state:'refuse', label:'演示表情 · 拒绝 / refuse', texts:['抱歉，这个请求我不能执行。','这件事超出了我能做的范围，我只能拒绝。','这个操作我不能帮你完成。']},
     {state:'surprise', label:'演示表情 · 意外 / surprise', texts:['有点意外，我发现了一个和预期不同的结果。','这个结果比预想中更特别，我需要重新判断一下。','发现了一个意外情况，不过信息已经保留下来了。']},
     {state:'bored', label:'演示表情 · 等待 / bored', texts:['还在等外部结果返回，这一步比平时慢一点。','暂时没有新的变化，我还在等待。','任务还没有结束，目前处于等待状态。']}
   ];
@@ -464,7 +464,7 @@ try {
   async function openAgent(){
     if(inPanel) return;
     inPanel = true;
-    face.play('send');
+    face.play('affirm');
     overlay.classList.add('open');
     overlay.setAttribute('aria-hidden','false');
     await new Promise(resolve => setTimeout(resolve,70));
@@ -529,7 +529,7 @@ try {
     addMessage('user',text);
     input.value='';
     face.reset();
-    await face.play('send');
+    await face.play('affirm');
     if(token !== replyToken || !inPanel) return;
 
     const typing = addMessage('agent','•••','typing');

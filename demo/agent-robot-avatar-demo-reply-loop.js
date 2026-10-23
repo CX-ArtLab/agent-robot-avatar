@@ -4,7 +4,7 @@ const input = document.getElementById('input');
 const sendButton = document.getElementById('send');
 const overlay = document.getElementById('agentOverlay');
 
-const RESULT_STATES = Object.freeze(['success', 'failure', 'warning', 'angry', 'error', 'surprise', 'inspect']);
+const RESULT_STATES = Object.freeze(['success', 'failure', 'wary', 'angry', 'refuse', 'surprise', 'inspect']);
 const NON_DIALOG_STATES = Object.freeze(['bored', 'sleep', 'sleepy', 'wake', 'waiting']);
 
 const EXTRA_I18N = Object.freeze({

@@ -32,8 +32,10 @@ function setEyeOrbitTransform(eye, x, scaleX, scaleY) {
 }
 
 async function enterWaiting(instance, continuous, source, options = {}) {
-  const variant = options?.variant ?? 'default';
-  if (variant !== 'default' && variant !== 'wrap' && variant !== 'wave') throw new TypeError(`Unknown waiting variant: ${variant}`);
+  // 'spin' names the default variant, matching the waiting-spin action.
+  const requested = options?.variant ?? 'default';
+  const variant = requested === 'spin' ? 'default' : requested;
+  if (variant !== 'default' && variant !== 'wrap' && variant !== 'wave') throw new TypeError(`Unknown waiting variant: ${requested}`);
   instance.noteActivity();
   instance._inputWanted = false;
 

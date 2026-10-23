@@ -47,7 +47,7 @@ const RANDOM_LABELS = Object.freeze({
 });
 
 const WRAP_WAITING_LABELS = Object.freeze({
-  'zh-CN':'等待 · 环绕', 'zh-TW':'等待 · 環繞', en:'Waiting · Wrap', ja:'待機 · 回り込み',
+  'zh-CN':'等待 · 滚动', 'zh-TW':'等待 · 滾動', en:'Waiting · Scroll', ja:'待機 · 回り込み',
   ko:'대기 · 감싸기', es:'Espera · Envoltura', pt:'Espera · Contorno', de:'Warten · Umlauf', fr:'Attente · Boucle',
 });
 
@@ -87,9 +87,9 @@ function syncActionLabels() {
   const failure = FAILURE_LABELS[activeLanguage(FAILURE_LABELS)];
   const love = LOVE_LABELS[activeLanguage(LOVE_LABELS)];
   const random = RANDOM_LABELS[activeLanguage(RANDOM_LABELS)];
-  const inspectButton = ensureActionButton('inspect', 'warning');
+  const inspectButton = ensureActionButton('inspect', 'wary');
   const failureButton = ensureActionButton('failure', 'success');
-  const wrapButton = ensureActionButton('waiting-wrap', 'waiting');
+  const wrapButton = ensureActionButton('waiting-wrap', 'waiting-spin');
   const waveButton = ensureActionButton('waiting-wave', 'waiting-wrap');
   // New actions go at the very end of the row, in the order they were added.
   const loveButton = ensureActionButton('love', 'wake');
