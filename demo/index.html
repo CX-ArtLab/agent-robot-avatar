@@ -116,6 +116,7 @@
     .demo-panel-toggle.demo-panel-open{background:#dfe1e4!important;color:#25282c!important}
     .demo-panel-toggle svg{width:18px;height:18px;display:block;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
     .demo-panel-toggle svg .demo-palette-dot{fill:currentColor}
+    .demo-panel-toggle svg .demo-dice-dot{fill:currentColor;stroke:none}
     .demo-options-group{display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap;width:max-content;max-width:100%;padding:7px 9px;border:1px solid rgba(0,0,0,.055);border-radius:14px;background:rgba(255,255,255,.82);box-shadow:0 6px 22px rgba(0,0,0,.055);backdrop-filter:blur(14px)}
     .demo-options-group[hidden]{display:none!important}
     .demo-option{min-height:30px;display:inline-flex;align-items:center;gap:7px;padding:4px 8px;border-radius:9px;background:#f4f5f6;white-space:nowrap;user-select:none;width:auto!important;flex:0 0 auto!important}
@@ -264,7 +265,6 @@
   .demo-stage{position:relative;display:grid;place-items:center;width:100%;contain:inline-size;height:clamp(190px,30vh,280px);border:1px solid rgba(0,0,0,.055);border-radius:16px;background:var(--demo-stage-bg,#fff);box-shadow:0 7px 30px rgba(0,0,0,.08)}
   .demo-stage-reel{position:absolute;inset:-1px;border-radius:inherit;overflow:hidden;pointer-events:none}
   .demo-stage-reel-strip{position:absolute;inset:0 0 auto;will-change:transform}
-  .demo-stage-label{position:absolute;left:12px;bottom:10px;z-index:6;padding:3px 8px;border-radius:999px;background:rgba(255,255,255,.9);box-shadow:0 2px 8px rgba(0,0,0,.08);color:#5f646a;font:600 10px/1.3 Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;opacity:0;pointer-events:none}
   .demo-replay{position:absolute;top:10px;right:10px;z-index:6;width:26px;height:26px;padding:0;border-radius:999px;background:rgba(255,255,255,.9);box-shadow:0 2px 8px rgba(0,0,0,.08);color:#5f646a;font:600 14px/26px system-ui,sans-serif}
   .demo-intro-finale{position:absolute;inset:-1px;border-radius:inherit;overflow:hidden;pointer-events:none}
   .demo-intro-finale>div{position:absolute;border-radius:50%;-webkit-mask-image:radial-gradient(circle,transparent 26%,#000 44%,#000 52%,transparent 70%);mask-image:radial-gradient(circle,transparent 26%,#000 44%,#000 52%,transparent 70%);will-change:transform,opacity}
@@ -296,7 +296,6 @@
     <div class="avatar-home" id="home">
       <agent-robot-avatar id="face" size="118" auto-sleep="18000"></agent-robot-avatar>
     </div>
-    <span class="demo-stage-label" aria-hidden="true"></span>
     <!-- Temporary: replays the opening show while it is being tuned. Remove before the release. -->
     <button class="demo-replay" id="demoReplayIntro" type="button" title="Replay intro" aria-label="Replay intro">↻</button>
   </div>
@@ -346,7 +345,7 @@
       </div>
       <div class="demo-toolbar-group" id="demoColorsGroup">
         <button class="demo-panel-toggle" id="demoRandomColors" type="button">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3.5"/><circle class="demo-palette-dot" cx="8.5" cy="8.5" r="1.1"/><circle class="demo-palette-dot" cx="15.5" cy="8.5" r="1.1"/><circle class="demo-palette-dot" cx="12" cy="12" r="1.1"/><circle class="demo-palette-dot" cx="8.5" cy="15.5" r="1.1"/><circle class="demo-palette-dot" cx="15.5" cy="15.5" r="1.1"/></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3.5"/><circle class="demo-dice-dot" cx="8.6" cy="8.6" r="1.6"/><circle class="demo-dice-dot" cx="15.4" cy="8.6" r="1.6"/><circle class="demo-dice-dot" cx="12" cy="12" r="1.6"/><circle class="demo-dice-dot" cx="8.6" cy="15.4" r="1.6"/><circle class="demo-dice-dot" cx="15.4" cy="15.4" r="1.6"/></svg>
         </button>
         <button class="demo-panel-toggle" id="demoColorPanelToggle" type="button" aria-expanded="false" aria-controls="demoColorPanel">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"/><circle class="demo-palette-dot" cx="13.5" cy="6.5" r=".5"/><circle class="demo-palette-dot" cx="17.5" cy="10.5" r=".5"/><circle class="demo-palette-dot" cx="6.5" cy="12.5" r=".5"/><circle class="demo-palette-dot" cx="8.5" cy="7.5" r=".5"/></svg>

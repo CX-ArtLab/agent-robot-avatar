@@ -595,19 +595,18 @@ function mountDemoControls() {
   // blend without turning grey; once they are white the heads grow darker, ending
   // next to the default black on white. Swapped palettes give more light backgrounds.
   const INTRO_SEQUENCE = [
-    ['netflix'], ['warriors'], ['telegram'], ['discord'], ['dribbble'], ['ubuntu'], ['lakers'],
+    ['warriors'], ['telegram'], ['discord'], ['dribbble'], ['ubuntu'], ['lakers'],
     ['snapchat'], ['claude'], ['telegram', true], ['chatgpt'], ['dribbble', true],
-    ['youtube'], ['discord', true], ['celtics', true],
+    ['youtube'], ['discord', true],
   ];
-  // A slower, longer reel spin than the random button: more turns, each one calmer.
-  const INTRO_REEL = Object.freeze({ speed: 0.4, spin: 3400 });
+  // A longer reel spin than the random button, for more turns.
+  const INTRO_REEL = Object.freeze({ speed: 0.5, spin: 2900 });
   const BRAND_COLORS = ['#e50914', '#1ed760', '#f2ff59', '#ffc72c', '#5865f2', '#229ed9', '#e95420',
     '#ea4c89', '#fdb927', '#fffc00', '#0fa578', '#d97757', '#6cabdd', '#a50044'];
   let stopIntro = null;
   let finale = null;
 
   function reelScene({ chosen, eyesFor, play, done, isEnded }) {
-    const label = stage.querySelector('.demo-stage-label');
     const palettes = INTRO_SEQUENCE.map(([id, swapped]) => {
       const palette = PALETTES.find(item => item.id === id);
       return swapped ? { ...palette, background: palette.head, head: palette.background } : palette;
@@ -644,10 +643,6 @@ function mountDemoControls() {
         shownBlock = index;
         const block = blocks[index];
         paintColors(block.background, block.head, eyesFor(block.background));
-        if (block.name) {
-          label.textContent = block[currentLanguage] || block.name;
-          label.animate([{ opacity: 0 }, { opacity: 1, offset: 0.2 }, { opacity: 1, offset: 0.7 }, { opacity: 0 }], { duration: 420 });
-        }
       }
       frame = requestAnimationFrame(follow);
     };
@@ -694,7 +689,6 @@ function mountDemoControls() {
         cancelAnimationFrame(frame);
         clearTimeout(fallback);
         face.removeEventListener('face-state', onState);
-        label.getAnimations().forEach(animation => animation.cancel());
         reel.remove();
       },
     };
