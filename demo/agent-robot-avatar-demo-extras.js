@@ -125,6 +125,7 @@ function mountStateLabels() {
   const status = document.getElementById('status');
   if (!face || !status) return;
   face.addEventListener('face-state', event => {
+    if (document.documentElement.dataset.demoIntro) return;
     const state = event.detail?.state;
     if (state === 'inspect') {
       const t = INSPECT_LABELS[activeLanguage(INSPECT_LABELS)];

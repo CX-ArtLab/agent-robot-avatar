@@ -345,10 +345,12 @@ function mountDemoControls() {
   let shown = { background: bgColor.value, head: headColor.value, eyes: '#ffffff' };
   let fadeFrame = 0;
   let previewing = false;
+  // The opening show paints the stage itself while it runs.
+  let stageOverride = null;
 
   function paintColors(background, head, eyes) {
     shown = { background, head, eyes };
-    stage.style.setProperty('--demo-stage-bg', background);
+    stage.style.setProperty('--demo-stage-bg', stageOverride ?? background);
     face.setAttribute('color', head);
     const shadow = face.shadowRoot;
     if (!shadow) return;
@@ -364,7 +366,7 @@ function mountDemoControls() {
     }).join('');
   }
 
-  function fadeColors(background, head, eyes) {
+  function fadeColors(background, head, eyes, duration = 320) {
     cancelAnimationFrame(fadeFrame);
     if (reducedMotion.matches) {
       paintColors(background, head, eyes);
@@ -373,7 +375,7 @@ function mountDemoControls() {
     const from = shown;
     const start = performance.now();
     const step = now => {
-      const t = Math.min(1, (now - start) / 320);
+      const t = Math.min(1, (now - start) / duration);
       const eased = 1 - (1 - t) ** 3;
       paintColors(
         mixColor(from.background, background, eased),
@@ -487,6 +489,8 @@ function mountDemoControls() {
   face.setPointerFollow(pointerToggle.checked);
 
   face.addEventListener('face-state', event => {
+    // The opening show is decoration, not a state worth reporting.
+    if (document.documentElement.dataset.demoIntro) return;
     currentState = String(event.detail?.state || 'idle');
     updateStatus();
   });
@@ -579,35 +583,107 @@ function mountDemoControls() {
   setPanel(null);
   applyLanguage(currentLanguage);
 
-  // Opening show: once the demo is revealed, the stage runs through every palette,
-  // slow to fast to slow like a settling reel, and lands on the chosen colors.
-  // Only colors change, and any click, key or scroll ends it at once.
+  // Opening show: once the demo is revealed, each palette spreads from behind the
+  // avatar like a ripple, slow to fast to slow, while the eyes spin like reels and
+  // the brand name flashes in the corner; it lands on the chosen colors with a nod.
+  // Ripples are clip-path animations on a few short-lived layers. Any click, key,
+  // scroll or other action ends the show at once, and reduced motion skips it.
   function playIntro() {
     if (reducedMotion.matches) return;
-    const steps = PALETTES.map(palette => [palette.background, palette.head]);
-    const delay = index => {
-      const t = index / (steps.length - 1);
-      return Math.round(110 + 230 * (2 * t - 1) ** 2);
-    };
+    const home = stage.querySelector('.avatar-home');
+    const label = stage.querySelector('.demo-stage-label');
+    const events = ['pointerdown', 'keydown', 'wheel', 'touchstart'];
+    const ripples = [];
     let index = 0;
     let timer = 0;
-    const events = ['pointerdown', 'keydown', 'wheel', 'touchstart'];
-    const finish = () => {
+    let ownAction = false;
+    let ended = false;
+    const delay = i => Math.round(110 + 230 * (2 * i / (PALETTES.length - 1) - 1) ** 2);
+    const eyesFor = background => (eyeThrough.checked ? background : '#ffffff');
+    const play = action => {
+      ownAction = true;
+      try { face.play(action); } finally { ownAction = false; }
+    };
+    const commit = color => {
+      stageOverride = color;
+      stage.style.setProperty('--demo-stage-bg', color);
+      shown = { ...shown, background: color };
+    };
+    const ripple = (color, onDone) => {
+      const layer = document.createElement('div');
+      layer.className = 'demo-stage-ripple';
+      layer.style.background = color;
+      stage.insertBefore(layer, home);
+      ripples.push(layer);
+      const animation = layer.animate(
+        [{ clipPath: 'circle(0% at 50% 50%)' }, { clipPath: 'circle(80% at 50% 50%)' }],
+        { duration: 560, easing: 'cubic-bezier(.2,.7,.3,1)' },
+      );
+      animation.onfinish = () => {
+        if (ended) return;
+        commit(color);
+        layer.remove();
+        ripples.splice(ripples.indexOf(layer), 1);
+        onDone?.();
+      };
+    };
+    const showName = (palette, duration) => {
+      label.textContent = palette[currentLanguage] || palette.name;
+      label.animate([
+        { opacity: 0, transform: 'translateY(3px)' },
+        { opacity: 1, transform: 'none', offset: 0.2 },
+        { opacity: 1, offset: 0.75 },
+        { opacity: 0 },
+      ], { duration });
+    };
+    const cleanup = () => {
+      ended = true;
       clearTimeout(timer);
-      events.forEach(type => window.removeEventListener(type, finish, true));
+      events.forEach(type => window.removeEventListener(type, end, true));
+      face.removeEventListener('action-state', onAction);
+      ripples.forEach(layer => layer.remove());
+      ripples.length = 0;
+      label.getAnimations().forEach(animation => animation.cancel());
+      stageOverride = null;
+      delete document.documentElement.dataset.demoIntro;
+    };
+    function end() {
+      if (ended) return;
+      cleanup();
       showChosenColors({ fade: true });
+      // An action that interrupted the show may have changed state while it ran.
+      currentState = String(face._state || 'idle');
+      updateStatus();
+    }
+    function onAction(event) {
+      if (!ownAction && event.detail.phase === 'start') end();
+    }
+    const land = () => {
+      const background = bgColor.value.toLowerCase();
+      ripple(background, () => {
+        cleanup();
+        showChosenColors();
+        play('affirm');
+      });
+      fadeColors(shown.background, headColor.value.toLowerCase(), eyesFor(background), 240);
     };
     const step = () => {
-      if (index >= steps.length) {
-        finish();
+      if (index === PALETTES.length) {
+        land();
         return;
       }
-      const [background, head] = steps[index];
-      fadeColors(background, head, eyeThrough.checked ? background : '#ffffff');
-      timer = setTimeout(step, delay(index));
+      const palette = PALETTES[index];
+      const duration = delay(index);
+      ripple(palette.background);
+      fadeColors(shown.background, palette.head, eyesFor(palette.background), 160);
+      showName(palette, Math.max(300, duration * 1.4));
       index += 1;
+      timer = setTimeout(step, duration);
     };
-    events.forEach(type => window.addEventListener(type, finish, { capture: true, passive: true }));
+    document.documentElement.dataset.demoIntro = 'true';
+    events.forEach(type => window.addEventListener(type, end, { capture: true, passive: true }));
+    face.addEventListener('action-state', onAction);
+    play('random');
     step();
   }
 
