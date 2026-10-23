@@ -590,12 +590,13 @@ function mountDemoControls() {
   // burst one rotating layer. Any click, key, scroll or other action ends the show
   // at once, and reduced motion skips it.
 
-  // [palette, swapped]: backgrounds grow lighter, and once they are white the heads
-  // grow darker, ending next to the default black on white. Swapped palettes give
-  // more light backgrounds.
+  // [palette, swapped]: from dark to light, the backgrounds walk around the color
+  // wheel (navy, sky blue, indigo, pink, orange, gold, yellow) so that neighbors
+  // blend without turning grey; once they are white the heads grow darker, ending
+  // next to the default black on white. Swapped palettes give more light backgrounds.
   const INTRO_SEQUENCE = [
-    ['netflix'], ['comfyui'], ['warriors'], ['barca'], ['discord'], ['ubuntu'], ['telegram'],
-    ['lakers'], ['snapchat'], ['claude'], ['telegram', true], ['chatgpt'], ['dribbble', true],
+    ['netflix'], ['warriors'], ['telegram'], ['discord'], ['dribbble'], ['ubuntu'], ['lakers'],
+    ['snapchat'], ['claude'], ['telegram', true], ['chatgpt'], ['dribbble', true],
     ['youtube'], ['discord', true], ['celtics', true],
   ];
   // A slower, longer reel spin than the random button: more turns, each one calmer.
@@ -622,11 +623,14 @@ function mountDemoControls() {
     const height = stage.clientHeight + 2;
     const seam = Math.round(height * 0.18);
     strip.style.height = `${height * blocks.length}px`;
-    strip.style.background = `linear-gradient(${blocks.map((block, i) => {
+    const stops = blocks.map((block, i) => {
       const from = i * height + (i ? seam / 2 : 0);
       const to = (i + 1) * height - (i < blocks.length - 1 ? seam / 2 : 0);
       return `${block.background} ${from}px ${to}px`;
-    }).join(', ')})`;
+    }).join(', ');
+    // Seams blend in OKLab where supported, which keeps them from going grey.
+    strip.style.background = `linear-gradient(${stops})`;
+    strip.style.background = `linear-gradient(in oklab, ${stops})`;
     reel.appendChild(strip);
     let frame = 0;
     let shownBlock = blocks.length - 1;
@@ -696,28 +700,32 @@ function mountDemoControls() {
     };
   }
 
-  // Ending halo: a soft ring of pastel brand colors behind the avatar that turns
-  // slowly, widens and fades. Its edge fades out, so it never fills the stage.
+  // Ending ripples: three rings tinted with faint brand colors spread from behind
+  // the avatar to the edges of the stage, turning as they go, and fade out.
   function playFinale() {
     finale?.remove();
     const clip = document.createElement('div');
     clip.className = 'demo-intro-finale';
-    const halo = document.createElement('div');
-    const pastel = BRAND_COLORS.map(color => mixColor(color, '#ffffff', 0.45));
-    const size = 280;
-    Object.assign(halo.style, {
-      width: `${size}px`, height: `${size}px`,
-      left: `${(stage.clientWidth - size) / 2}px`, top: `${(stage.clientHeight - size) / 2}px`,
-      background: `conic-gradient(from 0deg, ${pastel.join(', ')}, ${pastel[0]})`,
+    const pastel = BRAND_COLORS.map(color => mixColor(color, '#ffffff', 0.5));
+    const size = Math.ceil(Math.hypot(stage.clientWidth, stage.clientHeight)) + 40;
+    const rings = [0, 1, 2].map(i => {
+      const ring = document.createElement('div');
+      Object.assign(ring.style, {
+        width: `${size}px`, height: `${size}px`,
+        left: `${(stage.clientWidth - size) / 2}px`, top: `${(stage.clientHeight - size) / 2}px`,
+        background: `conic-gradient(from ${i * 50}deg, ${pastel.join(', ')}, ${pastel[0]})`,
+      });
+      clip.appendChild(ring);
+      return ring;
     });
-    clip.appendChild(halo);
     stage.insertBefore(clip, stage.querySelector('.avatar-home'));
     finale = clip;
-    halo.animate([
-      { transform: 'scale(.55) rotate(0deg)', opacity: 0 },
-      { transform: 'scale(.9) rotate(35deg)', opacity: 0.7, offset: 0.3 },
-      { transform: 'scale(1.25) rotate(110deg)', opacity: 0 },
-    ], { duration: 1800, easing: 'cubic-bezier(.4,0,.3,1)', fill: 'forwards' }).onfinish = () => {
+    const animations = rings.map((ring, i) => ring.animate([
+      { transform: 'scale(.12) rotate(0deg)', opacity: 0 },
+      { opacity: 0.7, offset: 0.15 },
+      { transform: 'scale(1) rotate(120deg)', opacity: 0 },
+    ], { duration: 1500, delay: i * 240, easing: 'cubic-bezier(.2,.6,.35,1)', fill: 'both' }));
+    animations[animations.length - 1].onfinish = () => {
       clip.remove();
       if (finale === clip) finale = null;
     };
