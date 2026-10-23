@@ -6,12 +6,30 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ## [Unreleased]
 
-## [0.5.3] - 2026-10-23
+## [0.6.0] - 2026-10-23
+
+### Upgrading from 0.5.x
+
+Several actions are renamed after what the avatar does on screen, instead of the situation they were first written for. The old names keep working in 0.6 and print a one-time notice in the browser console; they stop working in 1.0. To upgrade, replace the old names in `play()` calls and in `action-state` or `face-state` listeners:
+
+| Old name | New name | What it looks like |
+| --- | --- | --- |
+| `send` | `affirm` | A nod |
+| `warning` | `wary` | Head turned, one eye close, a guarded up-and-down look |
+| `error`, `system-error`, `connection-error` | `refuse` | A head shake |
+| `blocked`, `policy-blocked` | `angry` | Lowered, glaring eyes |
+| `wait` | `waiting-spin` (or `waiting`) | The default waiting spin |
+| `failed`, `fail` | `failure` | |
+| `verify`, `review` | `inspect` | |
+| `slot` | `random` | |
+
+`action-state` now reports `affirm`, `wary`, `angry` and `refuse`, and `face-state` reports `wary` and `refuse`. A shake reads as "no", so use `refuse` when the Agent cannot or will not do something, and `failure` when a task or connection fails. Packages that depend on `^0.5.x` do not pick up 0.6 automatically.
 
 ### Added
 
-- Added the `waiting-wave` action (等待 · 波动): both eyes bob in staggered waves. `startWaiting({ variant: 'wave' })` loops it continuously.
-- Added a Color themes panel to the demo with 17 named two-color presets; clicking the active pair swaps foreground and background.
+- Added the `waiting-wave` action: both eyes bob in staggered waves. `startWaiting({ variant: 'wave' })` loops it continuously.
+- Added `waiting-spin` as the explicit name of the default waiting motion, and `startWaiting({ variant: 'spin' })`.
+- Added brand-inspired color palettes to the demo. Colors apply to a stage card around the avatar; hovering a swatch previews it, and a swap button exchanges the background and head colors.
 - Added an experimental embedded eyes engine: a portable, allocation-free C++11 library that draws the same 18 expressions on 1-bit framebuffers from 16 to 512 pixels, with fit/fill/zoom layouts, round-screen clipping, proximity gaze with selectable range, and runtime timing changes.
 - Added firmware examples for 26 board and screen configurations (ESP32, ESP32-S3 and RP2040; ST7789, ST7735, GC9A01, ILI9341, ILI9342C, ILI9488, CO5300 AMOLED, ST7701S RGB panels, SSD1306 and SH1106 OLEDs; LilyGO, M5Stack, Waveshare, Seeed, Espressif and Guition boards). All compile in CI; none is verified on real hardware yet.
 - Added the hardware preview, an offline single-file page that runs the same C++ engine compiled to WebAssembly on 33 simulated screens, with panel-accurate display, module housings, actual-size zoom, wiring tables and a proximity-gaze simulator. It is also available online with the demo.
@@ -19,11 +37,13 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ### Changed
 
-- Refined the warning expression with independently tilted eyes, adjusted eye proportions and eyelids.
+- Renamed actions as listed above. The C++ engine uses the same names: `Action::Affirm`, `Wary`, `Angry`, `Refuse` and `WaitingSpin` keep the previous numeric IDs, and the old names still parse.
+- Demo labels now describe the expression: Waiting · Spin, Waiting · Scroll, Affirm, Wary, Angry and Refuse.
+- Refined the wary expression with independently tilted eyes, adjusted eye proportions and eyelids.
 
 ### Fixed
 
-- The demo no longer shows intermediate layouts while loading, and its action rows stay even on small phones.
+- The demo no longer shows intermediate layouts while loading, keeps its action rows even and stable on phones and under browser page translators, and keeps an open panel on screen.
 
 ## [0.5.2] - 2026-10-06
 
@@ -171,7 +191,7 @@ First public release.
 - npm-compatible package metadata for later package publication
 - Contribution guide, issue templates, pull request template, MIT License, and Ko-fi funding metadata
 
-[0.5.3]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.5.3
+[0.6.0]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.6.0
 [0.5.2]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.5.2
 [0.4.3]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.4.3
 [0.4.2]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.4.2

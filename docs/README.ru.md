@@ -6,7 +6,7 @@
 
 [English](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/README.md) | [简体中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-CN.md) | [Español](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.es.md) | [Русский](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ru.md) | [Français](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.fr.md) | [Português](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.pt.md) | [Deutsch](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.de.md) | [日本語](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ja.md) | [한국어](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ko.md) | [繁體中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-TW.md)
 
-![Version](https://img.shields.io/badge/version-v0.5.3-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
+![Version](https://img.shields.io/badge/version-v0.6.0-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
 ![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square)
 
@@ -75,17 +75,17 @@ import 'agent-robot-avatar';
 const avatar = document.querySelector('#avatar');
 
 avatar.play('success');
-avatar.play('warning');
-avatar.play('error');
+avatar.play('wary');
+avatar.play('refuse');
 
 avatar.reset();
 ```
 
 Доступные действия:
 
-`idle` · `bored` · `waiting` · `waiting-wrap` · `input` · `send` · `success` · `failure` · `warning` · `inspect` · `blocked` · `error` · `surprise` · `love` · `random` · `sleep` · `wake`
+`idle` · `bored` · `waiting-spin` · `waiting-wrap` · `waiting-wave` · `input` · `affirm` · `success` · `failure` · `wary` · `inspect` · `angry` · `refuse` · `surprise` · `love` · `random` · `sleep` · `wake`
 
-`failure` означает, что задача завершилась неуспешно; `error` предназначен для ошибок соединения, сервиса или системы.
+Названия действий описывают, что делает аватар. `refuse` качает головой — для запроса, который Agent не может или не будет выполнять; `failure` — для задачи или соединения, которые не удались; `wary` поворачивает голову и настороженно оглядывает сверху вниз — для действия, требующего подтверждения. Названия из 0.5 (`send`, `warning`, `error`, `blocked` и другие) работают до 1.0 с уведомлением в консоли; см. [таблицу обновления](../CHANGELOG.md#upgrading-from-05x).
 
 `love` выражает симпатию или благодарность: два глаза наклоняются друг к другу и образуют одно сердце, трижды бьются и возвращаются в исходное состояние.
 
@@ -103,7 +103,7 @@ try {
   const result = await runAgentRequest();
   await avatar.play(result.ok ? 'success' : 'failure');
 } catch (error) {
-  await avatar.play('error');
+  await avatar.play('failure');
 }
 ```
 
@@ -161,7 +161,7 @@ Issues и Pull Requests приветствуются. Перед отправк�
 
 ## Статус проекта
 
-**Текущая публичная версия: v0.5.3**
+**Текущая публичная версия: v0.6.0**
 
 Публичный API намеренно остаётся компактным, пока проект развивается к будущему обязательству стабильности `1.0.0`.
 

@@ -134,11 +134,11 @@ The application provides an advancing `uint32_t` millisecond clock. A clock roll
 
 ## Actions and lifecycle
 
-`idle`, `bored`, `waiting`, `waiting-wrap`, `input`, `send`, `success`, `failure`, `warning`, `inspect`, `blocked`, `error`, `surprise`, `love`, `random`, `sleep`, `wake`, `waiting-wave`.
+`idle`, `bored`, `waiting-spin`, `waiting-wrap`, `input`, `affirm`, `success`, `failure`, `wary`, `inspect`, `angry`, `refuse`, `surprise`, `love`, `random`, `sleep`, `wake`, `waiting-wave`.
 
 `waiting-wave` is an additional persistent waiting variant restored from the first experimental C++ implementation: two elliptical eyes bob with a 1400 ms period and staggered phase. The original waiting variants remain available. The SVG waiting-wave variant is separately tuned to three 1100 ms cycles; this hardware variant retains its earlier continuous 1400 ms motion. Its numeric ID is appended after `wake` to retain existing command IDs.
 
-Aliases: `angry` / `policy-blocked` → `blocked`; `system-error` / `connection-error` → `error`; `slot` → `random`.
+The names match the Web avatar and describe what the eyes do. `waiting` also starts `waiting-spin`. Names from 0.5 still parse until 1.0: `wait` → `waiting-spin`; `send` → `affirm`; `warning` → `wary`; `blocked` / `policy-blocked` → `angry`; `error` / `system-error` / `connection-error` → `refuse`; `failed` / `fail` → `failure`; `verify` / `review` → `inspect`; `slot` → `random`. `Action::Affirm`, `Wary`, `Angry`, `Refuse` and `WaitingSpin` keep the numeric IDs of the old enumerators.
 
 - `play(name, nowMs)` returns false for an invalid command and leaves the active action unchanged.
 - One-shot expressions return to idle. Idle, waiting, input and sleep persist until another command.

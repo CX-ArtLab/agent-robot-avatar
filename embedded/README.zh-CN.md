@@ -80,16 +80,16 @@ pio device monitor -b 115200
 串口中发送英文动作名，末尾加换行：
 
 - `love`：爱心。
-- `waiting` / `waiting-wrap` / `waiting-wave`：持续等待，直到新动作替换。
+- `waiting-spin` / `waiting-wrap` / `waiting-wave`：持续等待（旋转、滚动、波动），直到新动作替换。
 - `success` / `failure`：任务成功或失败。
-- `warning` / `inspect` / `blocked` / `error`：警告、审视、阻止、错误。
+- `wary` / `inspect` / `angry` / `refuse`：警惕、审视、生气、拒绝。
 - `sleep` / `wake`：睡眠、唤醒。
 - `gaze -0.5 0.2`：由程序明确指定注视方向，坐标范围 `[-1,1]`。注视幅度由 `EyesConfig::gazeRange`（或运行时 `setGazeRange()`）决定：`Small` 为原来的 8 × 6，`Medium`（默认）为 20 × 18，眼睛最远到表情区域边缘；`Large` 为 30 × 21，会稍微越过边缘。眼睛靠近边缘时按 Web 版公式变窄并向内收，看起来像在转向侧面；眼睛居中时三档画面完全相同。
 - `demo`：轮流播放全部动作；有效的手动动作会退出轮播。
 - `reset`：回到待机。
 - `help`：列出命令。
 
-完整动作还包括 `idle`、`bored`、`input`、`send`、`surprise`、`random`。支持与 Web 版对应的部分别名，详见英文接口说明。
+完整动作还包括 `idle`、`bored`、`input`、`affirm`（肯定）、`surprise`、`random`。0.5 版的旧名字（`send`、`warning`、`blocked`、`error` 等）在 1.0 之前仍可使用，对照关系详见英文接口说明。
 
 ## 接入自己的设备
 
