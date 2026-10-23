@@ -103,7 +103,9 @@ reset
 
 ## Embed the engine in another product
 
-Copy `lib/AgentRobotEyes` into an Arduino `libraries` folder, or compile its source directory into your C++11 application. For non-Arduino projects, no Arduino library is needed.
+Copy `lib/AgentRobotEyes` into an Arduino `libraries` folder (or, once released, add its ZIP with *Sketch → Include Library → Add .ZIP Library*), or compile its source directory into your C++11 application. For non-Arduino projects, no Arduino library is needed.
+
+The library ships two Arduino IDE examples under *File → Examples → AgentRobotEyes*: **SerialEyes** draws the eyes as text in the Serial Monitor and needs no screen, and **OledSSD1306** runs them on a 0.96″ 128×64 I²C OLED (install *Adafruit SSD1306* first). Both take action names typed in the Serial Monitor. CI compiles them for ESP32 and RP2040.
 
 ```cpp
 #include <AgentRobotEyes.h>

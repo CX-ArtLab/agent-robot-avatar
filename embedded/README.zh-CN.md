@@ -93,7 +93,11 @@ pio device monitor -b 115200
 
 ## 接入自己的设备
 
-库在 `embedded/lib/AgentRobotEyes`。Arduino 用户可将这个目录复制到自己的 `libraries` 目录；其他 C++11 平台可编译库的整个 `src` 目录。绘制核心不要求安装 Adafruit 库，例程中的显示驱动才需要它们。
+库在 `embedded/lib/AgentRobotEyes`。Arduino 用户可将这个目录复制到自己的 `libraries` 目录（正式发布后也可以下载压缩包，用“项目 → 导入库 → 添加 .ZIP 库”安装）；其他 C++11 平台可编译库的整个 `src` 目录。
+
+库里带两个 Arduino IDE 示例，在“文件 → 示例 → AgentRobotEyes”下：**SerialEyes** 在串口监视器里用字符画出眼睛，不需要屏幕；**OledSSD1306** 运行在 0.96 寸 128×64 I²C OLED 上（需先安装 Adafruit SSD1306 库）。两个示例都可以在串口监视器里输入动作名来播放。CI 会为 ESP32 和 RP2040 编译它们。
+
+绘制核心不要求安装 Adafruit 库，例程中的显示驱动才需要它们。
 
 你的程序负责提供持续递增的毫秒时间、调用 `eyes.update(nowMs)`，并将新生成的位图交给屏幕驱动。时间支持 32 位计数器回绕；不要混用多个时钟，也不要让多个任务同时无保护地操作同一实例。
 

@@ -17,8 +17,8 @@ void present() { displayPresent(eyes); }
 
 void help() {
   Serial.println("Agent Robot Eyes 0.1.0 (experimental)");
-  Serial.println("Commands: idle bored waiting waiting-wrap input send success failure");
-  Serial.println("warning inspect blocked error surprise love random sleep wake waiting-wave");
+  Serial.println("Commands: idle bored waiting-spin waiting-wrap waiting-wave input affirm");
+  Serial.println("success failure wary inspect angry refuse surprise love random sleep wake");
   Serial.println("Also: reset | demo | gaze -1..1 -1..1 | help");
 }
 

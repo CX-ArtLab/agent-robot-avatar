@@ -34,6 +34,8 @@ const notices = await readFile(join(root, 'preview/third-party-notices.txt'), 'u
 const libraryVersion = (await readFile(join(root, 'lib/AgentRobotEyes/library.properties'), 'utf8')).match(/^version=(.+)$/m)[1].trim();
 assert.equal(JSON.parse(await readFile(join(root, 'lib/AgentRobotEyes/library.json'), 'utf8')).version, libraryVersion,
   'library.json and library.properties must carry the same version');
+assert.equal((await readFile(join(root, 'lib/AgentRobotEyes/src/AgentRobotEyes.h'), 'utf8')).match(/version\(\) \{ return "([^"]+)"/)[1], libraryVersion,
+  'Eyes::version() must match library.properties');
 const demoCSS = await readFile(join(root,'preview/project-demo.css'),'utf8');
 const displayFrames = await loadPreviewFrames(join(root,'preview'));
 const presets = JSON.parse(await readFile(join(root,'preview/presets.json'),'utf8'));
