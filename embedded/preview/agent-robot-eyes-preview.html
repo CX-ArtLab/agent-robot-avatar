@@ -1938,7 +1938,7 @@ class PanelRenderer {
     const note=document.createElement('div');note.className='meta';
     const link=document.createElement('a');link.href='https://github.com/CX-ArtLab/agent-robot-avatar/issues/new?template=hardware_report.yml';
     link.target='_blank';link.rel='noopener noreferrer';link.textContent='提交实机验证报告';
-    note.append('引脚依据厂商资料，CI 已编译通过，尚未在实物上验证。在实物上试过的话，欢迎',link,'。');
+    note.append('引脚依据厂商资料，固件已编译通过，尚未在实物上验证。在实物上试过的话，欢迎',link,'。');
     parts.push(note);
     $('wiring-body').replaceChildren(...parts);
   }
