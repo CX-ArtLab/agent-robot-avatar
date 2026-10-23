@@ -700,32 +700,28 @@ function mountDemoControls() {
     };
   }
 
-  // Ending ripples: three rings tinted with faint brand colors spread from behind
-  // the avatar to the edges of the stage, turning as they go, and fade out.
+  // Ending ripple: one wide ring tinted with faint brand colors spreads from behind
+  // the avatar to the edges of the stage, turning as it goes, and fades out.
   function playFinale() {
     finale?.remove();
     const clip = document.createElement('div');
     clip.className = 'demo-intro-finale';
-    const pastel = BRAND_COLORS.map(color => mixColor(color, '#ffffff', 0.5));
-    const size = Math.ceil(Math.hypot(stage.clientWidth, stage.clientHeight)) + 40;
-    const rings = [0, 1, 2].map(i => {
-      const ring = document.createElement('div');
-      Object.assign(ring.style, {
-        width: `${size}px`, height: `${size}px`,
-        left: `${(stage.clientWidth - size) / 2}px`, top: `${(stage.clientHeight - size) / 2}px`,
-        background: `conic-gradient(from ${i * 50}deg, ${pastel.join(', ')}, ${pastel[0]})`,
-      });
-      clip.appendChild(ring);
-      return ring;
+    const pastel = BRAND_COLORS.map(color => mixColor(color, '#ffffff', 0.6));
+    const size = Math.ceil(Math.hypot(stage.clientWidth, stage.clientHeight)) + 80;
+    const ring = document.createElement('div');
+    Object.assign(ring.style, {
+      width: `${size}px`, height: `${size}px`,
+      left: `${(stage.clientWidth - size) / 2}px`, top: `${(stage.clientHeight - size) / 2}px`,
+      background: `conic-gradient(from 0deg, ${pastel.join(', ')}, ${pastel[0]})`,
     });
+    clip.appendChild(ring);
     stage.insertBefore(clip, stage.querySelector('.avatar-home'));
     finale = clip;
-    const animations = rings.map((ring, i) => ring.animate([
+    ring.animate([
       { transform: 'scale(.12) rotate(0deg)', opacity: 0 },
-      { opacity: 0.7, offset: 0.15 },
+      { opacity: 0.55, offset: 0.18 },
       { transform: 'scale(1) rotate(120deg)', opacity: 0 },
-    ], { duration: 1500, delay: i * 240, easing: 'cubic-bezier(.2,.6,.35,1)', fill: 'both' }));
-    animations[animations.length - 1].onfinish = () => {
+    ], { duration: 1700, easing: 'cubic-bezier(.2,.6,.35,1)', fill: 'both' }).onfinish = () => {
       clip.remove();
       if (finale === clip) finale = null;
     };
