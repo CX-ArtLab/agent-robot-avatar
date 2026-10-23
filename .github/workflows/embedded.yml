@@ -24,7 +24,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        environment: [esp32-s3-st7789, pico-st7789, esp32-ssd1306]
+        environment: [esp32-s3-st7789, pico-st7789, esp32-ssd1306, esp32-s3-gc9a01, waveshare-s3-round-128,
+          esp32-s3-st7789-240x280, esp32-s3-st7789-240x320, cyd-ili9341, t-display-st7789, t-display-s3,
+          m5-dial, m5-atoms3, m5-cores3, m5-stickc-plus2, esp32-ssd1306-128x32, esp32-sh1106]
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v5
