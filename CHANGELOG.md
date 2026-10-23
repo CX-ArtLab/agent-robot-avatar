@@ -8,6 +8,8 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ### Added
 
+- Added firmware examples for the remaining previewed screens: ST7789 1.14″ and 2.0″ landscape, ST7735 1.8″ and 0.96″, ILI9488 3.5″ modules, Seeed XIAO Round Display, ESP32-S3-BOX-3, Waveshare 1.75″ AMOLED (CO5300 QSPI), LilyGO T-RGB 2.1″ and Guition ESP32-4848S040 (ST7701S RGB panels). CI now builds 26 configurations and 32 of the 33 previewed screens have a wiring example. None is verified on real hardware.
+
 - Added compile-checked firmware examples for 13 more boards and screens (GC9A01 round modules, Waveshare ESP32-S3 1.28″ round, CYD ILI9341, LilyGO T-Display and T-Display-S3, M5Stack Dial / AtomS3 / CoreS3 / StickC Plus2, ST7789 240×280 and 240×320, SSD1306 128×32, SH1106) through per-board display adapters; CI builds all 16 configurations. The preview marks 21 screens as having a wiring example and shows the board, build command and wiring table, and a bilingual *Hardware report* issue template lets users confirm results on real hardware. None is physically verified yet.
 
 - Added display-only panel rendering to the hardware preview (pixel grid and sub-pixels, IPS/TN backlight, AMOLED black, OLED tints, glass glare, active-area outline, raw-pixel switch), 24 more boards and kits with generic housings, physical actual-size zoom, per-screen remembered layouts, 90° rotation and eye/background colours. The core framebuffer is unchanged.

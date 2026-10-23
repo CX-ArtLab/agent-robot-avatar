@@ -143,13 +143,51 @@
     "frame": "tft",
     "controller": "ST7735S",
     "type": "SPI · 彩屏",
-    "example": false,
+    "example": true,
     "source": "https://www.waveshare.net/shop/1.8inch-LCD-Module.htm",
     "module": "waveshare-1.8",
     "rotation": 90,
     "group": "square",
     "panel": "tn",
-    "bus": "spi"
+    "bus": "spi",
+    "firmware": {
+      "env": "esp32-s3-st7735-128x160",
+      "board": "ESP32-S3-DevKitC",
+      "wiring": [
+        [
+          "SCK",
+          "GPIO 12"
+        ],
+        [
+          "MOSI / SDA",
+          "GPIO 11"
+        ],
+        [
+          "CS",
+          "GPIO 10"
+        ],
+        [
+          "DC",
+          "GPIO 9"
+        ],
+        [
+          "RST",
+          "GPIO 8"
+        ],
+        [
+          "VCC",
+          "3V3"
+        ],
+        [
+          "GND",
+          "GND"
+        ],
+        [
+          "BL / BLK",
+          "3V3（常亮）"
+        ]
+      ]
+    }
   },
   {
     "id": "landscape",
@@ -159,13 +197,51 @@
     "frame": "tft",
     "controller": "ST7789VW",
     "type": "SPI · 彩屏 · 横向旋转",
-    "example": false,
+    "example": true,
     "source": "https://www.waveshare.net/shop/2inch-LCD-Module.htm",
     "module": "waveshare-2",
     "rotation": 0,
     "group": "square",
     "panel": "ips",
-    "bus": "spi"
+    "bus": "spi",
+    "firmware": {
+      "env": "esp32-s3-st7789-320x240",
+      "board": "ESP32-S3-DevKitC",
+      "wiring": [
+        [
+          "SCK",
+          "GPIO 12"
+        ],
+        [
+          "MOSI / SDA",
+          "GPIO 11"
+        ],
+        [
+          "CS",
+          "GPIO 10"
+        ],
+        [
+          "DC",
+          "GPIO 9"
+        ],
+        [
+          "RST",
+          "GPIO 8"
+        ],
+        [
+          "VCC",
+          "3V3"
+        ],
+        [
+          "GND",
+          "GND"
+        ],
+        [
+          "BL / BLK",
+          "3V3（常亮）"
+        ]
+      ]
+    }
   },
   {
     "id": "portrait",
@@ -283,13 +359,51 @@
     "frame": "tft",
     "controller": "ST7789",
     "type": "SPI · 彩屏",
-    "example": false,
+    "example": true,
     "source": "https://www.waveshare.net/shop/1.14inch-LCD-Module.htm",
     "module": "waveshare-1.14",
     "rotation": 0,
     "group": "bar",
     "panel": "ips",
-    "bus": "spi"
+    "bus": "spi",
+    "firmware": {
+      "env": "esp32-s3-st7789-240x135",
+      "board": "ESP32-S3-DevKitC",
+      "wiring": [
+        [
+          "SCK",
+          "GPIO 12"
+        ],
+        [
+          "MOSI / SDA",
+          "GPIO 11"
+        ],
+        [
+          "CS",
+          "GPIO 10"
+        ],
+        [
+          "DC",
+          "GPIO 9"
+        ],
+        [
+          "RST",
+          "GPIO 8"
+        ],
+        [
+          "VCC",
+          "3V3"
+        ],
+        [
+          "GND",
+          "GND"
+        ],
+        [
+          "BL / BLK",
+          "3V3（常亮）"
+        ]
+      ]
+    }
   },
   {
     "id": "eyes",
@@ -482,7 +596,7 @@
     "frame": "round",
     "controller": "GC9A01 + CHSC6X",
     "type": "SPI · 彩屏",
-    "example": false,
+    "example": true,
     "group": "round",
     "panel": "ips",
     "diag": 1.28,
@@ -511,7 +625,11 @@
         }
       ]
     },
-    "bus": "spi"
+    "bus": "spi",
+    "firmware": {
+      "env": "xiao-round-display",
+      "board": "Seeed XIAO ESP32S3（插在圆屏扩展板上）"
+    }
   },
   {
     "id": "t-rgb-21",
@@ -521,7 +639,7 @@
     "frame": "round",
     "controller": "ST7701S",
     "type": "SPI · 彩屏",
-    "example": false,
+    "example": true,
     "group": "round",
     "panel": "ips",
     "diag": 2.1,
@@ -541,7 +659,11 @@
       },
       "parts": []
     },
-    "bus": "rgb"
+    "bus": "rgb",
+    "firmware": {
+      "env": "t-rgb-21",
+      "board": "LilyGO T-RGB 2.1″"
+    }
   },
   {
     "id": "amoled-175",
@@ -551,7 +673,7 @@
     "frame": "round",
     "controller": "CO5300",
     "type": "SPI · 彩屏",
-    "example": false,
+    "example": true,
     "group": "round",
     "panel": "amoled",
     "diag": 1.75,
@@ -571,7 +693,11 @@
       },
       "parts": []
     },
-    "bus": "qspi"
+    "bus": "qspi",
+    "firmware": {
+      "env": "waveshare-amoled-175",
+      "board": "Waveshare ESP32-S3-Touch-AMOLED-1.75"
+    }
   },
   {
     "id": "st7789-13",
@@ -967,7 +1093,7 @@
     "frame": "tft",
     "controller": "ST7735S",
     "type": "SPI · 彩屏",
-    "example": false,
+    "example": true,
     "group": "square",
     "panel": "tn",
     "diag": 1.8,
@@ -1034,7 +1160,45 @@
         }
       ]
     },
-    "bus": "spi"
+    "bus": "spi",
+    "firmware": {
+      "env": "esp32-s3-st7735-128x160",
+      "board": "ESP32-S3-DevKitC",
+      "wiring": [
+        [
+          "SCK",
+          "GPIO 12"
+        ],
+        [
+          "MOSI / SDA",
+          "GPIO 11"
+        ],
+        [
+          "CS",
+          "GPIO 10"
+        ],
+        [
+          "DC",
+          "GPIO 9"
+        ],
+        [
+          "RST",
+          "GPIO 8"
+        ],
+        [
+          "VCC",
+          "3V3"
+        ],
+        [
+          "GND",
+          "GND"
+        ],
+        [
+          "BL / BLK",
+          "3V3（常亮）"
+        ]
+      ]
+    }
   },
   {
     "id": "st7735-096",
@@ -1044,7 +1208,7 @@
     "frame": "tft",
     "controller": "ST7735S",
     "type": "SPI · 彩屏",
-    "example": false,
+    "example": true,
     "group": "bar",
     "panel": "ips",
     "diag": 0.96,
@@ -1080,7 +1244,45 @@
         }
       ]
     },
-    "bus": "spi"
+    "bus": "spi",
+    "firmware": {
+      "env": "esp32-s3-st7735-160x80",
+      "board": "ESP32-S3-DevKitC",
+      "wiring": [
+        [
+          "SCK",
+          "GPIO 12"
+        ],
+        [
+          "MOSI / SDA",
+          "GPIO 11"
+        ],
+        [
+          "CS",
+          "GPIO 10"
+        ],
+        [
+          "DC",
+          "GPIO 9"
+        ],
+        [
+          "RST",
+          "GPIO 8"
+        ],
+        [
+          "VCC",
+          "3V3"
+        ],
+        [
+          "GND",
+          "GND"
+        ],
+        [
+          "BL / BLK",
+          "3V3（常亮）"
+        ]
+      ]
+    }
   },
   {
     "id": "t-display-s3",
@@ -1362,7 +1564,7 @@
     "frame": "tft",
     "controller": "ILI9342C",
     "type": "开发套件 · 彩屏",
-    "example": false,
+    "example": true,
     "group": "kit",
     "panel": "ips",
     "diag": 2.4,
@@ -1395,7 +1597,11 @@
         }
       ]
     },
-    "bus": "spi"
+    "bus": "spi",
+    "firmware": {
+      "env": "esp32-s3-box-3",
+      "board": "Espressif ESP32-S3-BOX-3"
+    }
   },
   {
     "id": "ssd1306-096",
@@ -1742,7 +1948,7 @@
     "frame": "tft",
     "controller": "ILI9488",
     "type": "SPI · 彩屏",
-    "example": false,
+    "example": true,
     "group": "square",
     "panel": "ips",
     "diag": 3.5,
@@ -1792,7 +1998,45 @@
         }
       ]
     },
-    "bus": "spi18"
+    "bus": "spi18",
+    "firmware": {
+      "env": "esp32-s3-ili9488",
+      "board": "ESP32-S3-DevKitC",
+      "wiring": [
+        [
+          "SCK",
+          "GPIO 12"
+        ],
+        [
+          "MOSI / SDA",
+          "GPIO 11"
+        ],
+        [
+          "CS",
+          "GPIO 10"
+        ],
+        [
+          "DC",
+          "GPIO 9"
+        ],
+        [
+          "RST",
+          "GPIO 8"
+        ],
+        [
+          "VCC",
+          "3V3"
+        ],
+        [
+          "GND",
+          "GND"
+        ],
+        [
+          "BL / BLK",
+          "3V3（常亮）"
+        ]
+      ]
+    }
   },
   {
     "id": "st7701-40-86",
@@ -1802,7 +2046,7 @@
     "frame": "tft",
     "controller": "ST7701S + GT911",
     "type": "SPI · 彩屏",
-    "example": false,
+    "example": true,
     "group": "square",
     "panel": "ips",
     "diag": 4,
@@ -1826,6 +2070,10 @@
       },
       "parts": []
     },
-    "bus": "rgb"
+    "bus": "rgb",
+    "firmware": {
+      "env": "guition-4848s040",
+      "board": "Guition ESP32-4848S040（86 面板）"
+    }
   }
 ]
