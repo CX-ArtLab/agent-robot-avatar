@@ -23,8 +23,16 @@
 | `t-display-st7789` | LilyGO T-Display | 板载 ST7789 1.14″，横屏 |
 | `t-display-s3` | LilyGO T-Display-S3 | 板载 ST7789 1.9″，8 位并口，横屏 |
 | `m5-dial` / `m5-atoms3` / `m5-cores3` / `m5-stickc-plus2` | M5Stack 对应型号 | 板载屏幕，由 M5Unified 自动识别 |
+| `esp32-s3-st7789-240x135` / `-320x240` | ESP32-S3-DevKitC-1 | ST7789 1.14″ / 2.0″ 横屏（接线同上） |
+| `esp32-s3-st7735-128x160` / `-160x80` | ESP32-S3-DevKitC-1 | ST7735 1.8″ / 0.96″（接线同上） |
+| `esp32-s3-ili9488` | ESP32-S3-DevKitC-1 | ILI9488 3.5″，480×320（接线同上） |
+| `xiao-round-display` | Seeed XIAO ESP32S3 + 圆形扩展屏 | 插上即可，无需接线 |
+| `esp32-s3-box-3` | 乐鑫 ESP32-S3-BOX-3 | 板载屏幕 |
+| `waveshare-amoled-175` | 微雪 ESP32-S3-Touch-AMOLED-1.75 | 板载 AMOLED 圆屏 |
+| `t-rgb-21` | LilyGO T-RGB 2.1″ | 板载 RGB 圆屏 |
+| `guition-4848s040` | Guition ESP32-4848S040（86 面板） | 板载 RGB 方屏 |
 
-每个配置的屏幕驱动在 `examples/arduino/boards.h` 中各占一小段，主程序共用。引脚依据厂商资料。所有配置都在 CI 中编译通过，尚未实机验证；如果你在实物上运行过，欢迎提交"实机验证报告"Issue，预览器里会标记为"社区已实机验证"。
+每个配置的屏幕驱动在 `examples/arduino/boards.h` 中各占一小段，主程序共用。引脚依据厂商资料；T-RGB、86 面板和 BOX-3 采用 Arduino_GFX 自带的板型配置，AMOLED 的引脚来自 ESPHome 设备库。实机上需要留意：ST7735 有多种版本（画面错位时可改用 `INITR_GREENTAB`）；AMOLED 可能需要微调列偏移；T-RGB 不同批次的初始化序列不同。眼睛是黑底白色，屏幕的红蓝顺序不影响显示。所有配置都在 CI 中编译通过，尚未实机验证；如果你在实物上运行过，欢迎提交"实机验证报告"Issue，预览器里会标记为"社区已实机验证"。
 
 **本版尚未进行实机测试。编译通过和电脑端测试，不代表已经确认屏幕接线、实际帧率或设备上的显示效果。** Web 与嵌入式版本共用表情名称和设计，但采用不同绘制器；嵌入式版每 20 毫秒采样原版几何参数并插值，保留原有眼部动作和时间过程；不绘制头部、天线及头部轮廓裁切，低分辨率边缘会有像素化差异。
 

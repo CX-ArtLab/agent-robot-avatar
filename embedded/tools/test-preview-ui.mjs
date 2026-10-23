@@ -175,7 +175,7 @@ try {
   assert((await page.locator('#wiring-body tr').count())>=6,'external modules list their wiring');
   await choose('esp32s3-round-128');
   assert.match(await page.locator('#wiring-body').textContent(),/无需接线/);
-  await choose('mini');
+  await choose('eyes');
   assert.equal(await page.locator('#wiring').isHidden(),true);
   assert.match(await page.locator('#screen-support').textContent(),/仅效果预览/);
   await choose('ssd1306-091');
