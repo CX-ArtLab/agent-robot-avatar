@@ -65,9 +65,18 @@ static void namesAndCancellation() {
     assert(parsed==static_cast<Action>(i));
   }
   Action parsed = Action::Idle;
-  assert(Eyes::parseAction("angry",parsed) && parsed==Action::Blocked);
+  assert(Eyes::parseAction("angry",parsed) && parsed==Action::Angry);
+  assert(Eyes::parseAction("blocked",parsed) && parsed==Action::Angry);
   assert(Eyes::parseAction("slot",parsed) && parsed==Action::Random);
-  assert(Eyes::parseAction("connection-error",parsed) && parsed==Action::Error);
+  assert(Eyes::parseAction("refuse",parsed) && parsed==Action::Refuse);
+  assert(Eyes::parseAction("connection-error",parsed) && parsed==Action::Refuse);
+  assert(Eyes::parseAction("affirm",parsed) && parsed==Action::Affirm);
+  assert(Eyes::parseAction("send",parsed) && parsed==Action::Affirm);
+  assert(Eyes::parseAction("wary",parsed) && parsed==Action::Wary);
+  assert(Eyes::parseAction("warning",parsed) && parsed==Action::Wary);
+  assert(Eyes::parseAction("waiting",parsed) && parsed==Action::WaitingSpin);
+  assert(Eyes::parseAction("waiting-spin",parsed) && parsed==Action::WaitingSpin);
+  assert(!strcmp(Eyes::actionName(Action::Refuse),"refuse"));
   eyes.startWaiting(0);
   assert(!eyes.play("not-an-action",100));
   assert(!eyes.play(nullptr,100));
@@ -83,7 +92,7 @@ static void namesAndCancellation() {
   assert(eyes.action()==Action::WaitingWrap); // earlier success cannot complete this action
   eyes.stopWaiting(60100);
   assert(eyes.action()==Action::Idle);
-  eyes.play("warning",60200);
+  eyes.play("wary",60200);
   eyes.reset(60300);
   eyes.update(70000);
   assert(eyes.action()==Action::Idle);
@@ -218,7 +227,7 @@ static void inputExitContinuity() {
 
   // Leaving either cursor blink half reaches each target's unmodified pose.
   for (const uint32_t start: {700u,900u}) {
-    for (const Action action: {Action::Idle,Action::Send,Action::Love,Action::Wake,Action::WaitingWave}) {
+    for (const Action action: {Action::Idle,Action::Affirm,Action::Love,Action::Wake,Action::WaitingWave}) {
       assert(eyes.begin(config,pixels.data(),pixels.size(),0));
       eyes.play(Action::Input,0);eyes.update(start);
       const uint32_t source=hash(eyes);

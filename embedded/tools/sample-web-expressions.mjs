@@ -75,6 +75,7 @@ function eyeParameters(face,side){
     Math.atan2(m[1],m[0])*180/Math.PI,(topEdge-cy)*sy,(bottomEdge-cy)*sy,
     Math.tan(angle(top))*sy/(sx||1),Math.tan(angle(bottom))*sy/(sx||1),inputShape?3*sx:-1];
 }
+// Web implementation names, below the public alias table, in C++ Action order.
 const actions=['idle','bored','waiting','waiting-wrap','input','send','success','failure','warning','inspect','blocked','error','surprise','love','random','sleep','wake'];
 // Fixed-rate GEOMETRY samples (20 ms), not image frames. Keep source delays,
 // poses and timing intact; host gaze and automatic blinking remain procedural.

@@ -15,6 +15,7 @@ const hash=createHash('sha256');
 for(const name of ['core','extension-host','actions','waiting','wrap','failure','inspect','love','random'])
   hash.update(await readFile(join(root,`../src/agent-robot-avatar-${name}.js`)));
 assert.equal(hash.digest('hex'),reference.sourceHash,'regenerate visual reference after changing the Web expressions');
+// Web implementation names, below the public alias table, in C++ Action order.
 const names=['idle','bored','waiting','waiting-wrap','input','send','success','failure','warning','inspect','blocked','error','surprise','love','random','sleep','wake'];
 const temp=await mkdtemp(join(tmpdir(),'web-eye-fidelity-'));
 try {

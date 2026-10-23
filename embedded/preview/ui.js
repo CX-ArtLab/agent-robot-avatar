@@ -5,9 +5,9 @@
   'use strict';
   const INITIAL_DOCUMENT = document.documentElement.outerHTML;
   const ACTIONS = [
-    ['idle','正常'],['bored','发呆'],['waiting','等待'],['waiting-wrap','等待 · 环绕'],
-    ['input','输入'],['send','发送/点头'],['success','成功'],['failure','失败'],
-    ['warning','警告'],['inspect','审视'],['blocked','内容阻止'],['error','系统错误'],
+    ['idle','正常'],['bored','发呆'],['waiting-spin','等待 · 旋转'],['waiting-wrap','等待 · 滚动'],
+    ['input','输入'],['affirm','肯定'],['success','成功'],['failure','失败'],
+    ['wary','警惕'],['inspect','审视'],['angry','生气'],['refuse','拒绝'],
     ['surprise','惊讶'],['love','喜欢'],['random','随机'],['sleep','睡着'],['wake','醒来'],
     ['waiting-wave','等待 · 波动']
   ];

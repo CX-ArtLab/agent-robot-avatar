@@ -7,8 +7,8 @@
 namespace agent_robot {
 
 enum class Action : uint8_t {
-  Idle, Bored, Waiting, WaitingWrap, Input, Send, Success, Failure,
-  Warning, Inspect, Blocked, Error, Surprise, Love, Random, Sleep, Wake,
+  Idle, Bored, WaitingSpin, WaitingWrap, Input, Affirm, Success, Failure,
+  Wary, Inspect, Angry, Refuse, Surprise, Love, Random, Sleep, Wake,
   WaitingWave, Count // Append new actions to preserve existing numeric IDs.
 };
 
@@ -65,7 +65,7 @@ class Eyes {
   bool update(uint32_t now);
 
   Action action() const { return action_; }
-  bool isWaiting() const { return action_ == Action::Waiting || action_ == Action::WaitingWrap || action_ == Action::WaitingWave; }
+  bool isWaiting() const { return action_ == Action::WaitingSpin || action_ == Action::WaitingWrap || action_ == Action::WaitingWave; }
   bool isSleeping() const { return action_ == Action::Sleep; }
   const uint8_t* data() const { return buffer_; }
   uint16_t width() const { return config_.width; }

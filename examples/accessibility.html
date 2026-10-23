@@ -29,7 +29,7 @@
     <div class="actions" aria-label="Request lifecycle controls">
       <button type="button" data-request="success">Run success</button>
       <button type="button" data-request="failure">Run failure</button>
-      <button type="button" data-request="error">Run connection error</button>
+      <button type="button" data-request="refuse">Run declined request</button>
       <button type="button" id="cancel-request">Cancel request</button>
       <button type="button" id="replace-request">Replace slow request</button>
     </div>
@@ -51,7 +51,7 @@
       waiting: 'Processing…',
       success: 'Task completed.',
       failure: 'Task failed.',
-      error: 'Connection problem.',
+      refuse: 'Request declined.',
     };
 
     let requestGeneration = 0;
@@ -78,7 +78,7 @@
       }
 
       // Waiting text is transient. Clear it whenever waiting ends or is cancelled,
-      // but keep success/failure/error text because animation completion does not
+      // but keep success/failure/refuse text because animation completion does not
       // mean the underlying business state has changed again.
       if (action === 'waiting' && phase !== 'start' && status.dataset.avatarAction === 'waiting') {
         status.textContent = '';

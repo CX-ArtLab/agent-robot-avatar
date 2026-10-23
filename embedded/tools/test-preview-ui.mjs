@@ -61,10 +61,10 @@ try {
   assert((await page.locator('#demo').textContent()).includes('轮播中'),'running cycle is labelled');
   await page.clock.runFor(4100);
   assert((await page.locator('#current').textContent()).includes('bored'));
-  await page.locator('[data-action="waiting"]').click();
+  await page.locator('[data-action="waiting-spin"]').click();
   assert.equal(await page.locator('#demo').getAttribute('aria-pressed'),'false');
   await page.clock.runFor(5100);
-  assert((await page.locator('#current').textContent()).endsWith('waiting'));
+  assert((await page.locator('#current').textContent()).endsWith('waiting-spin'));
   await page.locator('[data-action="sleep"]').click(); await page.clock.runFor(3600);
   const sleeping=await frame(); await page.clock.runFor(5000);
   assert.equal((await frame()).hash,sleeping.hash);
@@ -115,7 +115,7 @@ try {
   assert(Math.abs(Number.parseFloat(await clock())-before-.067)<=.011);
   await page.locator('#blink').uncheck(); await page.locator('#transitions').uncheck();
   assert((await page.locator('#current').textContent()).endsWith('love'),'blink/transition switches keep the action');
-  for(const action of ['input','blocked','random','surprise','waiting-wave']) {
+  for(const action of ['input','angry','random','surprise','waiting-wave']) {
     await page.locator(`[data-action="${action}"]`).click();
     assert((await page.locator('#current').textContent()).endsWith(action));
   }

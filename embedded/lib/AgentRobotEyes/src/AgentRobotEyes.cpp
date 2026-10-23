@@ -17,8 +17,19 @@ const float GAZE_REACH[][2] = {{8, 6}, {20, 18}, {30, 21}};
 // to 22 % and height by 8 %, and the eye moves inward by 58 % of the lost width.
 float edgeFactor(float distance) { return clamp(1 - distance / 58, 0, 1); }
 const char* const NAMES[] = {
-  "idle", "bored", "waiting", "waiting-wrap", "input", "send", "success", "failure",
-  "warning", "inspect", "blocked", "error", "surprise", "love", "random", "sleep", "wake", "waiting-wave"
+  "idle", "bored", "waiting-spin", "waiting-wrap", "input", "affirm", "success", "failure",
+  "wary", "inspect", "angry", "refuse", "surprise", "love", "random", "sleep", "wake", "waiting-wave"
+};
+
+// Names that still parse, matching the Web avatar: "waiting" is the generic name
+// for the default spin, the others are deprecated and removed in 1.0.
+struct Alias { const char* name; Action action; };
+const Alias ALIASES[] = {
+  {"waiting", Action::WaitingSpin}, {"wait", Action::WaitingSpin}, {"send", Action::Affirm},
+  {"failed", Action::Failure}, {"fail", Action::Failure}, {"warning", Action::Wary},
+  {"verify", Action::Inspect}, {"review", Action::Inspect}, {"blocked", Action::Angry},
+  {"policy-blocked", Action::Angry}, {"error", Action::Refuse}, {"system-error", Action::Refuse},
+  {"connection-error", Action::Refuse}, {"slot", Action::Random},
 };
 static_assert(sizeof(NAMES) / sizeof(NAMES[0]) == static_cast<unsigned>(Action::Count), "Action names must stay complete");
 }
@@ -81,23 +92,22 @@ bool Eyes::parseAction(const char* name, Action& result) {
   for (unsigned i = 0; i < static_cast<unsigned>(Action::Count); ++i) {
     if (strcmp(name, NAMES[i]) == 0) { result = static_cast<Action>(i); return true; }
   }
-  if (!strcmp(name, "angry") || !strcmp(name, "policy-blocked")) result = Action::Blocked;
-  else if (!strcmp(name, "system-error") || !strcmp(name, "connection-error")) result = Action::Error;
-  else if (!strcmp(name, "slot")) result = Action::Random;
-  else return false;
-  return true;
+  for (const Alias& alias : ALIASES) {
+    if (strcmp(name, alias.name) == 0) { result = alias.action; return true; }
+  }
+  return false;
 }
 
 uint32_t Eyes::duration(Action action) {
   switch (action) {
     case Action::Bored: return 4000;
-    case Action::Send: return 1360;
+    case Action::Affirm: return 1360;
     case Action::Success: return 2000;
     case Action::Failure: return 2720;
-    case Action::Warning: return 3850;
+    case Action::Wary: return 3850;
     case Action::Inspect: return 6870;
-    case Action::Blocked: return 1980;
-    case Action::Error: return 1840;
+    case Action::Angry: return 1980;
+    case Action::Refuse: return 1840;
     case Action::Surprise: return 1770;
     case Action::Love: return 3190;
     case Action::Random: return 2260;
@@ -127,7 +137,7 @@ bool Eyes::play(const char* name, uint32_t now) {
   return parseAction(name, action) && play(action, now);
 }
 void Eyes::reset(uint32_t now) { play(Action::Idle, now); }
-void Eyes::startWaiting(uint32_t now, bool wrap) { play(wrap ? Action::WaitingWrap : Action::Waiting, now); }
+void Eyes::startWaiting(uint32_t now, bool wrap) { play(wrap ? Action::WaitingWrap : Action::WaitingSpin, now); }
 void Eyes::stopWaiting(uint32_t now) { if (isWaiting()) reset(now); }
 void Eyes::sleep(uint32_t now) { play(Action::Sleep, now); }
 void Eyes::wake(uint32_t now) { if (isSleeping()) play(Action::Wake, now); }
@@ -197,7 +207,7 @@ Eyes::Pose Eyes::poseAt(uint32_t now) const {
   uint32_t elapsed = now - started_;
   const uint32_t total = duration(action_);
   Action selected = total && elapsed >= total ? Action::Idle : action_;
-  if (selected == Action::Waiting && elapsed >= 120) elapsed = 120 + (elapsed - 120) % 3200;
+  if (selected == Action::WaitingSpin && elapsed >= 120) elapsed = 120 + (elapsed - 120) % 3200;
   if (selected == Action::WaitingWrap && elapsed >= 120) elapsed = 120 + (elapsed - 120) % 2400;
   Pose p;
   if (selected == Action::WaitingWave) {

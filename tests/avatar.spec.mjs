@@ -95,7 +95,7 @@ test('interactive demo loads without runtime errors', async ({ page }) => {
 
   await page.goto('/demo/');
   await expect(page.locator('agent-robot-avatar')).toBeVisible();
-  await expect(page.locator('[data-action="waiting"]')).toBeVisible();
+  await expect(page.locator('[data-action="waiting-spin"]')).toBeVisible();
   await expect(page.locator('#demoAntennaFlash')).not.toBeChecked();
   await expect(page.locator('#agent-demo-build')).toHaveText('Demo 0.5.3');
   const versions = await page.evaluate(() => ({
@@ -134,7 +134,7 @@ test('looping waiting starts once and continues smoothly', async ({ page }) => {
     input.checked = true;
     input.dispatchEvent(new Event('change', { bubbles: true }));
   });
-  await page.locator('[data-action="waiting"]').click();
+  await page.locator('[data-action="waiting-spin"]').click();
 
   const avatar = page.locator('#face');
   await expect.poll(() => avatar.evaluate(element => element._waitingFx?.continuous)).toBe(true);
@@ -197,9 +197,10 @@ test('built-in action registry maps every core action', async ({ page }) => {
     }
 
     for (const action of [
-      'idle', 'bored', 'input', 'send', 'success', 'warning', 'error',
-      'system-error', 'connection-error', 'angry', 'blocked', 'policy-blocked',
+      'idle', 'bored', 'input', 'affirm', 'success', 'wary', 'refuse', 'angry',
       'surprise', 'sleep', 'wake',
+      // Deprecated names still reach the same implementations.
+      'send', 'warning', 'error', 'system-error', 'connection-error', 'blocked', 'policy-blocked',
     ]) {
       element._inputWanted = false;
       element._sleeping = action === 'wake';
@@ -211,8 +212,9 @@ test('built-in action registry maps every core action', async ({ page }) => {
   });
 
   expect(called).toEqual([
-    'reset', 'bored', 'input', 'send', 'success', 'warning', 'error',
-    'error', 'error', 'angry', 'angry', 'angry', 'surprise', 'sleep', 'wake',
+    'reset', 'bored', 'input', 'send', 'success', 'warning', 'error', 'angry',
+    'surprise', 'sleep', 'wake',
+    'send', 'warning', 'error', 'error', 'error', 'angry', 'angry',
   ]);
 });
 
