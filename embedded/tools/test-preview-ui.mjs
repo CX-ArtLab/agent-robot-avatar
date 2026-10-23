@@ -40,6 +40,7 @@ try {
   await page.goto(file);
   await page.waitForFunction(() => document.getElementById('status').textContent.includes('本机绘制'));
   await page.locator('#gaze-mode [data-value="off"]').click();
+  assert.match(await page.locator('#gaze-hint').textContent(),/正视/);
   assert.equal(await page.locator('.action').count(),18);
   assert((await frame()).lit>1000);
   assert.equal(await page.locator('#step').isDisabled(),true);
@@ -89,6 +90,7 @@ try {
   assert.equal(await page.locator('#device').evaluate(el=>el.classList.contains('bare')),true);
   await page.locator('#housing').check();
   await page.locator('#gaze-mode [data-value="manual"]').click();
+  assert.match(await page.locator('#gaze-hint').textContent(),/lookAt/);
   await page.locator('#gx').fill('1');
   assert.notEqual((await frame()).hash,centered.hash);
   // Gaze range changes how far the same gaze moves the eyes, not the centred pose.

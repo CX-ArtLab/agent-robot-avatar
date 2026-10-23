@@ -459,6 +459,7 @@ html,body{height:100%}
   <section class="section">
     <h2>注视</h2>
     <div class="seg" id="gaze-mode" data-value="track" role="group" aria-label="注视方式"><button class="chip" type="button" data-value="track" title="用鼠标模拟靠近的物体">跟随物体</button><button class="chip" type="button" data-value="manual">手动</button><button class="chip" type="button" data-value="off">关闭</button></div>
+    <div class="meta" id="gaze-hint"></div>
     <div class="field"><span>注视幅度</span><div class="seg push" id="gaze-range" data-value="1" role="group" aria-label="注视幅度" title="眼睛看向一侧时移动多远；“大”会稍微越过表情区域边缘，眼睛在边缘处变窄"><button class="chip" type="button" data-value="0">小</button><button class="chip" type="button" data-value="1">中</button><button class="chip" type="button" data-value="2">大</button></div></div>
     <div id="track-options" class="group">
       <label class="field"><span>感应范围</span><input id="sense-radius" type="range" min="16" max="200" step="4" value="72"><output id="sense-value">72 px</output></label>
@@ -1586,6 +1587,12 @@ class PanelRenderer {
   const ZOOM_SNAPS = [1,1.5,2,3,4,5,6,8,10,12,16];
   const BARE_PITCH_MM = .15; // presets without physical data (raw canvas, custom sizes)
   const DEFAULT_COLORS = {eye:'#ffffff',bg:'#000000'};
+  // What each gaze source needs on a real board.
+  const GAZE_HINTS = {
+    track:'开发板需要外接摄像头，或距离／人体感应传感器来提供目标位置；这里用鼠标模拟靠近的物体。',
+    manual:'由你的程序指定看的方向（C++ 的 lookAt()），不需要额外硬件。',
+    off:'眼睛保持正视前方。'
+  };
   const $ = id => document.getElementById(id);
   const store = {
     get(key,fallback){try{const v=localStorage.getItem('robotEyesPreview.'+key);return v?JSON.parse(v):fallback;}catch(_){return fallback;}},
@@ -1931,6 +1938,7 @@ class PanelRenderer {
     api.eyes_tracking(mode==='track'?1:0,now());
     applyGazeConfig();
     if(mode==='manual')api.eyes_gaze(Number($('gx').value),Number($('gy').value));
+    $('gaze-hint').textContent=GAZE_HINTS[mode];
     $('track-options').hidden=mode!=='track';
     $('manual-options').hidden=mode!=='manual';
     $('motion-sensitivity').setAttribute('aria-disabled',String(!$('moving-only').checked));
