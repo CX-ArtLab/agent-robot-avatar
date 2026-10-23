@@ -29,6 +29,18 @@ The preview runs **this exact embedded C++ engine compiled to WebAssembly**, not
 | `esp32-s3-st7789` | ESP32-S3-DevKitC-1 | ST7789, 240×240 SPI TFT | Build target; physical verification pending |
 | `pico-st7789` | Raspberry Pi Pico / RP2040 | ST7789, 240×240 SPI TFT | Build target; physical verification pending |
 | `esp32-ssd1306` | ESP32 Dev Module | SSD1306, 128×64 I²C OLED, address `0x3C` | Build target; physical verification pending |
+| `esp32-ssd1306-128x32` | ESP32 Dev Module | SSD1306, 128×32 I²C OLED, address `0x3C` | Build target; physical verification pending |
+| `esp32-sh1106` | ESP32 Dev Module | SH1106, 128×64 I²C OLED, address `0x3C` | Build target; physical verification pending |
+| `esp32-s3-gc9a01` | ESP32-S3-DevKitC-1 | GC9A01, 240×240 round SPI TFT (same wiring as `esp32-s3-st7789`) | Build target; physical verification pending |
+| `esp32-s3-st7789-240x280` | ESP32-S3-DevKitC-1 | ST7789, 240×280 SPI TFT (1.69″, same wiring) | Build target; physical verification pending |
+| `esp32-s3-st7789-240x320` | ESP32-S3-DevKitC-1 | ST7789, 240×320 SPI TFT (2.0″, same wiring) | Build target; physical verification pending |
+| `waveshare-s3-round-128` | Waveshare ESP32-S3-Touch-LCD-1.28 | GC9A01 on board (CLK 10, MOSI 11, CS 9, DC 8, RST 14, BL 2) | Build target; physical verification pending |
+| `cyd-ili9341` | ESP32-2432S028 “Cheap Yellow Display” | ILI9341 on HSPI (SCK 14, MOSI 13, MISO 12, CS 15, DC 2, BL 21) | Build target; physical verification pending |
+| `t-display-st7789` | LilyGO T-Display (ESP32) | ST7789 135×240 (SCK 18, MOSI 19, CS 5, DC 16, RST 23, BL 4), landscape | Build target; physical verification pending |
+| `t-display-s3` | LilyGO T-Display-S3 | ST7789 170×320, 8-bit parallel (Arduino_GFX), landscape | Build target; physical verification pending |
+| `m5-dial`, `m5-atoms3`, `m5-cores3`, `m5-stickc-plus2` | M5Stack Dial / AtomS3 / CoreS3 / StickC Plus2 | Built-in panels through M5Unified, which detects the board | Build target; physical verification pending |
+
+`examples/arduino/boards.h` holds one small display adapter per configuration; the main program is shared. Pin numbers follow the vendors' documentation (Waveshare wiki, LilyGO `pin_config.h`, the CYD community pin list). The Dial and StickC Plus2 build on the StampS3 and M5Stick-C board definitions of the pinned PlatformIO platform; M5Unified identifies the actual board at runtime. Round panels enable the core's circular layout. If you run one of these on real hardware, please open a *Hardware report* issue so the preview can mark it as community-verified.
 
 The TFT example reserves a centered 240×160 eye viewport. Its mask is 4,800 bytes plus a 480-byte RGB565 conversion row. The OLED mask is 1,024 bytes; its driver also owns a display buffer. These numbers exclude the engine, driver and framework overhead. No PSRAM is required by the core. Actual frame rate depends on the CPU, screen and bus; the example's 25 FPS setting is a ceiling, not a measured throughput claim.
 

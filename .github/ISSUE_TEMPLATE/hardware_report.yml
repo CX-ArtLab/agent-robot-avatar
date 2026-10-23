@@ -1,0 +1,47 @@
+name: Hardware report / 实机验证报告
+description: Tell us how a board example ran on real hardware / 告诉我们示例固件在实物上的运行情况
+title: "[Hardware] "
+labels: ["hardware-report"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for trying the eyes on a real board. Reports move a screen from "compiled, not yet tested on hardware" to "verified by the community" in the preview.
+        感谢在实物上试用！报告会让预览器里这块屏从"编译通过，未实机验证"变为"社区已实机验证"。
+  - type: input
+    id: environment
+    attributes:
+      label: Firmware environment / 固件配置
+      description: The name after `pio run -e`, shown under 接线与固件 in the preview.
+      placeholder: esp32-s3-gc9a01
+    validations:
+      required: true
+  - type: input
+    id: hardware
+    attributes:
+      label: Board and screen / 开发板和屏幕
+      description: Exact product names, links if you have them.
+      placeholder: ESP32-S3-DevKitC-1 + GC9A01 1.28" round module (AliExpress, blue PCB)
+    validations:
+      required: true
+  - type: dropdown
+    id: result
+    attributes:
+      label: Result / 结果
+      options:
+        - Works as in the preview / 和预览一致，正常运行
+        - Works after changes (describe below) / 修改后可以运行（请在下面说明）
+        - Shows something wrong / 能显示，但画面不对
+        - Nothing on the screen / 屏幕没有显示
+    validations:
+      required: true
+  - type: textarea
+    id: changes
+    attributes:
+      label: What you changed or what looks wrong / 改动或问题
+      description: Pins, rotation, colour order, offsets, library versions, serial output...
+  - type: textarea
+    id: media
+    attributes:
+      label: Photo or video / 照片或视频
+      description: Drag files here. A short clip of the eyes moving helps the most.

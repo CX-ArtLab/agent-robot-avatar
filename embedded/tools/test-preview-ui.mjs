@@ -168,6 +168,16 @@ try {
   // A type chip narrows the picker to that type; the bus line estimates frame rate.
   assert.deepEqual(await page.locator('#profile option').evaluateAll(options=>[...new Set(options.map(o=>SCREEN_PRESETS.find(p=>p.id===o.value).group))]),['round']);
   assert.match(await page.locator('#screen-spec').textContent(),/SPI 40 MHz/);
+  // Screens with a firmware example show the board, build command and wiring.
+  await choose('gc9a01-128');
+  assert.equal(await page.locator('#wiring').isHidden(),false);
+  assert.match(await page.locator('#wiring-body').textContent(),/pio run -e esp32-s3-gc9a01/);
+  assert((await page.locator('#wiring-body tr').count())>=6,'external modules list their wiring');
+  await choose('esp32s3-round-128');
+  assert.match(await page.locator('#wiring-body').textContent(),/无需接线/);
+  await choose('mini');
+  assert.equal(await page.locator('#wiring').isHidden(),true);
+  assert.match(await page.locator('#screen-support').textContent(),/仅效果预览/);
   await choose('ssd1306-091');
   assert.match(await page.locator('#screen-spec').textContent(),/I²C/);
   assert.equal(await page.locator('#spec-res').textContent(),'128 × 32');
@@ -184,5 +194,5 @@ try {
   assert.equal((await frame()).width,172,'invalid custom size leaves valid framebuffer intact');
   if(process.env.PREVIEW_SCREENSHOT) await page.screenshot({path:process.env.PREVIEW_SCREENSHOT,fullPage:true});
   assert.deepEqual(errors,[]); assert.deepEqual(external,[]);
-  console.log(`Offline ${engine} UI passed: all controls, pause/step, native animation, cycling/manual interruption, sleep/wake, OLED/TFT, gaze, reset, cycling state, housing in place, zoom without scrolling, timing without restart, actual size, display-only panel effects, per-screen layout, rotation, screen types, custom size, every preset, responsive layout; no network requests.`);
+  console.log(`Offline ${engine} UI passed: all controls, pause/step, native animation, cycling/manual interruption, sleep/wake, OLED/TFT, gaze, reset, cycling state, housing in place, zoom without scrolling, timing without restart, actual size, display-only panel effects, per-screen layout, rotation, screen types, wiring examples, custom size, every preset, responsive layout; no network requests.`);
 } finally { await browser.close(); }
