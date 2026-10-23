@@ -583,11 +583,16 @@ function mountDemoControls() {
   setPanel(null);
   applyLanguage(currentLanguage);
 
-  // Opening show: the stage rolls down through the vivid palettes like a slot reel,
-  // dark to light, in step with the eyes' reel spin, then lands on the chosen colors
-  // and the avatar ends happy. The reel is one strip of color blocks moved with a transform.
-  // Any click, key, scroll or other action ends the show at once, and reduced motion
-  // skips it.
+  // Opening show. Two scenes are being compared (a temporary switch picks one):
+  // - reel: the stage rolls down through the palettes like a slot reel, dark to
+  //   light, in step with a slower, longer spin of the eyes;
+  // - ribbons: a dark stage, the eyes power on, then light ribbons in the palette
+  //   colors burst from behind the avatar toward the viewer, faster and faster, until
+  //   a sweep of light turns the stage back to the chosen colors.
+  // Both end with the success pose once the scene and the eyes have come to rest.
+  // Only transforms, opacity and colors animate, on short-lived elements. Any click,
+  // key, scroll or other action ends the show at once, and reduced motion skips it.
+
   // [palette, swapped]: backgrounds grow lighter, and once they are white the heads
   // grow darker, ending next to the default black on white. Swapped palettes give
   // more light backgrounds.
@@ -598,15 +603,16 @@ function mountDemoControls() {
   ];
   // A slower, longer reel spin than the random button: more turns, each one calmer.
   const INTRO_REEL = Object.freeze({ speed: 0.4, spin: 3400 });
+  const RIBBON_COLORS = ['#e50914', '#1ed760', '#f2ff59', '#ffc72c', '#5865f2', '#229ed9', '#e95420',
+    '#ea4c89', '#fdb927', '#fffc00', '#0fa578', '#d97757', '#6cabdd', '#a50044'];
+  const INTRO_STYLE_KEY = 'agentRobotAvatarDemoIntro';
 
   let stopIntro = null;
+  let introStyle = 'ribbons';
+  try { introStyle = localStorage.getItem(INTRO_STYLE_KEY) === 'reel' ? 'reel' : 'ribbons'; } catch (_) {}
 
-  function playIntro({ force = false } = {}) {
-    stopIntro?.();
-    if (reducedMotion.matches && !force) return;
+  function reelScene({ chosen, eyesFor, play, done, isEnded }) {
     const label = stage.querySelector('.demo-stage-label');
-    const events = ['pointerdown', 'keydown', 'wheel', 'touchstart'];
-    const chosen = { background: bgColor.value.toLowerCase(), head: headColor.value.toLowerCase() };
     const palettes = INTRO_SEQUENCE.map(([id, swapped]) => {
       const palette = PALETTES.find(item => item.id === id);
       return swapped ? { ...palette, background: palette.head, head: palette.background } : palette;
@@ -614,12 +620,6 @@ function mountDemoControls() {
     // Top to bottom: a filler for the landing bounce, the chosen colors, the palettes
     // from light back to dark, and the current colors, which show first.
     const blocks = [chosen, chosen, ...palettes.slice().reverse(), { background: shown.background, head: shown.head }];
-    const eyesFor = background => (eyeThrough.checked ? background : '#ffffff');
-    let ownAction = false;
-    let ended = false;
-    let frame = 0;
-    let shownBlock = blocks.length - 1;
-
     // One gradient strip; soft seams keep a fast roll from looking torn.
     const reel = document.createElement('div');
     reel.className = 'demo-stage-reel';
@@ -634,19 +634,184 @@ function mountDemoControls() {
       return `${block.background} ${from}px ${to}px`;
     }).join(', ')})`;
     reel.appendChild(strip);
+    let frame = 0;
+    let shownBlock = blocks.length - 1;
+
+    // The head and eyes follow the block that fills most of the stage.
+    const follow = () => {
+      if (isEnded()) return;
+      const offset = new DOMMatrixReadOnly(getComputedStyle(strip).transform).m42;
+      const index = Math.min(blocks.length - 1, Math.max(0, Math.round(-offset / height)));
+      if (index !== shownBlock) {
+        shownBlock = index;
+        const block = blocks[index];
+        paintColors(block.background, block.head, eyesFor(block.background));
+        if (block.name) {
+          label.textContent = block[currentLanguage] || block.name;
+          label.animate([{ opacity: 0 }, { opacity: 1, offset: 0.2 }, { opacity: 1, offset: 0.7 }, { opacity: 0 }], { duration: 420 });
+        }
+      }
+      frame = requestAnimationFrame(follow);
+    };
+    // The eyes' reel starts after the action's short preparation; roll the stage
+    // with it, for the same time.
+    const roll = () => {
+      if (isEnded() || strip.getAnimations().length) return;
+      const startY = -(blocks.length - 1) * height;
+      const endY = -height;
+      const travel = endY - startY;
+      const animation = strip.animate([
+        { transform: `translateY(${startY}px)`, easing: 'cubic-bezier(.5,0,1,1)' },
+        { transform: `translateY(${startY + travel * 0.04}px)`, offset: 0.08 },
+        { transform: `translateY(${startY + travel * 0.8}px)`, offset: 0.7, easing: 'cubic-bezier(0,0,.35,1)' },
+        { transform: `translateY(${endY + height * 0.12}px)`, offset: 0.9, easing: 'cubic-bezier(.45,0,.4,1)' },
+        { transform: `translateY(${endY}px)` },
+      ], { duration: face._randomFx?.duration ?? 3400, fill: 'forwards' });
+      frame = requestAnimationFrame(follow);
+      animation.onfinish = () => done('scene');
+    };
+    const onState = event => {
+      if (event.detail.state !== 'random') return;
+      face.removeEventListener('face-state', onState);
+      roll();
+    };
+    let fallback = 0;
+    return {
+      start() {
+        face.addEventListener('face-state', onState);
+        const config = window.AgentRobotAvatarRandomConfig;
+        const saved = config && { speed: config.speed, spin: config.spin };
+        if (config) Object.assign(config, INTRO_REEL);
+        try { play('random'); } finally { if (saved) Object.assign(config, saved); }
+        stageOverride = 'transparent';
+        stage.insertBefore(reel, stage.querySelector('.avatar-home'));
+        // Should the eyes never start (an older component), roll anyway.
+        fallback = setTimeout(() => {
+          if (strip.getAnimations().length) return;
+          done('eyes');
+          roll();
+        }, 800);
+      },
+      teardown() {
+        cancelAnimationFrame(frame);
+        clearTimeout(fallback);
+        face.removeEventListener('face-state', onState);
+        label.getAnimations().forEach(animation => animation.cancel());
+        reel.remove();
+      },
+    };
+  }
+
+  function ribbonScene({ chosen, eyesFor, play, done, isEnded }) {
+    const dark = '#05060a';
+    const silhouette = '#1d1e24';
+    const width = stage.clientWidth;
+    const layer = document.createElement('div');
+    layer.className = 'demo-intro-ribbons';
+    const sweep = document.createElement('div');
+    sweep.className = 'demo-intro-sweep';
+    sweep.style.background = chosen.background;
+    const flare = document.createElement('div');
+    flare.className = 'demo-intro-flare';
+    const timers = [];
+    const after = (ms, fn) => timers.push(setTimeout(() => { if (!isEnded()) fn(); }, ms));
+    let glow = null;
+
+    // Ribbons leave sooner, travel faster and come closer (wider, brighter) as the
+    // show goes on. Each is a light tube: a white core fading out to its color.
+    const burst = () => {
+      const count = 44;
+      for (let i = 0; i < count; i++) {
+        const t = i / (count - 1);
+        after(1900 * (1 - (1 - t) ** 1.8), () => {
+          const ribbon = document.createElement('span');
+          const color = RIBBON_COLORS[(i * 5) % RIBBON_COLORS.length];
+          const side = i % 2 ? 1 : -1;
+          const reach = side * width * (0.25 + Math.random() * 0.55);
+          const near = 0.35 + 0.65 * t;
+          ribbon.style.width = `${2 + (4 + Math.random() * 10) * near}px`;
+          ribbon.style.background = `linear-gradient(90deg, transparent, ${color} 30%, #fff 50%, ${color} 70%, transparent)`;
+          layer.insertBefore(ribbon, sweep);
+          const animation = ribbon.animate([
+            { transform: 'translateX(-50%) scaleX(.3)', opacity: 0 },
+            { opacity: 0.45 + 0.55 * near, offset: 0.2 },
+            { transform: `translateX(calc(-50% + ${reach}px)) scaleX(${1.5 + (1 + Math.random() * 3) * near})`, opacity: 0.6 + 0.4 * near },
+          ], { duration: 950 - 550 * t, easing: 'cubic-bezier(.55,0,.85,.4)', fill: 'forwards' });
+          animation.onfinish = () => ribbon.remove();
+        });
+      }
+    };
+    // A bar of light crosses the stage, and the chosen colors open up behind it.
+    const sweepIn = () => {
+      fadeColors(chosen.background, chosen.head, eyesFor(chosen.background), 420);
+      const timing = { duration: 520, easing: 'cubic-bezier(.7,0,.2,1)', fill: 'forwards' };
+      flare.animate([{ transform: 'translateX(-30%)', opacity: 1 }, { transform: `translateX(${width}px)`, opacity: 0.6 }], timing);
+      sweep.animate([{ clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0 0 0)' }], timing).onfinish = () => {
+        glow?.reverse();
+        done('scene');
+      };
+    };
+    return {
+      start() {
+        stageOverride = dark;
+        paintColors(dark, silhouette, dark);
+        layer.append(sweep, flare);
+        stage.insertBefore(layer, stage.querySelector('.avatar-home'));
+        // The eyes power on with a glow, then spin while the ribbons fly.
+        after(150, () => {
+          fadeColors(dark, silhouette, '#ffffff', 450);
+          glow = face.animate([
+            { filter: 'drop-shadow(0 0 0 rgba(255,255,255,0))' },
+            { filter: 'drop-shadow(0 0 14px rgba(255,255,255,.6))' },
+          ], { duration: 450, fill: 'forwards' });
+        });
+        after(600, () => {
+          play('random');
+          layer.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.08)' }], { duration: 2200, easing: 'ease-in', fill: 'forwards' });
+          burst();
+        });
+        after(2650, sweepIn);
+        // Should the eyes never start (an older component), finish anyway.
+        after(1800, () => { if (!face._randomFx) done('eyes'); });
+      },
+      teardown() {
+        timers.forEach(clearTimeout);
+        glow?.cancel();
+        layer.remove();
+      },
+    };
+  }
+
+  function playIntro({ force = false } = {}) {
+    stopIntro?.();
+    if (reducedMotion.matches && !force) return;
+    const events = ['pointerdown', 'keydown', 'wheel', 'touchstart'];
+    const chosen = { background: bgColor.value.toLowerCase(), head: headColor.value.toLowerCase() };
+    const eyesFor = background => (eyeThrough.checked ? background : '#ffffff');
+    const pending = new Set(['scene', 'eyes']);
+    let ownAction = false;
+    let ended = false;
 
     const play = action => {
       ownAction = true;
       try { face.play(action); } finally { ownAction = false; }
     };
+    const done = part => {
+      pending.delete(part);
+      land();
+    };
+    const scene = (introStyle === 'reel' ? reelScene : ribbonScene)({ chosen, eyesFor, play, done, isEnded: () => ended });
+    const onEyes = event => {
+      if (event.detail.action !== 'random' || event.detail.phase === 'start') return;
+      done('eyes');
+    };
     const cleanup = () => {
       ended = true;
       stopIntro = null;
-      cancelAnimationFrame(frame);
       events.forEach(type => window.removeEventListener(type, end, true));
       face.removeEventListener('action-state', onAction);
-      reel.remove();
-      label.getAnimations().forEach(animation => animation.cancel());
+      face.removeEventListener('action-state', onEyes);
+      scene.teardown();
       stageOverride = null;
       delete document.documentElement.dataset.demoIntro;
     };
@@ -661,40 +826,8 @@ function mountDemoControls() {
     function onAction(event) {
       if (!ownAction && event.detail.phase === 'start') end();
     }
-    // The head and eyes follow the block that fills most of the stage.
-    const follow = () => {
-      if (ended) return;
-      const offset = new DOMMatrixReadOnly(getComputedStyle(strip).transform).m42;
-      const index = Math.min(blocks.length - 1, Math.max(0, Math.round(-offset / height)));
-      if (index !== shownBlock) {
-        shownBlock = index;
-        const block = blocks[index];
-        paintColors(block.background, block.head, eyesFor(block.background));
-        if (block.name) {
-          label.textContent = block[currentLanguage] || block.name;
-          label.animate([{ opacity: 0 }, { opacity: 1, offset: 0.2 }, { opacity: 1, offset: 0.7 }, { opacity: 0 }], { duration: 420 });
-        }
-      }
-      frame = requestAnimationFrame(follow);
-    };
-
-    stopIntro = end;
-    document.documentElement.dataset.demoIntro = 'true';
-    events.forEach(type => window.addEventListener(type, end, { capture: true, passive: true }));
-    face.addEventListener('action-state', onAction);
-    const reelConfig = window.AgentRobotAvatarRandomConfig;
-    const saved = reelConfig && { speed: reelConfig.speed, spin: reelConfig.spin };
-    if (reelConfig) Object.assign(reelConfig, INTRO_REEL);
-    try { play('random'); } finally { if (saved) Object.assign(reelConfig, saved); }
-    stageOverride = 'transparent';
-    stage.insertBefore(reel, stage.querySelector('.avatar-home'));
-
-    // The eyes' reel starts after the action's short preparation; roll the stage
-    // with it for the same time, and end once both have come to rest.
-    let reelDone = false;
-    let eyesDone = false;
-    const land = () => {
-      if (ended || !reelDone || !eyesDone) return;
+    function land() {
+      if (ended || pending.size) return;
       cleanup();
       showChosenColors();
       // Ending pose: happy eyes and a small hop, a "ta-da" after the spin. It is
@@ -710,46 +843,28 @@ function mountDemoControls() {
       };
       face.addEventListener('action-state', release);
       play('success');
-    };
-    const roll = () => {
-      if (ended || strip.getAnimations().length) return;
-      const startY = -(blocks.length - 1) * height;
-      const endY = -height;
-      const travel = endY - startY;
-      const animation = strip.animate([
-        { transform: `translateY(${startY}px)`, easing: 'cubic-bezier(.5,0,1,1)' },
-        { transform: `translateY(${startY + travel * 0.04}px)`, offset: 0.08 },
-        { transform: `translateY(${startY + travel * 0.8}px)`, offset: 0.7, easing: 'cubic-bezier(0,0,.35,1)' },
-        { transform: `translateY(${endY + height * 0.12}px)`, offset: 0.9, easing: 'cubic-bezier(.45,0,.4,1)' },
-        { transform: `translateY(${endY}px)` },
-      ], { duration: face._randomFx?.duration ?? 3400, fill: 'forwards' });
-      frame = requestAnimationFrame(follow);
-      animation.onfinish = () => {
-        reelDone = true;
-        land();
-      };
-    };
-    face.addEventListener('face-state', function onState(event) {
-      if (event.detail.state !== 'random') return;
-      face.removeEventListener('face-state', onState);
-      roll();
-    });
-    face.addEventListener('action-state', function onEnd(event) {
-      if (event.detail.action !== 'random' || event.detail.phase === 'start') return;
-      face.removeEventListener('action-state', onEnd);
-      eyesDone = true;
-      land();
-    });
-    // Should the eyes never start (an older component), roll anyway.
-    setTimeout(() => {
-      if (strip.getAnimations().length) return;
-      eyesDone = true;
-      roll();
-    }, 800);
+    }
+
+    stopIntro = end;
+    document.documentElement.dataset.demoIntro = 'true';
+    events.forEach(type => window.addEventListener(type, end, { capture: true, passive: true }));
+    face.addEventListener('action-state', onAction);
+    face.addEventListener('action-state', onEyes);
+    scene.start();
   }
 
-  // Temporary replay button for tuning the opening show; remove before the release.
-  stage.querySelector('#demoReplayIntro')?.addEventListener('click', () => playIntro({ force: true }));
+  // Temporary controls for tuning the opening show; remove before the release.
+  const replayButton = stage.querySelector('#demoReplayIntro');
+  const styleButton = stage.querySelector('#demoIntroStyle');
+  const showStyle = () => { if (styleButton) styleButton.textContent = introStyle === 'reel' ? '转轮' : '光带'; };
+  replayButton?.addEventListener('click', () => playIntro({ force: true }));
+  styleButton?.addEventListener('click', () => {
+    introStyle = introStyle === 'reel' ? 'ribbons' : 'reel';
+    try { localStorage.setItem(INTRO_STYLE_KEY, introStyle); } catch (_) {}
+    showStyle();
+    playIntro({ force: true });
+  });
+  showStyle();
 
   if (document.documentElement.dataset.demoReady) playIntro();
   else {
