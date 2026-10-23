@@ -275,6 +275,7 @@
     if(!api.eyes_init(preset.width,preset.height,segValue('fps'),
       $('blink').checked?1:0,$('transitions').checked?240:0,0))throw new Error('Core initialization failed');
     api.eyes_tracking($('tracking').checked?1:0,0);
+    api.eyes_gaze_range(segValue('gaze-range'));
     applyGazeConfig();
     $('gx').value=$('gy').value='0';$('gx-value').value=$('gy-value').value='0.00';
     $('screen-label').textContent=preset.width+' × '+preset.height+' · 1-bit';
@@ -429,6 +430,8 @@
       $('sense-radius').oninput=resizeDisplay;
       for(const id of ['hold','response'])bindSeg(id,()=>{applyGazeConfig();updateTrackingStatus();});
       $('moving-only').onchange=()=>{applyGazeConfig();updateTrackingStatus();};
+      setSeg('gaze-range',store.get('gazeRange',1));api.eyes_gaze_range(segValue('gaze-range'));
+      bindSeg('gaze-range',()=>{api.eyes_gaze_range(segValue('gaze-range'));store.set('gazeRange',segValue('gaze-range'));draw();});
       bindSeg('motion-sensitivity',()=>{motionAnchor=null;lastMotion=-Infinity;});
       $('fit').onclick=event=>{const b=event.target.closest('[data-fit]');if(b){fit=b.dataset.fit;applyLayout(true);}};
       for(const id of ['face-scale','offset-x','offset-y'])$(id).oninput=()=>applyLayout(true);

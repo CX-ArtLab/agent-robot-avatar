@@ -12,12 +12,18 @@ enum class Action : uint8_t {
   WaitingWave, Count // Append new actions to preserve existing numeric IDs.
 };
 
+// How far idle gaze moves the eyes in the 160 x 100 face area. Small is the
+// original reach (8 x 6). Medium reaches the edge of the face area. Large goes
+// slightly past it, narrowing the eyes near the edge like the Web avatar does.
+enum class GazeRange : uint8_t { Small, Medium, Large };
+
 struct EyesConfig {
   uint16_t width = 240;
   uint16_t height = 160;
   uint8_t maxFps = 30;
   bool autoBlink = true;
   uint16_t transitionMs = 240;
+  GazeRange gazeRange = GazeRange::Medium;
 };
 
 enum class FitMode : uint8_t { Contain, Cover };
@@ -46,6 +52,8 @@ class Eyes {
   void wake(uint32_t now);
   // Explicit host-controlled gaze. This never installs pointer/touch listeners.
   void lookAt(float x, float y); // normalized [-1, 1]
+  // Changes how far lookAt() moves the eyes; keeps the current animation.
+  bool setGazeRange(GazeRange range);
   // Layout changes preserve the current animation. Circle requires a square
   // framebuffer; pixels outside the visible circle are cleared in the bitmap.
   bool setLayout(const EyesLayout& layout);

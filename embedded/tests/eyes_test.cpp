@@ -1,8 +1,10 @@
 #include "AgentRobotEyes.h"
+#include <algorithm>
 #include "AgentRobotGaze.h"
 #include <assert.h>
 #include <cmath>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <limits>
 #include <set>
@@ -316,6 +318,61 @@ static void layoutsAndProximity() {
   gaze.observe(target,800);gaze.update(2000);assert(gaze.tracking());
 }
 
+static bool pixelOn(const Eyes& eyes, int x, int y) {
+  return (eyes.data()[y * eyes.stride() + x / 8] >> (7 - x % 8)) & 1;
+}
+
+// The left eye's extent: the first lit run along the face's middle row, and
+// the lit run down that run's centre column (the right eye never interferes).
+struct Bounds { int x0, x1, y0, y1; };
+static Bounds leftEye(const Eyes& eyes) {
+  Bounds b;
+  int x = 0, y = 0;
+  while (x < 160 && !pixelOn(eyes,x,50)) ++x;
+  b.x0 = x;
+  while (x < 160 && pixelOn(eyes,x,50)) ++x;
+  b.x1 = x - 1;
+  const int cx = (b.x0 + b.x1) / 2;
+  while (y < 100 && !pixelOn(eyes,cx,y)) ++y;
+  b.y0 = y;
+  while (y < 100 && pixelOn(eyes,cx,y)) ++y;
+  b.y1 = y - 1;
+  return b;
+}
+
+// Idle gaze reach per range, and the Web avatar's narrowing near the edge.
+static void gazeRanges() {
+  EyesConfig config; config.width = 160; config.height = 100; config.autoBlink = false;
+  std::vector<uint8_t> pixels(Eyes::requiredBytes(config.width,config.height));
+  Eyes eyes; assert(eyes.begin(config,pixels.data(),pixels.size(),0));
+  assert(!eyes.setGazeRange(static_cast<agent_robot::GazeRange>(3)));
+  config.gazeRange = static_cast<agent_robot::GazeRange>(3);
+  Eyes rejected; assert(!rejected.begin(config,pixels.data(),pixels.size(),0));
+  const agent_robot::GazeRange ranges[] = {agent_robot::GazeRange::Small, agent_robot::GazeRange::Medium, agent_robot::GazeRange::Large};
+  uint32_t t = 0, centred = 0;
+  Bounds rest = {}, reach[3] = {};
+  for (unsigned i=0;i<3;++i) {
+    assert(eyes.setGazeRange(ranges[i]));
+    eyes.lookAt(0,0); assert(eyes.update(t+=20));
+    if (!i) { centred = hash(eyes); rest = leftEye(eyes); }
+    assert(hash(eyes) == centred); // a centred gaze keeps the sampled Web pose
+    eyes.lookAt(-1,0); assert(eyes.update(t+=20));
+    reach[i] = leftEye(eyes);
+  }
+  const int restWidth = rest.x1 - rest.x0;
+  assert(rest.x0 - reach[0].x0 <= 9);                 // small: the original reach
+  assert(rest.x0 - reach[1].x0 >= 16);                // medium reaches much further...
+  assert(reach[1].x0 >= 1);                           // ...without leaving the face area
+  assert(reach[1].x1 - reach[1].x0 < restWidth);      // and narrows near the edge
+  assert(reach[2].x1 < reach[1].x1);                  // large goes further still
+  assert(reach[2].x1 - reach[2].x0 < reach[1].x1 - reach[1].x0);
+  assert(eyes.setGazeRange(agent_robot::GazeRange::Medium));
+  eyes.lookAt(0,-1); assert(eyes.update(t+=20));
+  const Bounds up = leftEye(eyes);
+  assert(up.y0 >= 1 && rest.y0 - up.y0 >= 15);        // vertical reach stays inside too
+  assert(std::abs((up.x0 + up.x1) - (rest.x0 + rest.x1)) <= 2); // vertical gaze keeps x
+}
+
 int main() {
   bufferContract();
   namesAndCancellation();
@@ -325,6 +382,7 @@ int main() {
   inputExitContinuity();
   restoredWaitingWave();
   layoutsAndProximity();
+  gazeRanges();
   puts("Eyes core: buffer guards, all actions, cancellation, frame limits, rollover, sleep and isolation passed.");
 }
 

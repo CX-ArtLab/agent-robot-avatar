@@ -209,6 +209,7 @@ html,body{height:100%}
     <h2>接近感应</h2>
     <label class="field toggle demo-toggle"><span>靠近注视（鼠标模拟物体）</span><input id="tracking" type="checkbox" checked disabled><span class="demo-switch" aria-hidden="true"></span></label>
     <label class="field"><span>感应扩展范围</span><input id="sense-radius" type="range" min="16" max="200" step="4" value="72"><output id="sense-value">72 px</output></label>
+    <div class="field"><span>注视幅度</span><div class="seg" id="gaze-range" data-value="1" role="group" aria-label="注视幅度" title="眼睛看向一侧时移动多远；“大”会稍微越过表情区域边缘，眼睛在边缘处变窄"><button class="chip" type="button" data-value="0">小</button><button class="chip" type="button" data-value="1">中</button><button class="chip" type="button" data-value="2">大</button></div></div>
     <label class="field toggle demo-toggle"><span>只看移动目标</span><input id="moving-only" type="checkbox"><span class="demo-switch" aria-hidden="true"></span></label>
     <div class="field"><span>移动灵敏度</span><div class="seg" id="motion-sensitivity" data-value="3" role="group" aria-label="移动灵敏度"><button class="chip" type="button" data-value="1">高</button><button class="chip" type="button" data-value="3">中</button><button class="chip" type="button" data-value="8">低</button></div></div>
     <div class="field"><span>跟随速度</span><div class="seg" id="response" data-value="140" role="group" aria-label="跟随速度"><button class="chip" type="button" data-value="60">快</button><button class="chip" type="button" data-value="140">正常</button><button class="chip" type="button" data-value="320">慢</button></div></div>

@@ -83,6 +83,12 @@ try {
   await page.locator('#housing').check();
   await page.locator('#gx').fill('1');
   assert.notEqual((await frame()).hash,centered.hash);
+  // Gaze range changes how far the same gaze moves the eyes, not the centred pose.
+  const medium=await frame();
+  await page.locator('#gaze-range [data-value="2"]').click();
+  assert.notEqual((await frame()).hash,medium.hash,'large gaze range moves the eyes further');
+  await page.locator('#gaze-range [data-value="1"]').click();
+  assert.equal((await frame()).hash,medium.hash);
   await page.locator('#center').click(); assert.equal((await frame()).hash,centered.hash);
   await page.locator('#fps [data-value="60"]').click();
   const before=Number.parseFloat(await clock());

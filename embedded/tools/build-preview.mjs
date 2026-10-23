@@ -12,7 +12,7 @@ const preview = join(root, 'preview');
 const temp = await mkdtemp(join(tmpdir(), 'robot-eyes-preview-'));
 const zig = process.env.ZIG || 'zig';
 const exported = ['eyes_init', 'eyes_play', 'eyes_gaze', 'eyes_update', 'eyes_action', 'eyes_data', 'eyes_size', 'eyes_stride',
-  'eyes_layout','eyes_tracking','eyes_target','eyes_motion_target','eyes_gaze_config','eyes_is_tracking','eyes_duration'];
+  'eyes_layout','eyes_tracking','eyes_target','eyes_motion_target','eyes_gaze_config','eyes_is_tracking','eyes_duration','eyes_gaze_range'];
 try {
   const version = execFileSync(zig, ['version'], { encoding: 'utf8' }).trim();
   if (version !== '0.13.0') throw new Error(`Use Zig 0.13.0 for reproducible preview builds (found ${version}).`);
