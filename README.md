@@ -49,7 +49,7 @@ Built with SVG and vanilla JavaScript, it works as a native custom element with 
 
 An independent, allocation-free C++11 eyes-only engine draws the same 18 expressions on robot and dev-board screens. Firmware examples cover 26 board and screen configurations across ESP32, ESP32-S3 and RP2040 — ST7789, ST7735, GC9A01 round, ILI9341/9342/9488, CO5300 AMOLED, ST7701S RGB panels and SSD1306/SH1106 OLEDs, including LilyGO, M5Stack, Waveshare, Seeed and Espressif boards. Every example compiles in CI; none is verified on real hardware yet, so please send a hardware report if you try one.
 
-[Try the hardware preview](https://cx-artlab.github.io/agent-robot-avatar/hardware/) — the same C++ engine compiled to WebAssembly, on 33 simulated screens with wiring tables. See the [embedded guide](https://github.com/CX-ArtLab/agent-robot-avatar/tree/main/embedded) and [中文说明](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/embedded/README.zh-CN.md). The Web component's installation and behavior are unchanged.
+See the [embedded guide](https://github.com/CX-ArtLab/agent-robot-avatar/tree/main/embedded) and [中文说明](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/embedded/README.zh-CN.md). The Web component's installation and behavior are unchanged.
 
 ## Install
 

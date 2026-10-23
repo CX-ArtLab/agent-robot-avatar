@@ -39,7 +39,7 @@ Several actions are renamed after what the avatar does on screen, instead of the
 
 ### Also in this release
 
-- The embedded eyes engine for robot and dev-board screens is released separately as [AgentRobotEyes 0.1.0](https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/eyes-v0.1.0), with its own version number; see [embedded/CHANGELOG.md](embedded/CHANGELOG.md).
+- The embedded eyes engine for robot and dev-board screens is still in development. It will get its own version number and release; progress is tracked in [embedded/CHANGELOG.md](embedded/CHANGELOG.md).
 
 ### Removed
 

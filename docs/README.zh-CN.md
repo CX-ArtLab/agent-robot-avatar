@@ -28,7 +28,7 @@ Agent Robot Avatar 还可作为 AG-UI 风格 Agent 界面的视觉反馈层。
 
 独立的 C++11 眼睛表情核心，在机器人和开发板的屏幕上画出同样的 18 种表情。固件示例覆盖 26 种开发板与屏幕组合（ESP32、ESP32-S3、RP2040；ST7789、ST7735、GC9A01 圆屏、ILI9341/9342/9488、CO5300 AMOLED、ST7701S RGB 屏、SSD1306/SH1106 OLED，含 LilyGO、M5Stack、微雪、Seeed、乐鑫等开发板）。所有示例都在 CI 中编译通过，尚未实机验证；如果你在实物上试过，欢迎提交实机验证报告。
 
-[在线试用硬件预览器](https://cx-artlab.github.io/agent-robot-avatar/hardware/)：同一份 C++ 核心编译成 WebAssembly，可在 33 种模拟屏幕上查看效果和接线表。[查看硬件接入说明](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/embedded/README.zh-CN.md)。现有 Web 组件与 Demo 保持不变。
+[查看硬件接入说明](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/embedded/README.zh-CN.md)。现有 Web 组件与 Demo 保持不变。
 
 ## 在线 Demo
 

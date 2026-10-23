@@ -26,9 +26,5 @@ for (const entry of await readdir(demo, { withFileTypes: true })) {
   }
 }
 
-// The hardware preview is a self-contained page; publish it at /hardware/.
-await mkdir(path.join(output, 'hardware'), { recursive: true });
-await cp(path.join(root, 'embedded/preview/agent-robot-eyes-preview.html'), path.join(output, 'hardware/index.html'));
-
 console.log(`GitHub Pages demo built at ${output}`);
 
