@@ -243,7 +243,7 @@
    other setting visible at once in the options panel on the right. */
 :root{--stage-bg:#f8f8f6}
 html,body{height:100%}
-.canvas.preview{height:100vh;min-height:0;padding:56px 20px 20px;display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:20px}
+.canvas.preview{height:100vh;min-height:0;padding:56px 20px 20px;display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:20px;background-image:none}
 .preview .title span:not(:last-child)::after{content:' / '}
 .card{border:1px solid rgba(0,0,0,.055);border-radius:16px;background:rgba(255,255,255,.88);box-shadow:0 7px 30px rgba(0,0,0,.06);backdrop-filter:blur(14px)}
 .preview button:disabled,.preview input:disabled,.preview select:disabled{opacity:.45;cursor:not-allowed;transform:none}
@@ -255,8 +255,12 @@ html,body{height:100%}
 .left{min-width:0;min-height:0;display:grid;grid-template-rows:minmax(0,1fr) auto auto auto;gap:10px}
 .stage{min-height:0;overflow:hidden;display:grid}
 .sensor-wrap{position:relative;margin:auto}
-.sense-zone{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border:1px dashed #b1b6bc88;border-radius:50%;pointer-events:none}
-.sense-zone.active{border-color:#7e9a8299}
+/* Proximity zone: a tinted disc with a label, solid and greener while locked on. */
+.sense-zone{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border:1.5px dashed #9aa4ad;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(126,154,130,0) 45%,rgba(126,154,130,.10) 100%);transition:border-color .2s,background .2s}
+.sense-zone::after{content:'感应范围';position:absolute;left:50%;top:var(--label-top,14px);transform:translateX(-50%);padding:2px 8px;border-radius:999px;background:#ffffffcc;font-size:10px;color:#7d868e;white-space:nowrap}
+.sense-zone.active{border:1.5px solid #6f9a77;background:radial-gradient(circle,rgba(111,154,119,0) 40%,rgba(111,154,119,.18) 100%)}
+.sense-zone.active::after{content:'正在注视';color:#4f7a57}
 .device{position:relative;width:100%;height:100%;isolation:isolate}
 .frame-art{position:absolute;inset:0;pointer-events:none;filter:drop-shadow(0 2px 1px #12203733) drop-shadow(0 12px 12px #182e3c1f)}
 .frame-art svg{display:block;width:100%;height:100%}
@@ -338,6 +342,12 @@ html,body{height:100%}
 .tabs .chip{background:transparent;padding:7px 2px;font-size:12px;white-space:nowrap}
 .tabs .chip[aria-pressed=true]{background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.08)}
 .meta{font-size:11px;line-height:1.6;color:#8e939a}
+/* The three numbers that decide what a screen can show. */
+.spec-badges{display:flex;flex-wrap:wrap;gap:6px}
+.spec-badges span{padding:4px 9px;border-radius:7px;background:#e8eaec;color:#1f2328;font-size:12.5px;font-weight:650;font-variant-numeric:tabular-nums}
+/* A notice that should not be missed: warm tone from the demo's warning tag. */
+.notice{display:flex;gap:8px;align-items:flex-start;padding:8px 10px;border:1px solid #efe0b6;border-radius:9px;background:#fff7e3;color:#82672b;font-size:11.5px;line-height:1.55}
+.notice::before{content:'!';flex:0 0 16px;height:16px;margin-top:1px;border-radius:50%;background:#c79a3c;color:#fff;font:700 11px/16px Inter,system-ui,sans-serif;text-align:center}
 .chip{background:#f4f5f6;color:#5f646a;border-radius:9px;padding:7px 10px;font-size:12px}
 .chip:hover{background:#e9eaec}
 .chip[aria-pressed=true]{background:#dfe1e4;color:#202327;font-weight:650}
@@ -437,7 +447,8 @@ html,body{height:100%}
         <div class="seg push" id="custom-shape" data-value="0" role="group" aria-label="形状"><button class="chip" type="button" data-value="0">矩形</button><button class="chip" type="button" data-value="1">圆形</button></div></div>
       <span id="size-error" role="status"></span>
     </div>
-    <div class="meta"><span id="screen-spec"></span><br><span id="screen-support"></span></div>
+    <div class="spec-badges"><span id="spec-res" title="分辨率"></span><span id="spec-color" title="色彩"></span><span id="spec-fps" title="按连接总线带宽估算的整屏刷新上限"></span></div>
+    <div class="meta"><span id="screen-spec"></span> · <span id="screen-support"></span></div>
   </section>
 
   <section class="section">
@@ -459,7 +470,7 @@ html,body{height:100%}
   <section class="section">
     <h2>注视</h2>
     <div class="seg" id="gaze-mode" data-value="track" role="group" aria-label="注视方式"><button class="chip" type="button" data-value="track" title="用鼠标模拟靠近的物体">跟随物体</button><button class="chip" type="button" data-value="manual">手动</button><button class="chip" type="button" data-value="off">关闭</button></div>
-    <div class="meta" id="gaze-hint"></div>
+    <div class="notice" id="gaze-hint"></div>
     <div class="field"><span>注视幅度</span><div class="seg push" id="gaze-range" data-value="1" role="group" aria-label="注视幅度" title="眼睛看向一侧时移动多远；“大”会稍微越过表情区域边缘，眼睛在边缘处变窄"><button class="chip" type="button" data-value="0">小</button><button class="chip" type="button" data-value="1">中</button><button class="chip" type="button" data-value="2">大</button></div></div>
     <div id="track-options" class="group">
       <label class="field"><span>感应范围</span><input id="sense-radius" type="range" min="16" max="200" step="4" value="72"><output id="sense-value">72 px</output></label>
@@ -497,10 +508,9 @@ html,body{height:100%}
 
   <section class="section">
     <h2>屏幕效果</h2>
-    <div class="toggle-chips">
-      <label class="chip-toggle" title="放大后显示像素格和红绿蓝子像素"><input id="pixel-grid" type="checkbox" checked>像素颗粒</label>
-      <label class="chip-toggle" title="LCD 背光漏光与亮部发光"><input id="panel-glow" type="checkbox" checked>背光发光</label>
-      <label class="chip-toggle" title="外框玻璃的反光"><input id="glass-glare" type="checkbox" checked>玻璃反光</label>
+    <div class="pair">
+      <label class="field toggle demo-toggle" title="放大后显示像素格和红绿蓝子像素"><span>像素颗粒</span><input id="pixel-grid" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
+      <label class="field toggle demo-toggle" title="外框玻璃的反光"><span>玻璃反光</span><input id="glass-glare" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
     </div>
   </section>
 
@@ -1599,7 +1609,7 @@ class PanelRenderer {
     set(key,value){try{localStorage.setItem('robotEyesPreview.'+key,JSON.stringify(value));}catch(_){}}
   };
   // Every option is remembered in this browser, except screen-specific frame rate.
-  const CHECKBOXES = ['housing','show-area','raw-pixels','pixel-grid','panel-glow','glass-glare','blink','transitions','moving-only'];
+  const CHECKBOXES = ['housing','show-area','raw-pixels','pixel-grid','glass-glare','blink','transitions','moving-only'];
   const SEGMENTS = ['gaze-mode','gaze-range','motion-sensitivity','response','hold','speed'];
   const screen = $('screen'), ctx = screen.getContext('2d',{alpha:false});
   let panel = null;
@@ -1737,7 +1747,7 @@ class PanelRenderer {
   function renderFps() {
     const limit=screenLimit();
     const top=document.createElement('button');top.type='button';top.className='chip';top.dataset.value='max';
-    top.textContent=(base.bus?'屏幕上限 ':'最高 ')+limit;
+    top.textContent=(base.bus?'当前屏幕上限 ':'最高 ')+limit;
     top.title=base.bus?'按'+BUSES[base.bus][0]+'带宽估算的整屏刷新上限，不含绘制时间':'没有总线数据，按 60 FPS';
     const tiers=FPS_TIERS.filter(value=>value<limit).map(value=>{
       const b=document.createElement('button');b.type='button';b.className='chip';b.dataset.value=String(value);b.textContent=String(value);return b;
@@ -1760,7 +1770,7 @@ class PanelRenderer {
   function renderPanel() {
     if(!panel)return;
     panel.render({panel:base.panel||'ips',plain:$('raw-pixels').checked,grid:$('pixel-grid').checked,
-      glow:$('panel-glow').checked,round:preset.frame==='round',corner:base.corner||0,mono});
+      glow:true,round:preset.frame==='round',corner:base.corner||0,mono});
   }
   function sensorInput() {
     if(segValue('gaze-mode')!=='track')return;
@@ -1852,6 +1862,8 @@ class PanelRenderer {
     const radius=Number($('sense-radius').value), ring=Math.max(g.w,g.h)*ppm+radius*2;
     $('sense-zone').hidden=segValue('gaze-mode')!=='track';
     $('sense-zone').style.width=$('sense-zone').style.height=ring+'px';
+    // Label just above the module, inside the ring, so the stage never clips it.
+    $('sense-zone').style.setProperty('--label-top',Math.max(4,(ring-g.h*ppm)/2-26)+'px');
     $('sense-value').value=radius+' px';
     const reference=g.m?g.m.name+(g.m.revision?' · '+g.m.revision:''):preset.name;
     $('stage-caption').textContent=reference+(g.rot!==((base.rotation||0)===90)?' · 旋转 90°':'')+' · '+Math.round(25.4/pitchMm())+' PPI'+
@@ -1892,11 +1904,12 @@ class PanelRenderer {
   // ---------- configuration ----------
   function syncScreenInfo() {
     const bus=BUSES[base.bus];
-    $('screen-spec').textContent=[preset.width+' × '+preset.height,
-      base.id==='custom'?'自定义尺寸':base.id==='eyes'?'原始眼睛画布':base.controller,
+    $('spec-res').textContent=preset.width+' × '+preset.height;
+    $('spec-color').textContent=base.panel==='oled'?'单色':base.panel?'彩色':'1-bit 画布';
+    $('spec-fps').textContent=bus?'最高约 '+screenLimit()+' FPS':'帧率不限';
+    $('screen-spec').textContent=[base.id==='custom'?'自定义尺寸':base.id==='eyes'?'原始眼睛画布':base.controller,
       PANEL_NAMES[base.panel],bus&&bus[0]].filter(Boolean).join(' · ');
-    $('screen-support').textContent=(bus?'屏幕上限约 '+screenLimit()+' FPS · ':'')+
-      (base.example?'有参考例程（未实机验证）':'暂无驱动例程');
+    $('screen-support').textContent=base.example?'有参考例程（未实机验证）':'暂无驱动例程';
   }
   function syncControls() {
     const oled=base.panel==='oled';
@@ -2096,7 +2109,7 @@ class PanelRenderer {
       $('color-reset').onclick=()=>{colors={...DEFAULT_COLORS};saveColors();};
       $('mono-chips').onclick=event=>{const b=event.target.closest('[data-mono]');if(b){mono=b.dataset.mono;store.set('mono',mono);syncControls();renderPanel();}};
       for(const id of ['show-area','glass-glare'])$(id).onchange=()=>{resizeDisplay();saveSettings();};
-      for(const id of ['pixel-grid','panel-glow','raw-pixels'])$(id).onchange=()=>{renderPanel();saveSettings();};
+      for(const id of ['pixel-grid','raw-pixels'])$(id).onchange=()=>{renderPanel();saveSettings();};
       $('download').onclick=()=>{
         const url=URL.createObjectURL(new Blob(['<!doctype html>\n'+INITIAL_DOCUMENT],{type:'text/html;charset=utf-8'}));
         const link=document.createElement('a');link.href=url;link.download='agent-robot-eyes-preview.html';
