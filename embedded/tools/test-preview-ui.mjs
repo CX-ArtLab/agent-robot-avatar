@@ -40,6 +40,7 @@ try {
   await page.goto(file);
   await page.waitForFunction(() => document.getElementById('status').textContent.includes('本机绘制'));
   await page.locator('#gaze-mode [data-value="off"]').click();
+  assert.match(await page.locator('#gaze-hint').textContent(),/正视/);
   assert.equal(await page.locator('.action').count(),18);
   assert((await frame()).lit>1000);
   assert.equal(await page.locator('#step').isDisabled(),true);
@@ -89,6 +90,7 @@ try {
   assert.equal(await page.locator('#device').evaluate(el=>el.classList.contains('bare')),true);
   await page.locator('#housing').check();
   await page.locator('#gaze-mode [data-value="manual"]').click();
+  assert.match(await page.locator('#gaze-hint').textContent(),/lookAt/);
   await page.locator('#gx').fill('1');
   assert.notEqual((await frame()).hash,centered.hash);
   // Gaze range changes how far the same gaze moves the eyes, not the centred pose.
@@ -99,7 +101,7 @@ try {
   assert.equal((await frame()).hash,medium.hash);
   await page.locator('#center').click(); assert.equal((await frame()).hash,centered.hash);
   // The frame-rate cap follows the screen; changing timing keeps the animation.
-  assert.match(await page.locator('#fps [data-value="max"]').textContent(),/^屏幕上限 \d+$/);
+  assert.match(await page.locator('#fps [data-value="max"]').textContent(),/^当前屏幕上限 \d+$/);
   assert.equal(await page.locator('#fps [data-value="60"]').count(),0,'tiers above the screen limit are not offered');
   await page.locator('[data-action="love"]').click();
   for(let i=0;i<5;i++) await page.locator('#step').click();
@@ -168,7 +170,9 @@ try {
   assert.match(await page.locator('#screen-spec').textContent(),/SPI 40 MHz/);
   await choose('ssd1306-091');
   assert.match(await page.locator('#screen-spec').textContent(),/I²C/);
-  assert.match(await page.locator('#screen-support').textContent(),/屏幕上限约 \d+ FPS/);
+  assert.equal(await page.locator('#spec-res').textContent(),'128 × 32');
+  assert.equal(await page.locator('#spec-color').textContent(),'单色');
+  assert.match(await page.locator('#spec-fps').textContent(),/最高约 \d+ FPS/);
   await choose('round');
   assert.deepEqual([(await frame()).width,(await frame()).height],[240,240]);
   await choose('custom');

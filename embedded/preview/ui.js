@@ -23,13 +23,19 @@
   const ZOOM_SNAPS = [1,1.5,2,3,4,5,6,8,10,12,16];
   const BARE_PITCH_MM = .15; // presets without physical data (raw canvas, custom sizes)
   const DEFAULT_COLORS = {eye:'#ffffff',bg:'#000000'};
+  // What each gaze source needs on a real board.
+  const GAZE_HINTS = {
+    track:'开发板需要外接摄像头，或距离／人体感应传感器来提供目标位置；这里用鼠标模拟靠近的物体。',
+    manual:'由你的程序指定看的方向（C++ 的 lookAt()），不需要额外硬件。',
+    off:'眼睛保持正视前方。'
+  };
   const $ = id => document.getElementById(id);
   const store = {
     get(key,fallback){try{const v=localStorage.getItem('robotEyesPreview.'+key);return v?JSON.parse(v):fallback;}catch(_){return fallback;}},
     set(key,value){try{localStorage.setItem('robotEyesPreview.'+key,JSON.stringify(value));}catch(_){}}
   };
   // Every option is remembered in this browser, except screen-specific frame rate.
-  const CHECKBOXES = ['housing','show-area','raw-pixels','pixel-grid','panel-glow','glass-glare','blink','transitions','moving-only'];
+  const CHECKBOXES = ['housing','show-area','raw-pixels','pixel-grid','glass-glare','blink','transitions','moving-only'];
   const SEGMENTS = ['gaze-mode','gaze-range','motion-sensitivity','response','hold','speed'];
   const screen = $('screen'), ctx = screen.getContext('2d',{alpha:false});
   let panel = null;
@@ -167,7 +173,7 @@
   function renderFps() {
     const limit=screenLimit();
     const top=document.createElement('button');top.type='button';top.className='chip';top.dataset.value='max';
-    top.textContent=(base.bus?'屏幕上限 ':'最高 ')+limit;
+    top.textContent=(base.bus?'当前屏幕上限 ':'最高 ')+limit;
     top.title=base.bus?'按'+BUSES[base.bus][0]+'带宽估算的整屏刷新上限，不含绘制时间':'没有总线数据，按 60 FPS';
     const tiers=FPS_TIERS.filter(value=>value<limit).map(value=>{
       const b=document.createElement('button');b.type='button';b.className='chip';b.dataset.value=String(value);b.textContent=String(value);return b;
@@ -190,7 +196,7 @@
   function renderPanel() {
     if(!panel)return;
     panel.render({panel:base.panel||'ips',plain:$('raw-pixels').checked,grid:$('pixel-grid').checked,
-      glow:$('panel-glow').checked,round:preset.frame==='round',corner:base.corner||0,mono});
+      glow:true,round:preset.frame==='round',corner:base.corner||0,mono});
   }
   function sensorInput() {
     if(segValue('gaze-mode')!=='track')return;
@@ -282,6 +288,8 @@
     const radius=Number($('sense-radius').value), ring=Math.max(g.w,g.h)*ppm+radius*2;
     $('sense-zone').hidden=segValue('gaze-mode')!=='track';
     $('sense-zone').style.width=$('sense-zone').style.height=ring+'px';
+    // Label just above the module, inside the ring, so the stage never clips it.
+    $('sense-zone').style.setProperty('--label-top',Math.max(4,(ring-g.h*ppm)/2-26)+'px');
     $('sense-value').value=radius+' px';
     const reference=g.m?g.m.name+(g.m.revision?' · '+g.m.revision:''):preset.name;
     $('stage-caption').textContent=reference+(g.rot!==((base.rotation||0)===90)?' · 旋转 90°':'')+' · '+Math.round(25.4/pitchMm())+' PPI'+
@@ -322,11 +330,12 @@
   // ---------- configuration ----------
   function syncScreenInfo() {
     const bus=BUSES[base.bus];
-    $('screen-spec').textContent=[preset.width+' × '+preset.height,
-      base.id==='custom'?'自定义尺寸':base.id==='eyes'?'原始眼睛画布':base.controller,
+    $('spec-res').textContent=preset.width+' × '+preset.height;
+    $('spec-color').textContent=base.panel==='oled'?'单色':base.panel?'彩色':'1-bit 画布';
+    $('spec-fps').textContent=bus?'最高约 '+screenLimit()+' FPS':'帧率不限';
+    $('screen-spec').textContent=[base.id==='custom'?'自定义尺寸':base.id==='eyes'?'原始眼睛画布':base.controller,
       PANEL_NAMES[base.panel],bus&&bus[0]].filter(Boolean).join(' · ');
-    $('screen-support').textContent=(bus?'屏幕上限约 '+screenLimit()+' FPS · ':'')+
-      (base.example?'有参考例程（未实机验证）':'暂无驱动例程');
+    $('screen-support').textContent=base.example?'有参考例程（未实机验证）':'暂无驱动例程';
   }
   function syncControls() {
     const oled=base.panel==='oled';
@@ -368,6 +377,7 @@
     api.eyes_tracking(mode==='track'?1:0,now());
     applyGazeConfig();
     if(mode==='manual')api.eyes_gaze(Number($('gx').value),Number($('gy').value));
+    $('gaze-hint').textContent=GAZE_HINTS[mode];
     $('track-options').hidden=mode!=='track';
     $('manual-options').hidden=mode!=='manual';
     $('motion-sensitivity').setAttribute('aria-disabled',String(!$('moving-only').checked));
@@ -525,7 +535,7 @@
       $('color-reset').onclick=()=>{colors={...DEFAULT_COLORS};saveColors();};
       $('mono-chips').onclick=event=>{const b=event.target.closest('[data-mono]');if(b){mono=b.dataset.mono;store.set('mono',mono);syncControls();renderPanel();}};
       for(const id of ['show-area','glass-glare'])$(id).onchange=()=>{resizeDisplay();saveSettings();};
-      for(const id of ['pixel-grid','panel-glow','raw-pixels'])$(id).onchange=()=>{renderPanel();saveSettings();};
+      for(const id of ['pixel-grid','raw-pixels'])$(id).onchange=()=>{renderPanel();saveSettings();};
       $('download').onclick=()=>{
         const url=URL.createObjectURL(new Blob(['<!doctype html>\n'+INITIAL_DOCUMENT],{type:'text/html;charset=utf-8'}));
         const link=document.createElement('a');link.href=url;link.download='agent-robot-eyes-preview.html';
