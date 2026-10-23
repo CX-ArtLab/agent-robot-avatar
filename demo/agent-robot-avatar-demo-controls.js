@@ -583,66 +583,52 @@ function mountDemoControls() {
   setPanel(null);
   applyLanguage(currentLanguage);
 
-  // Opening show: once the demo is revealed, each palette spreads from behind the
-  // avatar like a ripple, slow to fast to slow, while the eyes spin like reels and
-  // the brand name flashes in the corner; it lands on the chosen colors with a nod.
-  // Ripples are clip-path animations on a few short-lived layers. Any click, key,
-  // scroll or other action ends the show at once, and reduced motion skips it.
+  // Opening show: the stage rolls down through the vivid palettes like a slot reel,
+  // dark to light, in step with the eyes' reel spin, then lands on the chosen colors
+  // and the avatar nods. The reel is one strip of color blocks moved with a transform.
+  // Any click, key, scroll or other action ends the show at once, and reduced motion
+  // skips it.
+  const INTRO_PALETTES = ['netflix', 'comfyui', 'warriors', 'barca', 'discord', 'telegram',
+    'ubuntu', 'dribbble', 'lakers', 'snapchat', 'youtube', 'chatgpt'];
+
   function playIntro() {
     if (reducedMotion.matches) return;
-    const home = stage.querySelector('.avatar-home');
     const label = stage.querySelector('.demo-stage-label');
     const events = ['pointerdown', 'keydown', 'wheel', 'touchstart'];
-    const ripples = [];
-    let index = 0;
-    let timer = 0;
+    const chosen = { background: bgColor.value.toLowerCase(), head: headColor.value.toLowerCase() };
+    const palettes = INTRO_PALETTES.map(id => PALETTES.find(palette => palette.id === id));
+    // Top to bottom: a filler for the landing bounce, the chosen colors, the palettes
+    // from light back to dark, and the current colors, which show first.
+    const blocks = [chosen, chosen, ...palettes.slice().reverse(), { background: shown.background, head: shown.head }];
+    const eyesFor = background => (eyeThrough.checked ? background : '#ffffff');
     let ownAction = false;
     let ended = false;
-    const delay = i => Math.round(110 + 230 * (2 * i / (PALETTES.length - 1) - 1) ** 2);
-    const eyesFor = background => (eyeThrough.checked ? background : '#ffffff');
+    let frame = 0;
+    let shownBlock = blocks.length - 1;
+
+    const reel = document.createElement('div');
+    reel.className = 'demo-stage-reel';
+    const strip = document.createElement('div');
+    strip.className = 'demo-stage-reel-strip';
+    const height = stage.clientHeight + 2;
+    for (const block of blocks) {
+      const cell = document.createElement('span');
+      cell.style.height = `${height}px`;
+      cell.style.background = block.background;
+      strip.appendChild(cell);
+    }
+    reel.appendChild(strip);
+
     const play = action => {
       ownAction = true;
       try { face.play(action); } finally { ownAction = false; }
     };
-    const commit = color => {
-      stageOverride = color;
-      stage.style.setProperty('--demo-stage-bg', color);
-      shown = { ...shown, background: color };
-    };
-    const ripple = (color, onDone) => {
-      const layer = document.createElement('div');
-      layer.className = 'demo-stage-ripple';
-      layer.style.background = color;
-      stage.insertBefore(layer, home);
-      ripples.push(layer);
-      const animation = layer.animate(
-        [{ clipPath: 'circle(0% at 50% 50%)' }, { clipPath: 'circle(80% at 50% 50%)' }],
-        { duration: 560, easing: 'cubic-bezier(.2,.7,.3,1)' },
-      );
-      animation.onfinish = () => {
-        if (ended) return;
-        commit(color);
-        layer.remove();
-        ripples.splice(ripples.indexOf(layer), 1);
-        onDone?.();
-      };
-    };
-    const showName = (palette, duration) => {
-      label.textContent = palette[currentLanguage] || palette.name;
-      label.animate([
-        { opacity: 0, transform: 'translateY(3px)' },
-        { opacity: 1, transform: 'none', offset: 0.2 },
-        { opacity: 1, offset: 0.75 },
-        { opacity: 0 },
-      ], { duration });
-    };
     const cleanup = () => {
       ended = true;
-      clearTimeout(timer);
+      cancelAnimationFrame(frame);
       events.forEach(type => window.removeEventListener(type, end, true));
       face.removeEventListener('action-state', onAction);
-      ripples.forEach(layer => layer.remove());
-      ripples.length = 0;
+      reel.remove();
       label.getAnimations().forEach(animation => animation.cancel());
       stageOverride = null;
       delete document.documentElement.dataset.demoIntro;
@@ -658,33 +644,50 @@ function mountDemoControls() {
     function onAction(event) {
       if (!ownAction && event.detail.phase === 'start') end();
     }
-    const land = () => {
-      const background = bgColor.value.toLowerCase();
-      ripple(background, () => {
-        cleanup();
-        showChosenColors();
-        play('affirm');
-      });
-      fadeColors(shown.background, headColor.value.toLowerCase(), eyesFor(background), 240);
-    };
-    const step = () => {
-      if (index === PALETTES.length) {
-        land();
-        return;
+    // The head and eyes follow the block that fills most of the stage.
+    const follow = () => {
+      if (ended) return;
+      const offset = new DOMMatrixReadOnly(getComputedStyle(strip).transform).m42;
+      const index = Math.min(blocks.length - 1, Math.max(0, Math.round(-offset / height)));
+      if (index !== shownBlock) {
+        shownBlock = index;
+        const block = blocks[index];
+        fadeColors(block.background, block.head, eyesFor(block.background), 120);
+        if (block.name) {
+          label.textContent = block[currentLanguage] || block.name;
+          label.animate([{ opacity: 0 }, { opacity: 1, offset: 0.2 }, { opacity: 1, offset: 0.7 }, { opacity: 0 }], { duration: 420 });
+        }
       }
-      const palette = PALETTES[index];
-      const duration = delay(index);
-      ripple(palette.background);
-      fadeColors(shown.background, palette.head, eyesFor(palette.background), 160);
-      showName(palette, Math.max(300, duration * 1.4));
-      index += 1;
-      timer = setTimeout(step, duration);
+      frame = requestAnimationFrame(follow);
     };
+
     document.documentElement.dataset.demoIntro = 'true';
     events.forEach(type => window.addEventListener(type, end, { capture: true, passive: true }));
     face.addEventListener('action-state', onAction);
     play('random');
-    step();
+    stageOverride = 'transparent';
+    stage.insertBefore(reel, stage.querySelector('.avatar-home'));
+
+    // Land with the eyes: the random action reports when its second reel settles.
+    const fx = face._randomFx;
+    const duration = fx ? Math.max(1600, fx.start + fx.duration - performance.now()) : 2300;
+    const startY = -(blocks.length - 1) * height;
+    const endY = -height;
+    const travel = endY - startY;
+    const animation = strip.animate([
+      { transform: `translateY(${startY}px)`, easing: 'cubic-bezier(.5,0,1,1)' },
+      { transform: `translateY(${startY + travel * 0.08}px)`, offset: 0.12 },
+      { transform: `translateY(${startY + travel * 0.72}px)`, offset: 0.55, easing: 'cubic-bezier(0,0,.35,1)' },
+      { transform: `translateY(${endY + height * 0.14}px)`, offset: 0.88, easing: 'cubic-bezier(.45,0,.4,1)' },
+      { transform: `translateY(${endY}px)` },
+    ], { duration, fill: 'forwards' });
+    frame = requestAnimationFrame(follow);
+    animation.onfinish = () => {
+      if (ended) return;
+      cleanup();
+      showChosenColors();
+      play('affirm');
+    };
   }
 
   if (document.documentElement.dataset.demoReady) playIntro();
