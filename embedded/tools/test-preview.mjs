@@ -53,6 +53,7 @@ function command(op, ...args) {
   if (op === 'target') {api.eyes_target(...args);expected.push({result:'ok'});}
   if (op === 'motion') {api.eyes_motion_target(...args);expected.push({result:'ok'});}
   if (op === 'gazeconfig') expected.push({result:String(api.eyes_gaze_config(...args))});
+  if (op === 'range') expected.push({result:String(api.eyes_gaze_range(...args))});
   if (op === 'update') {
     const changed = api.eyes_update(...args), action = api.eyes_action();
     const pixels = Buffer.from(new Uint8Array(api.memory.buffer, api.eyes_data(), api.eyes_size()));
@@ -91,6 +92,17 @@ for(const preset of presets) {
   command('motion',-.7,.8,.8,1,0,5100);command('update',5200);
   command('motion',-.7,.8,.8,1,1,5300);command('update',5400);
   command('motion',-.7,.8,.8,1,0,5600);command('update',6000);command('update',6500);
+}
+// Gaze reach and Web-style edge narrowing at every range, including invalid ranges.
+for (const [w,h] of [[240,160],[128,64],[128,32]]) {
+  command('init',w,h,60,0,0,0); command('range',3); command('range',-1);
+  let t = 0;
+  for (const range of [0,1,2]) {
+    command('range',range);
+    for (const [x,y] of [[0,0],[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,-1],[.35,-.6]]) {
+      command('gaze',x,y); command('update',t+=20);
+    }
+  }
 }
 // Exercise cursor-to-ellipse morphs from both visible and hidden blink halves,
 // including a command that interrupts the shape while it is still changing.

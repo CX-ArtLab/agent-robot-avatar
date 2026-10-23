@@ -10,6 +10,12 @@ constexpr float PI = 3.14159265358979323846f;
 float clamp(float x, float low, float high) { return x < low ? low : (x > high ? high : x); }
 float smooth(float t) { t = clamp(t, 0, 1); return t * t * (3 - 2 * t); }
 float lerp(float a, float b, float t) { return a + (b - a) * t; }
+// Idle gaze reach per GazeRange, in face units: {horizontal, vertical}.
+const float GAZE_REACH[][2] = {{8, 6}, {20, 18}, {30, 21}};
+// The Web avatar narrows an eye as it nears the head edge (32 / 208 in its
+// 240-unit drawing, i.e. -8 / 168 here): within 58 units, width shrinks by up
+// to 22 % and height by 8 %, and the eye moves inward by 58 % of the lost width.
+float edgeFactor(float distance) { return clamp(1 - distance / 58, 0, 1); }
 const char* const NAMES[] = {
   "idle", "bored", "waiting", "waiting-wrap", "input", "send", "success", "failure",
   "warning", "inspect", "blocked", "error", "surprise", "love", "random", "sleep", "wake", "waiting-wave"
@@ -48,7 +54,7 @@ Eyes::Pose Eyes::neutral() { return webPose(Action::Idle,0); }
 bool Eyes::begin(const EyesConfig& config, uint8_t* buffer, size_t capacity, uint32_t now) {
   const size_t needed = requiredBytes(config.width, config.height);
   if (!needed || !buffer || capacity < needed || config.maxFps < 1 || config.maxFps > 60
-      || config.transitionMs > 2000) return false;
+      || config.transitionMs > 2000 || static_cast<unsigned>(config.gazeRange) > 2) return false;
   config_ = config;
   layout_ = EyesLayout();
   buffer_ = buffer;
@@ -135,6 +141,13 @@ void Eyes::lookAt(float x, float y) {
   force_ = true;
 }
 
+bool Eyes::setGazeRange(GazeRange range) {
+  if (range != GazeRange::Small && range != GazeRange::Medium && range != GazeRange::Large) return false;
+  config_.gazeRange = range;
+  force_ = true;
+  return true;
+}
+
 bool Eyes::setLayout(const EyesLayout& layout) {
   if (!buffer_ || layout.x >= config_.width || layout.y >= config_.height ||
       (layout.width && layout.width > config_.width - layout.x) ||
@@ -191,8 +204,24 @@ Eyes::Pose Eyes::poseAt(uint32_t now) const {
   if (selected == Action::Input && p.left.corner >= 0 && ((now / 265) % 2))
     p.left.rx = p.right.rx = 0;
   if (selected == Action::Idle) {
-    p.left.x += lookX_ * 8; p.right.x += lookX_ * 8;
-    p.left.y += lookY_ * 6; p.right.y += lookY_ * 6;
+    const float* reach = GAZE_REACH[static_cast<unsigned>(config_.gazeRange)];
+    const float dx = lookX_ * reach[0], dy = lookY_ * reach[1];
+    Eye* eyes[] = {&p.left, &p.right};
+    for (unsigned side = 0; side < 2; ++side) {
+      Eye& e = *eyes[side];
+      e.y += dy;
+      if (dx == 0) continue;
+      const float outward = side ? 1.f : -1.f;
+      const float edge = side ? 168.f : -8.f;
+      // Apply only the change from the resting edge squash, so a centred gaze
+      // keeps the sampled Web pose exactly.
+      const float f0 = edgeFactor(outward * (edge - e.x)), f = edgeFactor(outward * (edge - e.x - dx));
+      const float w0 = 1 - .22f * f0 * f0, w = 1 - .22f * f * f;
+      const float rx = e.rx / w0 * w;
+      e.x += dx - outward * 2 * (e.rx - rx) * .58f;
+      e.rx = rx;
+      e.ry = e.ry / (1 - .08f * f0 * f0) * (1 - .08f * f * f);
+    }
     if (config_.autoBlink) {
       const uint32_t blink = (now - started_) % 4200;
       if (blink >= 3800 && blink < 3980) {

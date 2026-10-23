@@ -22,6 +22,8 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ### Fixed
 
+- Widened the embedded idle gaze, which moved the eyes only 8 × 6 face units (about a sixth of the Web avatar's reach). `GazeRange` now offers Small (the original), Medium (new default, 20 × 18, reaching the face-area edge) and Large (30 × 21); near the edge the eyes narrow and move inward with the Web avatar's formula. A centred gaze is unchanged. The hardware preview adds a 注视幅度 control.
+
 - Smoothed embedded input-cursor exits by interpolating both corner radii into the target ellipse instead of changing primitives on the final frame. Preserve the current shape through repeated interruptions and allow the same handoff into wake; retain original target poses and motion timings.
 
 - Restored the original 17 eye motions and timing in the embedded engine using sampled Web geometry, with independent SVG fidelity checks and native/WASM frame comparison. Hardware demo cycling now lets longer actions finish.

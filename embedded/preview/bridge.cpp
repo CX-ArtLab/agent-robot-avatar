@@ -69,6 +69,10 @@ int eyes_play(int action, uint32_t now) {
   return eyes.play(static_cast<agent_robot::Action>(action), now);
 }
 void eyes_gaze(float x, float y) { eyes.lookAt(x, y); }
+int eyes_gaze_range(int range) {
+  if (range < 0 || range > 2) return 0;
+  return eyes.setGazeRange(static_cast<agent_robot::GazeRange>(range));
+}
 int eyes_update(uint32_t now) {
   if (tracking && now-lastTracking >= trackingInterval) {
     gaze.update(now); lastTracking=now;

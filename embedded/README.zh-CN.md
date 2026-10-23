@@ -64,7 +64,7 @@ pio device monitor -b 115200
 - `success` / `failure`：任务成功或失败。
 - `warning` / `inspect` / `blocked` / `error`：警告、审视、阻止、错误。
 - `sleep` / `wake`：睡眠、唤醒。
-- `gaze -0.5 0.2`：由程序明确指定注视方向，坐标范围 `[-1,1]`。
+- `gaze -0.5 0.2`：由程序明确指定注视方向，坐标范围 `[-1,1]`。注视幅度由 `EyesConfig::gazeRange`（或运行时 `setGazeRange()`）决定：`Small` 为原来的 8 × 6，`Medium`（默认）为 20 × 18，眼睛最远到表情区域边缘；`Large` 为 30 × 21，会稍微越过边缘。眼睛靠近边缘时按 Web 版公式变窄并向内收，看起来像在转向侧面；眼睛居中时三档画面完全相同。
 - `demo`：轮流播放全部动作；有效的手动动作会退出轮播。
 - `reset`：回到待机。
 - `help`：列出命令。
