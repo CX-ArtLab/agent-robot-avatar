@@ -89,8 +89,9 @@
     .demo-control-stack>.controls{position:static;left:auto;top:auto;transform:none;max-width:none;width:100%;margin:0;overflow:visible;display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
     .demo-control-stack>.controls button{width:auto!important;min-width:0;flex:0 0 auto!important}
     .demo-options{display:grid;gap:7px;width:100%;max-width:100%;justify-items:center;padding:0;border:0;background:transparent;box-shadow:none;color:#72777e;font-size:11px}
-    .demo-panel-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-width:276px}
-    .demo-toolbar-group{display:flex;align-items:center;gap:6px;padding:5px;border:1px solid rgba(0,0,0,.055);border-radius:12px;background:rgba(255,255,255,.82);box-shadow:0 6px 22px rgba(0,0,0,.055);backdrop-filter:blur(14px)}
+    /* One card for the toolbar row: groups spread with the card, icons keep their spacing. */
+    .demo-panel-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-width:276px;padding:6px 8px;border-radius:16px;background:rgba(255,255,255,.88);box-shadow:0 7px 30px rgba(0,0,0,.08);backdrop-filter:blur(14px)}
+    .demo-toolbar-group{display:flex;align-items:center;gap:6px}
     /* Color panel: one strip of brand swatches; hovering previews, the caption names it. */
     .demo-options-group.demo-color-group{display:grid;gap:8px;width:100%!important;contain:inline-size;padding:10px 12px 8px}
     .demo-swatches{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 4px}
@@ -152,9 +153,8 @@
       .demo-options-group{gap:5px}.demo-option,.demo-reset{font-size:10px!important;padding:4px 5px!important;gap:4px!important}
     }
     .demo-roundness-control{
-      display:flex;align-items:center;justify-content:center;gap:8px;align-self:stretch;
-      min-width:0;padding:0 12px;border:1px solid rgba(0,0,0,.055);border-radius:12px;
-      background:rgba(255,255,255,.84);box-shadow:0 6px 22px rgba(0,0,0,.05);backdrop-filter:blur(14px);
+      display:flex;align-items:center;justify-content:center;gap:8px;
+      min-width:0;padding:0 4px;
       color:#747980;font:600 10px/1 Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
       user-select:none
     }
@@ -163,7 +163,7 @@
     .demo-roundness-mark.square{border-radius:3px}
     .demo-roundness-mark.round{border-radius:7px}
     .demo-roundness-control input[type=range]{
-      width:150px;min-width:60px;flex:0 1 150px;height:18px;margin:0;padding:0;accent-color:#666b72;cursor:pointer
+      width:96px;min-width:60px;flex:0 1 96px;height:18px;margin:0;padding:0;accent-color:#666b72;cursor:pointer
     }
     .demo-roundness-control input[type=range]:focus-visible{outline:2px solid #aeb2b8;outline-offset:2px;border-radius:999px}
     .demo-roundness-unlock{display:inline-flex;align-items:center;gap:5px;padding-left:3px;white-space:nowrap;cursor:pointer}
@@ -174,8 +174,8 @@
     .demo-roundness-unlock input:checked+.demo-roundness-switch::after{transform:translateX(12px)}
     .demo-roundness-unlock input:focus-visible+.demo-roundness-switch{outline:2px solid #aeb2b8;outline-offset:2px}
     @media(max-width:600px){
-      .demo-panel-toolbar{flex-wrap:wrap;row-gap:7px}
-      .demo-roundness-control{order:3;flex:1 0 100%;gap:7px;padding:7px 8px}
+      .demo-panel-toolbar{flex-wrap:wrap;row-gap:4px}
+      .demo-roundness-control{order:3;flex:1 0 100%;gap:7px;padding:6px 0 4px}
     }
     @media(max-width:390px){
       .demo-roundness-control{gap:5px;font-size:9px}
@@ -336,6 +336,9 @@
         </label>
       </div>
       <div class="demo-toolbar-group" id="demoColorsGroup">
+        <button class="demo-panel-toggle" id="demoRandomColors" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3.5"/><circle class="demo-palette-dot" cx="8.5" cy="8.5" r="1.1"/><circle class="demo-palette-dot" cx="15.5" cy="8.5" r="1.1"/><circle class="demo-palette-dot" cx="12" cy="12" r="1.1"/><circle class="demo-palette-dot" cx="8.5" cy="15.5" r="1.1"/><circle class="demo-palette-dot" cx="15.5" cy="15.5" r="1.1"/></svg>
+        </button>
         <button class="demo-panel-toggle" id="demoColorPanelToggle" type="button" aria-expanded="false" aria-controls="demoColorPanel">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"/><circle class="demo-palette-dot" cx="13.5" cy="6.5" r=".5"/><circle class="demo-palette-dot" cx="17.5" cy="10.5" r=".5"/><circle class="demo-palette-dot" cx="6.5" cy="12.5" r=".5"/><circle class="demo-palette-dot" cx="8.5" cy="7.5" r=".5"/></svg>
         </button>
@@ -349,14 +352,12 @@
         <button class="demo-option demo-icon-option demo-swap-button" id="demoSwapColors" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h15l-4-4M20 16H5l4 4"/></svg></button>
         <label class="demo-option color-option"><span id="demoHeadLabel"></span><input id="demoHeadColor" type="color" value="#08090b"></label>
         <label class="demo-option demo-toggle"><span id="demoEyeThroughLabel"></span><input id="demoEyeThrough" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
-        <button class="demo-option demo-icon-option" id="demoRandomColors" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 9h.01M15 9h.01M12 12h.01M9 15h.01M15 15h.01"/></svg><span></span></button>
         <button class="demo-option demo-reset" id="demoReset" type="button"></button>
       </div>
       <p class="demo-palette-note" id="demoPaletteNote"></p>
     </div>
     <div class="demo-options-group demo-behavior-group" id="demoSettingsPanel" hidden>
       <label class="demo-option demo-toggle"><span id="demoAntennaLabel"></span><input id="demoAntenna" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
-      <label class="demo-option demo-toggle"><span id="demoAntennaFlashLabel"></span><input id="demoAntennaFlash" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
       <label class="demo-option demo-toggle"><span id="demoLoopLabel"></span><input id="demoLoop" type="checkbox"><span class="demo-switch" aria-hidden="true"></span></label>
       <label class="demo-option demo-toggle"><span id="demoPointerFollowLabel"></span><input id="demoPointerFollow" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
     </div>

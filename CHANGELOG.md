@@ -23,13 +23,13 @@ Several actions are renamed after what the avatar does on screen, instead of the
 | `verify`, `review` | `inspect` | |
 | `slot` | `random` | |
 
-`action-state` now reports `affirm`, `wary`, `angry` and `refuse`, and `face-state` reports `wary` and `refuse`. A shake reads as "no", so use `refuse` when the Agent cannot or will not do something, and `failure` when a task or connection fails. Packages that depend on `^0.5.x` do not pick up 0.6 automatically.
+`action-state` now reports `affirm`, `wary`, `angry` and `refuse`, and `face-state` reports `wary` and `refuse`. A shake reads as "no", so use `refuse` when the Agent cannot or will not do something, and `failure` when a task or connection fails. Antenna blinking is removed: `setAntennaFlash()` now does nothing and prints a one-time notice, and it is deleted in 1.0. Packages that depend on `^0.5.x` do not pick up 0.6 automatically.
 
 ### Added
 
 - Added the `waiting-wave` action: both eyes bob in staggered waves. `startWaiting({ variant: 'wave' })` loops it continuously.
 - Added `waiting-spin` as the explicit name of the default waiting motion, and `startWaiting({ variant: 'spin' })`.
-- Added brand-inspired color palettes to the demo. Colors apply to a stage card around the avatar; hovering a swatch previews it, and a swap button exchanges the background and head colors.
+- Added brand-inspired color palettes to the demo. Colors apply to a stage card around the avatar; hovering a swatch previews it, a swap button exchanges the background and head colors, and the page opens with a short run through every palette.
 - Added an experimental embedded eyes engine: a portable, allocation-free C++11 library that draws the same 18 expressions on 1-bit framebuffers from 16 to 512 pixels, with fit/fill/zoom layouts, round-screen clipping, proximity gaze with selectable range, and runtime timing changes.
 - Added firmware examples for 26 board and screen configurations (ESP32, ESP32-S3 and RP2040; ST7789, ST7735, GC9A01, ILI9341, ILI9342C, ILI9488, CO5300 AMOLED, ST7701S RGB panels, SSD1306 and SH1106 OLEDs; LilyGO, M5Stack, Waveshare, Seeed, Espressif and Guition boards). All compile in CI; none is verified on real hardware yet.
 - Added the hardware preview, an offline single-file page that runs the same C++ engine compiled to WebAssembly on 33 simulated screens, with panel-accurate display, module housings, actual-size zoom, wiring tables and a proximity-gaze simulator. It is also available online with the demo.
@@ -38,8 +38,12 @@ Several actions are renamed after what the avatar does on screen, instead of the
 ### Changed
 
 - Renamed actions as listed above. The C++ engine uses the same names: `Action::Affirm`, `Wary`, `Angry`, `Refuse` and `WaitingSpin` keep the previous numeric IDs, and the old names still parse.
-- Demo labels now describe the expression: Waiting · Spin, Waiting · Scroll, Affirm, Wary, Angry and Refuse.
+- Demo labels now describe the expression: Waiting · Spin, Waiting · Scroll, Affirm, Wary, Angry and Refuse. The toolbar row is one card as wide as the actions, with Head shape and a random-colors button.
 - Refined the wary expression with independently tilted eyes, adjusted eye proportions and eyelids.
+
+### Removed
+
+- Removed antenna blinking (`setAntennaFlash()`), which added little and is no longer shown in the demo.
 
 ### Fixed
 

@@ -106,16 +106,6 @@ function syncActionLabels() {
   }
 }
 
-function applyDefaultAntennaFlashOff() {
-  const toggle = document.getElementById('demoAntennaFlash');
-  if (!toggle) return;
-  toggle.checked = false;
-  const face = document.getElementById('face');
-  face?.setAntennaFlash?.(false);
-  const dot = face?.shadowRoot?.getElementById('antennaDot');
-  if (dot) dot.style.opacity = '1';
-}
-
 function mountWaitingSync() {
   const face = document.getElementById('face');
   const chat = document.getElementById('chat');
@@ -154,14 +144,12 @@ function mountStateLabels() {
 
 function mountExtras() {
   syncActionLabels();
-  applyDefaultAntennaFlashOff();
   mountWaitingSync();
   mountStateLabels();
 
   new MutationObserver(() => {
     syncActionLabels();
   }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
-
 }
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mountExtras, { once: true });

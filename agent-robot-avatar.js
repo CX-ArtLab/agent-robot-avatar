@@ -2,7 +2,6 @@ import AgentRobotAvatar from './src/agent-robot-avatar-extension-host.js';
 import './src/agent-robot-avatar-actions.js';
 import './src/agent-robot-avatar-antenna.js';
 import './src/agent-robot-avatar-waiting.js';
-import './src/agent-robot-avatar-antenna-flash.js';
 import './src/agent-robot-avatar-inspect.js';
 import './src/agent-robot-avatar-failure.js';
 import './src/agent-robot-avatar-love.js';

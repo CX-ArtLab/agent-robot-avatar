@@ -22,23 +22,23 @@ const PALETTES = Object.freeze([
 ]);
 
 const PALETTE_UI = Object.freeze({
-  'zh-CN': { swap:'互换背景色和头部颜色', swapHint:'再点一次互换', random:'随机', hint:'悬停预览，点击使用', tapHint:'点击色块使用',
+  'zh-CN': { swap:'互换背景色和头部颜色', swapHint:'再点一次互换', random:'随机配色', hint:'悬停预览，点击使用', tapHint:'点击色块使用',
     note:'配色灵感来自各品牌公开形象，仅为非官方示例，与品牌方无关。' },
-  'zh-TW': { swap:'互換背景色和頭部顏色', swapHint:'再點一次互換', random:'隨機', hint:'懸停預覽，點擊使用', tapHint:'點擊色塊使用',
+  'zh-TW': { swap:'互換背景色和頭部顏色', swapHint:'再點一次互換', random:'隨機配色', hint:'懸停預覽，點擊使用', tapHint:'點擊色塊使用',
     note:'配色靈感來自各品牌公開形象，僅為非官方示例，與品牌方無關。' },
-  en: { swap:'Swap background and head colors', swapHint:'click again to swap', random:'Random', hint:'Hover to preview, click to apply', tapHint:'Tap a swatch to apply',
+  en: { swap:'Swap background and head colors', swapHint:'click again to swap', random:'Random colors', hint:'Hover to preview, click to apply', tapHint:'Tap a swatch to apply',
     note:'Palettes inspired by public brand colors. Unofficial examples, not affiliated with or endorsed by the brands.' },
-  ja: { swap:'背景色とヘッド色を入れ替え', swapHint:'もう一度で入れ替え', random:'ランダム', hint:'ホバーでプレビュー、クリックで適用', tapHint:'タップして適用',
+  ja: { swap:'背景色とヘッド色を入れ替え', swapHint:'もう一度で入れ替え', random:'ランダム配色', hint:'ホバーでプレビュー、クリックで適用', tapHint:'タップして適用',
     note:'各ブランドの公開イメージに着想を得た非公式の配色例です。ブランドとは関係ありません。' },
-  ko: { swap:'배경색과 머리 색상 바꾸기', swapHint:'다시 누르면 반전', random:'랜덤', hint:'마우스를 올려 미리 보고 클릭해 적용', tapHint:'탭하여 적용',
+  ko: { swap:'배경색과 머리 색상 바꾸기', swapHint:'다시 누르면 반전', random:'무작위 색상', hint:'마우스를 올려 미리 보고 클릭해 적용', tapHint:'탭하여 적용',
     note:'각 브랜드의 공개 이미지에서 영감을 받은 비공식 예시이며, 해당 브랜드와 관련이 없습니다.' },
-  es: { swap:'Intercambiar fondo y cabeza', swapHint:'otra vez para invertir', random:'Aleatorio', hint:'Pasa el cursor para ver, haz clic para aplicar', tapHint:'Toca un color para aplicarlo',
+  es: { swap:'Intercambiar fondo y cabeza', swapHint:'otra vez para invertir', random:'Colores aleatorios', hint:'Pasa el cursor para ver, haz clic para aplicar', tapHint:'Toca un color para aplicarlo',
     note:'Paletas inspiradas en colores públicos de marcas. Ejemplos no oficiales, sin relación ni respaldo de las marcas.' },
-  pt: { swap:'Trocar fundo e cabeça', swapHint:'de novo para inverter', random:'Aleatório', hint:'Passe o cursor para ver, clique para aplicar', tapHint:'Toque numa cor para aplicar',
+  pt: { swap:'Trocar fundo e cabeça', swapHint:'de novo para inverter', random:'Cores aleatórias', hint:'Passe o cursor para ver, clique para aplicar', tapHint:'Toque numa cor para aplicar',
     note:'Paletas inspiradas nas cores públicas das marcas. Exemplos não oficiais, sem afiliação ou endosso das marcas.' },
-  de: { swap:'Hintergrund und Kopffarbe tauschen', swapHint:'erneut zum Tauschen', random:'Zufall', hint:'Zum Ansehen darüberfahren, zum Übernehmen klicken', tapHint:'Zum Übernehmen antippen',
+  de: { swap:'Hintergrund und Kopffarbe tauschen', swapHint:'erneut zum Tauschen', random:'Zufällige Farben', hint:'Zum Ansehen darüberfahren, zum Übernehmen klicken', tapHint:'Zum Übernehmen antippen',
     note:'Paletten nach öffentlichen Markenfarben. Inoffizielle Beispiele, nicht mit den Marken verbunden oder von ihnen unterstützt.' },
-  fr: { swap:'Inverser fond et tête', swapHint:'encore pour inverser', random:'Aléatoire', hint:'Survolez pour voir, cliquez pour appliquer', tapHint:'Touchez pour appliquer',
+  fr: { swap:'Inverser fond et tête', swapHint:'encore pour inverser', random:'Couleurs aléatoires', hint:'Survolez pour voir, cliquez pour appliquer', tapHint:'Touchez pour appliquer',
     note:'Palettes inspirées des couleurs publiques des marques. Exemples non officiels, sans lien ni approbation des marques.' },
 });
 
@@ -47,7 +47,6 @@ const DEFAULTS = Object.freeze({
   head: '#08090b',
   eyeThrough: true,
   antenna: true,
-  antennaFlash: true,
   loop: false,
   pointerFollow: true,
 });
@@ -100,7 +99,7 @@ const I18N = Object.freeze({
     webComponent: 'Web 组件', color: '颜色', settings: '设定', language: '语言',
     colorSettings: '颜色设置', otherSettings: '其它功能', languageSettings: '页面语言',
     background: '背景色', head: '头部颜色', eyeThrough: '眼睛穿透', reset: '恢复默认',
-    antenna: '天线', antennaFlash: '天线闪动', loop: '循环', pointerFollow: '鼠标跟随',
+    antenna: '天线', loop: '循环播放', pointerFollow: '鼠标跟随',
     actions: { idle:'正常', bored:'发呆', 'waiting-spin':'等待 · 旋转', input:'输入', affirm:'肯定', success:'成功', wary:'警惕', angry:'生气', refuse:'拒绝', surprise:'惊讶', sleep:'睡着', wake:'醒来' },
     states: { idle:'默认待机', bored:'发呆', waiting:'等待', input:'输入中', affirm:'肯定', success:'成功', happy:'成功', wary:'警惕', angry:'生气', refuse:'拒绝', surprise:'惊讶', sleepy:'困倦', sleep:'睡眠', wake:'醒来' },
   },
@@ -108,7 +107,7 @@ const I18N = Object.freeze({
     webComponent: 'Web 元件', color: '顏色', settings: '設定', language: '語言',
     colorSettings: '顏色設定', otherSettings: '其他功能', languageSettings: '頁面語言',
     background: '背景色', head: '頭部顏色', eyeThrough: '眼睛穿透', reset: '恢復預設',
-    antenna: '天線', antennaFlash: '天線閃動', loop: '循環', pointerFollow: '滑鼠跟隨',
+    antenna: '天線', loop: '循環播放', pointerFollow: '滑鼠跟隨',
     actions: { idle:'正常', bored:'發呆', 'waiting-spin':'等待 · 旋轉', input:'輸入', affirm:'肯定', success:'成功', wary:'警惕', angry:'生氣', refuse:'拒絕', surprise:'驚訝', sleep:'睡著', wake:'醒來' },
     states: { idle:'預設待機', bored:'發呆', waiting:'等待', input:'輸入中', affirm:'肯定', success:'成功', happy:'成功', wary:'警惕', angry:'生氣', refuse:'拒絕', surprise:'驚訝', sleepy:'睏倦', sleep:'睡眠', wake:'醒來' },
   },
@@ -116,7 +115,7 @@ const I18N = Object.freeze({
     webComponent: 'Web Component', color: 'Color', settings: 'Settings', language: 'Language',
     colorSettings: 'Color settings', otherSettings: 'Other settings', languageSettings: 'Page language',
     background: 'Background', head: 'Head color', eyeThrough: 'Transparent eyes', reset: 'Reset colors',
-    antenna: 'Antenna', antennaFlash: 'Antenna blink', loop: 'Loop', pointerFollow: 'Pointer follow',
+    antenna: 'Antenna', loop: 'Loop playback', pointerFollow: 'Pointer follow',
     actions: { idle:'Normal', bored:'Bored', 'waiting-spin':'Waiting · Spin', input:'Input', affirm:'Affirm', success:'Success', wary:'Wary', angry:'Angry', refuse:'Refuse', surprise:'Surprise', sleep:'Sleep', wake:'Wake' },
     states: { idle:'Idle', bored:'Bored', waiting:'Waiting', input:'Input', affirm:'Affirm', success:'Success', happy:'Success', wary:'Wary', angry:'Angry', refuse:'Refuse', surprise:'Surprise', sleepy:'Sleepy', sleep:'Sleeping', wake:'Awake' },
   },
@@ -124,7 +123,7 @@ const I18N = Object.freeze({
     webComponent: 'Web コンポーネント', color: 'カラー', settings: '設定', language: '言語',
     colorSettings: 'カラー設定', otherSettings: 'その他の設定', languageSettings: 'ページ言語',
     background: '背景色', head: 'ヘッド色', eyeThrough: '目を透過', reset: '色をリセット',
-    antenna: 'アンテナ', antennaFlash: 'アンテナ点滅', loop: 'ループ', pointerFollow: 'マウス追従',
+    antenna: 'アンテナ', loop: 'ループ再生', pointerFollow: 'マウス追従',
     actions: { idle:'通常', bored:'退屈', 'waiting-spin':'待機 · 回転', input:'入力', affirm:'肯定', success:'成功', wary:'警戒', angry:'怒り', refuse:'拒否', surprise:'驚き', sleep:'睡眠', wake:'起床' },
     states: { idle:'待機中', bored:'退屈', waiting:'待機', input:'入力中', affirm:'肯定', success:'成功', happy:'成功', wary:'警戒', angry:'怒り', refuse:'拒否', surprise:'驚き', sleepy:'眠い', sleep:'睡眠中', wake:'起床' },
   },
@@ -132,7 +131,7 @@ const I18N = Object.freeze({
     webComponent: '웹 컴포넌트', color: '색상', settings: '설정', language: '언어',
     colorSettings: '색상 설정', otherSettings: '기타 설정', languageSettings: '페이지 언어',
     background: '배경색', head: '머리 색상', eyeThrough: '눈 투과', reset: '색상 초기화',
-    antenna: '안테나', antennaFlash: '안테나 점멸', loop: '반복', pointerFollow: '마우스 추적',
+    antenna: '안테나', loop: '반복 재생', pointerFollow: '마우스 추적',
     actions: { idle:'정상', bored:'멍함', 'waiting-spin':'대기 · 회전', input:'입력', affirm:'긍정', success:'성공', wary:'경계', angry:'화남', refuse:'거절', surprise:'놀람', sleep:'수면', wake:'깨우기' },
     states: { idle:'대기 중', bored:'멍함', waiting:'대기', input:'입력 중', affirm:'긍정', success:'성공', happy:'성공', wary:'경계', angry:'화남', refuse:'거절', surprise:'놀람', sleepy:'졸림', sleep:'수면 중', wake:'깨어남' },
   },
@@ -140,7 +139,7 @@ const I18N = Object.freeze({
     webComponent: 'Componente Web', color: 'Color', settings: 'Ajustes', language: 'Idioma',
     colorSettings: 'Ajustes de color', otherSettings: 'Otros ajustes', languageSettings: 'Idioma de página',
     background: 'Fondo', head: 'Color de cabeza', eyeThrough: 'Ojos transparentes', reset: 'Restablecer colores',
-    antenna: 'Antena', antennaFlash: 'Parpadeo antena', loop: 'Bucle', pointerFollow: 'Seguir cursor',
+    antenna: 'Antena', loop: 'Reproducir en bucle', pointerFollow: 'Seguir cursor',
     actions: { idle:'Normal', bored:'Aburrido', 'waiting-spin':'Esperando · Giro', input:'Entrada', affirm:'Afirmar', success:'Éxito', wary:'Recelo', angry:'Enfado', refuse:'Rechazar', surprise:'Sorpresa', sleep:'Dormir', wake:'Despertar' },
     states: { idle:'En espera', bored:'Aburrido', waiting:'Esperando', input:'Introduciendo', affirm:'Afirmar', success:'Éxito', happy:'Éxito', wary:'Recelo', angry:'Enfado', refuse:'Rechazar', surprise:'Sorpresa', sleepy:'Somnoliento', sleep:'Durmiendo', wake:'Despierto' },
   },
@@ -148,7 +147,7 @@ const I18N = Object.freeze({
     webComponent: 'Componente Web', color: 'Cor', settings: 'Configurações', language: 'Idioma',
     colorSettings: 'Configurações de cor', otherSettings: 'Outras configurações', languageSettings: 'Idioma da página',
     background: 'Fundo', head: 'Cor da cabeça', eyeThrough: 'Olhos transparentes', reset: 'Redefinir cores',
-    antenna: 'Antena', antennaFlash: 'Piscar antena', loop: 'Repetir', pointerFollow: 'Seguir cursor',
+    antenna: 'Antena', loop: 'Reprodução em loop', pointerFollow: 'Seguir cursor',
     actions: { idle:'Normal', bored:'Entediado', 'waiting-spin':'Aguardando · Giro', input:'Entrada', affirm:'Afirmar', success:'Sucesso', wary:'Desconfiança', angry:'Raiva', refuse:'Recusar', surprise:'Surpresa', sleep:'Dormir', wake:'Acordar' },
     states: { idle:'Em espera', bored:'Entediado', waiting:'Aguardando', input:'Digitando', affirm:'Afirmar', success:'Sucesso', happy:'Sucesso', wary:'Desconfiança', angry:'Raiva', refuse:'Recusar', surprise:'Surpresa', sleepy:'Sonolento', sleep:'Dormindo', wake:'Acordado' },
   },
@@ -156,7 +155,7 @@ const I18N = Object.freeze({
     webComponent: 'Webkomponente', color: 'Farbe', settings: 'Einstellungen', language: 'Sprache',
     colorSettings: 'Farbeinstellungen', otherSettings: 'Weitere Einstellungen', languageSettings: 'Seitensprache',
     background: 'Hintergrund', head: 'Kopffarbe', eyeThrough: 'Augen transparent', reset: 'Farben zurücksetzen',
-    antenna: 'Antenne', antennaFlash: 'Antenne blinken', loop: 'Schleife', pointerFollow: 'Maus folgen',
+    antenna: 'Antenne', loop: 'Endlos abspielen', pointerFollow: 'Maus folgen',
     actions: { idle:'Normal', bored:'Gelangweilt', 'waiting-spin':'Warten · Drehen', input:'Eingabe', affirm:'Zustimmen', success:'Erfolg', wary:'Wachsam', angry:'Wütend', refuse:'Ablehnen', surprise:'Überrascht', sleep:'Schlafen', wake:'Aufwachen' },
     states: { idle:'Bereit', bored:'Gelangweilt', waiting:'Warten', input:'Eingabe', affirm:'Zustimmen', success:'Erfolg', happy:'Erfolg', wary:'Wachsam', angry:'Wütend', refuse:'Ablehnen', surprise:'Überrascht', sleepy:'Müde', sleep:'Schläft', wake:'Wach' },
   },
@@ -164,7 +163,7 @@ const I18N = Object.freeze({
     webComponent: 'Composant Web', color: 'Couleur', settings: 'Réglages', language: 'Langue',
     colorSettings: 'Réglages des couleurs', otherSettings: 'Autres réglages', languageSettings: 'Langue de la page',
     background: 'Arrière-plan', head: 'Couleur de tête', eyeThrough: 'Yeux transparents', reset: 'Réinitialiser couleurs',
-    antenna: 'Antenne', antennaFlash: 'Clignotement antenne', loop: 'Boucle', pointerFollow: 'Suivre le curseur',
+    antenna: 'Antenne', loop: 'Lecture en boucle', pointerFollow: 'Suivre le curseur',
     actions: { idle:'Normal', bored:'Ennui', 'waiting-spin':'Attente · Rotation', input:'Entrée', affirm:'Approuver', success:'Succès', wary:'Méfiance', angry:'Colère', refuse:'Refuser', surprise:'Surprise', sleep:'Dormir', wake:'Réveil' },
     states: { idle:'En veille', bored:'Ennui', waiting:'Attente', input:'Saisie', affirm:'Approuver', success:'Succès', happy:'Succès', wary:'Méfiance', angry:'Colère', refuse:'Refuser', surprise:'Surprise', sleepy:'Somnolent', sleep:'Endormi', wake:'Réveillé' },
   },
@@ -210,11 +209,10 @@ function mountDemoControls() {
   const headColor = colorPanel.querySelector('#demoHeadColor');
   const eyeThrough = colorPanel.querySelector('#demoEyeThrough');
   const antennaToggle = options.querySelector('#demoAntenna');
-  const antennaFlashToggle = options.querySelector('#demoAntennaFlash');
   const loopToggle = options.querySelector('#demoLoop');
   const pointerToggle = options.querySelector('#demoPointerFollow');
   const resetButton = colorPanel.querySelector('#demoReset');
-  const randomButton = colorPanel.querySelector('#demoRandomColors');
+  const randomButton = options.querySelector('#demoRandomColors');
   const swapButton = colorPanel.querySelector('#demoSwapColors');
   const paletteNote = colorPanel.querySelector('#demoPaletteNote');
   const presets = colorPanel.querySelector('#demoColorPresets');
@@ -301,7 +299,8 @@ function mountDemoControls() {
       button.setAttribute('aria-label', name);
     }
     showCaption();
-    randomButton.querySelector('span').textContent = paletteUI.random;
+    randomButton.title = paletteUI.random;
+    randomButton.setAttribute('aria-label', paletteUI.random);
     swapButton.title = paletteUI.swap;
     swapButton.setAttribute('aria-label', paletteUI.swap);
     paletteNote.textContent = paletteUI.note;
@@ -312,7 +311,6 @@ function mountDemoControls() {
     colorPanel.querySelector('#demoHeadLabel').textContent = t.head;
     colorPanel.querySelector('#demoEyeThroughLabel').textContent = t.eyeThrough;
     options.querySelector('#demoAntennaLabel').textContent = t.antenna;
-    options.querySelector('#demoAntennaFlashLabel').textContent = t.antennaFlash;
     options.querySelector('#demoLoopLabel').textContent = t.loop;
     options.querySelector('#demoPointerFollowLabel').textContent = t.pointerFollow;
     resetButton.textContent = t.reset;
@@ -477,19 +475,10 @@ function mountDemoControls() {
     setTimeout(applyAntennaVisibility, 60);
   }
 
-  function applyAntennaFlashSetting() {
-    face.setAntennaFlash(antennaFlashToggle.checked);
-    if (!antennaFlashToggle.checked) {
-      const dot = face.shadowRoot?.getElementById('antennaDot');
-      if (dot) dot.style.opacity = '1';
-    }
-  }
-
   bgColor.addEventListener('input', () => showChosenColors());
   headColor.addEventListener('input', () => showChosenColors());
   eyeThrough.addEventListener('change', () => showChosenColors({ fade: true }));
   antennaToggle.addEventListener('change', syncAntennaVisibility);
-  antennaFlashToggle.addEventListener('change', applyAntennaFlashSetting);
 
   pointerToggle.addEventListener('change', () => {
     if (oldFollowInput) oldFollowInput.checked = pointerToggle.checked;
@@ -587,9 +576,50 @@ function mountDemoControls() {
 
   showChosenColors();
   syncAntennaVisibility();
-  applyAntennaFlashSetting();
   setPanel(null);
   applyLanguage(currentLanguage);
+
+  // Opening show: once the demo is revealed, the stage runs through every palette,
+  // slow to fast to slow like a settling reel, and lands on the chosen colors.
+  // Only colors change, and any click, key or scroll ends it at once.
+  function playIntro() {
+    if (reducedMotion.matches) return;
+    const steps = PALETTES.map(palette => [palette.background, palette.head]);
+    const delay = index => {
+      const t = index / (steps.length - 1);
+      return Math.round(110 + 230 * (2 * t - 1) ** 2);
+    };
+    let index = 0;
+    let timer = 0;
+    const events = ['pointerdown', 'keydown', 'wheel', 'touchstart'];
+    const finish = () => {
+      clearTimeout(timer);
+      events.forEach(type => window.removeEventListener(type, finish, true));
+      showChosenColors({ fade: true });
+    };
+    const step = () => {
+      if (index >= steps.length) {
+        finish();
+        return;
+      }
+      const [background, head] = steps[index];
+      fadeColors(background, head, eyeThrough.checked ? background : '#ffffff');
+      timer = setTimeout(step, delay(index));
+      index += 1;
+    };
+    events.forEach(type => window.addEventListener(type, finish, { capture: true, passive: true }));
+    step();
+  }
+
+  if (document.documentElement.dataset.demoReady) playIntro();
+  else {
+    const ready = new MutationObserver(() => {
+      if (!document.documentElement.dataset.demoReady) return;
+      ready.disconnect();
+      playIntro();
+    });
+    ready.observe(document.documentElement, { attributes: true, attributeFilter: ['data-demo-ready'] });
+  }
 }
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mountDemoControls, { once: true });

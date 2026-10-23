@@ -96,7 +96,6 @@ test('interactive demo loads without runtime errors', async ({ page }) => {
   await page.goto('/demo/');
   await expect(page.locator('agent-robot-avatar')).toBeVisible();
   await expect(page.locator('[data-action="waiting-spin"]')).toBeVisible();
-  await expect(page.locator('#demoAntennaFlash')).not.toBeChecked();
   await expect(page.locator('#agent-demo-build')).toHaveText('Demo 0.6.0');
   const versions = await page.evaluate(() => ({
     runtime: window.AgentRobotAvatarVersion,
@@ -163,13 +162,6 @@ test('extension registry routes actions and aliases', async ({ page }) => {
 
   await page.goto('/examples/basic.html');
   const avatar = page.locator('agent-robot-avatar');
-
-  await avatar.evaluate(element => {
-    element.setAntennaFlash(true);
-    void element.play('success');
-  });
-  await expect.poll(() => avatar.evaluate(element => element._antennaFlashAction)).toBe('success');
-  await avatar.evaluate(element => element.reset());
 
   await avatar.evaluate(element => { void element.play('review'); });
   await expect.poll(() => avatar.evaluate(element => Boolean(element._inspectFx))).toBe(true);

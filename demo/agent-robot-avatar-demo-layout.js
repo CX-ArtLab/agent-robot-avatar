@@ -34,8 +34,10 @@ function balanceControls() {
   // Measure with the column at full width so every tried wrap width fits inside it.
   stack.style.setProperty('--demo-stack-width', `${limit}px`);
   const toolbar = stack.querySelector('.demo-panel-toolbar');
+  const toolbarStyle = toolbar && getComputedStyle(toolbar);
   const toolbarWidth = toolbar ? [...toolbar.children]
-    .reduce((sum, child) => sum + child.offsetWidth, 0) + 12 * Math.max(0, toolbar.children.length - 1) : 0;
+    .reduce((sum, child) => sum + child.offsetWidth, 0) + 12 * Math.max(0, toolbar.children.length - 1)
+    + parseFloat(toolbarStyle.paddingLeft) + parseFloat(toolbarStyle.paddingRight) : 0;
   const rows = rowsAt(limit);
   const narrowest = 120;
   let low = narrowest;

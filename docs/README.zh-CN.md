@@ -145,7 +145,6 @@ try {
 ```js
 avatar.setPointerFollow(false);
 avatar.setHeadRoundness(75);
-avatar.setAntennaFlash(true);
 avatar.setPressSqueeze(true);
 avatar.setAntennaDrag(true);
 ```

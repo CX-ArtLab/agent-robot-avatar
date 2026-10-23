@@ -108,6 +108,7 @@ export declare class AgentRobotAvatar extends HTMLElement {
   startWaiting(options?: AgentRobotAvatarWaitingOptions): Promise<this>;
   stopWaiting(): this;
   setPointerFollow(enabled?: boolean): this;
+  /** @deprecated Removed in 0.6; does nothing and logs a one-time notice. Deleted in 1.0. */
   setAntennaFlash(enabled?: boolean): this;
   setPressSqueeze(enabled?: boolean): this;
   setAntennaDrag(enabled?: boolean): this;
