@@ -79,9 +79,11 @@
     const p=pitchMm(), w=screen.width*p, h=screen.height*p;
     return {m,rot,framed,w,h,display:[0,0,w,h]};
   }
+  // "Fit" sizes the module itself; the proximity ring may extend past the
+  // stage and is clipped there instead of shrinking the module.
   function pxPerMm(g) {
     if(zoom!=='fit')return CSS_PX_PER_MM*Number(zoom);
-    const r=$('stage').getBoundingClientRect(), margin=2*Number($('sense-radius').value)+40;
+    const r=$('stage').getBoundingClientRect(), margin=40;
     return Math.max(.5,Math.min((r.width-margin)/g.w,(r.height-margin)/g.h,CSS_PX_PER_MM*16));
   }
 
@@ -117,7 +119,7 @@
     const enabled=$('tracking').checked, locked=!!api.eyes_is_tracking();
     $('sense-zone').classList.toggle('active',enabled&&locked);
     const ignored=api.eyes_action()!==0;
-    const text=!enabled?'自动注视已关闭 · 可用上面的滑块手动调整方向'
+    const text=!enabled?'自动注视已关闭 · 可在“手动注视”中调整方向'
       :ignored?'当前动作暂不应用注视方向':'鼠标模拟物体 · '+(locked?'正在注视／离开后短暂停留':$('moving-only').checked?'等待范围内的移动目标':'等待目标进入虚线范围');
     if(text!==trackingText){$('tracking-note').textContent=text;trackingText=text;}
   }
@@ -167,6 +169,7 @@
       }
     } else if(frameKey) $('frame-art').replaceChildren();
     frameKey=key;
+    $('stage').classList.toggle('fit',zoom==='fit');
     const ppm=pxPerMm(g), [x,y,dw,dh]=g.display;
     $('sensor-wrap').style.width=g.w*ppm+'px';$('sensor-wrap').style.height=g.h*ppm+'px';
     device.dataset.profile=preset.frame;
@@ -350,7 +353,8 @@
       }
       const custom=document.createElement('option');custom.value='custom';custom.textContent='自定义分辨率…';$('profile').append(custom);
       $('zoom').append(...ZOOMS.map(([value,label])=>{
-        const b=document.createElement('button');b.type='button';b.className='chip';b.dataset.zoom=value;b.textContent=label;return b;
+        const b=document.createElement('button');b.type='button';b.className='chip';b.dataset.zoom=value;b.textContent=label;
+        if(value==='1')b.title='按常见电脑屏幕估算，不同显示器会有偏差';return b;
       }));
       $('mono-chips').append(...Object.entries(MONO_TINTS).map(([value,tint])=>{
         const b=document.createElement('button');b.type='button';b.className='chip';b.dataset.mono=value;b.textContent=tint.name;return b;
