@@ -776,8 +776,9 @@ function mountDemoControls() {
       if (ended || pending.size) return;
       cleanup();
       showChosenColors();
-      // Ending pose: happy eyes and a small hop, a "ta-da" after the spin. It is
-      // still part of the show, so the status label waits until it is over.
+      // Ending: as the ripple spreads the head tilts to one side and back, then the
+      // happy eyes and a small hop land as a "ta-da". It is still part of the show,
+      // so the status label waits until it is over.
       document.documentElement.dataset.demoIntro = 'true';
       const release = event => {
         if (event.detail.action === 'success' && event.detail.phase === 'start') return;
@@ -786,22 +787,37 @@ function mountDemoControls() {
         delete document.documentElement.dataset.demoIntro;
         currentState = String(face._state || 'idle');
         updateStatus();
-        // Last touch: a head tilt to one side and back, with no pause.
-        const head = face._headMotion;
-        if (head?.animate && !face._isReducedMotion?.()) {
-          const side = Math.random() < 0.5 ? -1 : 1;
-          head.style.transformBox = 'view-box';
-          head.style.transformOrigin = '120px 120px';
-          head.animate([
-            { transform: 'translateX(0px) rotate(0deg)', offset: 0, easing: 'cubic-bezier(.35,0,.22,1)' },
-            { transform: `translateX(${side * 3}px) rotate(${side * 9}deg)`, offset: 0.45, easing: 'cubic-bezier(.35,0,.22,1)' },
-            { transform: 'translateX(0px) rotate(0deg)', offset: 1 },
-          ], { duration: 1100, easing: 'linear' });
-        }
       };
-      face.addEventListener('action-state', release);
+      const head = face._headMotion;
+      const tilt = head?.animate && !face._isReducedMotion?.() ? (() => {
+        const side = Math.random() < 0.5 ? -1 : 1;
+        head.style.transformBox = 'view-box';
+        head.style.transformOrigin = '120px 120px';
+        return head.animate([
+          { transform: 'translateX(0px) rotate(0deg)', offset: 0, easing: 'cubic-bezier(.35,0,.22,1)' },
+          { transform: `translateX(${side * 3}px) rotate(${side * 9}deg)`, offset: 0.45, easing: 'cubic-bezier(.35,0,.22,1)' },
+          { transform: 'translateX(0px) rotate(0deg)', offset: 1 },
+        ], { duration: 1100, easing: 'linear' });
+      })() : null;
+      let timer = 0;
+      // Anything the visitor starts during the tilt takes over: no smile afterwards.
+      const interrupt = event => {
+        if (event.detail.phase !== 'start') return;
+        clearTimeout(timer);
+        tilt?.cancel();
+        face.removeEventListener('action-state', interrupt);
+        if (stopIntro) return;
+        delete document.documentElement.dataset.demoIntro;
+        currentState = String(face._state || 'idle');
+        updateStatus();
+      };
+      face.addEventListener('action-state', interrupt);
       playFinale();
-      play('success');
+      timer = setTimeout(() => {
+        face.removeEventListener('action-state', interrupt);
+        face.addEventListener('action-state', release);
+        play('success');
+      }, tilt ? 1100 : 0);
     }
 
     stopIntro = end;
