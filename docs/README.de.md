@@ -38,12 +38,17 @@ Agent Robot Avatar kann außerdem als visuelle Feedback-Ebene für Agent-Oberfl�
 - Lokale Jelly-Drag-Verformung mit elastischer Rückkehr
 - Drücken-und-Halten-Stauchung und ziehbare Federantenne
 - Programmatisch steuerbare Agent-Zustände und Ausdrücke
-- Feedback für waiting, success, failure, warning, review, blocked und system error
+- Ausdrücke für waiting, success, failure, affirm, wary, inspect, angry, refuse, love und mehr
 - Unterstützung für reduzierte Bewegung
 - Konfigurierbares Schlafverhalten
 - Einstellbare Kopfrundung
-- Optionales Statusblinken der Antenne
 - TypeScript-Deklarationen enthalten
+
+## Eingebettete Augen (experimentell)
+
+Eine eigenständige C++11-Engine ohne dynamische Speicherallokation zeichnet nur die Augen und zeigt dieselben 18 Ausdrücke auf Roboter- und Entwicklungsboard-Displays. Sie ist noch in Entwicklung und noch nicht veröffentlicht. Firmware-Beispiele decken 26 Board- und Display-Kombinationen mit ESP32, ESP32-S3 und RP2040 ab. Alle Beispiele werden in der CI kompiliert, sind aber noch nicht auf echter Hardware geprüft; wenn du eines ausprobierst, sende bitte einen Hardware-Bericht.
+
+Siehe die [Embedded-Anleitung](https://github.com/CX-ArtLab/agent-robot-avatar/tree/main/embedded). Die Embedded-Bibliothek ist von der Web Component getrennt und ändert nichts an deren Installation oder Verwendung.
 
 ## Installation
 
@@ -85,6 +90,8 @@ Verfügbare Aktionen:
 
 `idle` · `bored` · `waiting-spin` · `waiting-wrap` · `waiting-wave` · `input` · `affirm` · `success` · `failure` · `wary` · `inspect` · `angry` · `refuse` · `surprise` · `love` · `random` · `sleep` · `wake`
 
+`waiting-wave` spielt drei Wellen von je 1,1 Sekunden: Die Augen wippen versetzt auf und ab (Amplitude 10 SVG-Einheiten) und kommen dann zur Ruhe. `startWaiting({ variant: 'wave' })` wartet nahtlos in Schleife, `stopWaiting()` beendet das Warten. Die Aktion beachtet die Einstellung für reduzierte Bewegung und meldet ihren Lebenszyklus als `waiting`.
+
 Aktionsnamen beschreiben, was der Avatar tut. `refuse` schüttelt den Kopf, für eine Anfrage, die der Agent nicht ausführen kann oder will; `failure` steht für eine Aufgabe oder Verbindung ohne Erfolg; `wary` dreht den Kopf und mustert misstrauisch von oben bis unten, für eine Aktion, die eine Bestätigung braucht. Namen aus 0.5 (`send`, `warning`, `error`, `blocked` und weitere) funktionieren bis 1.0 weiter, mit einem Hinweis in der Konsole; siehe die [Upgrade-Tabelle](../CHANGELOG.md#upgrading-from-05x).
 
 `love` drückt Zuneigung oder Dank aus: Die beiden Augen neigen sich zu einem einzigen Herz zusammen, schlagen dreimal und kehren dann zurück.
@@ -98,6 +105,9 @@ avatar.startWaiting();
 
 // Zweite Wartebewegung: Die Augen drehen seitlich heraus und kommen von der anderen Seite zurück.
 avatar.startWaiting({ variant: 'wrap' });
+
+// Dritte Wartebewegung: versetzte Augenwellen auf und ab.
+avatar.startWaiting({ variant: 'wave' });
 
 try {
   const result = await runAgentRequest();

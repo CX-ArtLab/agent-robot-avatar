@@ -38,12 +38,17 @@ Agent Robot Avatar는 AG-UI 스타일 Agent 인터페이스를 위한 시각적 
 - 젤리 스타일의 국소 드래그 변형과 탄성 복귀
 - 길게 누르는 압축과 드래그 가능한 스프링 안테나
 - 프로그램으로 제어할 수 있는 Agent 상태와 표정
-- waiting, success, failure, warning, review, blocked, system error 피드백
+- waiting, success, failure, affirm, wary, inspect, angry, refuse, love 등의 표정
 - Reduced Motion 지원
 - 설정 가능한 수면 동작
 - 조절 가능한 머리 둥글기
-- 선택 가능한 안테나 상태 점멸
 - TypeScript 선언 포함
+
+## 임베디드 눈 (실험적)
+
+독립적인 C++11 엔진이 동적 메모리 할당 없이 눈만 그려, 로봇과 개발 보드 화면에 같은 18가지 표정을 보여 줍니다. 아직 개발 중이며 정식으로 출시되지 않았습니다. 펌웨어 예제는 ESP32, ESP32-S3, RP2040 기반의 26가지 보드·화면 조합을 다룹니다. 모든 예제는 CI에서 컴파일되지만 아직 실제 하드웨어에서 검증되지 않았습니다. 직접 시험해 보셨다면 하드웨어 보고서를 보내 주세요.
+
+[임베디드 가이드](https://github.com/CX-ArtLab/agent-robot-avatar/tree/main/embedded)를 참고하세요. 임베디드 라이브러리는 Web Component와 별개이며 설치와 사용 방법에 영향을 주지 않습니다.
 
 ## 설치
 
@@ -85,6 +90,8 @@ avatar.reset();
 
 `idle` · `bored` · `waiting-spin` · `waiting-wrap` · `waiting-wave` · `input` · `affirm` · `success` · `failure` · `wary` · `inspect` · `angry` · `refuse` · `surprise` · `love` · `random` · `sleep` · `wake`
 
+`waiting-wave`는 1.1초짜리 물결을 세 번 재생합니다. 두 눈이 엇갈린 리듬으로 위아래로 움직이고(진폭 10 SVG 단위) 멈춥니다. `startWaiting({ variant: 'wave' })`로 끊김 없이 반복하고 `stopWaiting()`으로 멈춥니다. Reduced Motion 설정을 따르며 수명 주기는 `waiting`으로 보고됩니다.
+
 액션 이름은 아바타의 모습을 나타냅니다. `refuse`는 고개를 젓는 동작으로 Agent가 수행할 수 없거나 하지 않을 요청에 사용하고, `failure`는 작업이나 연결이 성공하지 못한 경우, `wary`는 고개를 돌려 위아래로 살피는 경계의 눈빛으로 확인이 필요한 작업에 사용합니다. 0.5의 이전 이름(`send`, `warning`, `error`, `blocked` 등)은 1.0까지 동작하지만 콘솔에 이름 변경 안내가 표시됩니다. [업그레이드 표](../CHANGELOG.md#upgrading-from-05x)를 참고하세요.
 
 `love`는 호감이나 감사를 표현합니다. 두 눈이 서로 기울어 하나의 하트가 되고, 세 번 뛴 뒤 원래대로 돌아옵니다.
@@ -98,6 +105,9 @@ avatar.startWaiting();
 
 // 두 번째 대기 동작: 눈이 한쪽으로 빠져나갔다가 반대쪽에서 돌아옵니다.
 avatar.startWaiting({ variant: 'wrap' });
+
+// 세 번째 대기 모션: 엇갈려 위아래로 움직이는 눈의 물결.
+avatar.startWaiting({ variant: 'wave' });
 
 try {
   const result = await runAgentRequest();

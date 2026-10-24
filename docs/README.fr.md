@@ -38,12 +38,17 @@ Agent Robot Avatar peut également servir de couche de retour visuel pour les in
 - Déformation locale façon gelée lors du glisser, avec retour élastique
 - Compression par appui prolongé et antenne ressort déplaçable
 - États et expressions d’Agent contrôlables par code
-- Retours pour waiting, success, failure, warning, review, blocked et system error
+- Expressions pour waiting, success, failure, affirm, wary, inspect, angry, refuse, love et plus
 - Prise en charge du mouvement réduit
 - Comportement de sommeil configurable
 - Arrondi de la tête réglable
-- Clignotement d’état optionnel de l’antenne
 - Déclarations TypeScript incluses
+
+## Yeux embarqués (expérimental)
+
+Un moteur C++11 indépendant et sans allocation dynamique dessine uniquement les yeux, avec les mêmes 18 expressions, sur les écrans de robots et de cartes de développement. Il est encore en développement et n’a pas encore été publié. Les exemples de firmware couvrent 26 combinaisons de cartes et d’écrans avec ESP32, ESP32-S3 et RP2040. Tous sont compilés en CI mais pas encore testés sur du matériel réel ; si vous en essayez un, envoyez un rapport matériel.
+
+Voir le [guide embarqué](https://github.com/CX-ArtLab/agent-robot-avatar/tree/main/embedded). La bibliothèque embarquée est distincte du Web Component et ne change ni son installation ni son utilisation.
 
 ## Installation
 
@@ -85,6 +90,8 @@ Actions disponibles :
 
 `idle` · `bored` · `waiting-spin` · `waiting-wrap` · `waiting-wave` · `input` · `affirm` · `success` · `failure` · `wary` · `inspect` · `angry` · `refuse` · `surprise` · `love` · `random` · `sleep` · `wake`
 
+`waiting-wave` joue trois vagues de 1,1 seconde : les yeux montent et descendent avec un rythme décalé (amplitude de 10 unités SVG), puis se posent. `startWaiting({ variant: 'wave' })` boucle sans couture, et `stopWaiting()` arrête l’attente. L’action respecte le réglage de mouvement réduit et signale son cycle de vie comme `waiting`.
+
 Les noms d’action décrivent ce que fait l’avatar. `refuse` secoue la tête, pour une demande que l’Agent ne peut pas ou ne veut pas exécuter ; `failure` correspond à une tâche ou une connexion qui n’a pas abouti ; `wary` tourne la tête et toise avec méfiance, pour une action qui demande une confirmation. Les noms de la 0.5 (`send`, `warning`, `error`, `blocked`, etc.) fonctionnent encore jusqu’à la 1.0 avec un avis dans la console ; voir le [tableau de mise à niveau](../CHANGELOG.md#upgrading-from-05x).
 
 `love` exprime l’affection ou la gratitude : les deux yeux s’inclinent l’un vers l’autre pour former un seul cœur, battent trois fois, puis reviennent à la normale.
@@ -98,6 +105,9 @@ avatar.startWaiting();
 
 // Deuxième attente : les yeux sortent d'un côté et reviennent par l'autre.
 avatar.startWaiting({ variant: 'wrap' });
+
+// Troisième mouvement d’attente : vagues verticales décalées des yeux.
+avatar.startWaiting({ variant: 'wave' });
 
 try {
   const result = await runAgentRequest();

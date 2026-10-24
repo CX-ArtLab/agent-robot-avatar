@@ -26,9 +26,9 @@ Agent Robot Avatar 还可作为 AG-UI 风格 Agent 界面的视觉反馈层。
 
 ## 嵌入式眼睛版本（实验性）
 
-独立的 C++11 眼睛表情核心，在机器人和开发板的屏幕上画出同样的 18 种表情。固件示例覆盖 26 种开发板与屏幕组合（ESP32、ESP32-S3、RP2040；ST7789、ST7735、GC9A01 圆屏、ILI9341/9342/9488、CO5300 AMOLED、ST7701S RGB 屏、SSD1306/SH1106 OLED，含 LilyGO、M5Stack、微雪、Seeed、乐鑫等开发板）。所有示例都在 CI 中编译通过，尚未实机验证；如果你在实物上试过，欢迎提交实机验证报告。
+独立的 C++11 眼睛表情核心，在机器人和开发板的屏幕上画出同样的 18 种表情。固件示例覆盖 26 种开发板与屏幕组合（ESP32、ESP32-S3、RP2040；ST7789、ST7735、GC9A01 圆屏、ILI9341/9342/9488、CO5300 AMOLED、ST7701S RGB 屏、SSD1306/SH1106 OLED，含 LilyGO、M5Stack、微雪、Seeed、乐鑫等开发板）。目前仍在开发中，尚未正式发布。所有示例都在 CI 中编译通过，尚未实机验证；如果你在实物上试过，欢迎提交实机验证报告。
 
-[查看硬件接入说明](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/embedded/README.zh-CN.md)。现有 Web 组件与 Demo 保持不变。
+[查看硬件接入说明](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/embedded/README.zh-CN.md)。嵌入式库与 Web 组件相互独立，不影响 Web 组件的安装和使用。
 
 ## 在线 Demo
 
@@ -44,11 +44,10 @@ Agent Robot Avatar 还可作为 AG-UI 风格 Agent 界面的视觉反馈层。
 - 果冻式局部拖拽形变与弹性恢复
 - 按住挤压与可拖动的弹簧天线交互
 - 可通过程序控制 Agent 状态与表情
-- 支持 waiting、success、failure、warning、review、blocked、system error 等反馈
+- 支持 waiting、success、failure、affirm、wary、inspect、angry、refuse、love 等表情反馈
 - 支持减少动态效果
 - 可配置自动睡眠行为
 - 可调头部圆角
-- 可选天线状态闪烁
 - 内置 TypeScript 类型声明
 
 ## 安装
