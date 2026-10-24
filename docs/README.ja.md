@@ -173,9 +173,9 @@ ES Modules、Custom Elements、SVG、Pointer Events、Web Animations API、`Inte
 
 自動ブラウザテストは Chromium、Firefox、WebKit を対象にしています。
 
-## 組み込み向けの目（開発中）
+## ハードウェア版の表情（開発中）
 
-ロボットや開発ボードの画面向けに、目だけを描く C++ 版を開発中です（未リリース）。[組み込みガイド](https://github.com/CX-ArtLab/agent-robot-avatar/tree/main/embedded)をご覧ください。
+ロボットや開発ボードの画面にアバターの表情を表示する C++ 版（目だけを描画）を開発中です。まだリリースされていません。[ハードウェアガイド](https://github.com/CX-ArtLab/agent-robot-avatar/tree/main/embedded)をご覧ください。
 
 ## コントリビューション
 

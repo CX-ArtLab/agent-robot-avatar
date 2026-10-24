@@ -173,9 +173,9 @@ Conçu pour les navigateurs modernes prenant en charge ES Modules, Custom Elemen
 
 Les tests automatisés couvrent Chromium, Firefox et WebKit.
 
-## Yeux embarqués (en développement)
+## Version matérielle (en développement)
 
-Une version C++ limitée aux yeux, pour les écrans de robots et de cartes de développement, est en cours de développement et pas encore publiée. Voir le [guide embarqué](https://github.com/CX-ArtLab/agent-robot-avatar/tree/main/embedded).
+Une version C++ qui affiche les expressions de l’avatar sur les écrans de robots et de cartes de développement (seuls les yeux sont dessinés) est en cours de développement et pas encore publiée. Voir le [guide matériel](https://github.com/CX-ArtLab/agent-robot-avatar/tree/main/embedded).
 
 ## Contribution
 
