@@ -786,12 +786,17 @@ function mountDemoControls() {
         delete document.documentElement.dataset.demoIntro;
         currentState = String(face._state || 'idle');
         updateStatus();
-        // Last touch: the ordinary idle glance to one side, with the head following
-        // it in the usual way (no new action), then the normal wandering resumes.
-        if (face._wanderTarget && !face._isReducedMotion?.()) {
-          face._wanderTarget.x = (Math.random() < 0.5 ? -1 : 1) * 24;
-          face._wanderTarget.y = -6;
-          face._nextWanderAt = performance.now() + 1500;
+        // Last touch: a head tilt to one side and back, with no pause.
+        const head = face._headMotion;
+        if (head?.animate && !face._isReducedMotion?.()) {
+          const side = Math.random() < 0.5 ? -1 : 1;
+          head.style.transformBox = 'view-box';
+          head.style.transformOrigin = '120px 120px';
+          head.animate([
+            { transform: 'translateX(0px) rotate(0deg)', offset: 0, easing: 'cubic-bezier(.35,0,.22,1)' },
+            { transform: `translateX(${side * 3}px) rotate(${side * 9}deg)`, offset: 0.45, easing: 'cubic-bezier(.35,0,.22,1)' },
+            { transform: 'translateX(0px) rotate(0deg)', offset: 1 },
+          ], { duration: 1100, easing: 'linear' });
         }
       };
       face.addEventListener('action-state', release);
