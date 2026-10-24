@@ -96,7 +96,7 @@ Os nomes das ações descrevem o que o avatar faz. `refuse` balança a cabeça, 
 
 `love` expressa carinho ou gratidão: os dois olhos se inclinam até formar um único coração, batem três vezes e depois voltam ao normal.
 
-`random` reproduz um giro de caça-níqueis: cada olho rola sobre um tambor; depois o olho esquerdo desacelera, quica e para, seguido do direito. `slot` é um alias.
+`random` reproduz um giro de caça-níqueis: cada olho rola sobre um tambor; depois o olho esquerdo desacelera, quica e para, seguido do direito.
 
 Um fluxo típico de solicitação de Agent:
 

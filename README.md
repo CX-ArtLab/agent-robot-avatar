@@ -96,7 +96,7 @@ Action names describe what the avatar does. `refuse` shakes the head, for a requ
 
 `love` expresses affection or thanks: the two eyes lean together into a single heart, beat three times, then return.
 
-`random` plays a slot-machine spin: each eye rolls over a drum, then the left eye slows, bounces and settles, followed by the right. `slot` is an alias.
+`random` plays a slot-machine spin: each eye rolls over a drum, then the left eye slows, bounces and settles, followed by the right.
 
 For a real Agent request lifecycle:
 

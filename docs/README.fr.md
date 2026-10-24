@@ -96,7 +96,7 @@ Les noms d’action décrivent ce que fait l’avatar. `refuse` secoue la tête,
 
 `love` exprime l’affection ou la gratitude : les deux yeux s’inclinent l’un vers l’autre pour former un seul cœur, battent trois fois, puis reviennent à la normale.
 
-`random` joue un tour de machine à sous : chaque œil roule sur un tambour, puis l’œil gauche ralentit, rebondit et s’arrête, suivi du droit. `slot` est un alias.
+`random` joue un tour de machine à sous : chaque œil roule sur un tambour, puis l’œil gauche ralentit, rebondit et s’arrête, suivi du droit.
 
 Exemple de cycle de requête Agent :
 

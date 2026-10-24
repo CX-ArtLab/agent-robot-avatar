@@ -96,7 +96,7 @@ Los nombres de acción describen lo que hace el avatar. `refuse` niega con la ca
 
 `love` expresa cariño o agradecimiento: los dos ojos se inclinan hasta formar un único corazón, laten tres veces y luego vuelven a la normalidad.
 
-`random` reproduce un giro de tragaperras: cada ojo rueda sobre un tambor; después el ojo izquierdo frena, rebota y se detiene, seguido del derecho. `slot` es un alias.
+`random` reproduce un giro de tragaperras: cada ojo rueda sobre un tambor; después el ojo izquierdo frena, rebota y se detiene, seguido del derecho.
 
 Un flujo típico para una solicitud de Agent:
 

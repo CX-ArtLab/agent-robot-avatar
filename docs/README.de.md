@@ -96,7 +96,7 @@ Aktionsnamen beschreiben, was der Avatar tut. `refuse` schüttelt den Kopf, für
 
 `love` drückt Zuneigung oder Dank aus: Die beiden Augen neigen sich zu einem einzigen Herz zusammen, schlagen dreimal und kehren dann zurück.
 
-`random` spielt einen Spielautomaten-Dreh ab: Jedes Auge rollt über eine Walze, dann bremst das linke Auge, federt nach und kommt zur Ruhe, danach das rechte. `slot` ist ein Alias.
+`random` spielt einen Spielautomaten-Dreh ab: Jedes Auge rollt über eine Walze, dann bremst das linke Auge, federt nach und kommt zur Ruhe, danach das rechte.
 
 Ein typischer Agent-Anfrageablauf:
 
