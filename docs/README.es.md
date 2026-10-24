@@ -42,7 +42,7 @@ Agent Robot Avatar también puede utilizarse como capa de retroalimentación vis
 - Compatibilidad con movimiento reducido
 - Comportamiento de sueño configurable
 - Redondez de la cabeza ajustable
-- Tres skins de material (obsidiana, porcelana, aurora) con luz que sigue al puntero
+- 42 skins de materiales y estampados con luz que sigue al puntero
 - Declaraciones TypeScript incluidas
 
 ## Instalación
@@ -148,7 +148,7 @@ try {
 | `motion` | Política de movimiento: `auto`, `reduce` o `full` |
 | `press-squeeze` | Mantener pulsado el centro para comprimir; `false` lo desactiva |
 | `antenna-drag` | Arrastre y rebote de antena con reacción de enfado; `false` lo desactiva |
-| `skin` | Material: `obsidian`, `porcelain` o `aurora`; omítelo para el color plano |
+| `skin` | Material: `obsidian`, `porcelain`, `gold` … (42); omítelo para el color plano |
 
 Controles habituales en tiempo de ejecución:
 
@@ -163,22 +163,26 @@ Mantener pulsado el centro inicia la compresión. Al mover más de 4 píxeles CS
 
 ## Skins
 
-Tres materiales, con una luz que sigue al puntero:
+42 skins en cinco familias, con una luz que sigue al puntero:
 
 ```html
 <agent-robot-avatar skin="obsidian"></agent-robot-avatar>
 ```
 
 ```js
-avatar.setSkin('porcelain'); // obsidian, porcelain o aurora
+avatar.setSkin('porcelain'); // cualquier nombre de la lista
 avatar.setSkin(null);        // vuelve al color plano
 ```
 
-| Skin | Aspecto |
+| Familia | Skins |
 | --- | --- |
-| `obsidian` | Vidrio oscuro con un borde frío |
-| `porcelain` | Esmalte blanco cálido con ojos oscuros |
-| `aurora` | Degradado de cian a violeta con brillo de caramelo |
+| Vidrio y gemas | `obsidian`, `midnight`, `jade`, `amber`, `ruby`, `sapphire`, `emerald`, `neon` |
+| Porcelana, pastel y arcilla | `porcelain`, `pearl`, `sakura`, `mint`, `lavender`, `lemon`, `sky`, `peach`, `terracotta` |
+| Metal | `gold`, `silver`, `copper`, `titanium`, `rose-gold`, `graphite` |
+| Degradados | `aurora`, `ocean`, `forest`, `candy` |
+| Estampados | `tartan`, `polka`, `terrazzo`, `marble`, `black-marble`, `wood`, `pixel`, `confetti`, `rainbow`, `denim`, `graph-paper`, `halftone`, `leaves`, `blossoms`, `brick` |
+
+La exportación `SKIN_NAMES` enumera todos los nombres, por ejemplo para crear un selector.
 
 Todas las expresiones y gestos funcionan con un skin. Al quitar el skin, el atributo `color` vuelve a aplicarse.
 

@@ -101,7 +101,7 @@ test('packed package installs and can be imported without browser globals', asyn
       '--eval',
       "import('agent-robot-avatar').then(module => console.log(Object.keys(module).sort().join(',')))",
     ], { cwd: consumer });
-    assert.match(imported, /AgentRobotAvatar,VERSION,default/);
+    assert.match(imported, /AgentRobotAvatar,SKIN_NAMES,VERSION,default/);
 
     const packageJson = JSON.parse(await readFile(path.join(consumer, 'node_modules', 'agent-robot-avatar', 'package.json'), 'utf8'));
     assert.notEqual(packageJson.sideEffects, false);

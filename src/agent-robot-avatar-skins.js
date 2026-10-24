@@ -9,31 +9,16 @@ const baseApplyColor = proto._applyColor;
 // lit side, a darker edge for volume, a reflected glow on the far side, a thin
 // rim, the eye color, and the antenna sphere.
 const SKINS = Object.freeze({
+  // Glass and gems
   obsidian: Object.freeze({
     base: ['#7b8796', '#313a47', '#101722', '#05080e'],
     eye: '#f0f7ff', rim: '#c1d5f4', shine: 0.57, shade: 0.68,
     antenna: ['#c3cfdf', '#384452', '#080e19'],
   }),
-  porcelain: Object.freeze({
-    base: ['#ffffff', '#f5f4ec', '#d9dad3', '#a3aaab'],
-    eye: '#343b3c', rim: '#ffffff', shine: 0.95, shade: 0.18,
-    antenna: ['#ffffff', '#e7e9df', '#a6afb0'],
-  }),
-  aurora: Object.freeze({
-    base: ['#9aebea', '#92c9f1', '#a795eb', '#e79bc7'],
-    eye: '#2d3052', rim: '#fff4fe', shine: 0.82, shade: 0.30,
-    antenna: ['#edffff', '#9ba7ec', '#7456a5'],
-    linear: true,
-  }),
   midnight: Object.freeze({
     base: ['#7f98d4', '#2c4381', '#111e4a', '#060b22'],
     eye: '#eaf2ff', rim: '#a9c2ff', shine: 0.55, shade: 0.62,
     antenna: ['#c9d7ff', '#33498a', '#070d26'],
-  }),
-  graphite: Object.freeze({
-    base: ['#a3a9b0', '#61676e', '#35393e', '#1b1d20'],
-    eye: '#f4f6f8', rim: '#d3d8de', shine: 0.32, shade: 0.5,
-    antenna: ['#d9dde2', '#5d6369', '#191b1e'],
   }),
   jade: Object.freeze({
     base: ['#7fb5a3', '#2f6d5b', '#123e33', '#06201a'],
@@ -44,53 +29,6 @@ const SKINS = Object.freeze({
     base: ['#ffe2a6', '#f2a73c', '#c46812', '#6b3005'],
     eye: '#fff7e8', rim: '#ffdba0', shine: 0.6, shade: 0.5,
     antenna: ['#fff0cc', '#e08c22', '#6b3005'],
-  }),
-  sakura: Object.freeze({
-    base: ['#ffffff', '#fdeaf0', '#f3c7d4', '#d697ab'],
-    eye: '#4b2f3b', rim: '#ffffff', shine: 0.9, shade: 0.2,
-    antenna: ['#ffffff', '#f7d3de', '#cf8ea3'],
-  }),
-  mint: Object.freeze({
-    base: ['#f5fffb', '#cdf3e5', '#93dcc3', '#52ad90'],
-    eye: '#1f3f36', rim: '#f2fffa', shine: 0.85, shade: 0.24,
-    antenna: ['#ffffff', '#b5ead6', '#4fa88b'],
-  }),
-  'rose-gold': Object.freeze({
-    base: ['#ffeee6', '#e8b8a6', '#bb7f6c', '#7a4a3f'],
-    eye: '#3a2420', rim: '#fff2ec', shine: 0.85, shade: 0.34,
-    antenna: ['#fff4ef', '#d89c88', '#7a4a3f'],
-  }),
-  pearl: Object.freeze({
-    base: ['#ffffff', '#eaf2ff', '#f4e9ff', '#e2f6ee'],
-    eye: '#3b3a4a', rim: '#ffffff', shine: 0.92, shade: 0.16,
-    antenna: ['#ffffff', '#ece6fb', '#b9b4cf'],
-    linear: true,
-  }),
-  sunset: Object.freeze({
-    base: ['#ffd36e', '#ff9e6b', '#ff6f91', '#a26cf5'],
-    eye: '#3a2140', rim: '#fff4e8', shine: 0.8, shade: 0.3,
-    antenna: ['#fff3d6', '#ff8f7a', '#8a55d6'],
-    linear: true,
-  }),
-  gold: Object.freeze({
-    base: ['#fff4c2', '#f2c94c', '#c08a1e', '#6e4a08'],
-    eye: '#3a2a08', rim: '#fff1b8', shine: 0.9, shade: 0.4,
-    antenna: ['#fffbe6', '#e8b93a', '#6e4a08'],
-  }),
-  silver: Object.freeze({
-    base: ['#ffffff', '#d7dce2', '#9aa3ad', '#5c646d'],
-    eye: '#1c2228', rim: '#ffffff', shine: 0.95, shade: 0.3,
-    antenna: ['#ffffff', '#c3c9d0', '#5c646d'],
-  }),
-  copper: Object.freeze({
-    base: ['#ffd2b0', '#d9814a', '#a04d22', '#55230b'],
-    eye: '#fff1e6', rim: '#ffc9a3', shine: 0.75, shade: 0.5,
-    antenna: ['#ffe6d4', '#d9814a', '#55230b'],
-  }),
-  titanium: Object.freeze({
-    base: ['#c9d3dc', '#7f8d9b', '#4b5763', '#232a31'],
-    eye: '#eef4f9', rim: '#e6eef6', shine: 0.6, shade: 0.5,
-    antenna: ['#e6edf3', '#7f8d9b', '#232a31'],
   }),
   ruby: Object.freeze({
     base: ['#ff8a9a', '#d0243f', '#7a0d22', '#3a0410'],
@@ -106,6 +44,33 @@ const SKINS = Object.freeze({
     base: ['#8ff0c0', '#1fae74', '#0b6a45', '#033321'],
     eye: '#effff7', rim: '#b8f7d9', shine: 0.7, shade: 0.55,
     antenna: ['#d2fbe6', '#1fae74', '#033321'],
+  }),
+  neon: Object.freeze({
+    base: ['#5b3df5', '#2a1673', '#120a3a', '#06041a'],
+    eye: '#7ff9ff', rim: '#7ff9ff', shine: 0.45, shade: 0.6,
+    antenna: ['#c9fbff', '#5b3df5', '#06041a'],
+  }),
+  // Porcelain, pastel and clay
+  porcelain: Object.freeze({
+    base: ['#ffffff', '#f5f4ec', '#d9dad3', '#a3aaab'],
+    eye: '#343b3c', rim: '#ffffff', shine: 0.95, shade: 0.18,
+    antenna: ['#ffffff', '#e7e9df', '#a6afb0'],
+  }),
+  pearl: Object.freeze({
+    base: ['#ffffff', '#eaf2ff', '#f4e9ff', '#e2f6ee'],
+    eye: '#3b3a4a', rim: '#ffffff', shine: 0.92, shade: 0.16,
+    antenna: ['#ffffff', '#ece6fb', '#b9b4cf'],
+    linear: true,
+  }),
+  sakura: Object.freeze({
+    base: ['#ffffff', '#fdeaf0', '#f3c7d4', '#d697ab'],
+    eye: '#4b2f3b', rim: '#ffffff', shine: 0.9, shade: 0.2,
+    antenna: ['#ffffff', '#f7d3de', '#cf8ea3'],
+  }),
+  mint: Object.freeze({
+    base: ['#f5fffb', '#cdf3e5', '#93dcc3', '#52ad90'],
+    eye: '#1f3f36', rim: '#f2fffa', shine: 0.85, shade: 0.24,
+    antenna: ['#ffffff', '#b5ead6', '#4fa88b'],
   }),
   lavender: Object.freeze({
     base: ['#ffffff', '#ece6ff', '#cbbcf2', '#9c88d6'],
@@ -132,6 +97,44 @@ const SKINS = Object.freeze({
     eye: '#fff3ea', rim: '#f7c9b5', shine: 0.3, shade: 0.45,
     antenna: ['#f8d3c3', '#d0754f', '#5e2814'],
   }),
+  // Metal
+  gold: Object.freeze({
+    base: ['#fff4c2', '#f2c94c', '#c08a1e', '#6e4a08'],
+    eye: '#3a2a08', rim: '#fff1b8', shine: 0.9, shade: 0.4,
+    antenna: ['#fffbe6', '#e8b93a', '#6e4a08'],
+  }),
+  silver: Object.freeze({
+    base: ['#ffffff', '#d7dce2', '#9aa3ad', '#5c646d'],
+    eye: '#1c2228', rim: '#ffffff', shine: 0.95, shade: 0.3,
+    antenna: ['#ffffff', '#c3c9d0', '#5c646d'],
+  }),
+  copper: Object.freeze({
+    base: ['#ffd2b0', '#d9814a', '#a04d22', '#55230b'],
+    eye: '#fff1e6', rim: '#ffc9a3', shine: 0.75, shade: 0.5,
+    antenna: ['#ffe6d4', '#d9814a', '#55230b'],
+  }),
+  titanium: Object.freeze({
+    base: ['#c9d3dc', '#7f8d9b', '#4b5763', '#232a31'],
+    eye: '#eef4f9', rim: '#e6eef6', shine: 0.6, shade: 0.5,
+    antenna: ['#e6edf3', '#7f8d9b', '#232a31'],
+  }),
+  'rose-gold': Object.freeze({
+    base: ['#ffeee6', '#e8b8a6', '#bb7f6c', '#7a4a3f'],
+    eye: '#3a2420', rim: '#fff2ec', shine: 0.85, shade: 0.34,
+    antenna: ['#fff4ef', '#d89c88', '#7a4a3f'],
+  }),
+  graphite: Object.freeze({
+    base: ['#a3a9b0', '#61676e', '#35393e', '#1b1d20'],
+    eye: '#f4f6f8', rim: '#d3d8de', shine: 0.32, shade: 0.5,
+    antenna: ['#d9dde2', '#5d6369', '#191b1e'],
+  }),
+  // Gradients
+  aurora: Object.freeze({
+    base: ['#9aebea', '#92c9f1', '#a795eb', '#e79bc7'],
+    eye: '#2d3052', rim: '#fff4fe', shine: 0.82, shade: 0.30,
+    antenna: ['#edffff', '#9ba7ec', '#7456a5'],
+    linear: true,
+  }),
   ocean: Object.freeze({
     base: ['#7ff0e4', '#3cc3e0', '#2b7fd4', '#3b3fb0'],
     eye: '#132a4a', rim: '#e8fffd', shine: 0.8, shade: 0.3,
@@ -150,35 +153,7 @@ const SKINS = Object.freeze({
     antenna: ['#fff4fb', '#ff9cc8', '#7f6bd6'],
     linear: true,
   }),
-  neon: Object.freeze({
-    base: ['#5b3df5', '#2a1673', '#120a3a', '#06041a'],
-    eye: '#7ff9ff', rim: '#7ff9ff', shine: 0.45, shade: 0.6,
-    antenna: ['#c9fbff', '#5b3df5', '#06041a'],
-  }),
-  bee: Object.freeze({
-    base: ['#fff4b8', '#ffd23f', '#e3a812', '#8a6200'],
-    eye: '#ffffff', ring: '#1d1d1f', rim: '#ffffff', shine: 0.8, shade: 0.28,
-    antenna: ['#fff4b8', '#ffd23f', '#8a6200'],
-    pattern: { kind: 'stripes', colors: ['#1f1d1a'], width: 13, gap: 13, angle: 45 },
-  }),
-  'candy-cane': Object.freeze({
-    base: ['#ffffff', '#fbf6f6', '#efe3e3', '#c9b5b5'],
-    eye: '#3b1f24', rim: '#ffffff', shine: 0.8, shade: 0.28,
-    antenna: ['#ffffff', '#fbf6f6', '#c9b5b5'],
-    pattern: { kind: 'stripes', colors: ['#e8344e'], width: 12, gap: 12, angle: -40 },
-  }),
-  sailor: Object.freeze({
-    base: ['#ffffff', '#fbfaf7', '#efece6', '#c9c4bb'],
-    eye: '#14213d', rim: '#ffffff', shine: 0.8, shade: 0.28,
-    antenna: ['#ffffff', '#fbfaf7', '#c9c4bb'],
-    pattern: { kind: 'stripes', colors: ['#1d3a8a'], width: 7, gap: 9, angle: 90 },
-  }),
-  gingham: Object.freeze({
-    base: ['#ffffff', '#fbfaf7', '#efece6', '#c9c4bb'],
-    eye: '#3a1d24', rim: '#ffffff', shine: 0.8, shade: 0.28,
-    antenna: ['#ffffff', '#fbfaf7', '#c9c4bb'],
-    pattern: { kind: 'gingham', colors: ['#e2445c'], size: 22, opacity: 0.45 },
-  }),
+  // Printed patterns
   tartan: Object.freeze({
     base: ['#d04848', '#a82d30', '#7d1c20', '#4a0e12'],
     eye: '#fff6e8', ring: '#2a0b0e', rim: '#e8eef8', shine: 0.5, shade: 0.55,
@@ -191,65 +166,11 @@ const SKINS = Object.freeze({
     antenna: ['#ff9db2', '#ff5d84', '#9b1c3e'],
     pattern: { kind: 'dots', colors: ['#ffffff'], r: 6, size: 30, opacity: 0.9 },
   }),
-  stars: Object.freeze({
-    base: ['#4a5ba8', '#26357a', '#141f52', '#0a1030'],
-    eye: '#ffffff', rim: '#e8eef8', shine: 0.5, shade: 0.55,
-    antenna: ['#4a5ba8', '#26357a', '#0a1030'],
-    pattern: { kind: 'stars', colors: ['#ffe27a', '#ffffff'], count: 13 },
-  }),
-  hearts: Object.freeze({
-    base: ['#fff6f9', '#ffe0ea', '#ffc2d4', '#f095b2'],
-    eye: '#4b2032', rim: '#ffffff', shine: 0.8, shade: 0.28,
-    antenna: ['#fff6f9', '#ffe0ea', '#f095b2'],
-    pattern: { kind: 'hearts', colors: ['#ff5d8a', '#ff8fb0'] },
-  }),
-  waves: Object.freeze({
-    base: ['#eaf7ff', '#bfe6ff', '#7cc6f2', '#3a8fc7'],
-    eye: '#123049', rim: '#ffffff', shine: 0.8, shade: 0.28,
-    antenna: ['#eaf7ff', '#bfe6ff', '#3a8fc7'],
-    pattern: { kind: 'waves', colors: ['#ffffff'] },
-  }),
-  chevron: Object.freeze({
-    base: ['#fff3e6', '#ffd9b0', '#f4b16e', '#c87a2e'],
-    eye: '#4a2a10', rim: '#ffffff', shine: 0.8, shade: 0.28,
-    antenna: ['#fff3e6', '#ffd9b0', '#c87a2e'],
-    pattern: { kind: 'chevron', colors: ['#ffffff'] },
-  }),
-  honeycomb: Object.freeze({
-    base: ['#ffe9a3', '#f7c948', '#d99a12', '#8a5a00'],
-    eye: '#3a2600', rim: '#ffffff', shine: 0.8, shade: 0.28,
-    antenna: ['#ffe9a3', '#f7c948', '#8a5a00'],
-    pattern: { kind: 'honeycomb', colors: ['#fff4c4'] },
-  }),
   terrazzo: Object.freeze({
     base: ['#ffffff', '#fbfaf7', '#efece6', '#c9c4bb'],
     eye: '#2d2a26', rim: '#ffffff', shine: 0.8, shade: 0.28,
     antenna: ['#ffffff', '#fbfaf7', '#c9c4bb'],
     pattern: { kind: 'terrazzo', colors: ['#e46a4f', '#2e7d6b', '#f2b33d', '#3d5aa8', '#9aa0a6'] },
-  }),
-  camo: Object.freeze({
-    base: ['#a8b07a', '#7d8655', '#5a6138', '#33381e'],
-    eye: '#f6f3e6', ring: '#1d2012', rim: '#ffffff', shine: 0.8, shade: 0.28,
-    antenna: ['#a8b07a', '#7d8655', '#33381e'],
-    pattern: { kind: 'camo', colors: ['#4a5230', '#2f331d', '#c2b98a'] },
-  }),
-  leopard: Object.freeze({
-    base: ['#f8dfa6', '#e8b867', '#c98d3a', '#7a4f17'],
-    eye: '#fff8e8', ring: '#2b1a0d', rim: '#ffffff', shine: 0.8, shade: 0.28,
-    antenna: ['#f8dfa6', '#e8b867', '#7a4f17'],
-    pattern: { kind: 'leopard', colors: ['#2b1a0d', '#a8692a'] },
-  }),
-  tiger: Object.freeze({
-    base: ['#ffc27a', '#f28c28', '#d06a10', '#7a3a05'],
-    eye: '#fff6e6', ring: '#1d1410', rim: '#ffffff', shine: 0.8, shade: 0.28,
-    antenna: ['#ffc27a', '#f28c28', '#7a3a05'],
-    pattern: { kind: 'tiger', colors: ['#1d1410'] },
-  }),
-  watermelon: Object.freeze({
-    base: ['#ff9a9a', '#ff5a64', '#e0343f', '#9b1621'],
-    eye: '#ffffff', ring: '#2a1515', rim: '#ffffff', shine: 0.8, shade: 0.28,
-    antenna: ['#ff9a9a', '#ff5a64', '#9b1621'],
-    pattern: { kind: 'seeds', colors: ['#2a1515'] },
   }),
   marble: Object.freeze({
     base: ['#ffffff', '#f6f6f4', '#e6e6e2', '#bcbcb6'],
@@ -269,18 +190,6 @@ const SKINS = Object.freeze({
     antenna: ['#e9c08c', '#c9935a', '#5e3a1c'],
     pattern: { kind: 'wood', colors: ['#6e3f1c'] },
   }),
-  contour: Object.freeze({
-    base: ['#f2fbf6', '#d7f0e2', '#a9dcc1', '#5fa883'],
-    eye: '#173b2a', rim: '#ffffff', shine: 0.8, shade: 0.28,
-    antenna: ['#f2fbf6', '#d7f0e2', '#5fa883'],
-    pattern: { kind: 'contour', colors: ['#2f7a57'] },
-  }),
-  circuit: Object.freeze({
-    base: ['#2fae6a', '#167a46', '#0b5230', '#03281a'],
-    eye: '#eafff2', ring: '#03281a', rim: '#e8eef8', shine: 0.5, shade: 0.55,
-    antenna: ['#2fae6a', '#167a46', '#03281a'],
-    pattern: { kind: 'circuit', colors: ['#b8f5c8', '#f2d36b'] },
-  }),
   pixel: Object.freeze({
     base: ['#3a3a4a', '#24242f', '#16161d', '#0a0a10'],
     eye: '#ffffff', ring: '#16161a', rim: '#e8eef8', shine: 0.5, shade: 0.55,
@@ -292,18 +201,6 @@ const SKINS = Object.freeze({
     eye: '#2a2a35', rim: '#ffffff', shine: 0.8, shade: 0.28,
     antenna: ['#ffffff', '#fbfaf7', '#c9c4bb'],
     pattern: { kind: 'confetti', colors: ['#ff5d8a', '#3da9fc', '#ffd23f', '#2cb67d', '#7f5af0'] },
-  }),
-  flowers: Object.freeze({
-    base: ['#fffaf0', '#fff1d6', '#ffe0b0', '#e8b56a'],
-    eye: '#4a2a20', rim: '#ffffff', shine: 0.8, shade: 0.28,
-    antenna: ['#fffaf0', '#fff1d6', '#e8b56a'],
-    pattern: { kind: 'flowers', colors: ['#ff8fa8', '#ffd23f'] },
-  }),
-  clouds: Object.freeze({
-    base: ['#d9f0ff', '#9fd4fb', '#5fb0ef', '#2d7cc4'],
-    eye: '#123049', rim: '#ffffff', shine: 0.8, shade: 0.28,
-    antenna: ['#d9f0ff', '#9fd4fb', '#2d7cc4'],
-    pattern: { kind: 'clouds', colors: ['#ffffff'] },
   }),
   rainbow: Object.freeze({
     base: ['#ffffff', '#fbfaf7', '#efece6', '#c9c4bb'],
@@ -317,59 +214,11 @@ const SKINS = Object.freeze({
     antenna: ['#6f8fd6', '#3e5fae', '#0f2148'],
     pattern: { kind: 'denim', colors: ['#ffffff'] },
   }),
-  knit: Object.freeze({
-    base: ['#ffb3c1', '#ff8fa3', '#e86b85', '#a83a55'],
-    eye: '#ffffff', ring: '#6e1f33', rim: '#ffffff', shine: 0.8, shade: 0.28,
-    antenna: ['#ffb3c1', '#ff8fa3', '#a83a55'],
-    pattern: { kind: 'knit', colors: ['#ffffff'] },
-  }),
-  scales: Object.freeze({
-    base: ['#9ff2e5', '#3cc9b3', '#1b8f7f', '#0a4d45'],
-    eye: '#073833', rim: '#ffffff', shine: 0.8, shade: 0.28,
-    antenna: ['#9ff2e5', '#3cc9b3', '#0a4d45'],
-    pattern: { kind: 'scales', colors: ['#e8fffb'] },
-  }),
-  argyle: Object.freeze({
-    base: ['#3d5c94', '#24406e', '#152a4d', '#081428'],
-    eye: '#ffffff', ring: '#081428', rim: '#e8eef8', shine: 0.5, shade: 0.55,
-    antenna: ['#3d5c94', '#24406e', '#081428'],
-    pattern: { kind: 'argyle', colors: ['#f2c94c', '#ffffff'] },
-  }),
-  checker: Object.freeze({
-    base: ['#ffffff', '#fbfaf7', '#efece6', '#c9c4bb'],
-    eye: '#ffd23f', ring: '#1d1d1f', rim: '#ffffff', shine: 0.8, shade: 0.28,
-    antenna: ['#ffffff', '#fbfaf7', '#c9c4bb'],
-    pattern: { kind: 'checker', colors: ['#1d1d1f'] },
-  }),
-  houndstooth: Object.freeze({
-    base: ['#ffffff', '#fbfaf7', '#efece6', '#c9c4bb'],
-    eye: '#ffffff', ring: '#1d1d1f', rim: '#ffffff', shine: 0.8, shade: 0.28,
-    antenna: ['#ffffff', '#fbfaf7', '#c9c4bb'],
-    pattern: { kind: 'houndstooth', colors: ['#1d1d1f'] },
-  }),
-  grid: Object.freeze({
+  'graph-paper': Object.freeze({
     base: ['#fffdf6', '#fbf7ea', '#efe8d4', '#c9bf9f'],
     eye: '#1d2b4a', rim: '#ffffff', shine: 0.8, shade: 0.28,
     antenna: ['#fffdf6', '#fbf7ea', '#c9bf9f'],
     pattern: { kind: 'grid', colors: ['#4d8fd6'] },
-  }),
-  ripple: Object.freeze({
-    base: ['#e7f6ff', '#b9e2fb', '#7cc0ec', '#3a85c2'],
-    eye: '#123049', rim: '#ffffff', shine: 0.8, shade: 0.28,
-    antenna: ['#e7f6ff', '#b9e2fb', '#3a85c2'],
-    pattern: { kind: 'concentric', colors: ['#ffffff'] },
-  }),
-  sunburst: Object.freeze({
-    base: ['#fff1a8', '#ffd34d', '#f5a623', '#b86a00'],
-    eye: '#3a2600', rim: '#ffffff', shine: 0.8, shade: 0.28,
-    antenna: ['#fff1a8', '#ffd34d', '#b86a00'],
-    pattern: { kind: 'sunburst', colors: ['#ffffff'] },
-  }),
-  bubbles: Object.freeze({
-    base: ['#c9f1ff', '#7dd8f5', '#3aaed8', '#1a6f99'],
-    eye: '#0f3550', rim: '#ffffff', shine: 0.8, shade: 0.28,
-    antenna: ['#c9f1ff', '#7dd8f5', '#1a6f99'],
-    pattern: { kind: 'bubbles', colors: ['#ffffff'] },
   }),
   halftone: Object.freeze({
     base: ['#ffe6ee', '#ffb3c7', '#ff7aa0', '#d6406c'],
@@ -377,35 +226,11 @@ const SKINS = Object.freeze({
     antenna: ['#ffe6ee', '#ffb3c7', '#d6406c'],
     pattern: { kind: 'halftone', colors: ['#ffffff'] },
   }),
-  lightning: Object.freeze({
-    base: ['#4b4f7a', '#2c2f55', '#181a36', '#0b0c1d'],
-    eye: '#ffffff', rim: '#e8eef8', shine: 0.5, shade: 0.55,
-    antenna: ['#4b4f7a', '#2c2f55', '#0b0c1d'],
-    pattern: { kind: 'scatter', shapes: ['bolt'], colors: ['#ffe04a'], count: 11 },
-  }),
-  music: Object.freeze({
-    base: ['#fff8ef', '#fde9cf', '#f7cf9f', '#d99a5a'],
-    eye: '#2c1f3a', rim: '#ffffff', shine: 0.8, shade: 0.28,
-    antenna: ['#fff8ef', '#fde9cf', '#d99a5a'],
-    pattern: { kind: 'scatter', shapes: ['note'], colors: ['#3a2a55', '#e05a7a'], count: 11 },
-  }),
-  paws: Object.freeze({
-    base: ['#fff4ea', '#ffe2c6', '#f6c08e', '#cf8a4c'],
-    eye: '#3a2412', rim: '#ffffff', shine: 0.8, shade: 0.28,
-    antenna: ['#fff4ea', '#ffe2c6', '#cf8a4c'],
-    pattern: { kind: 'scatter', shapes: ['paw'], colors: ['#8a5a32'], count: 10, k: [6, 9] },
-  }),
-  snowflakes: Object.freeze({
-    base: ['#e9f4ff', '#bcdcfb', '#86b9ef', '#4a7fc6'],
-    eye: '#14294a', rim: '#ffffff', shine: 0.8, shade: 0.28,
-    antenna: ['#e9f4ff', '#bcdcfb', '#4a7fc6'],
-    pattern: { kind: 'scatter', shapes: ['snowflake'], colors: ['#ffffff'], count: 12, k: [5, 9] },
-  }),
   leaves: Object.freeze({
     base: ['#f0fbe6', '#cfeeb2', '#97d37b', '#4f9a45'],
     eye: '#173a17', rim: '#ffffff', shine: 0.8, shade: 0.28,
     antenna: ['#f0fbe6', '#cfeeb2', '#4f9a45'],
-    pattern: { kind: 'scatter', shapes: ['leaf'], colors: ['#3e8a3a', '#7cc46a'], count: 14, k: [6, 10] },
+    pattern: { kind: 'scatter', shapes: ['leaf'], colors: ['#3e8a3a', '#7cc46a'], count: 18, k: [6, 10] },
   }),
   blossoms: Object.freeze({
     base: ['#fffafd', '#ffeaf2', '#ffd0e0', '#f0a3c0'],
@@ -418,36 +243,6 @@ const SKINS = Object.freeze({
     eye: '#fff6ee', ring: '#3a160a', rim: '#ffffff', shine: 0.8, shade: 0.28,
     antenna: ['#e88a6a', '#c8603f', '#5a2010'],
     pattern: { kind: 'brick', colors: ['#f4dccd'] },
-  }),
-  moonlight: Object.freeze({
-    base: ['#3a4a8a', '#1f2b63', '#111a42', '#070c24'],
-    eye: '#ffffff', rim: '#e8eef8', shine: 0.5, shade: 0.55,
-    antenna: ['#3a4a8a', '#1f2b63', '#070c24'],
-    pattern: { kind: 'scatter', shapes: ['moon', 'star', 'star'], colors: ['#ffe9a6'], count: 12, k: [4, 8] },
-  }),
-  zebra: Object.freeze({
-    base: ['#ffffff', '#fbfaf7', '#efece6', '#c9c4bb'],
-    eye: '#1d1d1f', ring: '#ffffff', rim: '#ffffff', shine: 0.8, shade: 0.28,
-    antenna: ['#ffffff', '#fbfaf7', '#c9c4bb'],
-    pattern: { kind: 'tiger', colors: ['#1d1d1f'], count: 14, thickness: 0.7, seed: 59 },
-  }),
-  dalmatian: Object.freeze({
-    base: ['#ffffff', '#fbfaf7', '#efece6', '#c9c4bb'],
-    eye: '#1d1d1f', ring: '#ffffff', rim: '#ffffff', shine: 0.8, shade: 0.28,
-    antenna: ['#ffffff', '#fbfaf7', '#c9c4bb'],
-    pattern: { kind: 'spots', colors: ['#1d1d1f'] },
-  }),
-  cow: Object.freeze({
-    base: ['#ffffff', '#fbfaf7', '#efece6', '#c9c4bb'],
-    eye: '#5a3a2a', ring: '#ffffff', rim: '#ffffff', shine: 0.8, shade: 0.28,
-    antenna: ['#ffffff', '#fbfaf7', '#c9c4bb'],
-    pattern: { kind: 'camo', colors: ['#1d1d1f'], size: 220, scale: 1.6, seed: 61 },
-  }),
-  'rainbow-stripes': Object.freeze({
-    base: ['#ffffff', '#fbfaf7', '#efece6', '#c9c4bb'],
-    eye: '#ffffff', ring: '#2a2a35', rim: '#ffffff', shine: 0.8, shade: 0.28,
-    antenna: ['#ffffff', '#fbfaf7', '#c9c4bb'],
-    pattern: { kind: 'bands', colors: ['#ff6b6b', '#ffa94d', '#ffd43b', '#69db7c', '#4dabf7', '#9775fa'] },
   }),
 });
 const SKIN_NAMES = Object.freeze(Object.keys(SKINS));

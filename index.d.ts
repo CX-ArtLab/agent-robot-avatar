@@ -40,7 +40,52 @@ export type AgentRobotAvatarDeprecatedAction =
   | 'slot';
 
 /** Materials for the `skin` attribute and `setSkin()`. */
-export type AgentRobotAvatarSkin = 'obsidian' | 'porcelain' | 'aurora';
+export type AgentRobotAvatarSkin =
+  | 'obsidian'
+  | 'midnight'
+  | 'jade'
+  | 'amber'
+  | 'ruby'
+  | 'sapphire'
+  | 'emerald'
+  | 'neon'
+  | 'porcelain'
+  | 'pearl'
+  | 'sakura'
+  | 'mint'
+  | 'lavender'
+  | 'lemon'
+  | 'sky'
+  | 'peach'
+  | 'terracotta'
+  | 'gold'
+  | 'silver'
+  | 'copper'
+  | 'titanium'
+  | 'rose-gold'
+  | 'graphite'
+  | 'aurora'
+  | 'ocean'
+  | 'forest'
+  | 'candy'
+  | 'tartan'
+  | 'polka'
+  | 'terrazzo'
+  | 'marble'
+  | 'black-marble'
+  | 'wood'
+  | 'pixel'
+  | 'confetti'
+  | 'rainbow'
+  | 'denim'
+  | 'graph-paper'
+  | 'halftone'
+  | 'leaves'
+  | 'blossoms'
+  | 'brick';
+
+/** Every skin name, in display order (glass, porcelain, metal, gradients, patterns). */
+export declare const SKIN_NAMES: readonly AgentRobotAvatarSkin[];
 
 export type AgentRobotAvatarState =
   | 'idle'
