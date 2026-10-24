@@ -173,9 +173,9 @@ Für moderne Browser mit Unterstützung für ES Modules, Custom Elements, SVG, P
 
 Automatisierte Browsertests decken Chromium, Firefox und WebKit ab.
 
-## Eingebettete Augen (in Entwicklung)
+## Hardware-Version (in Entwicklung)
 
-Eine reine Augen-Version in C++ für Roboter- und Entwicklungsboard-Displays ist in Entwicklung und noch nicht veröffentlicht. Siehe die [Embedded-Anleitung](https://github.com/CX-ArtLab/agent-robot-avatar/tree/main/embedded).
+Eine C++-Version, die die Ausdrücke des Avatars auf Roboter- und Entwicklungsboard-Displays zeigt (sie zeichnet nur die Augen), ist in Entwicklung und noch nicht veröffentlicht. Siehe die [Hardware-Anleitung](https://github.com/CX-ArtLab/agent-robot-avatar/tree/main/embedded).
 
 ## Mitwirken
 

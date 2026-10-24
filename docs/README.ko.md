@@ -173,9 +173,9 @@ ES Modules, Custom Elements, SVG, Pointer Events, Web Animations API, `Intersect
 
 자동 브라우저 테스트는 Chromium, Firefox, WebKit을 포함합니다.
 
-## 임베디드 눈 (개발 중)
+## 하드웨어 표정 버전 (개발 중)
 
-로봇과 개발 보드 화면을 위한 눈 전용 C++ 버전을 개발 중이며 아직 출시되지 않았습니다. [임베디드 가이드](https://github.com/CX-ArtLab/agent-robot-avatar/tree/main/embedded)를 참고하세요.
+로봇과 개발 보드 화면에 아바타의 표정을 보여 주는 C++ 버전(눈만 그림)을 개발 중이며 아직 출시되지 않았습니다. [하드웨어 가이드](https://github.com/CX-ArtLab/agent-robot-avatar/tree/main/embedded)를 참고하세요.
 
 ## 기여
 
