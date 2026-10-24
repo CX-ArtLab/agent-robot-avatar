@@ -121,14 +121,14 @@ const PATTERNS = {
     }
     return { size: [size, size], body };
   },
-  camo({ colors, size = 160, seed = 3 }) {
+  camo({ colors, size = 160, seed = 3, scale = 1 }) {
     const random = rng(seed);
     let body = '';
     for (const color of colors) {
       for (let i = 0; i < 7; i++) {
         const x = random() * size, y = random() * size;
         for (let j = 0; j < 4; j++) {
-          const bx = x + (random() - .5) * 26, by = y + (random() - .5) * 18, rx = 9 + random() * 12, ry = 6 + random() * 9, turn = random() * 180;
+          const bx = x + (random() - .5) * 26 * scale, by = y + (random() - .5) * 18 * scale, rx = (9 + random() * 12) * scale, ry = (6 + random() * 9) * scale, turn = random() * 180;
           body += wrap(size, bx, by, rx, (px, py) => `<ellipse cx="${n(px)}" cy="${n(py)}" rx="${n(rx)}" ry="${n(ry)}" fill="${color}" transform="rotate(${n(turn)} ${n(px)} ${n(py)})"/>`);
         }
       }
@@ -145,11 +145,11 @@ const PATTERNS = {
     }
     return { size: [size, size], body };
   },
-  tiger({ colors: [c], count = 8, size = 120, seed = 13, opacity = 1 }) {
+  tiger({ colors: [c], count = 8, size = 120, seed = 13, opacity = 1, thickness = 1 }) {
     const random = rng(seed);
     let body = '';
     for (let i = 0; i < count; i++) {
-      const y0 = (i + random() * .6) * size / count, x0 = random() * size, len = 50 + random() * 40, thick = 3 + random() * 4, bend = (random() - .5) * 14;
+      const y0 = (i + random() * .6) * size / count, x0 = random() * size, len = 50 + random() * 40, thick = (3 + random() * 4) * thickness, bend = (random() - .5) * 14;
       const top = [], bottom = [];
       for (let t = 0; t <= 1.0001; t += .1) {
         const x = x0 - len / 2 + len * t, y = y0 + Math.sin(t * Math.PI * 1.5) * bend * .4 + bend * t, w = thick * Math.sin(Math.PI * t);
@@ -278,6 +278,91 @@ const PATTERNS = {
     const w = r * 2, h = r;
     return { size: [w, h], body: `<path d="M0 0A${r} ${r} 0 0 0 ${w} 0M${-r} ${h}A${r} ${r} 0 0 0 ${r} ${h}M${r} ${h}A${r} ${r} 0 0 0 ${w + r} ${h}" fill="none" stroke="${c}" stroke-width="1.6" opacity="${opacity}"/>` };
   },
+
+  argyle({ colors: [a, b], w = 36, h = 52, opacity = .55 }) {
+    return { size: [w, h], body: `<path d="M${w / 2} 0L${w} ${h / 2}L${w / 2} ${h}L0 ${h / 2}Z" fill="${a}" opacity="${opacity}"/><path d="M0 0L${w} ${h}M${w} 0L0 ${h}" stroke="${b}" stroke-width="1.2" stroke-dasharray="3 3" opacity=".8"/>` };
+  },
+  checker({ colors: [c], size = 28, opacity = .9 }) {
+    const h = size / 2;
+    return { size: [size, size], body: `<rect width="${h}" height="${h}" fill="${c}" opacity="${opacity}"/><rect x="${h}" y="${h}" width="${h}" height="${h}" fill="${c}" opacity="${opacity}"/>` };
+  },
+  houndstooth({ colors: [c], size = 16 }) {
+    const u = size / 4;
+    return { size: [size, size], body: `<path d="M0 0H${2 * u}V${2 * u}H0Z M${2 * u} ${2 * u}L${4 * u} 0V${u}L${3 * u} ${2 * u}Z M0 ${4 * u}L${2 * u} ${2 * u}V${3 * u}L${u} ${4 * u}Z M${2 * u} ${2 * u}H${3 * u}L${2 * u} ${3 * u}Z" fill="${c}"/>` };
+  },
+  grid({ colors: [c], size = 50, step = 10, opacity = .5 }) {
+    let body = `<path d="M0 0H${size}M0 0V${size}" stroke="${c}" stroke-width="1.6" opacity="${opacity}"/>`;
+    for (let i = step; i < size; i += step) body += `<path d="M0 ${i}H${size}M${i} 0V${size}" stroke="${c}" stroke-width=".7" opacity="${opacity * .7}"/>`;
+    return { size: [size, size], body };
+  },
+  concentric({ colors: [c], step = 11, opacity = .55 }) {
+    let body = '';
+    for (let r = step; r < 200; r += step) body += `<circle cx="120" cy="128" r="${r}" fill="none" stroke="${c}" stroke-width="2.4" opacity="${opacity}"/>`;
+    return { size: [240, 240], body };
+  },
+  sunburst({ colors: [c], rays = 18, opacity = .35 }) {
+    let body = '';
+    for (let i = 0; i < rays; i++) {
+      const a0 = i / rays * Math.PI * 2, a1 = (i + .5) / rays * Math.PI * 2;
+      body += `<path d="M120 150L${n(120 + Math.cos(a0) * 340)} ${n(150 + Math.sin(a0) * 340)}L${n(120 + Math.cos(a1) * 340)} ${n(150 + Math.sin(a1) * 340)}Z" fill="${c}" opacity="${opacity}"/>`;
+    }
+    return { size: [240, 240], body };
+  },
+  bubbles({ colors: [c], count = 18, size = 120, seed = 43 }) {
+    const random = rng(seed);
+    let body = '';
+    for (let i = 0; i < count; i++) {
+      const x = random() * size, y = random() * size, r = 3 + random() * 11;
+      body += wrap(size, x, y, r, (px, py) => `<circle cx="${n(px)}" cy="${n(py)}" r="${n(r)}" fill="${c}" fill-opacity=".12" stroke="${c}" stroke-width="1.3" opacity=".85"/><circle cx="${n(px - r * .35)}" cy="${n(py - r * .35)}" r="${n(r * .18)}" fill="${c}"/>`);
+    }
+    return { size: [size, size], body };
+  },
+  halftone({ colors: [c], step = 12, opacity = .7 }) {
+    let body = '';
+    for (let y = 6; y < 240; y += step) for (let x = 6 + ((y / step) % 2) * step / 2; x < 240; x += step) {
+      body += `<circle cx="${n(x)}" cy="${n(y)}" r="${n(.6 + 4.4 * (y / 240))}" fill="${c}" opacity="${opacity}"/>`;
+    }
+    return { size: [240, 240], body };
+  },
+  scatter({ colors, shapes, count = 12, size = 120, k = [6, 10], seed = 47 }) {
+    const random = rng(seed);
+    let body = '';
+    for (let i = 0; i < count; i++) {
+      const x = random() * size, y = random() * size, r = k[0] + random() * (k[1] - k[0]), turn = (random() - .5) * 70;
+      const shape = pick(random, shapes), color = colors[i % colors.length], accent = colors[(i + 1) % colors.length];
+      const art = SHAPES[shape](r, color, accent);
+      body += wrap(size, x, y, r * 1.3, (px, py) => `<g transform="translate(${n(px)} ${n(py)}) rotate(${n(turn)})">${art}</g>`);
+    }
+    return { size: [size, size], body };
+  },
+  bands({ colors, width = 8, angle = 45, opacity = .9 }) {
+    const s = width * colors.length;
+    return { size: [s, s], transform: `rotate(${angle})`, body: colors.map((c, i) => `<rect x="${i * width}" width="${width}" height="${s}" fill="${c}" opacity="${opacity}"/>`).join('') };
+  },
+  spots({ colors: [c], count = 16, size = 110, seed = 53 }) {
+    const random = rng(seed);
+    let body = '';
+    for (let i = 0; i < count; i++) {
+      const x = random() * size, y = random() * size, rx = 2.5 + random() * 5, ry = rx * (.7 + random() * .3), turn = random() * 180;
+      body += wrap(size, x, y, rx, (px, py) => `<ellipse cx="${n(px)}" cy="${n(py)}" rx="${n(rx)}" ry="${n(ry)}" fill="${c}" transform="rotate(${n(turn)} ${n(px)} ${n(py)})"/>`);
+    }
+    return { size: [size, size], body };
+  },
+  brick({ colors: [c], w = 40, h = 20, opacity = .8 }) {
+    const r = h / 2;
+    return { size: [w, h], body: `<path d="M0 0H${w}M0 ${r}H${w}M0 0V${r}M${w / 2} 0V${r}M${w / 4} ${r}V${h}M${w * .75} ${r}V${h}" stroke="${c}" stroke-width="1.6" opacity="${opacity}"/>` };
+  },
+};
+
+const SHAPES = {
+  bolt: (k, c) => `<path d="M${n(-.15 * k)} ${n(-k)}L${n(.45 * k)} ${n(-k)}L${n(.1 * k)} ${n(-.15 * k)}L${n(.5 * k)} ${n(-.15 * k)}L${n(-.25 * k)} ${n(k)}L0 ${n(.1 * k)}L${n(-.4 * k)} ${n(.1 * k)}Z" fill="${c}"/>`,
+  note: (k, c) => `<ellipse cx="${n(-.1 * k)}" cy="${n(.6 * k)}" rx="${n(.36 * k)}" ry="${n(.26 * k)}" fill="${c}" transform="rotate(-20 ${n(-.1 * k)} ${n(.6 * k)})"/><rect x="${n(.18 * k)}" y="${n(-.85 * k)}" width="${n(.13 * k)}" height="${n(1.45 * k)}" fill="${c}"/><path d="M${n(.31 * k)} ${n(-.85 * k)}Q${n(.75 * k)} ${n(-.55 * k)} ${n(.55 * k)} ${n(-.1 * k)}Q${n(.6 * k)} ${n(-.45 * k)} ${n(.31 * k)} ${n(-.5 * k)}Z" fill="${c}"/>`,
+  paw: (k, c) => `<ellipse cy="${n(.35 * k)}" rx="${n(.46 * k)}" ry="${n(.38 * k)}" fill="${c}"/>${[[-.58, -.2], [-.22, -.6], [.22, -.6], [.58, -.2]].map(([x, y]) => `<ellipse cx="${n(x * k)}" cy="${n(y * k)}" rx="${n(.19 * k)}" ry="${n(.24 * k)}" fill="${c}"/>`).join('')}`,
+  snowflake: (k, c) => `<g stroke="${c}" stroke-width="${n(.13 * k)}" stroke-linecap="round">${[0, 60, 120].map(a => `<path d="M0 ${n(-k)}V${n(k)}M${n(-.3 * k)} ${n(-.7 * k)}L0 ${n(-.45 * k)}L${n(.3 * k)} ${n(-.7 * k)}M${n(-.3 * k)} ${n(.7 * k)}L0 ${n(.45 * k)}L${n(.3 * k)} ${n(.7 * k)}" transform="rotate(${a})"/>`).join('')}</g>`,
+  leaf: (k, c, accent) => `<path d="M0 ${n(-k)}Q${n(.65 * k)} 0 0 ${n(k)}Q${n(-.65 * k)} 0 0 ${n(-k)}Z" fill="${c}"/><path d="M0 ${n(-.8 * k)}V${n(.9 * k)}" stroke="${accent}" stroke-width="${n(.08 * k)}"/>`,
+  blossom: (k, c, accent) => `${[0, 72, 144, 216, 288].map(a => `<ellipse cy="${n(-.5 * k)}" rx="${n(.3 * k)}" ry="${n(.45 * k)}" fill="${c}" transform="rotate(${a})"/>`).join('')}<circle r="${n(.2 * k)}" fill="${accent}"/>`,
+  moon: (k, c) => `<path d="M${n(.2 * k)} ${n(-k)}A${n(k)} ${n(k)} 0 1 0 ${n(.2 * k)} ${n(k)}A${n(.75 * k)} ${n(.8 * k)} 0 1 1 ${n(.2 * k)} ${n(-k)}Z" fill="${c}"/>`,
+  star: (k, c) => `<path d="${starPath(0, 0, k * .7, 0)}" fill="${c}"/>`,
 };
 
 function patternMarkup(id, spec) {
