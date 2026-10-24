@@ -42,6 +42,7 @@ Agent Robot Avatar peut également servir de couche de retour visuel pour les in
 - Prise en charge du mouvement réduit
 - Comportement de sommeil configurable
 - Arrondi de la tête réglable
+- Trois skins de matière (obsidienne, porcelaine, aurore) avec une lumière qui suit le pointeur
 - Déclarations TypeScript incluses
 
 ## Installation
@@ -147,6 +148,7 @@ try {
 | `motion` | Politique d’animation : `auto`, `reduce` ou `full` |
 | `press-squeeze` | Maintenir le centre pour comprimer ; `false` désactive le geste |
 | `antenna-drag` | Glisser et faire rebondir l’antenne avec réaction de colère ; `false` désactive le geste |
+| `skin` | Matière : `obsidian`, `porcelain` ou `aurora` ; à omettre pour la couleur unie |
 
 Contrôles courants à l’exécution :
 
@@ -158,6 +160,27 @@ avatar.setAntennaDrag(true);
 ```
 
 Maintenir le centre lance la compression. Après plus de 4 pixels CSS de déplacement, le même geste bascule vers le glisser de tête existant. L’antenne reprend sa limite de distance et se termine par la réaction de colère existante.
+
+## Skins
+
+Trois matières, avec une lumière qui suit le pointeur :
+
+```html
+<agent-robot-avatar skin="obsidian"></agent-robot-avatar>
+```
+
+```js
+avatar.setSkin('porcelain'); // obsidian, porcelain ou aurora
+avatar.setSkin(null);        // retour à la couleur unie
+```
+
+| Skin | Apparence |
+| --- | --- |
+| `obsidian` | Verre sombre avec un liseré froid |
+| `porcelain` | Émail blanc chaleureux avec des yeux sombres |
+| `aurora` | Dégradé du cyan au violet avec un éclat de bonbon |
+
+Toutes les expressions et tous les gestes fonctionnent avec un skin. Sans skin, l’attribut `color` s’applique de nouveau.
 
 ## Événements et intégration
 

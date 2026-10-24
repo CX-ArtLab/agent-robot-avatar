@@ -42,6 +42,7 @@ Agent Robot Avatar は、AG-UI スタイルの Agent インターフェースに
 - Reduced Motion 対応
 - 設定可能なスリープ動作
 - 頭部の丸みを調整可能
+- 光がポインターを追う 3 種類の素材スキン（黒曜石・白磁・オーロラ）
 - TypeScript 型定義を同梱
 
 ## インストール
@@ -147,6 +148,7 @@ try {
 | `motion` | モーション方針：`auto`、`reduce`、`full` |
 | `press-squeeze` | 中央を長押しして圧縮。`false` で無効化 |
 | `antenna-drag` | アンテナのドラッグ、ばね復帰、怒り反応。`false` で無効化 |
+| `skin` | 素材：`obsidian`、`porcelain`、`aurora`。省略すると単色 |
 
 よく使うランタイム制御：
 
@@ -158,6 +160,27 @@ avatar.setAntennaDrag(true);
 ```
 
 中央の長押しで圧縮が始まり、4 CSS ピクセルを超えて動かすと、同じポインタージェスチャーが従来の頭部ドラッグへ切り替わります。アンテナには頭部ドラッグと同じ距離制限が適用され、復帰後に従来の怒り反応が続きます。
+
+## スキン
+
+3 種類の素材。光はポインターを追いかけます：
+
+```html
+<agent-robot-avatar skin="obsidian"></agent-robot-avatar>
+```
+
+```js
+avatar.setSkin('porcelain'); // obsidian、porcelain、aurora
+avatar.setSkin(null);        // 単色に戻す
+```
+
+| スキン | 見た目 |
+| --- | --- |
+| `obsidian` | 黒曜石：寒色の縁取りがある黒いガラス |
+| `porcelain` | 白磁：温かみのある白い釉薬と濃い色の目 |
+| `aurora` | オーロラ：シアンから紫へのグラデーションとキャンディのような光沢 |
+
+すべての表情とジェスチャーはスキンと一緒に使えます。スキンを外すと `color` 属性が再び適用されます。
 
 ## イベントと統合
 

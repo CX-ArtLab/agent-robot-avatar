@@ -444,15 +444,18 @@ function ensureRuntime(instance) {
         if (record.attributeName === 'size') applySize(instance);
         if (record.attributeName === 'motion') motionChanged = true;
         if (record.attributeName === 'auto-sleep') autoSleepChanged = true;
+        if (record.attributeName === 'skin') instance._applySkinAttribute?.();
       }
       if (motionChanged) handleMotionChange(instance);
       if (autoSleepChanged) scheduleAutoSleep(instance);
     });
     instance._runtimeAttributeObserver.observe(instance, {
       attributes: true,
-      attributeFilter: ['size', 'motion', 'wake-on', 'auto-sleep'],
+      attributeFilter: ['size', 'motion', 'wake-on', 'auto-sleep', 'skin'],
     });
   }
+  // A skin set with setSkin() survives a reconnect; markup only applies when present.
+  if (instance.hasAttribute('skin')) instance._applySkinAttribute?.();
 
   if (typeof IntersectionObserver !== 'undefined') {
     instance._runtimeIntersectionObserver = new IntersectionObserver(entries => {

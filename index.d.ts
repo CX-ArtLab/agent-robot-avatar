@@ -39,6 +39,9 @@ export type AgentRobotAvatarDeprecatedAction =
   | 'connection-error'
   | 'slot';
 
+/** Materials for the `skin` attribute and `setSkin()`. */
+export type AgentRobotAvatarSkin = 'obsidian' | 'porcelain' | 'aurora';
+
 export type AgentRobotAvatarState =
   | 'idle'
   | 'happy'
@@ -114,6 +117,13 @@ export declare class AgentRobotAvatar extends HTMLElement {
   setAntennaDrag(enabled?: boolean): this;
   setHeadRoundness(value?: number): this;
   getHeadRoundness(): number;
+  /**
+   * Dresses the head in a material with light that follows the pointer.
+   * Same as the `skin` attribute; `null` or `'none'` returns to the flat color.
+   * Throws for an unknown name.
+   */
+  setSkin(skin?: AgentRobotAvatarSkin | 'none' | null): this;
+  getSkin(): AgentRobotAvatarSkin | null;
   noteActivity(wake?: boolean): void;
 
   addEventListener<K extends keyof AgentRobotAvatarEventMap>(

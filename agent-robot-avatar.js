@@ -8,6 +8,7 @@ import './src/agent-robot-avatar-love.js';
 import './src/agent-robot-avatar-random.js';
 import './src/agent-robot-avatar-head-roundness.js';
 import './src/agent-robot-avatar-gestures.js';
+import './src/agent-robot-avatar-skins.js';
 import './src/agent-robot-avatar-runtime.js';
 import { VERSION } from './src/agent-robot-avatar-version.js';
 

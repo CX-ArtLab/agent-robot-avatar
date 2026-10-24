@@ -42,6 +42,7 @@ Agent Robot Avatar kann außerdem als visuelle Feedback-Ebene für Agent-Oberfl�
 - Unterstützung für reduzierte Bewegung
 - Konfigurierbares Schlafverhalten
 - Einstellbare Kopfrundung
+- Drei Material-Skins (Obsidian, Porzellan, Aurora) mit Licht, das dem Zeiger folgt
 - TypeScript-Deklarationen enthalten
 
 ## Installation
@@ -147,6 +148,7 @@ try {
 | `motion` | Bewegungsstrategie: `auto`, `reduce` oder `full` |
 | `press-squeeze` | Mitte gedrückt halten und stauchen; `false` deaktiviert die Geste |
 | `antenna-drag` | Antenne ziehen, federnd zurückkehren und wütend reagieren; `false` deaktiviert sie |
+| `skin` | Material: `obsidian`, `porcelain` oder `aurora`; weglassen für die flache Farbe |
 
 Häufige Runtime-Steuerungen:
 
@@ -158,6 +160,27 @@ avatar.setAntennaDrag(true);
 ```
 
 Gedrückthalten in der Mitte startet die Stauchung. Nach mehr als 4 CSS-Pixeln Bewegung wechselt dieselbe Zeigergeste zum vorhandenen Kopfziehen. Die Antenne verwendet dessen Distanzlimit und endet mit der vorhandenen Wutreaktion.
+
+## Skins
+
+Drei Materialien, deren Licht dem Zeiger folgt:
+
+```html
+<agent-robot-avatar skin="obsidian"></agent-robot-avatar>
+```
+
+```js
+avatar.setSkin('porcelain'); // obsidian, porcelain oder aurora
+avatar.setSkin(null);        // zurück zur flachen Farbe
+```
+
+| Skin | Aussehen |
+| --- | --- |
+| `obsidian` | Dunkles Glas mit kühlem Rand |
+| `porcelain` | Warme weiße Glasur mit dunklen Augen |
+| `aurora` | Verlauf von Cyan zu Violett mit Bonbonglanz |
+
+Alle Ausdrücke und Gesten funktionieren mit einem Skin. Ohne Skin gilt wieder das Attribut `color`.
 
 ## Ereignisse und Integration
 

@@ -42,6 +42,7 @@ Agent Robot Avatar 还可作为 AG-UI 风格 Agent 界面的视觉反馈层。
 - 支持减少动态效果
 - 可配置自动睡眠行为
 - 可调头部圆角
+- 三种材质皮肤（黑曜石、白瓷、流光），光线跟随鼠标
 - 内置 TypeScript 类型声明
 
 ## 安装
@@ -147,6 +148,7 @@ try {
 | `motion` | 动态效果策略：`auto`、`reduce` 或 `full` |
 | `press-squeeze` | 按住头像中心进行挤压；设为 `false` 可关闭 |
 | `antenna-drag` | 拖动天线、弹簧复原并接愤怒表情；设为 `false` 可关闭 |
+| `skin` | 材质：`obsidian`、`porcelain` 或 `aurora`；不写则为纯色 |
 
 常用运行时控制：
 
@@ -158,6 +160,27 @@ avatar.setAntennaDrag(true);
 ```
 
 按住头像中心会开始挤压；移动超过 4 个 CSS 像素后，同一次指针操作会切换为原有的头部拖动。拖动天线沿用头部拖动的距离限制，复原后接原有的愤怒反应。
+
+## 皮肤
+
+三种材质，光线会跟随鼠标：
+
+```html
+<agent-robot-avatar skin="obsidian"></agent-robot-avatar>
+```
+
+```js
+avatar.setSkin('porcelain'); // obsidian、porcelain 或 aurora
+avatar.setSkin(null);        // 回到纯色
+```
+
+| 皮肤 | 样子 |
+| --- | --- |
+| `obsidian` | 黑曜石：深色玻璃，冷色亮边 |
+| `porcelain` | 白瓷：温润白釉，深色眼睛 |
+| `aurora` | 流光：青紫渐变，糖果光泽 |
+
+所有表情和手势都能配合皮肤使用。去掉皮肤后，`color` 属性会重新生效。
 
 ## 事件与集成
 

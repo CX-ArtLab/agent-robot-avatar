@@ -42,6 +42,7 @@ Agent Robot Avatar también puede utilizarse como capa de retroalimentación vis
 - Compatibilidad con movimiento reducido
 - Comportamiento de sueño configurable
 - Redondez de la cabeza ajustable
+- Tres skins de material (obsidiana, porcelana, aurora) con luz que sigue al puntero
 - Declaraciones TypeScript incluidas
 
 ## Instalación
@@ -147,6 +148,7 @@ try {
 | `motion` | Política de movimiento: `auto`, `reduce` o `full` |
 | `press-squeeze` | Mantener pulsado el centro para comprimir; `false` lo desactiva |
 | `antenna-drag` | Arrastre y rebote de antena con reacción de enfado; `false` lo desactiva |
+| `skin` | Material: `obsidian`, `porcelain` o `aurora`; omítelo para el color plano |
 
 Controles habituales en tiempo de ejecución:
 
@@ -158,6 +160,27 @@ avatar.setAntennaDrag(true);
 ```
 
 Mantener pulsado el centro inicia la compresión. Al mover más de 4 píxeles CSS, el mismo gesto pasa al arrastre de cabeza existente. La antena usa el mismo límite de distancia y termina con la reacción de enfado existente.
+
+## Skins
+
+Tres materiales, con una luz que sigue al puntero:
+
+```html
+<agent-robot-avatar skin="obsidian"></agent-robot-avatar>
+```
+
+```js
+avatar.setSkin('porcelain'); // obsidian, porcelain o aurora
+avatar.setSkin(null);        // vuelve al color plano
+```
+
+| Skin | Aspecto |
+| --- | --- |
+| `obsidian` | Vidrio oscuro con un borde frío |
+| `porcelain` | Esmalte blanco cálido con ojos oscuros |
+| `aurora` | Degradado de cian a violeta con brillo de caramelo |
+
+Todas las expresiones y gestos funcionan con un skin. Al quitar el skin, el atributo `color` vuelve a aplicarse.
 
 ## Eventos e integración
 
