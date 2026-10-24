@@ -88,15 +88,30 @@ avatar.reset();
 
 Acciones disponibles:
 
-`idle` · `bored` · `waiting-spin` · `waiting-wrap` · `waiting-wave` · `input` · `affirm` · `success` · `failure` · `wary` · `inspect` · `angry` · `refuse` · `surprise` · `love` · `random` · `sleep` · `wake`
+| Acción | Aspecto | Cuándo usarla |
+| --- | --- | --- |
+| `idle` | Parpadea y mira alrededor | Estado predeterminado |
+| `bored` | Mira despacio a un lado y al otro | No ha pasado nada en un rato |
+| `waiting-spin` | Los ojos giran de lado a lado | Esperando respuesta (predeterminado) |
+| `waiting-wrap` | Los ojos salen por un lado y vuelven por el otro | Esperando respuesta |
+| `waiting-wave` | Los ojos suben y bajan por turnos | Esperando respuesta |
+| `input` | Los ojos se convierten en cursores parpadeantes | El usuario está escribiendo |
+| `affirm` | Asiente | Entendido, confirmado |
+| `success` | Ojos felices y sonrientes | Tarea completada |
+| `failure` | Baja la cabeza y los ojos | Fallo de tarea o conexión |
+| `wary` | Gira la cabeza y mira de arriba abajo con recelo | La acción necesita confirmación |
+| `inspect` | Entrecierra los ojos y escanea arriba y abajo | Revisar o comprobar algo |
+| `angry` | Ojos bajos y fulminantes | Contenido bloqueado |
+| `refuse` | Niega con la cabeza | No puede o no quiere hacer la petición |
+| `surprise` | Ojos muy abiertos | Algo inesperado |
+| `love` | Los ojos se unen en un corazón que late | Agradecimiento, cariño |
+| `random` | Los ojos giran como rodillos de tragaperras | Elección al azar, momento lúdico |
+| `sleep` | Cierra los ojos y duerme | Mucho tiempo sin actividad |
+| `wake` | Abre los ojos y despierta | Vuelve la actividad |
 
-`waiting-wave` reproduce tres ondas de 1,1 segundos: los ojos suben y bajan con un ritmo escalonado (amplitud de 10 unidades SVG) y luego se detienen. Usa `startWaiting({ variant: 'wave' })` para una espera continua sin cortes y `stopWaiting()` para detenerla. Respeta el ajuste de movimiento reducido e informa su ciclo de vida como `waiting`.
+Las acciones de espera reproducen una ronda con `play()`. `startWaiting({ variant: 'spin' | 'wrap' | 'wave' })` se repite hasta que empiece otra acción o se llame a `stopWaiting()`.
 
-Los nombres de acción describen lo que hace el avatar. `refuse` niega con la cabeza, para una petición que el Agent no puede o no va a realizar; `failure` es para una tarea o conexión que no salió bien; `wary` gira la cabeza y mira de arriba abajo con recelo, para una acción que requiere confirmación. Los nombres de 0.5 (`send`, `warning`, `error`, `blocked` y otros) siguen funcionando con un aviso en la consola hasta 1.0; consulta la [tabla de actualización](../CHANGELOG.md#upgrading-from-05x).
-
-`love` expresa cariño o agradecimiento: los dos ojos se inclinan hasta formar un único corazón, laten tres veces y luego vuelven a la normalidad.
-
-`random` reproduce un giro de tragaperras: cada ojo rueda sobre un tambor; después el ojo izquierdo frena, rebota y se detiene, seguido del derecho. `slot` es un alias.
+Los nombres de 0.5 (`send`, `warning`, `error`, `blocked`, `slot` y otros) siguen funcionando hasta 1.0 con un aviso en la consola; consulta la [tabla de actualización](../CHANGELOG.md#upgrading-from-05x).
 
 Un flujo típico para una solicitud de Agent:
 
