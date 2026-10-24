@@ -44,12 +44,6 @@ Agent Robot Avatar は、AG-UI スタイルの Agent インターフェースに
 - 頭部の丸みを調整可能
 - TypeScript 型定義を同梱
 
-## 組み込み向けの目（実験的）
-
-独立した C++11 エンジンがメモリの動的確保なしで目だけを描画し、ロボットや開発ボードの画面で同じ 18 種類の表情を表示します。現在開発中で、まだリリースされていません。ファームウェア例は ESP32、ESP32-S3、RP2040 による 26 種類のボードと画面の組み合わせをカバーしています。すべて CI でコンパイルされていますが、実機ではまだ検証されていません。試した場合はハードウェアレポートを送ってください。
-
-[組み込みガイド](https://github.com/CX-ArtLab/agent-robot-avatar/tree/main/embedded)をご覧ください。組み込みライブラリは Web Component とは独立しており、そのインストール方法や使い方は変わりません。
-
 ## インストール
 
 ```bash
@@ -178,6 +172,10 @@ avatar.setAntennaDrag(true);
 ES Modules、Custom Elements、SVG、Pointer Events、Web Animations API、`IntersectionObserver`、`ResizeObserver`、`matchMedia` をサポートするモダンブラウザ向けです。
 
 自動ブラウザテストは Chromium、Firefox、WebKit を対象にしています。
+
+## 組み込み向けの目（開発中）
+
+ロボットや開発ボードの画面向けに、目だけを描く C++ 版を開発中です（未リリース）。[組み込みガイド](https://github.com/CX-ArtLab/agent-robot-avatar/tree/main/embedded)をご覧ください。
 
 ## コントリビューション
 

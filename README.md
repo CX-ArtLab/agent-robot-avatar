@@ -44,12 +44,6 @@ Built with SVG and vanilla JavaScript, it works as a native custom element with 
 - Adjustable head roundness
 - TypeScript declarations included
 
-## Embedded eyes (experimental)
-
-An independent, allocation-free C++11 eyes-only engine draws the same 18 expressions on robot and dev-board screens. Firmware examples cover 26 board and screen configurations across ESP32, ESP32-S3 and RP2040 — ST7789, ST7735, GC9A01 round, ILI9341/9342/9488, CO5300 AMOLED, ST7701S RGB panels and SSD1306/SH1106 OLEDs, including LilyGO, M5Stack, Waveshare, Seeed and Espressif boards. It is still in development and not released yet. Every example compiles in CI; none is verified on real hardware yet, so please send a hardware report if you try one.
-
-See the [embedded guide](https://github.com/CX-ArtLab/agent-robot-avatar/tree/main/embedded) and [中文说明](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/embedded/README.zh-CN.md). The embedded library is separate from the Web component and does not change how it is installed or used.
-
 ## Install
 
 ```bash
@@ -178,6 +172,10 @@ A minimal integration example is available at [`examples/basic.html`](./examples
 Designed for modern browsers with support for ES Modules, Custom Elements, SVG, Pointer Events, Web Animations API, `IntersectionObserver`, `ResizeObserver`, and `matchMedia`.
 
 Automated browser tests cover Chromium, Firefox, and WebKit.
+
+## Embedded eyes (in development)
+
+An eyes-only C++ version for robot and dev-board screens is in development and not released yet. See the [embedded guide](https://github.com/CX-ArtLab/agent-robot-avatar/tree/main/embedded).
 
 ## Contributing
 

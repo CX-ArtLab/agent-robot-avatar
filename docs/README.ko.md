@@ -44,12 +44,6 @@ Agent Robot Avatar는 AG-UI 스타일 Agent 인터페이스를 위한 시각적 
 - 조절 가능한 머리 둥글기
 - TypeScript 선언 포함
 
-## 임베디드 눈 (실험적)
-
-독립적인 C++11 엔진이 동적 메모리 할당 없이 눈만 그려, 로봇과 개발 보드 화면에 같은 18가지 표정을 보여 줍니다. 아직 개발 중이며 정식으로 출시되지 않았습니다. 펌웨어 예제는 ESP32, ESP32-S3, RP2040 기반의 26가지 보드·화면 조합을 다룹니다. 모든 예제는 CI에서 컴파일되지만 아직 실제 하드웨어에서 검증되지 않았습니다. 직접 시험해 보셨다면 하드웨어 보고서를 보내 주세요.
-
-[임베디드 가이드](https://github.com/CX-ArtLab/agent-robot-avatar/tree/main/embedded)를 참고하세요. 임베디드 라이브러리는 Web Component와 별개이며 설치와 사용 방법에 영향을 주지 않습니다.
-
 ## 설치
 
 ```bash
@@ -178,6 +172,10 @@ avatar.setAntennaDrag(true);
 ES Modules, Custom Elements, SVG, Pointer Events, Web Animations API, `IntersectionObserver`, `ResizeObserver`, `matchMedia`를 지원하는 최신 브라우저를 대상으로 합니다.
 
 자동 브라우저 테스트는 Chromium, Firefox, WebKit을 포함합니다.
+
+## 임베디드 눈 (개발 중)
+
+로봇과 개발 보드 화면을 위한 눈 전용 C++ 버전을 개발 중이며 아직 출시되지 않았습니다. [임베디드 가이드](https://github.com/CX-ArtLab/agent-robot-avatar/tree/main/embedded)를 참고하세요.
 
 ## 기여
 

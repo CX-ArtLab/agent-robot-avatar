@@ -44,12 +44,6 @@ Agent Robot Avatar 也可作為 AG-UI 風格 Agent 介面的視覺回饋層。
 - 可調整頭部圓角
 - 內含 TypeScript 型別宣告
 
-## 嵌入式眼睛版本（實驗性）
-
-獨立的 C++11 眼睛表情核心，不需動態配置記憶體，在機器人和開發板的螢幕上畫出同樣的 18 種表情。目前仍在開發中，尚未正式發布。韌體範例涵蓋 ESP32、ESP32-S3、RP2040 的 26 種開發板與螢幕組合，全部在 CI 中編譯通過，但尚未經過實機驗證；如果你在實物上試過，歡迎提交實機驗證報告。
-
-[查看硬體接入說明](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/embedded/README.zh-CN.md)（簡體中文）。嵌入式函式庫與 Web 組件相互獨立，不影響 Web 組件的安裝和使用。
-
 ## 安裝
 
 ```bash
@@ -178,6 +172,10 @@ avatar.setAntennaDrag(true);
 面向支援 ES Modules、Custom Elements、SVG、Pointer Events、Web Animations API、`IntersectionObserver`、`ResizeObserver` 和 `matchMedia` 的現代瀏覽器。
 
 自動瀏覽器測試涵蓋 Chromium、Firefox 和 WebKit。
+
+## 嵌入式眼睛版本（開發中）
+
+面向機器人和開發板螢幕的 C++ 眼睛版本正在開發中，尚未發布。詳見[硬體接入說明](https://github.com/CX-ArtLab/agent-robot-avatar/tree/main/embedded)。
 
 ## 參與貢獻
 

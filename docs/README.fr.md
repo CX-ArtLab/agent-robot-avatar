@@ -44,12 +44,6 @@ Agent Robot Avatar peut également servir de couche de retour visuel pour les in
 - Arrondi de la tête réglable
 - Déclarations TypeScript incluses
 
-## Yeux embarqués (expérimental)
-
-Un moteur C++11 indépendant et sans allocation dynamique dessine uniquement les yeux, avec les mêmes 18 expressions, sur les écrans de robots et de cartes de développement. Il est encore en développement et n’a pas encore été publié. Les exemples de firmware couvrent 26 combinaisons de cartes et d’écrans avec ESP32, ESP32-S3 et RP2040. Tous sont compilés en CI mais pas encore testés sur du matériel réel ; si vous en essayez un, envoyez un rapport matériel.
-
-Voir le [guide embarqué](https://github.com/CX-ArtLab/agent-robot-avatar/tree/main/embedded). La bibliothèque embarquée est distincte du Web Component et ne change ni son installation ni son utilisation.
-
 ## Installation
 
 ```bash
@@ -178,6 +172,10 @@ Un exemple minimal d’intégration est disponible dans [`examples/basic.html`](
 Conçu pour les navigateurs modernes prenant en charge ES Modules, Custom Elements, SVG, Pointer Events, Web Animations API, `IntersectionObserver`, `ResizeObserver` et `matchMedia`.
 
 Les tests automatisés couvrent Chromium, Firefox et WebKit.
+
+## Yeux embarqués (en développement)
+
+Une version C++ limitée aux yeux, pour les écrans de robots et de cartes de développement, est en cours de développement et pas encore publiée. Voir le [guide embarqué](https://github.com/CX-ArtLab/agent-robot-avatar/tree/main/embedded).
 
 ## Contribution
 
