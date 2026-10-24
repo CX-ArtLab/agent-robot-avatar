@@ -38,12 +38,17 @@ Agent Robot Avatar 也可作為 AG-UI 風格 Agent 介面的視覺回饋層。
 - 果凍式局部拖曳形變與彈性復原
 - 按住擠壓與可拖曳的彈簧天線互動
 - 可透過程式控制 Agent 狀態與表情
-- 支援 waiting、success、failure、warning、review、blocked、system error 等回饋
+- 支援 waiting、success、failure、affirm、wary、inspect、angry、refuse、love 等表情回饋
 - 支援減少動態效果
 - 可設定自動睡眠行為
 - 可調整頭部圓角
-- 可選天線狀態閃爍
 - 內含 TypeScript 型別宣告
+
+## 嵌入式眼睛版本（實驗性）
+
+獨立的 C++11 眼睛表情核心，不需動態配置記憶體，在機器人和開發板的螢幕上畫出同樣的 18 種表情。目前仍在開發中，尚未正式發布。韌體範例涵蓋 ESP32、ESP32-S3、RP2040 的 26 種開發板與螢幕組合，全部在 CI 中編譯通過，但尚未經過實機驗證；如果你在實物上試過，歡迎提交實機驗證報告。
+
+[查看硬體接入說明](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/embedded/README.zh-CN.md)（簡體中文）。嵌入式函式庫與 Web 組件相互獨立，不影響 Web 組件的安裝和使用。
 
 ## 安裝
 
@@ -85,6 +90,8 @@ avatar.reset();
 
 `idle` · `bored` · `waiting-spin` · `waiting-wrap` · `waiting-wave` · `input` · `affirm` · `success` · `failure` · `wary` · `inspect` · `angry` · `refuse` · `surprise` · `love` · `random` · `sleep` · `wake`
 
+`waiting-wave`（等待 · 波動）：雙眼錯開節奏上下起伏，每輪週期 1.1 秒、振幅 10 SVG 單位。`play('waiting-wave')` 連續播放三輪並回正；`startWaiting({ variant: 'wave' })` 持續循環，直到被其他動作取代或呼叫 `stopWaiting()`。支援減少動態效果設定，動作生命週期事件統一使用 `waiting`。
+
 動作名描述的是頭像做出的樣子：`refuse` 是搖頭，用於 Agent 不能或不會執行某個請求；`failure` 用於任務或連線沒有成功；`wary` 是側頭、上下打量的警惕眼神，用於需要使用者確認的操作。0.5 版的舊名字（`send`、`warning`、`error`、`blocked` 等）在 1.0 之前仍可使用，但會在主控台提示改名，詳見[升級對照表](../CHANGELOG.md#upgrading-from-05x)。
 
 `love` 用於表達喜歡或感謝：兩隻眼睛向中間靠攏合成一顆愛心，跳動三下後恢復。
@@ -98,6 +105,9 @@ avatar.startWaiting();
 
 // 第二種等待：眼睛從一側轉出，再從另一側轉入。
 avatar.startWaiting({ variant: 'wrap' });
+
+// 第三種等待動作：雙眼錯開節奏上下起伏。
+avatar.startWaiting({ variant: 'wave' });
 
 try {
   const result = await runAgentRequest();
