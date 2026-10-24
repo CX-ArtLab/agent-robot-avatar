@@ -42,6 +42,7 @@ Agent Robot Avatar는 AG-UI 스타일 Agent 인터페이스를 위한 시각적 
 - Reduced Motion 지원
 - 설정 가능한 수면 동작
 - 조절 가능한 머리 둥글기
+- 빛이 포인터를 따라가는 세 가지 재질 스킨(흑요석, 백자, 오로라)
 - TypeScript 선언 포함
 
 ## 설치
@@ -147,6 +148,7 @@ try {
 | `motion` | 모션 정책: `auto`, `reduce`, `full` |
 | `press-squeeze` | 중앙을 길게 눌러 압축; `false`로 비활성화 |
 | `antenna-drag` | 안테나 드래그, 스프링 복귀, 화난 반응; `false`로 비활성화 |
+| `skin` | 재질: `obsidian`, `porcelain` 또는 `aurora`. 생략하면 단색 |
 
 자주 쓰는 런타임 제어:
 
@@ -158,6 +160,27 @@ avatar.setAntennaDrag(true);
 ```
 
 중앙을 길게 누르면 압축이 시작됩니다. 4 CSS 픽셀을 넘게 움직이면 같은 포인터 제스처가 기존 머리 드래그로 전환됩니다. 안테나는 머리 드래그와 같은 거리 제한을 사용하며 복귀 후 기존 화난 반응이 이어집니다.
+
+## 스킨
+
+세 가지 재질이 있으며, 빛이 포인터를 따라갑니다:
+
+```html
+<agent-robot-avatar skin="obsidian"></agent-robot-avatar>
+```
+
+```js
+avatar.setSkin('porcelain'); // obsidian, porcelain 또는 aurora
+avatar.setSkin(null);        // 단색으로 돌아가기
+```
+
+| 스킨 | 모습 |
+| --- | --- |
+| `obsidian` | 흑요석: 차가운 테두리가 있는 어두운 유리 |
+| `porcelain` | 백자: 따뜻한 흰 유약과 어두운 눈 |
+| `aurora` | 오로라: 청록에서 보라로 이어지는 그라데이션과 캔디 같은 광택 |
+
+모든 표정과 제스처를 스킨과 함께 쓸 수 있습니다. 스킨을 제거하면 `color` 속성이 다시 적용됩니다.
 
 ## 이벤트와 통합
 

@@ -6,6 +6,7 @@ import AgentRobotAvatar, {
   type AgentRobotAvatarActionStateDetail,
   type AgentRobotAvatarCanonicalAction,
   type AgentRobotAvatarMotion,
+  type AgentRobotAvatarSkin,
   type AgentRobotAvatarState,
   type AgentRobotAvatarWakeOn,
 } from 'agent-robot-avatar';
@@ -41,9 +42,13 @@ avatar
   .setPointerFollow(false)
   .setAntennaFlash(true)
   .setHeadRoundness(50)
+  .setSkin('obsidian')
+  .setSkin(null)
   .reset();
 
 const roundness: number = avatar.getHeadRoundness();
+const skin: AgentRobotAvatarSkin | null = avatar.getSkin();
+void skin;
 const version: string = VERSION;
 const element: AgentRobotAvatar = document.createElement('agent-robot-avatar');
 

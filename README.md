@@ -42,6 +42,7 @@ Built with SVG and vanilla JavaScript, it works as a native custom element with 
 - Reduced-motion support
 - Configurable sleep behavior
 - Adjustable head roundness
+- Material skins (obsidian, porcelain, aurora) with light that follows the pointer
 - TypeScript declarations included
 
 ## Install
@@ -147,6 +148,7 @@ try {
 | `motion` | Motion policy: `auto`, `reduce`, or `full` |
 | `press-squeeze` | Center press-and-hold squeeze; set to `false` to disable |
 | `antenna-drag` | Antenna drag, spring return, and angry reaction; set to `false` to disable |
+| `skin` | Material: `obsidian`, `porcelain` or `aurora`; leave it out for the flat color |
 
 Common runtime controls:
 
@@ -158,6 +160,27 @@ avatar.setAntennaDrag(true);
 ```
 
 The avatar center begins the squeeze interaction. Moving more than 4 CSS pixels transfers the same pointer gesture to the existing head drag. Dragging the antenna uses the same pull limit as head dragging and ends with the existing angry reaction.
+
+## Skins
+
+Three materials, with light that follows the pointer:
+
+```html
+<agent-robot-avatar skin="obsidian"></agent-robot-avatar>
+```
+
+```js
+avatar.setSkin('porcelain'); // obsidian, porcelain or aurora
+avatar.setSkin(null);        // back to the flat color
+```
+
+| Skin | Look |
+| --- | --- |
+| `obsidian` | Dark glass with a cool rim |
+| `porcelain` | Warm white glaze with dark eyes |
+| `aurora` | Cyan-to-violet gradient with a candy sheen |
+
+Every expression and gesture works with a skin. When the skin is removed, the `color` attribute applies again.
 
 ## Events and integration
 
