@@ -786,6 +786,13 @@ function mountDemoControls() {
         delete document.documentElement.dataset.demoIntro;
         currentState = String(face._state || 'idle');
         updateStatus();
+        // Last touch: the ordinary idle glance to one side, with the head following
+        // it in the usual way (no new action), then the normal wandering resumes.
+        if (face._wanderTarget && !face._isReducedMotion?.()) {
+          face._wanderTarget.x = (Math.random() < 0.5 ? -1 : 1) * 24;
+          face._wanderTarget.y = -6;
+          face._nextWanderAt = performance.now() + 1500;
+        }
       };
       face.addEventListener('action-state', release);
       playFinale();
