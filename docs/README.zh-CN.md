@@ -88,15 +88,30 @@ avatar.reset();
 
 可用动作：
 
-`idle` · `bored` · `waiting-spin` · `waiting-wrap` · `waiting-wave` · `input` · `affirm` · `success` · `failure` · `wary` · `inspect` · `angry` · `refuse` · `surprise` · `love` · `random` · `sleep` · `wake`
+| 动作 | 样子 | 适合的场景 |
+| --- | --- | --- |
+| `idle` | 眨眼、四处看看 | 默认状态 |
+| `bored` | 慢慢往两边张望 | 一段时间没有动静 |
+| `waiting-spin` | 双眼左右绕圈 | 等待回复（默认） |
+| `waiting-wrap` | 双眼从一侧转出、另一侧回来 | 等待回复 |
+| `waiting-wave` | 双眼轮流上下起伏 | 等待回复 |
+| `input` | 双眼变成闪烁的输入光标 | 用户正在输入 |
+| `affirm` | 点头 | 收到、确认 |
+| `success` | 开心的笑眼 | 任务完成 |
+| `failure` | 低头、眼睛下垂 | 任务或连接失败 |
+| `wary` | 侧头、上下打量 | 操作需要用户确认 |
+| `inspect` | 眯眼上下扫视 | 检查、审核内容 |
+| `angry` | 压低眼睛瞪着 | 内容被拦截 |
+| `refuse` | 摇头 | 做不到或不愿做 |
+| `surprise` | 睁大眼睛 | 出乎意料 |
+| `love` | 双眼合成跳动的爱心 | 感谢、喜欢 |
+| `random` | 双眼像老虎机一样滚动 | 随机抽取、逗趣 |
+| `sleep` | 闭眼睡觉 | 长时间无操作 |
+| `wake` | 睁眼醒来 | 重新有动静 |
 
-`waiting-wave`（等待 · 波动）：双眼错开节奏上下起伏，每轮周期 1.1 秒、振幅 10 SVG 单位。`play('waiting-wave')` 连续播放三轮并回正；`startWaiting({ variant: 'wave' })` 持续循环，直到被其他动作替换或调用 `stopWaiting()`。支持减少动态效果设置，动作生命周期事件统一使用 `waiting`。
+等待类动作用 `play()` 播放一轮；用 `startWaiting({ variant: 'spin' | 'wrap' | 'wave' })` 会一直循环，直到播放其他动作或调用 `stopWaiting()`。
 
-动作名描述的是头像做出的样子：`refuse` 是摇头，用于 Agent 不能或不会执行某个请求；`failure` 用于任务或连接没有成功；`wary` 是侧头、上下打量的警惕眼神，用于需要用户确认的操作。0.5 版的旧名字（`send`、`warning`、`error`、`blocked` 等）在 1.0 之前仍可使用，但会在控制台提示改名，详见[升级对照表](../CHANGELOG.md#upgrading-from-05x)。
-
-`love` 用于表达喜欢或感谢：两只眼睛向中间靠拢合成一颗爱心，跳动三下后恢复。
-
-`random` 播放老虎机式的转动：两只眼睛各自在滚筒上滚动，随后左眼减速、弹跳着停下，右眼稍后停下。`slot` 是它的别名。
+0.5 版的旧名字（`send`、`warning`、`error`、`blocked`、`slot` 等）在 1.0 之前仍可使用，但会在控制台提示改名，详见[升级对照表](../CHANGELOG.md#upgrading-from-05x)。
 
 一个典型的 Agent 请求流程：
 

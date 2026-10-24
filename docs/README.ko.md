@@ -88,15 +88,30 @@ avatar.reset();
 
 사용 가능한 액션:
 
-`idle` · `bored` · `waiting-spin` · `waiting-wrap` · `waiting-wave` · `input` · `affirm` · `success` · `failure` · `wary` · `inspect` · `angry` · `refuse` · `surprise` · `love` · `random` · `sleep` · `wake`
+| 동작 | 모습 | 사용 상황 |
+| --- | --- | --- |
+| `idle` | 눈을 깜박이며 주변을 둘러봄 | 기본 상태 |
+| `bored` | 천천히 양옆을 둘러봄 | 한동안 아무 일도 없을 때 |
+| `waiting-spin` | 두 눈이 좌우로 회전 | 응답 대기 (기본) |
+| `waiting-wrap` | 두 눈이 한쪽으로 나갔다 반대쪽으로 돌아옴 | 응답 대기 |
+| `waiting-wave` | 두 눈이 번갈아 위아래로 출렁임 | 응답 대기 |
+| `input` | 두 눈이 깜박이는 입력 커서가 됨 | 사용자가 입력 중 |
+| `affirm` | 고개를 끄덕임 | 확인, 알겠음 |
+| `success` | 기쁘게 웃는 눈 | 작업 완료 |
+| `failure` | 고개와 눈이 처짐 | 작업 또는 연결 실패 |
+| `wary` | 고개를 돌려 경계하며 위아래로 훑어봄 | 사용자 확인이 필요한 작업 |
+| `inspect` | 눈을 가늘게 뜨고 위아래로 살핌 | 내용 확인·검토 |
+| `angry` | 눈을 내리깔고 노려봄 | 콘텐츠가 차단됨 |
+| `refuse` | 고개를 저음 | 할 수 없거나 하지 않을 요청 |
+| `surprise` | 눈을 크게 뜸 | 예상 밖의 일 |
+| `love` | 두 눈이 뛰는 하트로 합쳐짐 | 감사, 애정 |
+| `random` | 두 눈이 슬롯머신 릴처럼 돌아감 | 무작위 선택, 장난스러운 순간 |
+| `sleep` | 눈을 감고 잠듦 | 오랫동안 조작이 없을 때 |
+| `wake` | 눈을 뜨고 깨어남 | 활동이 다시 시작될 때 |
 
-`waiting-wave`는 1.1초짜리 물결을 세 번 재생합니다. 두 눈이 엇갈린 리듬으로 위아래로 움직이고(진폭 10 SVG 단위) 멈춥니다. `startWaiting({ variant: 'wave' })`로 끊김 없이 반복하고 `stopWaiting()`으로 멈춥니다. Reduced Motion 설정을 따르며 수명 주기는 `waiting`으로 보고됩니다.
+대기 동작은 `play()`로 한 번 재생됩니다. `startWaiting({ variant: 'spin' | 'wrap' | 'wave' })`는 다른 동작을 재생하거나 `stopWaiting()`을 호출할 때까지 반복됩니다.
 
-액션 이름은 아바타의 모습을 나타냅니다. `refuse`는 고개를 젓는 동작으로 Agent가 수행할 수 없거나 하지 않을 요청에 사용하고, `failure`는 작업이나 연결이 성공하지 못한 경우, `wary`는 고개를 돌려 위아래로 살피는 경계의 눈빛으로 확인이 필요한 작업에 사용합니다. 0.5의 이전 이름(`send`, `warning`, `error`, `blocked` 등)은 1.0까지 동작하지만 콘솔에 이름 변경 안내가 표시됩니다. [업그레이드 표](../CHANGELOG.md#upgrading-from-05x)를 참고하세요.
-
-`love`는 호감이나 감사를 표현합니다. 두 눈이 서로 기울어 하나의 하트가 되고, 세 번 뛴 뒤 원래대로 돌아옵니다.
-
-`random`은 슬롯머신 회전을 재생합니다. 각 눈이 드럼 위를 굴러가다가 먼저 왼쪽 눈이 감속해 튕기며 멈추고, 이어서 오른쪽 눈이 멈춥니다. `slot`은 별칭입니다.
+0.5의 이전 이름(`send`, `warning`, `error`, `blocked`, `slot` 등)은 1.0 전까지 계속 동작하지만 콘솔에 이름 변경 안내가 표시됩니다. [업그레이드 표](../CHANGELOG.md#upgrading-from-05x)를 참고하세요.
 
 일반적인 Agent 요청 흐름:
 

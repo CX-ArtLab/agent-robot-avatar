@@ -88,15 +88,30 @@ avatar.reset();
 
 可用動作：
 
-`idle` · `bored` · `waiting-spin` · `waiting-wrap` · `waiting-wave` · `input` · `affirm` · `success` · `failure` · `wary` · `inspect` · `angry` · `refuse` · `surprise` · `love` · `random` · `sleep` · `wake`
+| 動作 | 樣子 | 適合的情境 |
+| --- | --- | --- |
+| `idle` | 眨眼、四處看看 | 預設狀態 |
+| `bored` | 慢慢往兩邊張望 | 一段時間沒有動靜 |
+| `waiting-spin` | 雙眼左右繞圈 | 等待回覆（預設） |
+| `waiting-wrap` | 雙眼從一側轉出、另一側回來 | 等待回覆 |
+| `waiting-wave` | 雙眼輪流上下起伏 | 等待回覆 |
+| `input` | 雙眼變成閃爍的輸入游標 | 使用者正在輸入 |
+| `affirm` | 點頭 | 收到、確認 |
+| `success` | 開心的笑眼 | 任務完成 |
+| `failure` | 低頭、眼睛下垂 | 任務或連線失敗 |
+| `wary` | 側頭、上下打量 | 操作需要使用者確認 |
+| `inspect` | 瞇眼上下掃視 | 檢查、審核內容 |
+| `angry` | 壓低眼睛瞪著 | 內容被攔截 |
+| `refuse` | 搖頭 | 做不到或不願做 |
+| `surprise` | 睜大眼睛 | 出乎意料 |
+| `love` | 雙眼合成跳動的愛心 | 感謝、喜歡 |
+| `random` | 雙眼像老虎機一樣滾動 | 隨機抽取、逗趣 |
+| `sleep` | 閉眼睡覺 | 長時間無操作 |
+| `wake` | 睜眼醒來 | 重新有動靜 |
 
-`waiting-wave`（等待 · 波動）：雙眼錯開節奏上下起伏，每輪週期 1.1 秒、振幅 10 SVG 單位。`play('waiting-wave')` 連續播放三輪並回正；`startWaiting({ variant: 'wave' })` 持續循環，直到被其他動作取代或呼叫 `stopWaiting()`。支援減少動態效果設定，動作生命週期事件統一使用 `waiting`。
+等待類動作用 `play()` 播放一輪；用 `startWaiting({ variant: 'spin' | 'wrap' | 'wave' })` 會一直循環，直到播放其他動作或呼叫 `stopWaiting()`。
 
-動作名描述的是頭像做出的樣子：`refuse` 是搖頭，用於 Agent 不能或不會執行某個請求；`failure` 用於任務或連線沒有成功；`wary` 是側頭、上下打量的警惕眼神，用於需要使用者確認的操作。0.5 版的舊名字（`send`、`warning`、`error`、`blocked` 等）在 1.0 之前仍可使用，但會在主控台提示改名，詳見[升級對照表](../CHANGELOG.md#upgrading-from-05x)。
-
-`love` 用於表達喜歡或感謝：兩隻眼睛向中間靠攏合成一顆愛心，跳動三下後恢復。
-
-`random` 播放老虎機式的轉動：兩隻眼睛各自在滾筒上滾動，隨後左眼減速、彈跳著停下，右眼稍後停下。`slot` 是它的別名。
+0.5 版的舊名字（`send`、`warning`、`error`、`blocked`、`slot` 等）在 1.0 之前仍可使用，但會在主控台提示改名，詳見[升級對照表](../CHANGELOG.md#upgrading-from-05x)。
 
 典型的 Agent 請求流程：
 
