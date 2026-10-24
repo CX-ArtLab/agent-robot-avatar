@@ -790,12 +790,15 @@ function mountDemoControls() {
       };
       const head = face._headMotion;
       const tilt = head?.animate && !face._isReducedMotion?.() ? (() => {
-        const side = Math.random() < 0.5 ? -1 : 1;
+        // Keep the eyes centered while the head tilts: the gaze lock ignores wandering
+        // and the pointer, the same way every action holds the gaze.
+        face._expressionLock = true;
+        face._wanderTarget.x = face._wanderTarget.y = 0;
         head.style.transformBox = 'view-box';
         head.style.transformOrigin = '120px 120px';
         return head.animate([
           { transform: 'translateX(0px) rotate(0deg)', offset: 0, easing: 'cubic-bezier(.35,0,.22,1)' },
-          { transform: `translateX(${side * 3}px) rotate(${side * 9}deg)`, offset: 0.45, easing: 'cubic-bezier(.35,0,.22,1)' },
+          { transform: 'translateX(3px) rotate(9deg)', offset: 0.45, easing: 'cubic-bezier(.35,0,.22,1)' },
           { transform: 'translateX(0px) rotate(0deg)', offset: 1 },
         ], { duration: 1100, easing: 'linear' });
       })() : null;
