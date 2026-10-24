@@ -776,8 +776,8 @@ function mountDemoControls() {
       if (ended || pending.size) return;
       cleanup();
       showChosenColors();
-      // Ending: as the ripple spreads the head tilts to one side and back, then the
-      // happy eyes and a small hop land as a "ta-da". It is still part of the show,
+      // Ending: the head tilts to one side and back, and the tilt sets off the ripple;
+      // then the happy eyes and a small hop land as a "ta-da". It is still part of the show,
       // so the status label waits until it is over.
       document.documentElement.dataset.demoIntro = 'true';
       const release = event => {
@@ -802,11 +802,12 @@ function mountDemoControls() {
           { transform: 'translateX(0px) rotate(0deg)', offset: 1 },
         ], { duration: 1100, easing: 'linear' });
       })() : null;
-      let timer = 0;
+      let timer = 0, rippleTimer = 0;
       // Anything the visitor starts during the tilt takes over: no smile afterwards.
       const interrupt = event => {
         if (event.detail.phase !== 'start') return;
         clearTimeout(timer);
+        clearTimeout(rippleTimer);
         tilt?.cancel();
         face.removeEventListener('action-state', interrupt);
         if (stopIntro) return;
@@ -815,7 +816,8 @@ function mountDemoControls() {
         updateStatus();
       };
       face.addEventListener('action-state', interrupt);
-      playFinale();
+      // The ripple starts as the head nears the end of its tilt.
+      rippleTimer = setTimeout(playFinale, tilt ? 400 : 0);
       timer = setTimeout(() => {
         face.removeEventListener('action-state', interrupt);
         face.addEventListener('action-state', release);
