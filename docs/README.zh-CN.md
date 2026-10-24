@@ -173,9 +173,9 @@ avatar.setAntennaDrag(true);
 
 自动浏览器测试覆盖 Chromium、Firefox 和 WebKit。
 
-## 嵌入式眼睛版本（开发中）
+## 硬件表情版（开发中）
 
-面向机器人和开发板屏幕的 C++ 眼睛版本正在开发中，尚未发布。详见[硬件接入说明](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/embedded/README.zh-CN.md)。
+在机器人和开发板屏幕上显示表情的 C++ 版本（只画眼睛）正在开发中，尚未发布。详见[硬件接入说明](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/embedded/README.zh-CN.md)。
 
 ## 参与贡献
 
