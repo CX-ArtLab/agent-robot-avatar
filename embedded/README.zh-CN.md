@@ -1,4 +1,4 @@
-# Agent Robot Eyes：嵌入式眼睛表情组件
+# Agent Robot Eyes：硬件表情组件
 
 [English / 完整接口说明](README.md) · [返回主项目](../docs/README.zh-CN.md)
 

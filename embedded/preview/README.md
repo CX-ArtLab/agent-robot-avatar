@@ -1,4 +1,4 @@
-# Offline eyes preview / 离线眼睛预览器
+# Offline eyes preview / 离线表情预览器
 
 Download **`agent-robot-eyes-preview.html`** and open it in a browser. The file contains its UI and compiled engine. No install or server is required to run it. On a phone, a file manager's preview may not execute HTML/WebAssembly: use a desktop browser if it only shows source or a static preview.
 
