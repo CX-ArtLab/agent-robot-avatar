@@ -42,7 +42,7 @@ Agent Robot Avatar также можно использовать как сло�
 - Поддержка reduced motion
 - Настраиваемое поведение сна
 - Регулируемое скругление головы
-- Три скина-материала (обсидиан, фарфор, аврора) со светом, следующим за указателем
+- 42 скина-материала и узора со светом, следующим за указателем
 - TypeScript-декларации включены
 
 ## Установка
@@ -148,7 +148,7 @@ try {
 | `motion` | Политика движения: `auto`, `reduce` или `full` |
 | `press-squeeze` | Удержание центра для сжатия; `false` отключает жест |
 | `antenna-drag` | Перетаскивание и пружинящий возврат антенны с сердитой реакцией; `false` отключает жест |
-| `skin` | Материал: `obsidian`, `porcelain` или `aurora`; без атрибута — сплошной цвет |
+| `skin` | Материал: `obsidian`, `porcelain`, `gold` … (42); без атрибута — сплошной цвет |
 
 Часто используемые runtime-настройки:
 
@@ -163,22 +163,26 @@ avatar.setAntennaDrag(true);
 
 ## Скины
 
-Три материала, свет следует за указателем:
+42 скина в пяти семействах, свет следует за указателем:
 
 ```html
 <agent-robot-avatar skin="obsidian"></agent-robot-avatar>
 ```
 
 ```js
-avatar.setSkin('porcelain'); // obsidian, porcelain или aurora
+avatar.setSkin('porcelain'); // любое имя из списка
 avatar.setSkin(null);        // вернуться к сплошному цвету
 ```
 
-| Скин | Как выглядит |
+| Семейство | Скины |
 | --- | --- |
-| `obsidian` | Тёмное стекло с холодной кромкой |
-| `porcelain` | Тёплая белая глазурь с тёмными глазами |
-| `aurora` | Градиент от бирюзового к фиолетовому с карамельным блеском |
+| Стекло и камни | `obsidian`, `midnight`, `jade`, `amber`, `ruby`, `sapphire`, `emerald`, `neon` |
+| Фарфор, пастель и глина | `porcelain`, `pearl`, `sakura`, `mint`, `lavender`, `lemon`, `sky`, `peach`, `terracotta` |
+| Металл | `gold`, `silver`, `copper`, `titanium`, `rose-gold`, `graphite` |
+| Градиенты | `aurora`, `ocean`, `forest`, `candy` |
+| Узоры | `tartan`, `polka`, `terrazzo`, `marble`, `black-marble`, `wood`, `pixel`, `confetti`, `rainbow`, `denim`, `graph-paper`, `halftone`, `leaves`, `blossoms`, `brick` |
+
+Экспорт `SKIN_NAMES` содержит все имена, например для меню выбора.
 
 Все выражения и жесты работают со скином. Если убрать скин, снова применяется атрибут `color`.
 

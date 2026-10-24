@@ -8,7 +8,7 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ### Added
 
-- Added skins. `skin="obsidian"`, `"porcelain"` or `"aurora"` (or `setSkin()`) dresses the head in a material with a soft shine, a rim and a ground shadow, and its light follows the pointer the same way the eyes do. Every expression and gesture works with a skin: the eyelids cut the eyes through a mask instead of painting over them, so the material runs unbroken across the lids. `getSkin()` returns the active skin. Removing the skin brings back the `color` attribute. An unknown name in markup logs a warning and falls back to the flat color; `setSkin()` throws for it.
+- Added 42 skins in five families: glass and gems, porcelain and pastel, metal, gradients, and printed patterns. `skin="obsidian"` (or `setSkin()`) dresses the head in a material with a soft shine, a rim and a ground shadow, and its light follows the pointer the same way the eyes do. Printed patterns sit under the same shading, and busy ones outline the eyes so they stay readable. Every expression and gesture works with a skin: the eyelids cut the eyes through a mask instead of painting over them, so the material runs unbroken across the lids. `getSkin()` returns the active skin and the new `SKIN_NAMES` export lists every name. Removing the skin brings back the `color` attribute. An unknown name in markup logs a warning and falls back to the flat color; `setSkin()` throws for it.
 
 ## [0.6.0] - 2026-10-23
 

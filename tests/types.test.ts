@@ -1,4 +1,5 @@
 import AgentRobotAvatar, {
+  SKIN_NAMES,
   VERSION,
   type AgentRobotAvatarAction,
   type AgentRobotAvatarActionPhase,
@@ -43,12 +44,15 @@ avatar
   .setAntennaFlash(true)
   .setHeadRoundness(50)
   .setSkin('obsidian')
+  .setSkin('black-marble')
   .setSkin(null)
   .reset();
 
 const roundness: number = avatar.getHeadRoundness();
 const skin: AgentRobotAvatarSkin | null = avatar.getSkin();
 void skin;
+const firstSkin: AgentRobotAvatarSkin | undefined = SKIN_NAMES[0];
+void firstSkin;
 const version: string = VERSION;
 const element: AgentRobotAvatar = document.createElement('agent-robot-avatar');
 

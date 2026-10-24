@@ -42,7 +42,7 @@ O Agent Robot Avatar também pode ser usado como camada de feedback visual para 
 - Suporte a movimento reduzido
 - Comportamento de sono configurável
 - Arredondamento da cabeça ajustável
-- Três skins de material (obsidiana, porcelana, aurora) com luz que segue o ponteiro
+- 42 skins de materiais e estampas com luz que segue o ponteiro
 - Declarações TypeScript incluídas
 
 ## Instalação
@@ -148,7 +148,7 @@ try {
 | `motion` | Política de movimento: `auto`, `reduce` ou `full` |
 | `press-squeeze` | Pressione o centro para comprimir; `false` desativa |
 | `antenna-drag` | Arraste e retorno elástico da antena com reação de raiva; `false` desativa |
-| `skin` | Material: `obsidian`, `porcelain` ou `aurora`; omita para a cor lisa |
+| `skin` | Material: `obsidian`, `porcelain`, `gold` … (42); omita para a cor lisa |
 
 Controles comuns em tempo de execução:
 
@@ -163,22 +163,26 @@ Manter o centro pressionado inicia a compressão. Ao mover mais de 4 pixels CSS,
 
 ## Skins
 
-Três materiais, com uma luz que segue o ponteiro:
+42 skins em cinco famílias, com uma luz que segue o ponteiro:
 
 ```html
 <agent-robot-avatar skin="obsidian"></agent-robot-avatar>
 ```
 
 ```js
-avatar.setSkin('porcelain'); // obsidian, porcelain ou aurora
+avatar.setSkin('porcelain'); // qualquer nome da lista
 avatar.setSkin(null);        // volta à cor lisa
 ```
 
-| Skin | Aparência |
+| Família | Skins |
 | --- | --- |
-| `obsidian` | Vidro escuro com borda fria |
-| `porcelain` | Esmalte branco quente com olhos escuros |
-| `aurora` | Degradê de ciano a violeta com brilho de bala |
+| Vidro e gemas | `obsidian`, `midnight`, `jade`, `amber`, `ruby`, `sapphire`, `emerald`, `neon` |
+| Porcelana, pastel e argila | `porcelain`, `pearl`, `sakura`, `mint`, `lavender`, `lemon`, `sky`, `peach`, `terracotta` |
+| Metal | `gold`, `silver`, `copper`, `titanium`, `rose-gold`, `graphite` |
+| Degradês | `aurora`, `ocean`, `forest`, `candy` |
+| Estampas | `tartan`, `polka`, `terrazzo`, `marble`, `black-marble`, `wood`, `pixel`, `confetti`, `rainbow`, `denim`, `graph-paper`, `halftone`, `leaves`, `blossoms`, `brick` |
+
+A exportação `SKIN_NAMES` lista todos os nomes, por exemplo para montar um seletor.
 
 Todas as expressões e gestos funcionam com um skin. Ao remover o skin, o atributo `color` volta a valer.
 

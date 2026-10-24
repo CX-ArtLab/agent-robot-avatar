@@ -42,7 +42,7 @@ Agent Robot Avatar kann außerdem als visuelle Feedback-Ebene für Agent-Oberfl�
 - Unterstützung für reduzierte Bewegung
 - Konfigurierbares Schlafverhalten
 - Einstellbare Kopfrundung
-- Drei Material-Skins (Obsidian, Porzellan, Aurora) mit Licht, das dem Zeiger folgt
+- 42 Material- und Muster-Skins mit Licht, das dem Zeiger folgt
 - TypeScript-Deklarationen enthalten
 
 ## Installation
@@ -148,7 +148,7 @@ try {
 | `motion` | Bewegungsstrategie: `auto`, `reduce` oder `full` |
 | `press-squeeze` | Mitte gedrückt halten und stauchen; `false` deaktiviert die Geste |
 | `antenna-drag` | Antenne ziehen, federnd zurückkehren und wütend reagieren; `false` deaktiviert sie |
-| `skin` | Material: `obsidian`, `porcelain` oder `aurora`; weglassen für die flache Farbe |
+| `skin` | Material: `obsidian`, `porcelain`, `gold` … (42); weglassen für die flache Farbe |
 
 Häufige Runtime-Steuerungen:
 
@@ -163,22 +163,26 @@ Gedrückthalten in der Mitte startet die Stauchung. Nach mehr als 4 CSS-Pixeln B
 
 ## Skins
 
-Drei Materialien, deren Licht dem Zeiger folgt:
+42 Skins in fünf Familien; das Licht folgt dem Zeiger:
 
 ```html
 <agent-robot-avatar skin="obsidian"></agent-robot-avatar>
 ```
 
 ```js
-avatar.setSkin('porcelain'); // obsidian, porcelain oder aurora
+avatar.setSkin('porcelain'); // ein Name aus der Liste
 avatar.setSkin(null);        // zurück zur flachen Farbe
 ```
 
-| Skin | Aussehen |
+| Familie | Skins |
 | --- | --- |
-| `obsidian` | Dunkles Glas mit kühlem Rand |
-| `porcelain` | Warme weiße Glasur mit dunklen Augen |
-| `aurora` | Verlauf von Cyan zu Violett mit Bonbonglanz |
+| Glas und Edelsteine | `obsidian`, `midnight`, `jade`, `amber`, `ruby`, `sapphire`, `emerald`, `neon` |
+| Porzellan, Pastell und Ton | `porcelain`, `pearl`, `sakura`, `mint`, `lavender`, `lemon`, `sky`, `peach`, `terracotta` |
+| Metall | `gold`, `silver`, `copper`, `titanium`, `rose-gold`, `graphite` |
+| Verläufe | `aurora`, `ocean`, `forest`, `candy` |
+| Druckmuster | `tartan`, `polka`, `terrazzo`, `marble`, `black-marble`, `wood`, `pixel`, `confetti`, `rainbow`, `denim`, `graph-paper`, `halftone`, `leaves`, `blossoms`, `brick` |
+
+Der Export `SKIN_NAMES` listet alle Namen, etwa für eine Auswahl.
 
 Alle Ausdrücke und Gesten funktionieren mit einem Skin. Ohne Skin gilt wieder das Attribut `color`.
 

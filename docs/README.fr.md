@@ -42,7 +42,7 @@ Agent Robot Avatar peut également servir de couche de retour visuel pour les in
 - Prise en charge du mouvement réduit
 - Comportement de sommeil configurable
 - Arrondi de la tête réglable
-- Trois skins de matière (obsidienne, porcelaine, aurore) avec une lumière qui suit le pointeur
+- 42 skins de matières et de motifs avec une lumière qui suit le pointeur
 - Déclarations TypeScript incluses
 
 ## Installation
@@ -148,7 +148,7 @@ try {
 | `motion` | Politique d’animation : `auto`, `reduce` ou `full` |
 | `press-squeeze` | Maintenir le centre pour comprimer ; `false` désactive le geste |
 | `antenna-drag` | Glisser et faire rebondir l’antenne avec réaction de colère ; `false` désactive le geste |
-| `skin` | Matière : `obsidian`, `porcelain` ou `aurora` ; à omettre pour la couleur unie |
+| `skin` | Matière : `obsidian`, `porcelain`, `gold` … (42) ; à omettre pour la couleur unie |
 
 Contrôles courants à l’exécution :
 
@@ -163,22 +163,26 @@ Maintenir le centre lance la compression. Après plus de 4 pixels CSS de déplac
 
 ## Skins
 
-Trois matières, avec une lumière qui suit le pointeur :
+42 skins en cinq familles, avec une lumière qui suit le pointeur :
 
 ```html
 <agent-robot-avatar skin="obsidian"></agent-robot-avatar>
 ```
 
 ```js
-avatar.setSkin('porcelain'); // obsidian, porcelain ou aurora
+avatar.setSkin('porcelain'); // un nom de la liste
 avatar.setSkin(null);        // retour à la couleur unie
 ```
 
-| Skin | Apparence |
+| Famille | Skins |
 | --- | --- |
-| `obsidian` | Verre sombre avec un liseré froid |
-| `porcelain` | Émail blanc chaleureux avec des yeux sombres |
-| `aurora` | Dégradé du cyan au violet avec un éclat de bonbon |
+| Verre et pierres précieuses | `obsidian`, `midnight`, `jade`, `amber`, `ruby`, `sapphire`, `emerald`, `neon` |
+| Porcelaine, pastel et argile | `porcelain`, `pearl`, `sakura`, `mint`, `lavender`, `lemon`, `sky`, `peach`, `terracotta` |
+| Métal | `gold`, `silver`, `copper`, `titanium`, `rose-gold`, `graphite` |
+| Dégradés | `aurora`, `ocean`, `forest`, `candy` |
+| Motifs imprimés | `tartan`, `polka`, `terrazzo`, `marble`, `black-marble`, `wood`, `pixel`, `confetti`, `rainbow`, `denim`, `graph-paper`, `halftone`, `leaves`, `blossoms`, `brick` |
+
+L’export `SKIN_NAMES` liste tous les noms, par exemple pour construire un sélecteur.
 
 Toutes les expressions et tous les gestes fonctionnent avec un skin. Sans skin, l’attribut `color` s’applique de nouveau.
 

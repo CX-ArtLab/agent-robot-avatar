@@ -42,7 +42,7 @@ Agent Robot Avatar는 AG-UI 스타일 Agent 인터페이스를 위한 시각적 
 - Reduced Motion 지원
 - 설정 가능한 수면 동작
 - 조절 가능한 머리 둥글기
-- 빛이 포인터를 따라가는 세 가지 재질 스킨(흑요석, 백자, 오로라)
+- 빛이 포인터를 따라가는 42가지 재질·패턴 스킨
 - TypeScript 선언 포함
 
 ## 설치
@@ -148,7 +148,7 @@ try {
 | `motion` | 모션 정책: `auto`, `reduce`, `full` |
 | `press-squeeze` | 중앙을 길게 눌러 압축; `false`로 비활성화 |
 | `antenna-drag` | 안테나 드래그, 스프링 복귀, 화난 반응; `false`로 비활성화 |
-| `skin` | 재질: `obsidian`, `porcelain` 또는 `aurora`. 생략하면 단색 |
+| `skin` | 재질: `obsidian`, `porcelain`, `gold` … (42). 생략하면 단색 |
 
 자주 쓰는 런타임 제어:
 
@@ -163,22 +163,26 @@ avatar.setAntennaDrag(true);
 
 ## 스킨
 
-세 가지 재질이 있으며, 빛이 포인터를 따라갑니다:
+다섯 계열, 42가지 스킨이 있으며 빛이 포인터를 따라갑니다:
 
 ```html
 <agent-robot-avatar skin="obsidian"></agent-robot-avatar>
 ```
 
 ```js
-avatar.setSkin('porcelain'); // obsidian, porcelain 또는 aurora
+avatar.setSkin('porcelain'); // 아래 목록의 이름
 avatar.setSkin(null);        // 단색으로 돌아가기
 ```
 
-| 스킨 | 모습 |
+| 계열 | 스킨 |
 | --- | --- |
-| `obsidian` | 흑요석: 차가운 테두리가 있는 어두운 유리 |
-| `porcelain` | 백자: 따뜻한 흰 유약과 어두운 눈 |
-| `aurora` | 오로라: 청록에서 보라로 이어지는 그라데이션과 캔디 같은 광택 |
+| 유리와 보석 | `obsidian`, `midnight`, `jade`, `amber`, `ruby`, `sapphire`, `emerald`, `neon` |
+| 도자기·파스텔·점토 | `porcelain`, `pearl`, `sakura`, `mint`, `lavender`, `lemon`, `sky`, `peach`, `terracotta` |
+| 금속 | `gold`, `silver`, `copper`, `titanium`, `rose-gold`, `graphite` |
+| 그라데이션 | `aurora`, `ocean`, `forest`, `candy` |
+| 프린트 패턴 | `tartan`, `polka`, `terrazzo`, `marble`, `black-marble`, `wood`, `pixel`, `confetti`, `rainbow`, `denim`, `graph-paper`, `halftone`, `leaves`, `blossoms`, `brick` |
+
+`SKIN_NAMES`로 모든 이름을 가져와 스킨 선택기 등을 만들 수 있습니다.
 
 모든 표정과 제스처를 스킨과 함께 쓸 수 있습니다. 스킨을 제거하면 `color` 속성이 다시 적용됩니다.
 

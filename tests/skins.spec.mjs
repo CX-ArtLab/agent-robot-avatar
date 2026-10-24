@@ -68,13 +68,13 @@ test('unknown skins warn in markup and throw from setSkin', async ({ page }) => 
   const warnings = [];
   page.on('console', message => { if (message.type() === 'warning') warnings.push(message.text()); });
   const avatar = await addAvatar(page, { skin: 'obsidian' });
-  await avatar.evaluate(element => element.setAttribute('skin', 'marble'));
+  await avatar.evaluate(element => element.setAttribute('skin', 'velvet'));
   await expect.poll(() => avatar.evaluate(element => element.getSkin())).toBeNull();
-  expect(warnings.some(text => text.includes('unknown skin "marble"'))).toBe(true);
+  expect(warnings.some(text => text.includes('unknown skin "velvet"'))).toBe(true);
   const message = await avatar.evaluate(element => {
-    try { element.setSkin('marble'); return ''; } catch (error) { return error.message; }
+    try { element.setSkin('velvet'); return ''; } catch (error) { return error.message; }
   });
-  expect(message).toContain('Unknown Agent Robot Avatar skin: marble');
+  expect(message).toContain('Unknown Agent Robot Avatar skin: velvet');
 });
 
 test('the light follows the pointer and rests when following is off', async ({ page }) => {
@@ -98,4 +98,40 @@ test('a skin set from script survives moving the avatar in the page', async ({ p
   });
   await page.waitForTimeout(200);
   expect(await snapshot(avatar)).toMatchObject({ skin: 'aurora', head: 'url(#skin-base)' });
+});
+
+test('every skin renders through all expressions without errors', async ({ page }) => {
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  page.on('console', message => { if (message.type() === 'warning' || message.type() === 'error') errors.push(message.text()); });
+  await page.goto('/examples/basic.html');
+  const results = await page.evaluate(async () => {
+    const { SKIN_NAMES } = await import('/agent-robot-avatar.js');
+    const avatar = document.querySelector('#avatar');
+    const out = [];
+    for (const name of SKIN_NAMES) {
+      avatar.setSkin(name);
+      const root = avatar.shadowRoot;
+      const pattern = root.getElementById('skin-pattern');
+      const patternLayer = root.querySelector('use[fill="url(#skin-pattern)"]');
+      out.push({
+        name,
+        head: root.getElementById('head').getAttribute('fill'),
+        patternShown: Boolean(pattern) && patternLayer.style.display !== 'none',
+        patternHasArt: pattern ? pattern.childElementCount > 0 : null,
+      });
+    }
+    return { count: SKIN_NAMES.length, out };
+  });
+  expect(results.count).toBe(42);
+  for (const item of results.out) {
+    expect(item.head, item.name).toBe('url(#skin-base)');
+    if (item.patternShown) expect(item.patternHasArt, item.name).toBe(true);
+  }
+  expect(results.out.filter(item => item.patternShown).length).toBe(15);
+  for (const action of ['angry', 'love', 'random']) {
+    await page.locator('#avatar').evaluate((element, name) => element.play(name), action);
+    await page.waitForTimeout(400);
+  }
+  expect(errors).toEqual([]);
 });

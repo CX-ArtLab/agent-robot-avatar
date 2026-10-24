@@ -42,7 +42,7 @@ Agent Robot Avatar 也可作為 AG-UI 風格 Agent 介面的視覺回饋層。
 - 支援減少動態效果
 - 可設定自動睡眠行為
 - 可調整頭部圓角
-- 三種材質皮膚（黑曜石、白瓷、流光），光線跟隨滑鼠
+- 42 種材質與圖案皮膚，光線跟隨滑鼠
 - 內含 TypeScript 型別宣告
 
 ## 安裝
@@ -148,7 +148,7 @@ try {
 | `motion` | 動態效果策略：`auto`、`reduce` 或 `full` |
 | `press-squeeze` | 按住頭像中心進行擠壓；設為 `false` 可關閉 |
 | `antenna-drag` | 拖曳天線、彈簧復原並接憤怒表情；設為 `false` 可關閉 |
-| `skin` | 材質：`obsidian`、`porcelain` 或 `aurora`；不寫則為純色 |
+| `skin` | 材質：`obsidian`, `porcelain`, `gold` … (42)；不寫則為純色 |
 
 常用執行階段控制：
 
@@ -163,22 +163,26 @@ avatar.setAntennaDrag(true);
 
 ## 皮膚
 
-三種材質，光線會跟隨滑鼠：
+共 42 種皮膚，分五類，光線會跟隨滑鼠：
 
 ```html
 <agent-robot-avatar skin="obsidian"></agent-robot-avatar>
 ```
 
 ```js
-avatar.setSkin('porcelain'); // obsidian、porcelain 或 aurora
+avatar.setSkin('porcelain'); // 下方任一名稱
 avatar.setSkin(null);        // 回到純色
 ```
 
-| 皮膚 | 樣子 |
+| 類別 | 皮膚 |
 | --- | --- |
-| `obsidian` | 黑曜石：深色玻璃，冷色亮邊 |
-| `porcelain` | 白瓷：溫潤白釉，深色眼睛 |
-| `aurora` | 流光：青紫漸層，糖果光澤 |
+| 玻璃與寶石 | `obsidian`, `midnight`, `jade`, `amber`, `ruby`, `sapphire`, `emerald`, `neon` |
+| 瓷、粉彩與陶土 | `porcelain`, `pearl`, `sakura`, `mint`, `lavender`, `lemon`, `sky`, `peach`, `terracotta` |
+| 金屬 | `gold`, `silver`, `copper`, `titanium`, `rose-gold`, `graphite` |
+| 漸層 | `aurora`, `ocean`, `forest`, `candy` |
+| 印花圖案 | `tartan`, `polka`, `terrazzo`, `marble`, `black-marble`, `wood`, `pixel`, `confetti`, `rainbow`, `denim`, `graph-paper`, `halftone`, `leaves`, `blossoms`, `brick` |
+
+`SKIN_NAMES` 匯出了全部名稱，可用於製作皮膚選擇器。
 
 所有表情和手勢都能搭配皮膚使用。移除皮膚後，`color` 屬性會重新生效。
 
