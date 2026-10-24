@@ -44,12 +44,6 @@ Agent Robot Avatar kann außerdem als visuelle Feedback-Ebene für Agent-Oberfl�
 - Einstellbare Kopfrundung
 - TypeScript-Deklarationen enthalten
 
-## Eingebettete Augen (experimentell)
-
-Eine eigenständige C++11-Engine ohne dynamische Speicherallokation zeichnet nur die Augen und zeigt dieselben 18 Ausdrücke auf Roboter- und Entwicklungsboard-Displays. Sie ist noch in Entwicklung und noch nicht veröffentlicht. Firmware-Beispiele decken 26 Board- und Display-Kombinationen mit ESP32, ESP32-S3 und RP2040 ab. Alle Beispiele werden in der CI kompiliert, sind aber noch nicht auf echter Hardware geprüft; wenn du eines ausprobierst, sende bitte einen Hardware-Bericht.
-
-Siehe die [Embedded-Anleitung](https://github.com/CX-ArtLab/agent-robot-avatar/tree/main/embedded). Die Embedded-Bibliothek ist von der Web Component getrennt und ändert nichts an deren Installation oder Verwendung.
-
 ## Installation
 
 ```bash
@@ -178,6 +172,10 @@ Ein minimales Integrationsbeispiel ist unter [`examples/basic.html`](../examples
 Für moderne Browser mit Unterstützung für ES Modules, Custom Elements, SVG, Pointer Events, Web Animations API, `IntersectionObserver`, `ResizeObserver` und `matchMedia`.
 
 Automatisierte Browsertests decken Chromium, Firefox und WebKit ab.
+
+## Eingebettete Augen (in Entwicklung)
+
+Eine reine Augen-Version in C++ für Roboter- und Entwicklungsboard-Displays ist in Entwicklung und noch nicht veröffentlicht. Siehe die [Embedded-Anleitung](https://github.com/CX-ArtLab/agent-robot-avatar/tree/main/embedded).
 
 ## Mitwirken
 

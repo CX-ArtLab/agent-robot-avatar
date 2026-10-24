@@ -44,12 +44,6 @@ O Agent Robot Avatar também pode ser usado como camada de feedback visual para 
 - Arredondamento da cabeça ajustável
 - Declarações TypeScript incluídas
 
-## Olhos embarcados (experimental)
-
-Um mecanismo C++11 independente e sem alocação dinâmica de memória desenha apenas os olhos, com as mesmas 18 expressões, em telas de robôs e placas de desenvolvimento. Ainda está em desenvolvimento e ainda não foi lançado. Os exemplos de firmware cobrem 26 combinações de placa e tela com ESP32, ESP32-S3 e RP2040. Todos são compilados na CI, mas ainda não foram testados em hardware real; se você testar algum, envie um relatório de hardware.
-
-Consulte o [guia embarcado](https://github.com/CX-ArtLab/agent-robot-avatar/tree/main/embedded). A biblioteca embarcada é separada do Web Component e não muda como ele é instalado ou usado.
-
 ## Instalação
 
 ```bash
@@ -178,6 +172,10 @@ Um exemplo mínimo de integração está disponível em [`examples/basic.html`](
 Projetado para navegadores modernos com suporte a ES Modules, Custom Elements, SVG, Pointer Events, Web Animations API, `IntersectionObserver`, `ResizeObserver` e `matchMedia`.
 
 Os testes automatizados cobrem Chromium, Firefox e WebKit.
+
+## Olhos embarcados (em desenvolvimento)
+
+Uma versão em C++ só com os olhos, para telas de robôs e placas de desenvolvimento, está em desenvolvimento e ainda não foi lançada. Consulte o [guia embarcado](https://github.com/CX-ArtLab/agent-robot-avatar/tree/main/embedded).
 
 ## Contribuindo
 

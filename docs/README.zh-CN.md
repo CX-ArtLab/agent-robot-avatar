@@ -24,12 +24,6 @@ Agent Robot Avatar 还可作为 AG-UI 风格 Agent 界面的视觉反馈层。
   <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Agent Robot Avatar 交互动画演示" width="560">
 </p>
 
-## 嵌入式眼睛版本（实验性）
-
-独立的 C++11 眼睛表情核心，在机器人和开发板的屏幕上画出同样的 18 种表情。固件示例覆盖 26 种开发板与屏幕组合（ESP32、ESP32-S3、RP2040；ST7789、ST7735、GC9A01 圆屏、ILI9341/9342/9488、CO5300 AMOLED、ST7701S RGB 屏、SSD1306/SH1106 OLED，含 LilyGO、M5Stack、微雪、Seeed、乐鑫等开发板）。目前仍在开发中，尚未正式发布。所有示例都在 CI 中编译通过，尚未实机验证；如果你在实物上试过，欢迎提交实机验证报告。
-
-[查看硬件接入说明](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/embedded/README.zh-CN.md)。嵌入式库与 Web 组件相互独立，不影响 Web 组件的安装和使用。
-
 ## 在线 Demo
 
 [打开交互 Demo](https://cx-artlab.github.io/agent-robot-avatar/?lang=zh-CN)
@@ -178,6 +172,10 @@ avatar.setAntennaDrag(true);
 面向支持 ES Modules、Custom Elements、SVG、Pointer Events、Web Animations API、`IntersectionObserver`、`ResizeObserver` 和 `matchMedia` 的现代浏览器。
 
 自动浏览器测试覆盖 Chromium、Firefox 和 WebKit。
+
+## 嵌入式眼睛版本（开发中）
+
+面向机器人和开发板屏幕的 C++ 眼睛版本正在开发中，尚未发布。详见[硬件接入说明](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/embedded/README.zh-CN.md)。
 
 ## 参与贡献
 

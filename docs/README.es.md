@@ -44,12 +44,6 @@ Agent Robot Avatar también puede utilizarse como capa de retroalimentación vis
 - Redondez de la cabeza ajustable
 - Declaraciones TypeScript incluidas
 
-## Ojos embebidos (experimental)
-
-Un motor independiente en C++11, sin asignación dinámica de memoria, dibuja solo los ojos con las mismas 18 expresiones en pantallas de robots y placas de desarrollo. Aún está en desarrollo y todavía no se ha publicado. Los ejemplos de firmware cubren 26 combinaciones de placa y pantalla con ESP32, ESP32-S3 y RP2040. Todos se compilan en CI, pero aún no se han probado en hardware real; si pruebas alguno, envía un informe de hardware.
-
-Consulta la [guía embebida](https://github.com/CX-ArtLab/agent-robot-avatar/tree/main/embedded). La biblioteca embebida es independiente del Web Component y no cambia cómo se instala ni cómo se usa.
-
 ## Instalación
 
 ```bash
@@ -178,6 +172,10 @@ Hay un ejemplo mínimo de integración en [`examples/basic.html`](../examples/ba
 Diseñado para navegadores modernos con soporte para ES Modules, Custom Elements, SVG, Pointer Events, Web Animations API, `IntersectionObserver`, `ResizeObserver` y `matchMedia`.
 
 Las pruebas automatizadas cubren Chromium, Firefox y WebKit.
+
+## Ojos embebidos (en desarrollo)
+
+Una versión en C++ solo con los ojos, para pantallas de robots y placas de desarrollo, está en desarrollo y aún no se ha publicado. Consulta la [guía embebida](https://github.com/CX-ArtLab/agent-robot-avatar/tree/main/embedded).
 
 ## Contribuir
 
