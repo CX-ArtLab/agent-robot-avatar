@@ -26,7 +26,7 @@ O Agent Robot Avatar também pode ser usado como camada de feedback visual para 
 
 ## Demo ao vivo
 
-[Abrir a demo interativa](https://cx-artlab.github.io/agent-robot-avatar/?lang=pt)
+[Abrir a demo interativa](https://cx-artlab.github.io/agent-robot-avatar/?lang=pt) · [Visite a galeria de skins](https://cx-artlab.github.io/agent-robot-avatar/skins.html?lang=pt)
 
 ## Destaques
 
@@ -43,6 +43,7 @@ O Agent Robot Avatar também pode ser usado como camada de feedback visual para 
 - Comportamento de sono configurável
 - Arredondamento da cabeça ajustável
 - 188 skins numerados em 17 séries, com luz que segue o ponteiro
+- Versão leve sem skins para as páginas mais enxutas
 - Declarações TypeScript incluídas
 
 ## Instalação
@@ -184,7 +185,7 @@ avatar.setSkin(102);  // ou '102'
 avatar.setSkin(null); // volta à cor lisa
 ```
 
-Veja todos os skins com seus números na [galeria de skins](https://cx-artlab.github.io/agent-robot-avatar/materials/).
+Veja todos os skins com seus números na [página com todos os skins](https://cx-artlab.github.io/agent-robot-avatar/materials/?lang=pt).
 
 | Série | Números |
 | --- | --- |

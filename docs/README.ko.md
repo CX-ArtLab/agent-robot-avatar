@@ -26,7 +26,7 @@ Agent Robot Avatar는 AG-UI 스타일 Agent 인터페이스를 위한 시각적 
 
 ## 라이브 데모
 
-[인터랙티브 데모 열기](https://cx-artlab.github.io/agent-robot-avatar/?lang=ko)
+[인터랙티브 데모 열기](https://cx-artlab.github.io/agent-robot-avatar/?lang=ko) · [스킨 갤러리 둘러보기](https://cx-artlab.github.io/agent-robot-avatar/skins.html?lang=ko)
 
 ## 주요 특징
 
@@ -43,6 +43,7 @@ Agent Robot Avatar는 AG-UI 스타일 Agent 인터페이스를 위한 시각적 
 - 설정 가능한 수면 동작
 - 조절 가능한 머리 둥글기
 - 17개 시리즈, 188가지 번호 스킨. 빛이 포인터를 따라갑니다
+- 스킨을 뺀 경량판 제공
 - TypeScript 선언 포함
 
 ## 설치
@@ -184,7 +185,7 @@ avatar.setSkin(102);  // '102'도 가능
 avatar.setSkin(null); // 단색으로 돌아가기
 ```
 
-모든 스킨과 번호는 [스킨 갤러리](https://cx-artlab.github.io/agent-robot-avatar/materials/)에서 볼 수 있습니다.
+모든 스킨과 번호는 [전체 스킨 페이지](https://cx-artlab.github.io/agent-robot-avatar/materials/?lang=ko)에서 볼 수 있습니다.
 
 | 시리즈 | 번호 |
 | --- | --- |

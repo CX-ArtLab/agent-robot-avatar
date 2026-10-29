@@ -26,7 +26,7 @@ Agent Robot Avatar también puede utilizarse como capa de retroalimentación vis
 
 ## Demo en vivo
 
-[Abrir la demo interactiva](https://cx-artlab.github.io/agent-robot-avatar/?lang=es)
+[Abrir la demo interactiva](https://cx-artlab.github.io/agent-robot-avatar/?lang=es) · [Visita la galería de pieles](https://cx-artlab.github.io/agent-robot-avatar/skins.html?lang=es)
 
 ## Características
 
@@ -43,6 +43,7 @@ Agent Robot Avatar también puede utilizarse como capa de retroalimentación vis
 - Comportamiento de sueño configurable
 - Redondez de la cabeza ajustable
 - 188 skins numerados en 17 series, con luz que sigue al puntero
+- Versión ligera sin skins para las páginas más pequeñas
 - Declaraciones TypeScript incluidas
 
 ## Instalación
@@ -184,7 +185,7 @@ avatar.setSkin(102);  // o '102'
 avatar.setSkin(null); // vuelve al color plano
 ```
 
-Consulta todos los skins con su número en la [galería de skins](https://cx-artlab.github.io/agent-robot-avatar/materials/).
+Consulta todos los skins con su número en la [página de todos los skins](https://cx-artlab.github.io/agent-robot-avatar/materials/?lang=es).
 
 | Serie | Números |
 | --- | --- |

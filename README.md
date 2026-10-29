@@ -26,7 +26,7 @@ Built with SVG and vanilla JavaScript, it works as a native custom element with 
 
 ## Live Demo
 
-[Open the interactive demo](https://cx-artlab.github.io/agent-robot-avatar/)
+[Open the interactive demo](https://cx-artlab.github.io/agent-robot-avatar/) · [Visit the Skin Gallery](https://cx-artlab.github.io/agent-robot-avatar/skins.html)
 
 ## Highlights
 
@@ -43,6 +43,7 @@ Built with SVG and vanilla JavaScript, it works as a native custom element with 
 - Configurable sleep behavior
 - Adjustable head roundness
 - 188 numbered skins in 17 series, with light that follows the pointer
+- A lite build without skins for the smallest pages
 - TypeScript declarations included
 
 ## Install
@@ -184,7 +185,7 @@ avatar.setSkin(102);  // or '102'
 avatar.setSkin(null); // back to the flat color
 ```
 
-See every skin with its number in the [skin gallery](https://cx-artlab.github.io/agent-robot-avatar/materials/).
+See every skin with its number on the [all skins page](https://cx-artlab.github.io/agent-robot-avatar/materials/).
 
 | Series | Numbers |
 | --- | --- |

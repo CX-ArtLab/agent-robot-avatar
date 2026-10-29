@@ -26,7 +26,7 @@ Agent Robot Avatar 也可作為 AG-UI 風格 Agent 介面的視覺回饋層。
 
 ## 線上 Demo
 
-[開啟互動 Demo](https://cx-artlab.github.io/agent-robot-avatar/?lang=zh-TW)
+[開啟互動 Demo](https://cx-artlab.github.io/agent-robot-avatar/?lang=zh-TW) · [逛逛皮膚美術館](https://cx-artlab.github.io/agent-robot-avatar/skins.html?lang=zh-TW)
 
 ## 特點
 
@@ -43,6 +43,7 @@ Agent Robot Avatar 也可作為 AG-UI 風格 Agent 介面的視覺回饋層。
 - 可設定自動睡眠行為
 - 可調整頭部圓角
 - 188 款編號皮膚，分 17 個系列，光線跟隨滑鼠
+- 不含皮膚的精簡版，適合對大小特別在意的頁面
 - 內含 TypeScript 型別宣告
 
 ## 安裝
@@ -184,7 +185,7 @@ avatar.setSkin(102);  // 也可以寫 '102'
 avatar.setSkin(null); // 回到純色
 ```
 
-所有皮膚及編號請見[皮膚館](https://cx-artlab.github.io/agent-robot-avatar/materials/)。
+所有皮膚及編號請見[全部皮膚頁](https://cx-artlab.github.io/agent-robot-avatar/materials/?lang=zh-TW)。
 
 | 系列 | 編號 |
 | --- | --- |

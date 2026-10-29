@@ -26,7 +26,7 @@ Agent Robot Avatar 还可作为 AG-UI 风格 Agent 界面的视觉反馈层。
 
 ## 在线 Demo
 
-[打开交互 Demo](https://cx-artlab.github.io/agent-robot-avatar/?lang=zh-CN)
+[打开交互 Demo](https://cx-artlab.github.io/agent-robot-avatar/?lang=zh-CN) · [逛逛皮肤美术馆](https://cx-artlab.github.io/agent-robot-avatar/skins.html?lang=zh-CN)
 
 ## 特点
 
@@ -43,6 +43,7 @@ Agent Robot Avatar 还可作为 AG-UI 风格 Agent 界面的视觉反馈层。
 - 可配置自动睡眠行为
 - 可调头部圆角
 - 188 款编号皮肤，分 17 个系列，光线跟随鼠标
+- 不含皮肤的精简版，适合对大小特别在意的页面
 - 内置 TypeScript 类型声明
 
 ## 安装
@@ -184,7 +185,7 @@ avatar.setSkin(102);  // 也可以写 '102'
 avatar.setSkin(null); // 回到纯色
 ```
 
-所有皮肤及编号见[皮肤馆](https://cx-artlab.github.io/agent-robot-avatar/materials/)。
+所有皮肤及编号见[全部皮肤页](https://cx-artlab.github.io/agent-robot-avatar/materials/?lang=zh-CN)。
 
 | 系列 | 编号 |
 | --- | --- |

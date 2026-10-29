@@ -26,7 +26,7 @@ Agent Robot Avatar peut également servir de couche de retour visuel pour les in
 
 ## Démo en ligne
 
-[Ouvrir la démo interactive](https://cx-artlab.github.io/agent-robot-avatar/?lang=fr)
+[Ouvrir la démo interactive](https://cx-artlab.github.io/agent-robot-avatar/?lang=fr) · [Voir la galerie de skins](https://cx-artlab.github.io/agent-robot-avatar/skins.html?lang=fr)
 
 ## Points forts
 
@@ -43,6 +43,7 @@ Agent Robot Avatar peut également servir de couche de retour visuel pour les in
 - Comportement de sommeil configurable
 - Arrondi de la tête réglable
 - 188 skins numérotés en 17 séries, avec une lumière qui suit le pointeur
+- Version légère sans skins pour les pages les plus sobres
 - Déclarations TypeScript incluses
 
 ## Installation
@@ -184,7 +185,7 @@ avatar.setSkin(102);  // ou '102'
 avatar.setSkin(null); // retour à la couleur unie
 ```
 
-Retrouvez tous les skins et leur numéro dans la [galerie des skins](https://cx-artlab.github.io/agent-robot-avatar/materials/).
+Retrouvez tous les skins et leur numéro dans la [page de tous les skins](https://cx-artlab.github.io/agent-robot-avatar/materials/?lang=fr).
 
 | Série | Numéros |
 | --- | --- |

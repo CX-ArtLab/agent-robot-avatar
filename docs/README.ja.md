@@ -26,7 +26,7 @@ Agent Robot Avatar は、AG-UI スタイルの Agent インターフェースに
 
 ## ライブデモ
 
-[インタラクティブデモを開く](https://cx-artlab.github.io/agent-robot-avatar/?lang=ja)
+[インタラクティブデモを開く](https://cx-artlab.github.io/agent-robot-avatar/?lang=ja) · [スキンギャラリーを見る](https://cx-artlab.github.io/agent-robot-avatar/skins.html?lang=ja)
 
 ## 特長
 
@@ -43,6 +43,7 @@ Agent Robot Avatar は、AG-UI スタイルの Agent インターフェースに
 - 設定可能なスリープ動作
 - 頭部の丸みを調整可能
 - 17 シリーズ・188 種類の番号付きスキン。光はポインターを追います
+- スキンを含まない軽量版も用意
 - TypeScript 型定義を同梱
 
 ## インストール
@@ -184,7 +185,7 @@ avatar.setSkin(102);  // '102' でも可
 avatar.setSkin(null); // 単色に戻す
 ```
 
-すべてのスキンと番号は[スキン一覧](https://cx-artlab.github.io/agent-robot-avatar/materials/)で確認できます。
+すべてのスキンと番号は[スキン一覧ページ](https://cx-artlab.github.io/agent-robot-avatar/materials/?lang=ja)で確認できます。
 
 | シリーズ | 番号 |
 | --- | --- |

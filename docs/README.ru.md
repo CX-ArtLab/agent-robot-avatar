@@ -26,7 +26,7 @@ Agent Robot Avatar также можно использовать как сло�
 
 ## Демонстрация в реальном времени
 
-[Открыть интерактивную демонстрацию](https://cx-artlab.github.io/agent-robot-avatar/?lang=ru)
+[Открыть интерактивную демонстрацию](https://cx-artlab.github.io/agent-robot-avatar/?lang=ru) · [Открыть галерею скинов](https://cx-artlab.github.io/agent-robot-avatar/skins.html?lang=ru)
 
 ## Основные возможности
 
@@ -43,6 +43,7 @@ Agent Robot Avatar также можно использовать как сло�
 - Настраиваемое поведение сна
 - Регулируемое скругление головы
 - 188 пронумерованных скинов в 17 сериях, свет следует за указателем
+- Облегчённая версия без скинов для самых лёгких страниц
 - TypeScript-декларации включены
 
 ## Установка
@@ -184,7 +185,7 @@ avatar.setSkin(102);  // или '102'
 avatar.setSkin(null); // вернуться к сплошному цвету
 ```
 
-Все скины с номерами — в [галерее скинов](https://cx-artlab.github.io/agent-robot-avatar/materials/).
+Все скины с номерами — на [странице со всеми скинами](https://cx-artlab.github.io/agent-robot-avatar/materials/?lang=ru).
 
 | Серия | Номера |
 | --- | --- |

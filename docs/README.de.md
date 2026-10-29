@@ -26,7 +26,7 @@ Agent Robot Avatar kann außerdem als visuelle Feedback-Ebene für Agent-Oberfl�
 
 ## Live-Demo
 
-[Interaktive Demo öffnen](https://cx-artlab.github.io/agent-robot-avatar/?lang=de)
+[Interaktive Demo öffnen](https://cx-artlab.github.io/agent-robot-avatar/?lang=de) · [Zur Skin-Galerie](https://cx-artlab.github.io/agent-robot-avatar/skins.html?lang=de)
 
 ## Besondere Merkmale
 
@@ -43,6 +43,7 @@ Agent Robot Avatar kann außerdem als visuelle Feedback-Ebene für Agent-Oberfl�
 - Konfigurierbares Schlafverhalten
 - Einstellbare Kopfrundung
 - 188 nummerierte Skins in 17 Serien, mit Licht, das dem Zeiger folgt
+- Schlanke Version ohne Skins für besonders kleine Seiten
 - TypeScript-Deklarationen enthalten
 
 ## Installation
@@ -184,7 +185,7 @@ avatar.setSkin(102);  // oder '102'
 avatar.setSkin(null); // zurück zur flachen Farbe
 ```
 
-Alle Skins mit Nummer zeigt die [Skin-Galerie](https://cx-artlab.github.io/agent-robot-avatar/materials/).
+Alle Skins mit Nummer zeigt die [Seite mit allen Skins](https://cx-artlab.github.io/agent-robot-avatar/materials/?lang=de).
 
 | Serie | Nummern |
 | --- | --- |
