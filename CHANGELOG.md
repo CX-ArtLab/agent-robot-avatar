@@ -16,11 +16,6 @@ The project follows Semantic Versioning for public releases. Internal developmen
 - `agent-robot-avatar/lite`: the same avatar without any skin code.
 - The demo has a Skin Gallery and a page with every skin.
 
-### Changed
-
-- A large avatar no longer looks further toward the pointer than a small one.
-- The npm package no longer includes the translated READMEs and support images; they stay on GitHub.
-
 ## [0.6.0] - 2026-10-23
 
 ### Upgrading from 0.5.x
