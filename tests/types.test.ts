@@ -1,5 +1,7 @@
 import AgentRobotAvatar, {
   SKIN_NAMES,
+  SKIN_SERIES,
+  SKINS,
   VERSION,
   type AgentRobotAvatarAction,
   type AgentRobotAvatarActionPhase,
@@ -43,8 +45,8 @@ avatar
   .setPointerFollow(false)
   .setAntennaFlash(true)
   .setHeadRoundness(50)
-  .setSkin('obsidian')
-  .setSkin('black-marble')
+  .setSkin('103')
+  .setSkin(188)
   .setSkin(null)
   .reset();
 
@@ -53,6 +55,12 @@ const skin: AgentRobotAvatarSkin | null = avatar.getSkin();
 void skin;
 const firstSkin: AgentRobotAvatarSkin | undefined = SKIN_NAMES[0];
 void firstSkin;
+const skinTitle: string = SKINS['13'].titleEn;
+void skinTitle;
+const seriesSkins: readonly AgentRobotAvatarSkin[] | undefined = SKIN_SERIES[0]?.skins;
+void seriesSkins;
+// @ts-expect-error skins are numbered, not named
+avatar.setSkin('obsidian');
 const version: string = VERSION;
 const element: AgentRobotAvatar = document.createElement('agent-robot-avatar');
 

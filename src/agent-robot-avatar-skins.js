@@ -111,7 +111,11 @@ function render(instance) {
   instance._material = null;
   if (!entry?.native) showNative(instance, null);
   instance._skinShown = name;
-  if (!entry) return;
+  // Without a skin the head takes the current color attribute again.
+  if (!entry) {
+    baseApplyColor.call(instance, instance.getAttribute('color'));
+    return;
+  }
   if (entry.native) {
     const skin = showNative(instance, entry.native);
     if (skin) {
