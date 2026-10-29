@@ -8,14 +8,15 @@
 .demo-nav a:focus-visible{outline:2px solid #777d86;outline-offset:3px}
 .canvas>.demo-nav{position:absolute;top:18px;left:50%;transform:translateX(-50%);z-index:30}
 @media(max-width:800px){.canvas>.demo-nav{top:70px}.demo-nav{font-size:13px}.demo-nav a{padding:7px 18px}}
-.demo-skin-page-link{justify-self:center;display:inline-flex;align-items:center;margin-top:4px;padding:11px 22px;border-radius:14px;color:#3d2350;font:600 13px Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;text-decoration:none;white-space:nowrap;transition:transform .15s}
-.demo-skin-page-link:hover{transform:translateY(-1px)}
-.demo-skin-page-link:hover::before{box-shadow:0 8px 26px rgba(177,140,255,.5)}
+.demo-skin-page-link{justify-self:center;display:inline-flex;align-items:center;gap:9px;margin-top:4px;padding:11px 20px 11px 16px;border:1px solid rgba(0,0,0,.06);border-radius:14px;background:rgba(255,255,255,.92);box-shadow:0 7px 30px rgba(0,0,0,.08);color:#2c3035;font:600 13px Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;text-decoration:none;white-space:nowrap;transition:transform .15s,color .25s,border-color .25s}
+/* A small dot in the skin colors marks the button while it is at rest. */
+.demo-skin-page-link::after{content:'';width:10px;height:10px;border-radius:50%;order:-1;background:radial-gradient(circle at 30% 25%,#fff 0,rgba(255,255,255,0) 45%),conic-gradient(from 200deg,#ff9cc8,#b18cff,#7fd4ff,#ff9cc8);box-shadow:0 0 0 2px rgba(255,255,255,.9),0 1px 4px rgba(177,140,255,.45)}
+.demo-skin-page-link:hover,.demo-skin-page-link:focus-visible{transform:translateY(-1px);color:#3d2350;border-color:transparent}
 .demo-skin-page-link:focus-visible{outline:2px solid #777d86;outline-offset:3px}
 @media(prefers-reduced-motion:reduce){.demo-skin-page-link{transition:none}.demo-skin-page-link:hover{transform:none}}
 /* The way into the skins glows in the colors of skin 705: soft pink, violet
    and sky blobs on a pale pink ground under a top highlight, slowly drifting.
-   The bottom button always glows; the tab fades it in on hover. */
+   Both fade it in on hover. */
 .demo-nav a[data-skin-link],.demo-skin-page-link{position:relative;isolation:isolate}
 .demo-nav a[data-skin-link]::before,.demo-skin-page-link::before{content:'';position:absolute;inset:0;z-index:-1;border-radius:inherit;transition:opacity .25s ease,box-shadow .25s ease;
   background:radial-gradient(120% 120% at 22% 0%,rgba(255,255,255,.85),rgba(255,255,255,0) 46%),
@@ -25,10 +26,9 @@
     #ffd3ea;
   background-size:100% 100%,170% 170%,170% 170%,170% 170%,100% 100%;
   animation:demo-skin-glow 3s ease-in-out infinite alternate}
-.demo-nav a[data-skin-link]::before{opacity:0;animation-play-state:paused}
+.demo-nav a[data-skin-link]::before,.demo-skin-page-link::before{opacity:0;animation-play-state:paused}
 .demo-nav a[data-skin-link]:hover,.demo-nav a[data-skin-link]:focus-visible{color:#3d2350;background:transparent}
-.demo-nav a[data-skin-link]:hover::before,.demo-nav a[data-skin-link]:focus-visible::before{opacity:1;animation-play-state:running;box-shadow:0 4px 16px rgba(177,140,255,.38)}
-.demo-skin-page-link::before{box-shadow:0 6px 22px rgba(177,140,255,.4)}
+.demo-nav a[data-skin-link]:hover::before,.demo-nav a[data-skin-link]:focus-visible::before,.demo-skin-page-link:hover::before,.demo-skin-page-link:focus-visible::before{opacity:1;animation-play-state:running;box-shadow:0 4px 16px rgba(177,140,255,.38)}
 @keyframes demo-skin-glow{
   from{background-position:0 0,0% 100%,100% 100%,70% 0%}
   to{background-position:0 0,45% 55%,55% 35%,25% 90%}}
