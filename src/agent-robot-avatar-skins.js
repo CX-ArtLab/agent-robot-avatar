@@ -34,14 +34,34 @@ function findPainted(root, record) {
   return node;
 }
 
+// Some adjustments touch layers every skin shares, so each change is recorded
+// and undone before the next skin is painted.
 function paintAdjustments(instance, name) {
   const records = SKIN_PAINTS[name]?.paint || [];
   const root = instance.shadowRoot;
+  const undo = instance._skinUndo ??= [];
   for (const record of records) {
     const node = findPainted(root, record);
-    if (node) for (const [attribute, value] of Object.entries(record.attributes)) node.setAttribute(attribute, value);
+    if (!node) continue;
+    for (const [attribute, value] of Object.entries(record.attributes)) {
+      undo.push(() => {
+        if (old === null) node.removeAttribute(attribute);
+        else node.setAttribute(attribute, old);
+      });
+      const old = node.getAttribute(attribute);
+      node.setAttribute(attribute, value);
+    }
   }
-  for (const [property, value] of Object.entries(SKIN_PAINTS[name]?.properties || {})) instance.style.setProperty(property, value);
+  for (const [property, value] of Object.entries(SKIN_PAINTS[name]?.properties || {})) {
+    const old = instance.style.getPropertyValue(property);
+    undo.push(() => old ? instance.style.setProperty(property, old) : instance.style.removeProperty(property));
+    instance.style.setProperty(property, value);
+  }
+}
+
+function undoAdjustments(instance) {
+  const undo = instance._skinUndo;
+  while (undo?.length) undo.pop()();
 }
 
 // Adjustments to light-driven attributes were made with the light at rest. They
@@ -86,6 +106,7 @@ function render(instance) {
   const name = instance._skinName ?? null;
   if (instance._skinShown === name || !instance._head) return;
   const entry = name ? SKIN_CATALOG[name] : null;
+  undoAdjustments(instance);
   instance._material?.dispose();
   instance._material = null;
   if (!entry?.native) showNative(instance, null);

@@ -425,12 +425,23 @@ function build(instance) {
     layer.style.display = 'none';
     return layer;
   });
-  return { instance, defs, layers, pattern, ball, sheen, sheenParts, sideMaskShape, sideLine, headTransform: shape.transform, eyeGroups, eyeHighlights, style, name: null, parts: null, light: { ...REST_LIGHT }, shown: {}, nodes: {}, offsets: {} };
+  // Tuned looks restyle these shared layers; every paint starts from this state.
+  const pristine = [pattern, layers, sideMask, ...eyeHighlights].flatMap(node => [node, ...node.querySelectorAll('*')])
+    .map(node => [node, [...node.attributes].map(({ name, value }) => [name, value])]);
+  return { instance, defs, layers, pattern, ball, sheen, sheenParts, sideMaskShape, sideLine, headTransform: shape.transform, eyeGroups, eyeHighlights, style, pristine, name: null, parts: null, light: { ...REST_LIGHT }, shown: {}, nodes: {}, offsets: {} };
+}
+
+function restorePristine(skin) {
+  for (const [node, attributes] of skin.pristine) {
+    for (const name of node.getAttributeNames()) if (!attributes.some(([n]) => n === name)) node.removeAttribute(name);
+    for (const [name, value] of attributes) if (node.getAttribute(name) !== value) node.setAttribute(name, value);
+  }
 }
 
 function paintSkin(skin, name) {
   const look = SKINS[name].faithful ? tunedAcrylic(SKINS[name], SKINS[name].fixedTune) : SKINS[name];
   const tune = look.tune;
+  restorePristine(skin);
   skin.defs.replaceChildren();
   // Balls shade and reflect in their own colours, so a warm ball never picks up
   // a cool grey cast at its edge.
