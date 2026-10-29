@@ -1,28 +1,4 @@
-import { skin } from './more-materials.js';
-
-export const woodSkins = {
-  woodmaple:skin('浅枫木','PALE MAPLE','奶油浅木 · 细密柔纹 · 温润哑光',
-    ['#f7e8ca','#e4c999','#c9a575','#a87d50'],'#62492d','#f3e0b8',['#f2eee6','#e1dbcf'],
-    {number:156,pattern:'woodmaple',minimalControls:true,matte:true,shine:.075,shade:.12,
-      antenna:['#fff1d2','#d7b585','#997146']}),
-  woodoak:skin('暖橡木','WARM OAK','蜂蜜木色 · 山形纹理 · 开放木孔',
-    ['#efd3a0','#cea065','#ad7844','#82532e'],'#503522','#e7c594',['#f2eee6','#e1dbcf'],
-    {number:157,pattern:'woodoak',minimalControls:true,matte:true,shine:.085,shade:.16,
-      antenna:['#f6dfb4','#c99b60','#84552f']}),
-  woodwalnut:skin('深胡桃木','DARK WALNUT','巧克力棕 · 弯曲木纹 · 自然木结',
-    ['#b58d67','#865b3c','#5e3b28','#38251c'],'#f5e7cc','#c9a27c',['#eeeae4','#dcd6ce'],
-    {number:158,pattern:'woodwalnut',minimalControls:true,matte:true,shine:.11,shade:.2,
-      antenna:['#d9b28b','#8b6143','#432d21']}),
-  woodrose:skin('红木','ROSEWOOD','暖红棕色 · 交错长纹 · 柔亮木蜡',
-    ['#cf9376','#a65d42','#773d2c','#48251e'],'#f8e8d2','#d9a48a',['#f0e9e3','#ded3cb'],
-    {number:159,pattern:'woodrose',minimalControls:true,matte:true,shine:.15,shade:.19,
-      antenna:['#e2b39a','#aa674b','#582d23']}),
-  woodebony:skin('黑檀木','EBONY','深黑褐底 · 金棕细纹 · 细腻缎光',
-    ['#696052','#42382d','#2a221c','#171411'],'#f2e7d2','#8c7a60',['#eceae6','#d8d5ce'],
-    {number:160,pattern:'woodebony',minimalControls:true,matte:true,shine:.12,shade:.23,
-      antenna:['#b0a08a','#554636','#241c17']}),
-};
-
+// Wood grain, one recipe per wood.
 const grainStyles = {
   woodmaple:{seed:17,dark:'#a17849',light:'#fff0cd',sway:3.5,bend:5,knotX:64,knotY:163,pores:32},
   woodoak:{seed:29,dark:'#70451e',light:'#ffe3ad',sway:5,bend:22,knotX:142,knotY:93,pores:112,cathedral:true},

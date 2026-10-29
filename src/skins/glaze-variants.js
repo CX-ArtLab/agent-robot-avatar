@@ -27,5 +27,3 @@ export const glazeVariants = {
     ['#c0cdd6','#f6fbff','#dce8ef','#effaff','#ffffff'],['#ffffff','#e7f2f7','#abbfc9'],'#405765'),number:119},
 };
 
-export const glossGlazeNames = ['blueglaze',...Object.keys(glazeVariants).filter(name => glazeVariants[name].source === 'blueglaze')];
-export const iceGlazeNames = ['iceglaze',...Object.keys(glazeVariants).filter(name => glazeVariants[name].source === 'iceglaze')];
