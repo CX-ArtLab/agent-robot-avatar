@@ -172,9 +172,11 @@ avatar.setAntennaDrag(true);
 
 Manter o centro pressionado inicia a compressão. Ao mover mais de 4 pixels CSS, o mesmo gesto passa ao arraste de cabeça existente. A antena usa o mesmo limite de distância e termina com a reação de raiva existente.
 
-## Skins
+## Skins · Novidade na 0.7
 
 188 skins em 17 séries, com uma luz que segue o ponteiro. Cada skin tem um número permanente: o número da série seguido de dois dígitos, então 305 é o quinto skin da série 3. Os nomes podem mudar; os números nunca mudam nem são reutilizados.
+
+<img src="../assets/readme/skin-gallery.jpg" alt="Galeria de skins: destaques, filtros e busca" width="100%">
 
 ```html
 <agent-robot-avatar skin="301"></agent-robot-avatar>

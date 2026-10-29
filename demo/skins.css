@@ -2,10 +2,10 @@
 .page-header{height:78px;position:relative;display:flex;align-items:flex-start;justify-content:center;padding-top:18px}
 .page-header>.title{max-width:35%;line-height:1.5}
 .page-header>.build-badge{white-space:nowrap}
-.workspace{display:grid;grid-template-columns:minmax(0,1fr) 452px;max-width:1360px;margin:auto;padding:0 28px 24px;gap:28px}
+.workspace{display:grid;grid-template-columns:minmax(0,680px) 452px;justify-content:center;max-width:1360px;margin:auto;padding:0 28px 24px;gap:28px}
 .preview{min-width:0}
 .skins-page .canvas{min-height:calc(100vh - 102px)!important;background:transparent;display:grid;align-content:center;padding:24px 0}
-.skins-page .demo-control-stack{position:relative;top:auto!important;left:auto!important;transform:none!important;max-width:100%!important;margin-inline:auto;min-width:0}
+.skins-page .demo-control-stack{position:relative;top:auto!important;left:auto!important;transform:none!important;max-width:100%!important;margin-inline:auto;min-width:0;width:100%!important}
 .skins-page .demo-control-stack>.controls,.skins-page .demo-options,.skins-page .demo-options-group{max-width:100%!important}
 .skins-page .demo-options{min-width:0;grid-template-columns:minmax(0,1fr)}
 .skins-page .demo-stage{height:clamp(260px,42vh,400px)}

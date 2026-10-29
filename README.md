@@ -172,9 +172,11 @@ avatar.setAntennaDrag(true);
 
 The avatar center begins the squeeze interaction. Moving more than 4 CSS pixels transfers the same pointer gesture to the existing head drag. Dragging the antenna uses the same pull limit as head dragging and ends with the existing angry reaction.
 
-## Skins
+## Skins · New in 0.7
 
 188 skins in 17 series, with light that follows the pointer. Every skin has a permanent number: the series number followed by two digits, so 305 is the fifth skin of series 3. Titles may be reworded later; numbers never change and are never reused.
+
+<img src="./assets/readme/skin-gallery.jpg" alt="Skin Gallery: featured skins, filters and search" width="100%">
 
 ```html
 <agent-robot-avatar skin="301"></agent-robot-avatar>
