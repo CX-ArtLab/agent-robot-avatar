@@ -1,13 +1,14 @@
-import '../../agent-robot-avatar.js';
+import { VERSION } from '../../agent-robot-avatar.js';
 import { publicSkins, skinById, skinThumbnail, catalogCategories as materialCategories } from '../skin-catalog.js';
 import { t, skinLanguage, skinTitle, seriesTitle } from '../skins-i18n.js';
 
 const params = new URLSearchParams(location.search);
+document.getElementById('catalog-build').textContent = `Demo ${VERSION}`;
 const language = params.get('lang') || 'zh-CN';
 const lang = skinLanguage(language);
 document.documentElement.lang = lang;
 document.title = `${t('allSkins', 0, lang)} · Agent Robot Avatar`;
-for (const [selector, key] of [['#back-to-skins', 'backHome'], ['.catalog-header h1', 'allSkins'], ['.search-label .sr-only', 'search'], ['#empty-state p', 'none'], ['#clear-search', 'showAll']]) {
+for (const [selector, key] of [['#nav-demo', 'demo'], ['#nav-skins', 'skins'], ['#back-to-skins', 'backHome'], ['.library-header h1', 'allSkins'], ['.search-label .sr-only', 'search'], ['#empty-state p', 'none'], ['#clear-search', 'showAll']]) {
   document.querySelector(selector).textContent = t(key, 0, lang);
 }
 document.getElementById('skin-search').placeholder = t('search', 0, lang);
@@ -15,6 +16,10 @@ const home = new URL('../skins.html', location.href);
 home.searchParams.set('lang', language);
 if (skinById.has(params.get('skin'))) home.searchParams.set('skin', params.get('skin'));
 document.getElementById('back-to-skins').href = home.href;
+document.getElementById('nav-skins').href = home.href;
+const demoPage = new URL('../index.html', location.href);
+demoPage.searchParams.set('lang', language);
+document.getElementById('nav-demo').href = demoPage.href;
 document.getElementById('catalog-count').textContent = t('count', publicSkins.length, lang);
 const grid = document.getElementById('skin-grid');
 const search = document.getElementById('skin-search');
@@ -60,35 +65,26 @@ function render() {
     section.append(heading,cards);fragment.append(section);
     for (const skin of members) {
       const card = document.createElement('a');
-      card.className = `skin-card material ${skin.id}`;
+      card.className = 'skin-card';
       card.dataset.skin = skin.id;
       const url = new URL(home);
       url.searchParams.set('skin', skin.id);
       card.href = url.href;
       card.setAttribute('aria-label', t('preview', skinTitle(skin, lang), lang));
-      const stage = document.createElement('div');
-      stage.className = 'stage';
-      if (skin.stage) stage.style.background = skin.stage;
+      // The same card as the skin page: the skin's stage color, its picture,
+      // its name and its number.
+      if (skin.stage) card.style.background = skin.stage;
       const img = document.createElement('img');
       img.alt = '';
       img.width = img.height = 120;
       img.dataset.skin = skin.id;
-      const caption = document.createElement('div');
-      caption.className = 'caption';
-      const label = document.createElement('h3');
+      const label = document.createElement('span');
+      label.className = 'skin-label';
       label.textContent = skinTitle(skin, lang);
-      const swatch = document.createElement('span');
-      swatch.className = 'swatch';
-      swatch.style.background = skin.base[1];
-      swatch.setAttribute('aria-hidden', 'true');
-      label.prepend(swatch);
       const number = document.createElement('span');
       number.className = 'skin-number';
       number.textContent = `#${skin.id}`;
-      label.append(number);
-      caption.append(label);
-      stage.append(img);
-      card.append(stage, caption);
+      card.append(img, label, number);
       cards.append(card);
       observer.observe(img);
     }

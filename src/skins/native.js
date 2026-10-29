@@ -265,6 +265,8 @@ function applyAcrylicTuning(skin, look) {
     [[0, t.eyeColor], [t.eyeLitPart, t.eyeColor], [1, mixHex(t.eyeColor, base[1], t.eyeTint)]]);
   skin.style.textContent += `
     #leftBase,#rightBase,#leftInputBase,#rightInputBase{fill-opacity:${t.eyeOpacity};${t.eyeRimWidth > 0 ? `stroke:rgba(255,255,255,${t.eyeRimOpacity});stroke-width:${t.eyeRimWidth}px;` : ''}}`;
+  skin.eyePaint.opacity = t.eyeOpacity;
+  skin.eyePaint.outline = t.eyeRimWidth > 0 ? { color: '#ffffff', width: t.eyeRimWidth, opacity: t.eyeRimOpacity } : null;
 
   // Eye shadow.
   defs.querySelector('#skin-eye-sink')?.remove();
@@ -418,6 +420,7 @@ function restorePristine(skin) {
 function paintSkin(skin, name) {
   const look = SKINS[name].faithful ? tunedAcrylic(SKINS[name], SKINS[name].fixedTune) : SKINS[name];
   const tune = look.tune;
+  joinEyes(skin, false);
   restorePristine(skin);
   skin.defs.replaceChildren();
   // Balls shade and reflect in their own colours, so a warm ball never picks up
@@ -585,6 +588,10 @@ function paintSkin(skin, name) {
   skin.antennaFixed = false;
   skin.eyeHighlight = null;
   for (const layer of skin.eyeHighlights) layer.style.display = 'none';
+  skin.eyePaint = {
+    gradient: look.acrylic, color: look.eye, opacity: look.wet ? .8 : 1,
+    outline: look.ring ? { color: look.ring, width: 3, opacity: 1 } : look.wet ? { color: '#ffffff', width: 1.6, opacity: .95 } : null,
+  };
   skin.style.textContent = `
     #leftBase,#rightBase,#leftInputBase,#rightInputBase{fill:${look.acrylic ? 'url(#skin-eye-glass)' : look.eye};${ring}${look.wet ? 'fill-opacity:.8;stroke:rgba(255,255,255,.95);stroke-width:1.6px;' : ''}}
     #antennaDot{fill:url(#skin-antenna);${look.plain ? '' : `stroke:${look.rim};stroke-width:.7px`}}`;
@@ -691,6 +698,7 @@ export function showNative(instance, name) {
     skin.layers.style.display = '';
     applyLight(skin, skin.light.x, skin.light.y);
   } else {
+    joinEyes(skin, false);
     skin.style.textContent = '';
     for (const group of skin.eyeGroups) group.removeAttribute('filter');
     for (const layer of skin.eyeHighlights) layer.style.display = 'none';
@@ -700,6 +708,112 @@ export function showNative(instance, name) {
     baseApplyColor.call(instance, instance.getAttribute('color'));
   }
   return skin;
+}
+
+// Love slides the two eyes into one heart. Each eye has its own shadow, rim and
+// gradient, so where they overlap one would show on top of the other. While
+// they overlap, both are hidden and their union is painted once instead.
+function eyeBox(eye, parent) {
+  const box = eye.getBBox();
+  const m = parent.getCTM().inverse().multiply(eye.getCTM());
+  const xs = [], ys = [];
+  for (const [x, y] of [[box.x, box.y], [box.x + box.width, box.y], [box.x, box.y + box.height], [box.x + box.width, box.y + box.height]]) {
+    xs.push(m.a * x + m.c * y + m.e);
+    ys.push(m.b * x + m.d * y + m.f);
+  }
+  return { x0: Math.min(...xs), y0: Math.min(...ys), x1: Math.max(...xs), y1: Math.max(...ys) };
+}
+
+function joinedSurface(skin) {
+  if (skin.joined) return skin.joined;
+  const root = skin.instance.shadowRoot;
+  const defs = root.querySelector('defs');
+  const parent = skin.eyeGroups[0].parentElement;
+  const mask = svg('mask', { id: 'skin-joined-eyes', maskUnits: 'userSpaceOnUse', maskContentUnits: 'userSpaceOnUse', x: 0, y: 0, width: 240, height: 240, style: 'mask-type:alpha' }, defs);
+  for (const side of ['left', 'right']) svg('use', { href: `#${side}Eye` }, mask);
+  const outline = svg('filter', { id: 'skin-joined-outline', x: '-20%', y: '-20%', width: '140%', height: '140%' }, defs);
+  const dilate = svg('feMorphology', { in: 'SourceAlpha', operator: 'dilate', radius: 1, result: 'grown' }, outline);
+  const flood = svg('feFlood', {}, outline);
+  svg('feComposite', { in2: 'grown', operator: 'in' }, outline);
+  const gradientNode = svg('linearGradient', { id: 'skin-eye-joined', gradientUnits: 'userSpaceOnUse' }, defs);
+  const group = svg('g', { 'pointer-events': 'none', 'aria-hidden': 'true', 'clip-path': parent.getAttribute('clip-path') || 'none' });
+  parent.after(group);
+  const ring = svg('g', { filter: 'url(#skin-joined-outline)' }, group);
+  for (const side of ['left', 'right']) svg('use', { href: `#${side}Eye` }, ring);
+  const surface = svg('g', {}, group);
+  const paint = svg('rect', { x: 0, y: 0, width: 240, height: 240, mask: 'url(#skin-joined-eyes)' }, surface);
+  group.style.display = 'none';
+  skin.joined = { parent, group, ring, surface, paint, gradient: gradientNode, dilate, flood, on: false, opacity: parent.style.opacity };
+  return skin.joined;
+}
+
+function joinEyes(skin, on) {
+  const joined = on ? joinedSurface(skin) : skin.joined;
+  if (!joined || joined.on === on) return;
+  joined.on = on;
+  joined.parent.style.opacity = on ? '0' : joined.opacity;
+  joined.group.style.display = on ? '' : 'none';
+  // The copies in the mask must not carry each eye's own shadow.
+  for (const group of skin.eyeGroups) {
+    if (on) {
+      skin.eyeFilter = group.getAttribute('filter');
+      group.removeAttribute('filter');
+    } else if (skin.eyeFilter) group.setAttribute('filter', skin.eyeFilter);
+  }
+  if (!on) { skin.eyeFilter = null; return; }
+  const paint = skin.eyePaint || { color: '#ffffff', opacity: 1, outline: null };
+  // The eye filter's region is set in one eye's own units; the joined copy
+  // covers the whole face instead.
+  const root = skin.instance.shadowRoot;
+  root.getElementById('skin-eye-sink-joined')?.remove();
+  joined.offset = null;
+  const source = skin.eyeFilter && root.getElementById('skin-eye-sink');
+  if (source) {
+    const copy = source.cloneNode(true);
+    copy.id = 'skin-eye-sink-joined';
+    for (const [name, value] of [['x', 0], ['y', 0], ['width', 240], ['height', 240]]) copy.setAttribute(name, value);
+    joined.offset = copy.querySelector('#skin-eye-sink-offset');
+    joined.offset?.removeAttribute('id');
+    source.after(copy);
+    joined.surface.setAttribute('filter', 'url(#skin-eye-sink-joined)');
+  } else joined.surface.removeAttribute('filter');
+  if (paint.gradient) {
+    const source = skin.instance.shadowRoot.getElementById('skin-eye-glass');
+    joined.gradient.replaceChildren(...[...(source?.children || [])].map(stop => stop.cloneNode()));
+    joined.paint.setAttribute('fill', 'url(#skin-eye-joined)');
+  } else joined.paint.setAttribute('fill', paint.color);
+  joined.paint.setAttribute('fill-opacity', String(paint.opacity));
+  joined.ring.style.display = paint.outline ? '' : 'none';
+  if (paint.outline) {
+    joined.dilate.setAttribute('radius', String(paint.outline.width / 2));
+    joined.flood.setAttribute('flood-color', paint.outline.color);
+    joined.flood.setAttribute('flood-opacity', String(paint.outline.opacity));
+  }
+}
+
+export function separateNativeEyes(instance) {
+  if (instance._nativeSkin) joinEyes(instance._nativeSkin, false);
+}
+
+// Called every frame: joins the eyes while they overlap and keeps the joined
+// gradient spanning both, the way each eye's gradient spans that eye.
+export function joinNativeEyes(instance) {
+  const skin = instance._nativeSkin;
+  if (!skin?.name) return;
+  const [left, right] = skin.eyeGroups;
+  if (!instance._loveFx || !left || !right) { joinEyes(skin, false); return; }
+  const parent = left.parentElement;
+  const a = eyeBox(left, parent), b = eyeBox(right, parent);
+  const overlap = a.x1 > b.x0 && b.x1 > a.x0 && a.y1 > b.y0 && b.y1 > a.y0;
+  joinEyes(skin, overlap);
+  if (!overlap) return;
+  const x0 = Math.min(a.x0, b.x0), y0 = Math.min(a.y0, b.y0), x1 = Math.max(a.x1, b.x1), y1 = Math.max(a.y1, b.y1);
+  // The shadow keeps following the light.
+  const offset = skin.joined.offset, live = skin.parts?.eyeSink;
+  if (offset && live) for (const name of ['dx', 'dy']) offset.setAttribute(name, live.getAttribute(name));
+  const g = skin.joined.gradient;
+  g.setAttribute('x1', x1.toFixed(2)); g.setAttribute('y1', y0.toFixed(2));
+  g.setAttribute('x2', x0.toFixed(2)); g.setAttribute('y2', y1.toFixed(2));
 }
 
 export function lightNative(instance, x, y) {

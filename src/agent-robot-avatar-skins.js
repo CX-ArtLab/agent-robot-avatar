@@ -151,6 +151,13 @@ function render(instance) {
     return;
   }
   if (entry.native) {
+    // Frames may stop as soon as love ends, so the joined heart is split here.
+    if (!instance._skinLoveEnd) {
+      instance._skinLoveEnd = event => {
+        if (event.detail?.state !== 'love') painters.native?.separateNativeEyes(instance);
+      };
+      instance.addEventListener('face-state', instance._skinLoveEnd);
+    }
     const skin = showNative(instance, entry.native);
     if (skin) {
       const light = instance._skinLight;
@@ -189,6 +196,7 @@ function updateLight(instance) {
     light.y += ((Number.isFinite(ty) ? ty : REST_LIGHT.y) - light.y) * .18;
   }
   if (SKIN_CATALOG[name].native) {
+    painters.native.joinNativeEyes(instance);
     painters.native.lightNative(instance, light.x, light.y);
   } else if (instance._material) {
     const last = instance._materialLight;

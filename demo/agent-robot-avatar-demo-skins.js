@@ -1,4 +1,5 @@
 import { restoreAppearance, saveAppearance } from './agent-robot-avatar-demo-appearance.js';
+import { t } from './skins-i18n.js';
 const face = document.getElementById('face');
 const params = new URLSearchParams(location.search);
 const storageKey = 'agentRobotAvatarDemoSkin';
@@ -17,15 +18,16 @@ if (selected && selected !== 'classic') {
   library = await import('./skin-catalog.js');
   selected = library.skinById.has(selected) ? selected : 'classic';
   library.applySkin(face, selected);
+  // The stage takes the skin's own background, as on the skin pages.
+  document.getElementById('demoStage').style.background = library.skinById.get(selected)?.stage || '';
 }
 selected ||= 'classic';
 face.dataset.skin = selected;
 
 function updateLinks() {
-  const isChinese = document.documentElement.lang.startsWith('zh');
   const links = navigation.querySelectorAll('a');
-  links[0].textContent = isChinese ? '演示' : 'Demo';
-  links[1].textContent = isChinese ? '皮肤' : 'Skins';
+  links[0].textContent = t('demo');
+  links[1].textContent = t('skins');
   for (const link of document.querySelectorAll('[data-skin-link]')) {
     const url = new URL('./skins.html', location.href);
     url.searchParams.set('skin', selected);
@@ -41,6 +43,7 @@ for (const link of document.querySelectorAll('[data-skin-link]')) link.addEventL
 function useCustomColor() {
   if (selected === 'classic') return;
   library?.applySkin(face, 'classic');
+  document.getElementById('demoStage').style.background = '';
   selected = 'classic';
   face.dataset.skin = 'classic';
   try { localStorage.setItem(storageKey, 'classic'); } catch {}

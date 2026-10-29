@@ -87,6 +87,8 @@ function renderCards() {
     const card = document.createElement('button');
     card.type = 'button';
     card.className = 'skin-card';
+    // Each card sits on the same background as the skin's stage.
+    if (skin.stage) card.style.background = skin.stage;
     card.dataset.skin = skin.id;
     card.setAttribute('aria-pressed', String(skin.id === selected));
     card.setAttribute('aria-label', skinTitle(skin));
@@ -102,6 +104,7 @@ function renderCards() {
     thumbnails.observe(img);
   }
   grid.replaceChildren(fragment);
+  grid.dataset.view = effectiveCategory === 'featured' && !query ? 'featured' : 'list';
   grid.scrollTop = 0;
   grid.hidden = !matches.length;
   document.getElementById('empty-state').hidden = !!matches.length;
@@ -170,6 +173,7 @@ function selectSkin(id, updateUrl = true) {
   compare.textContent = t('compare');
   compare.disabled = id === 'classic';
   material = applySkin(face, id);
+  document.getElementById('demoStage').style.background = skin.stage || '';
   syncShadow();
   name.textContent = `${skinTitle(skin)} · #${id}`;
   for (const card of grid.querySelectorAll('.skin-card')) card.setAttribute('aria-pressed', String(card.dataset.skin === id));

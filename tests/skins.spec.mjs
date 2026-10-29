@@ -179,3 +179,20 @@ test('every skin renders through all expressions without errors', async ({ page 
   }
   expect(errors).toEqual([]);
 });
+
+test('love paints overlapping eyes once, then returns to two eyes', async ({ page }) => {
+  await page.goto('/examples/basic.html');
+  await page.evaluate(async () => (await import('/agent-robot-avatar.js')).loadSkins());
+  // The page's own avatar is on screen, so its frames keep running.
+  const avatar = page.locator('#avatar');
+  await avatar.evaluate(element => element.setSkin('17'));
+  const state = () => avatar.evaluate(element => {
+    const root = element.shadowRoot;
+    const joined = root.querySelector('[mask="url(#skin-joined-eyes)"]')?.closest('g[clip-path]');
+    return { joined: Boolean(joined) && joined.style.display !== 'none', eyesHidden: root.getElementById('leftEye').parentElement.style.opacity === '0' };
+  });
+  // play() resolves when love is over, so do not wait for it here.
+  await avatar.evaluate(element => { element.play('love'); });
+  await expect.poll(state).toEqual({ joined: true, eyesHidden: true });
+  await expect.poll(state, { timeout: 8000 }).toEqual({ joined: false, eyesHidden: false });
+});
