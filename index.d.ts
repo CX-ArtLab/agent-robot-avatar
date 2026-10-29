@@ -87,6 +87,11 @@ export declare const SKIN_NAMES: readonly AgentRobotAvatarSkin[];
 export declare const SKINS: Readonly<Record<AgentRobotAvatarSkin, AgentRobotAvatarSkinInfo>>;
 /** The skin series, in gallery order. */
 export declare const SKIN_SERIES: readonly AgentRobotAvatarSkinSeries[];
+/**
+ * Skin painters download the first time a skin is used, so the first skin shows
+ * a moment after it is set. Await this to load them in advance.
+ */
+export declare function loadSkins(): Promise<void>;
 
 export type AgentRobotAvatarState =
   | 'idle'

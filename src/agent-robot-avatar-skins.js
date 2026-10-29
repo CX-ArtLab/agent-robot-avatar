@@ -1,8 +1,27 @@
 import AgentRobotAvatar, { registerAvatarExtension } from './agent-robot-avatar-extension-host.js';
 import { SKIN_CATALOG, SKIN_SERIES } from './skins/catalog.js';
-import { SKIN_PAINTS } from './skins/paints.js';
-import { showNative, lightNative, maskEyelids, REST_LIGHT } from './skins/native.js';
-import { applyMaterial } from './skins/material-library.js';
+
+// The painters are large, so they load the first time a skin needs them. A page
+// that never uses a skin never downloads them.
+const painters = {};
+const loading = {};
+function loadPainter(kind) {
+  loading[kind] ??= Promise.all([
+    import('./skins/paints.js'),
+    kind === 'native' ? import('./skins/native.js') : import('./skins/material-library.js'),
+    import('./skins/eyelids.js'),
+  ]).then(([paints, painter, eyelids]) => {
+    painters.paints = paints.SKIN_PAINTS;
+    painters.maskEyelids = eyelids.maskEyelids;
+    painters[kind] = painter;
+  });
+  return loading[kind];
+}
+
+/** Loads every skin painter now, so later skins show on the same frame they are set. */
+function loadSkins() {
+  return Promise.all([loadPainter('native'), loadPainter('material')]).then(() => undefined);
+}
 
 const proto = AgentRobotAvatar.prototype;
 const baseApplyColor = proto._applyColor;
@@ -16,6 +35,7 @@ const SERIES = Object.freeze(SKIN_SERIES.map(series => Object.freeze({
   id: series.id, title: series.zh, titleEn: series.en, skins: Object.freeze([...series.skins]),
 })));
 
+const REST_LIGHT = Object.freeze({ x: -0.5, y: -0.5 });
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
 function normalizeSkin(value) {
@@ -37,7 +57,7 @@ function findPainted(root, record) {
 // Some adjustments touch layers every skin shares, so each change is recorded
 // and undone before the next skin is painted.
 function paintAdjustments(instance, name) {
-  const records = SKIN_PAINTS[name]?.paint || [];
+  const records = painters.paints[name]?.paint || [];
   const root = instance.shadowRoot;
   const undo = instance._skinUndo ??= [];
   for (const record of records) {
@@ -52,7 +72,7 @@ function paintAdjustments(instance, name) {
       node.setAttribute(attribute, value);
     }
   }
-  for (const [property, value] of Object.entries(SKIN_PAINTS[name]?.properties || {})) {
+  for (const [property, value] of Object.entries(painters.paints[name]?.properties || {})) {
     const old = instance.style.getPropertyValue(property);
     undo.push(() => old ? instance.style.setProperty(property, old) : instance.style.removeProperty(property));
     instance.style.setProperty(property, value);
@@ -67,6 +87,7 @@ function undoAdjustments(instance) {
 // Adjustments to light-driven attributes were made with the light at rest. They
 // become offsets so they move with the light instead of being overwritten.
 function adjustNative(instance, skin, name) {
+  const { lightNative } = painters.native;
   const { x, y } = skin.light;
   lightNative(instance, REST_LIGHT.x, REST_LIGHT.y);
   const resting = Object.entries(skin.nodes).map(([key, node]) => {
@@ -83,7 +104,7 @@ function adjustNative(instance, skin, name) {
 }
 
 function adjustMaterial(instance, material, name) {
-  const records = SKIN_PAINTS[name]?.paint || [];
+  const records = painters.paints[name]?.paint || [];
   const root = instance.shadowRoot;
   const key = SKIN_CATALOG[name].material;
   const offsets = [];
@@ -106,10 +127,23 @@ function render(instance) {
   const name = instance._skinName ?? null;
   if (instance._skinShown === name || !instance._head) return;
   const entry = name ? SKIN_CATALOG[name] : null;
+  const kind = entry ? (entry.native ? 'native' : 'material') : null;
+  if (kind && !painters[kind]) {
+    // Draw it once the painter arrives, unless another skin was chosen meanwhile.
+    if (instance._skinPending !== name) {
+      instance._skinPending = name;
+      loadPainter(kind).then(() => {
+        instance._skinPending = undefined;
+        if ((instance._skinName ?? null) === name) render(instance);
+      });
+    }
+    return;
+  }
+  const { showNative } = painters.native || {};
   undoAdjustments(instance);
   instance._material?.dispose();
   instance._material = null;
-  if (!entry?.native) showNative(instance, null);
+  if (!entry?.native) showNative?.(instance, null);
   instance._skinShown = name;
   // Without a skin the head takes the current color attribute again.
   if (!entry) {
@@ -125,8 +159,8 @@ function render(instance) {
     }
   } else {
     // The lids cut the eyes through a mask, so the head paint shows behind them.
-    maskEyelids(instance);
-    const material = applyMaterial(instance, entry.material);
+    painters.maskEyelids(instance);
+    const material = painters.material.applyMaterial(instance, entry.material);
     adjustMaterial(instance, material, name);
     instance._material = material;
     instance._materialLight = null;
@@ -155,7 +189,7 @@ function updateLight(instance) {
     light.y += ((Number.isFinite(ty) ? ty : REST_LIGHT.y) - light.y) * .18;
   }
   if (SKIN_CATALOG[name].native) {
-    lightNative(instance, light.x, light.y);
+    painters.native.lightNative(instance, light.x, light.y);
   } else if (instance._material) {
     const last = instance._materialLight;
     if (last && Math.abs(last.x - light.x) < .0005 && Math.abs(last.y - light.y) < .0005) return;
@@ -209,5 +243,5 @@ registerAvatarExtension({
   },
 });
 
-export { AgentRobotAvatar, SKINS, SKIN_NAMES, SERIES as SKIN_SERIES };
+export { AgentRobotAvatar, SKINS, SKIN_NAMES, SERIES as SKIN_SERIES, loadSkins };
 export default AgentRobotAvatar;

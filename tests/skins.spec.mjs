@@ -6,6 +6,8 @@ const SAMPLES = { 103: 'url(#skin-base)', 13: 'url(#skin-base)', 2: 'url(#materi
 
 async function addAvatar(page, attributes) {
   await page.goto('/examples/basic.html');
+  // Load the painters first so each skin shows on the frame it is set.
+  await page.evaluate(async () => (await import('/agent-robot-avatar.js')).loadSkins());
   await page.evaluate(attrs => {
     const avatar = document.createElement('agent-robot-avatar');
     avatar.id = 'skinned';
@@ -115,8 +117,19 @@ test('a skin set from script survives moving the avatar in the page', async ({ p
   expect(await snapshot(avatar)).toMatchObject({ skin: '60', head: 'url(#skin-base)' });
 });
 
+test('without preloading, a skin shows once its painter has loaded', async ({ page }) => {
+  await page.goto('/examples/basic.html');
+  const avatar = page.locator('#avatar');
+  await avatar.evaluate(element => element.setSkin('111'));
+  expect(await avatar.evaluate(element => element.getSkin())).toBe('111');
+  await expect.poll(() => avatar.evaluate(element => element.shadowRoot.getElementById('head').getAttribute('fill'))).toBe(SAMPLES[111]);
+  await avatar.evaluate(element => element.setSkin('13'));
+  await expect.poll(() => avatar.evaluate(element => element.shadowRoot.getElementById('head').getAttribute('fill'))).toBe(SAMPLES[13]);
+});
+
 test('a skin set before the avatar is in the page shows once it is added', async ({ page }) => {
   await page.goto('/examples/basic.html');
+  await page.evaluate(async () => (await import('/agent-robot-avatar.js')).loadSkins());
   const head = await page.evaluate(async () => {
     const element = document.createElement('agent-robot-avatar');
     element.setSkin('2');
@@ -145,7 +158,8 @@ test('every skin renders through all expressions without errors', async ({ page 
   page.on('console', message => { if (message.type() === 'warning' || message.type() === 'error') errors.push(message.text()); });
   await page.goto('/examples/basic.html');
   const results = await page.evaluate(async () => {
-    const { SKIN_NAMES } = await import('/agent-robot-avatar.js');
+    const { SKIN_NAMES, loadSkins } = await import('/agent-robot-avatar.js');
+    await loadSkins();
     const avatar = document.querySelector('#avatar');
     const out = [];
     for (const name of SKIN_NAMES) {

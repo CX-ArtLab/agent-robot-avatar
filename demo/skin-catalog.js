@@ -1,5 +1,8 @@
-import { SKINS, SKIN_NAMES, SKIN_SERIES } from '../agent-robot-avatar.js';
+import { SKINS, SKIN_NAMES, SKIN_SERIES, loadSkins } from '../agent-robot-avatar.js';
 import { featured, demoSkins } from './skin-catalog-data.js';
+
+// The showcase switches skins constantly, so it loads every painter up front.
+await loadSkins();
 
 // The demo shows the component's own numbered skins. Pages here add only what a
 // showcase needs: filters, stage colors, a demo-only floor shadow, and a light
