@@ -1,0 +1,11 @@
+:root{--demo-paper:#f8f8f6;--demo-ink:#25282d;--demo-muted:#72777f;--demo-line:#e4e5e5;--demo-radius:16px}
+.demo-nav{display:flex;align-items:center;gap:3px;padding:4px;border:1px solid rgba(0,0,0,.045);border-radius:13px;background:rgba(255,255,255,.88);box-shadow:0 3px 15px rgba(0,0,0,.035);font:12px/1.4 Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif}
+.demo-nav a{color:#787d84;text-decoration:none;border-radius:9px;padding:7px 18px;white-space:nowrap;transition:background .15s,color .15s}
+.demo-nav a:hover{background:#f1f2f3;color:#333}
+.demo-nav a[aria-current=page]{background:#eceeef;color:#30343a}
+.demo-nav a:focus-visible{outline:2px solid #777d86;outline-offset:3px}
+.canvas>.demo-nav{position:absolute;top:18px;left:50%;transform:translateX(-50%);z-index:30}
+.demo-skin-entry{display:inline-flex;align-items:center;justify-content:center;min-height:32px;padding:0 12px;margin-left:4px;border-radius:9px;background:#f1f2f3;color:#555c65;text-decoration:none;font:11px Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif}
+.demo-skin-entry:hover{background:#e7e8ea}
+.demo-skin-entry:focus-visible{outline:2px solid #777d86;outline-offset:3px}
+@media(max-width:800px){.canvas>.demo-nav{top:70px}.demo-nav a{padding:6px 16px}}

@@ -119,10 +119,10 @@ test('demo follows the linked language and remembers a manual choice', async ({ 
   await expect(page.locator('html')).toHaveAttribute('lang', 'zh-TW');
 });
 
-test('demo falls back to the browser language', async ({ browser }) => {
-  const context = await browser.newContext({ locale: 'fr-FR' });
+test('demo falls back to the browser language', async ({ browser, baseURL }) => {
+  const context = await browser.newContext({ locale: 'fr-FR', baseURL });
   const page = await context.newPage();
-  await page.goto('http://127.0.0.1:4173/demo/');
+  await page.goto('/demo/');
   await expect(page.locator('html')).toHaveAttribute('lang', 'fr');
   await context.close();
 });

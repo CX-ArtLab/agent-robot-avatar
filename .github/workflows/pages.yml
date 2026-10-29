@@ -8,6 +8,8 @@ on:
       - src/**
       - demo/**
       - scripts/build-pages.mjs
+      - scripts/public-pages-files.mjs
+      - tests/pages-public.test.mjs
       - .github/workflows/pages.yml
   workflow_dispatch:
 
@@ -35,7 +37,7 @@ jobs:
         uses: actions/configure-pages@v5
 
       - name: Build demo
-        run: node scripts/build-pages.mjs
+        run: node --test tests/pages-public.test.mjs
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4

@@ -78,10 +78,12 @@ test('version is consistent across the package, runtime, and demo', async () => 
   const packageJson = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8'));
   const runtime = await import(pathToFileURL(path.join(root, 'agent-robot-avatar.js')).href);
   const demo = await readFile(path.join(root, 'demo', 'index.html'), 'utf8');
+  const demoRuntime = await readFile(path.join(root, 'demo', 'agent-robot-avatar-demo.js'), 'utf8');
 
   assert.equal(runtime.VERSION, packageJson.version);
   assert.match(packageJson.version, /^\d+\.\d+\.\d+(?:-rc\.\d+)?$/);
-  assert.match(demo, /AgentRobotAvatarDemoBuild = VERSION/);
+  assert.match(demo, /<script type="module" src="\.\/agent-robot-avatar-demo\.js"><\/script>/);
+  assert.match(demoRuntime, /AgentRobotAvatarDemoBuild = VERSION/);
   assert.doesNotMatch(demo, /agent-robot-avatar\.js\?v=|demoVersion/);
 });
 
@@ -121,10 +123,13 @@ test('packed package installs and can be imported without browser globals', asyn
 test('Pages build resolves both its component preload and import at the deployment root', async () => {
   run(process.execPath, ['scripts/build-pages.mjs']);
   const html = await readFile(path.join(root, '.pages-site', 'index.html'), 'utf8');
+  const demoRuntime = await readFile(path.join(root, '.pages-site', 'agent-robot-avatar-demo.js'), 'utf8');
   assert.doesNotMatch(html, /\.\.\/agent-robot-avatar\.js/);
+  assert.doesNotMatch(demoRuntime, /\.\.\/agent-robot-avatar\.js/);
   const preloads = [...html.matchAll(/rel="modulepreload" href="([^"]+)"/g)].map(match => match[1]);
   assert.ok(preloads.includes('./agent-robot-avatar.js'));
-  assert.match(html, /import\('\.\/agent-robot-avatar\.js'\)/);
+  assert.match(html, /src="\.\/agent-robot-avatar-demo\.js"/);
+  assert.match(demoRuntime, /import\('\.\/agent-robot-avatar\.js'\)/);
   for (const preload of preloads) {
     await readFile(path.join(root, '.pages-site', preload), 'utf8');
   }
