@@ -36,7 +36,18 @@ function updateLinks() {
   }
 }
 new MutationObserver(updateLinks).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
-for (const link of document.querySelectorAll('[data-skin-link]')) link.addEventListener('click', saveAppearance);
+for (const link of document.querySelectorAll('[data-skin-link]')) {
+  link.addEventListener('click', saveAppearance);
+  // Fetch the skin page's code while the pointer is on its way to the link.
+  link.addEventListener('pointerenter', warmSkinPage, { once: true });
+  link.addEventListener('focus', warmSkinPage, { once: true });
+}
+function warmSkinPage() {
+  for (const href of ['./skins.js', './skin-catalog.js', '../src/skins/paints.js', '../src/skins/native.js', '../src/skins/material-library.js']) {
+    if (document.querySelector(`link[rel="modulepreload"][href="${href}"]`)) continue;
+    document.head.append(Object.assign(document.createElement('link'), { rel: 'modulepreload', href }));
+  }
+}
 
 // Manual color controls return to the plain surface, so a previous material
 // never obscures a user's chosen head color or leaves masked eyelids behind.

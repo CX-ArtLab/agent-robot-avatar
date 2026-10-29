@@ -148,7 +148,7 @@ try {
 | `motion` | Política de movimento: `auto`, `reduce` ou `full` |
 | `press-squeeze` | Pressione o centro para comprimir; `false` desativa |
 | `antenna-drag` | Arraste e retorno elástico da antena com reação de raiva; `false` desativa |
-| `skin` | Número do skin, `1`–`188`; omita para a cor lisa |
+| `skin` | Número do skin, por exemplo `301`; omita para a cor lisa |
 
 Controles comuns em tempo de execução:
 
@@ -163,14 +163,14 @@ Manter o centro pressionado inicia a compressão. Ao mover mais de 4 pixels CSS,
 
 ## Skins
 
-188 skins em 17 séries, com uma luz que segue o ponteiro. Cada skin tem um número permanente: os nomes podem mudar, os números nunca.
+188 skins em 17 séries, com uma luz que segue o ponteiro. Cada skin tem um número permanente: o número da série seguido de dois dígitos, então 305 é o quinto skin da série 3. Os nomes podem mudar; os números nunca mudam nem são reutilizados.
 
 ```html
-<agent-robot-avatar skin="13"></agent-robot-avatar>
+<agent-robot-avatar skin="301"></agent-robot-avatar>
 ```
 
 ```js
-avatar.setSkin(2);    // ou '2'
+avatar.setSkin(102);  // ou '102'
 avatar.setSkin(null); // volta à cor lisa
 ```
 
@@ -178,23 +178,23 @@ Veja todos os skins com seus números na [galeria de skins](https://cx-artlab.gi
 
 | Série | Números |
 | --- | --- |
-| Esmalte | 1–6 |
-| Vidro gelo | 7–12 |
-| Goma | 13–24 |
-| Vidro bala | 25–30 |
-| Acrílico | 31–42 |
-| Gelatina | 43–54 |
-| Degradê | 55–66 |
-| Vidro fosco | 67–72 |
-| Metal | 73–102 |
-| Gemas e cerâmica | 103–114 |
-| Madeira | 115–120 |
-| Bolas | 121–130 |
-| Transparente e brilho | 131–135 |
-| Tecido e couro | 136–147 |
-| Doces e frutas | 148–159 |
-| Natureza | 160–171 |
-| Padrões e tecnologia | 172–188 |
+| Esmalte | 101–106 |
+| Vidro gelo | 201–206 |
+| Goma | 301–312 |
+| Vidro bala | 401–406 |
+| Acrílico | 501–512 |
+| Gelatina | 601–612 |
+| Degradê | 701–712 |
+| Vidro fosco | 801–806 |
+| Metal | 901–930 |
+| Gemas e cerâmica | 1001–1012 |
+| Madeira | 1101–1106 |
+| Bolas | 1201–1210 |
+| Transparente e brilho | 1301–1305 |
+| Tecido e couro | 1401–1412 |
+| Doces e frutas | 1501–1512 |
+| Natureza | 1601–1612 |
+| Padrões e tecnologia | 1701–1717 |
 
 O código que desenha os skins é baixado na primeira vez que um skin é usado, então uma página sem skins nunca o carrega. `await loadSkins()` o carrega antecipadamente. `SKINS` traz os nomes em chinês e inglês e as cores de cada skin, `SKIN_SERIES` as séries e `SKIN_NAMES` todos os números.
 

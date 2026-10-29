@@ -1,6 +1,6 @@
 import { VERSION } from '../../agent-robot-avatar.js';
 import { publicSkins, skinById, skinThumbnail, catalogCategories as materialCategories } from '../skin-catalog.js';
-import { t, skinLanguage, skinTitle, seriesTitle } from '../skins-i18n.js';
+import { t, skinLanguage, skinTitle, seriesTitle, copySkinNumber } from '../skins-i18n.js';
 
 const params = new URLSearchParams(location.search);
 document.getElementById('catalog-build').textContent = `Demo ${VERSION}`;
@@ -28,7 +28,7 @@ let category = categories.some(({id}) => id === params.get('view')) ? params.get
 search.value = params.get('q') || '';
 const observer = new IntersectionObserver(entries => {
   for (const {isIntersecting, target} of entries) if (isIntersecting) {
-    target.src = skinThumbnail(target.dataset.skin);
+    skinThumbnail(target.dataset.skin).then(url => { target.src = url; });
     observer.unobserve(target);
   }
 }, {rootMargin:'160px'});
@@ -64,27 +64,44 @@ function render() {
     heading.id=`category-${group.id}`;section.setAttribute('aria-labelledby',heading.id);
     section.append(heading,cards);fragment.append(section);
     for (const skin of members) {
-      const card = document.createElement('a');
+      const card = document.createElement('div');
       card.className = 'skin-card';
       card.dataset.skin = skin.id;
+      const link = document.createElement('a');
+      link.className = 'card-link';
       const url = new URL(home);
       url.searchParams.set('skin', skin.id);
-      card.href = url.href;
-      card.setAttribute('aria-label', t('preview', skinTitle(skin, lang), lang));
-      // The same card as the skin page: the skin's stage color, its picture,
-      // its name and its number.
-      if (skin.stage) card.style.background = skin.stage;
+      link.href = url.href;
+      link.setAttribute('aria-label', t('preview', skinTitle(skin, lang), lang));
+      // A stage in the skin's own color above, the name and number below.
+      const stage = document.createElement('div');
+      stage.className = 'stage';
+      if (skin.stage) stage.style.background = skin.stage;
       const img = document.createElement('img');
       img.alt = '';
       img.width = img.height = 120;
       img.dataset.skin = skin.id;
+      stage.append(img);
+      const caption = document.createElement('div');
+      caption.className = 'caption';
+      const swatch = document.createElement('span');
+      swatch.className = 'swatch';
+      swatch.style.background = skin.base[1];
+      swatch.setAttribute('aria-hidden', 'true');
       const label = document.createElement('span');
       label.className = 'skin-label';
       label.textContent = skinTitle(skin, lang);
-      const number = document.createElement('span');
-      number.className = 'skin-number';
+      caption.append(swatch, label);
+      link.append(stage, caption);
+      // The number copies itself, so it sits outside the link.
+      const number = document.createElement('button');
+      number.type = 'button';
+      number.className = 'skin-number copy-number';
       number.textContent = `#${skin.id}`;
-      card.append(img, label, number);
+      number.title = t('copy', 0, lang);
+      number.setAttribute('aria-label', `${t('copy', 0, lang)} ${skin.id}`);
+      number.addEventListener('click', () => copySkinNumber(skin.id, number, lang));
+      card.append(link, number);
       cards.append(card);
       observer.observe(img);
     }

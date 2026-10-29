@@ -27,12 +27,13 @@ const proto = AgentRobotAvatar.prototype;
 const baseApplyColor = proto._applyColor;
 
 // Skins are numbered. The number is the permanent public name; the Chinese and
-// English titles are for display and may be reworded later.
-const SKIN_NAMES = Object.freeze(Object.keys(SKIN_CATALOG));
+// English titles are for display and may be reworded later. SKIN_NAMES lists
+// them in display order, series by series.
+const SKIN_NAMES = Object.freeze(SKIN_SERIES.flatMap(series => series.skins));
 const SKINS = Object.freeze(Object.fromEntries(Object.entries(SKIN_CATALOG).map(([id, skin]) => [id,
   Object.freeze({ series: skin.series, title: skin.zh, titleEn: skin.en, base: Object.freeze([...skin.base]) })])));
 const SERIES = Object.freeze(SKIN_SERIES.map(series => Object.freeze({
-  id: series.id, title: series.zh, titleEn: series.en, skins: Object.freeze([...series.skins]),
+  id: series.id, number: series.number, title: series.zh, titleEn: series.en, skins: Object.freeze([...series.skins]),
 })));
 
 const REST_LIGHT = Object.freeze({ x: -0.5, y: -0.5 });
@@ -213,7 +214,7 @@ function updateLight(instance) {
 proto._applySkinAttribute = function() {
   const value = this.getAttribute('skin');
   if (normalizeSkin(value) === undefined) {
-    console.warn(`agent-robot-avatar: unknown skin "${value}". Use a skin number from 1 to ${SKIN_NAMES.length}, or none.`);
+    console.warn(`agent-robot-avatar: unknown skin "${value}". Use a skin number such as ${SKIN_NAMES[0]}, or none.`);
     this.setSkin(null);
   } else {
     this.setSkin(value);

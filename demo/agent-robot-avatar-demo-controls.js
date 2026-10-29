@@ -836,6 +836,14 @@ function mountDemoControls() {
   }
 
   if (document.body.dataset.page === 'skins') return;
+  // Coming back from the skin pages goes straight to the avatar; the opening
+  // show plays on a fresh visit.
+  let fromSkins = false;
+  try {
+    const referrer = new URL(document.referrer);
+    fromSkins = referrer.origin === location.origin && /\/(skins\.html|materials\/)/.test(referrer.pathname);
+  } catch { /* no referrer */ }
+  if (fromSkins) return;
   if (document.documentElement.dataset.demoReady) playIntro();
   else {
     const ready = new MutationObserver(() => {

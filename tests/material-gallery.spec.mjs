@@ -4,8 +4,8 @@ import { expect, test } from '@playwright/test';
 // lavender variant. Both live previews and exported thumbnails must keep them.
 // Skin number -> [material key, eye color].
 const iceEyes = {
-  7:['iceglaze','#304c6e'], 8:['mintice','#3a6458'], 9:['blushice','#643a50'],
-  10:['champagneice','#6b5834'], 11:['lavenderice','#304c6e'], 12:['whiteice','#405765'],
+  201:['iceglaze','#304c6e'], 202:['mintice','#3a6458'], 203:['blushice','#643a50'],
+  204:['champagneice','#6b5834'], 205:['lavenderice','#304c6e'], 206:['whiteice','#405765'],
 };
 
 test('ice skin previews and catalog thumbnails preserve the original eye colors', async ({page}) => {

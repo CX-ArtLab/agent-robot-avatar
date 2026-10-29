@@ -9,7 +9,11 @@
 .skins-page .demo-control-stack>.controls,.skins-page .demo-options,.skins-page .demo-options-group{max-width:100%!important}
 .skins-page .demo-options{min-width:0;grid-template-columns:minmax(0,1fr)}
 .skins-page .demo-stage{height:clamp(260px,42vh,400px)}
-.skin-name{position:absolute;top:12px;left:0;width:100%;margin:0;text-align:center;color:#72777e;font-size:12px;font-weight:400;z-index:6;pointer-events:none}
+.skin-name{position:absolute;top:12px;left:0;width:100%;margin:0;display:flex;align-items:center;justify-content:center;gap:8px;color:#72777e;font-size:12px;font-weight:400;z-index:6;pointer-events:none}
+.copy-number{pointer-events:auto;display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:999px;background:rgba(255,255,255,.6);backdrop-filter:blur(6px);color:#72777e;font-size:11px;font-variant-numeric:tabular-nums}
+.copy-number::after{content:"";width:10px;height:10px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='9' y='9' width='12' height='12' rx='2'/%3E%3Cpath d='M5 15V5a2 2 0 0 1 2-2h10'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='9' y='9' width='12' height='12' rx='2'/%3E%3Cpath d='M5 15V5a2 2 0 0 1 2-2h10'/%3E%3C/svg%3E") center/contain no-repeat}
+.copy-number:hover{background:rgba(255,255,255,.9);color:#333}
+.copy-number[data-copied]::after{-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E")}
 .skins-page #face[data-shadow="off"],.skins-page .agent-overlay #face{filter:none}
 .skin-options button{font-size:11px;padding:7px 10px;color:#656a70}
 .skin-options button[aria-pressed="true"]{background:#dfe1e4;color:#202327}

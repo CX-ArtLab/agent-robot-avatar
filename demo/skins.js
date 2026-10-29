@@ -1,7 +1,7 @@
 import './agent-robot-avatar-demo.js';
 import { restoreAppearance, saveAppearance } from './agent-robot-avatar-demo-appearance.js';
 import { publicSkins, skinById, featured, filters, applySkin, skinThumbnail, storedSkin, SKIN_STORAGE_KEY } from './skin-catalog.js';
-import { t, skinTitle } from './skins-i18n.js';
+import { t, skinTitle, copySkinNumber } from './skins-i18n.js';
 
 // Language switching stays with the shared demo; this page relabels itself
 // whenever the document language changes.
@@ -12,11 +12,24 @@ const grid = document.getElementById('skin-grid');
 const search = document.getElementById('skin-search');
 const header = document.getElementById('page-header');
 header.append(document.querySelector('.title'), document.getElementById('agent-demo-build'));
-const name = document.createElement('p');
-name.id = 'skin-name';
-name.className = 'skin-name';
+// The stage title: the skin's name and a button that copies its number.
+const title = document.createElement('div');
+title.id = 'skin-name';
+title.className = 'skin-name';
+const name = document.createElement('span');
 name.setAttribute('aria-live', 'polite');
-document.getElementById('demoStage').append(name);
+const copyNumber = document.createElement('button');
+copyNumber.type = 'button';
+copyNumber.className = 'copy-number';
+copyNumber.addEventListener('click', () => copySkinNumber(selected, copyNumber));
+title.append(name, copyNumber);
+document.getElementById('demoStage').append(title);
+function showNumber(id) {
+  copyNumber.hidden = !id;
+  copyNumber.textContent = `#${id}`;
+  copyNumber.title = t('copy');
+  copyNumber.setAttribute('aria-label', `${t('copy')} ${id}`);
+}
 
 const skinOptions = document.createElement('div');
 skinOptions.className = 'demo-options-group skin-options';
@@ -59,7 +72,7 @@ const thumbnails = new IntersectionObserver(entries => {
   for (const entry of entries) {
     if (!entry.isIntersecting) continue;
     const img = entry.target;
-    img.src = skinThumbnail(img.dataset.skin);
+    skinThumbnail(img.dataset.skin).then(url => { img.src = url; });
     thumbnails.unobserve(img);
   }
 }, { rootMargin: '160px' });
@@ -175,7 +188,8 @@ function selectSkin(id, updateUrl = true) {
   material = applySkin(face, id);
   document.getElementById('demoStage').style.background = skin.stage || '';
   syncShadow();
-  name.textContent = `${skinTitle(skin)} · #${id}`;
+  name.textContent = skinTitle(skin);
+  showNumber(id);
   for (const card of grid.querySelectorAll('.skin-card')) card.setAttribute('aria-pressed', String(card.dataset.skin === id));
   if (updateUrl) writeRoute();
   updateLinks();
@@ -198,7 +212,8 @@ compare.addEventListener('click', () => {
   material?.setOriginal(original);
   compare.setAttribute('aria-pressed', String(original));
   compare.textContent = original ? t('back') : t('compare');
-  name.textContent = original ? t('original') : `${skinTitle(skinById.get(selected))} · #${selected}`;
+  name.textContent = original ? t('original') : skinTitle(skinById.get(selected));
+  showNumber(original ? null : selected);
 });
 canvas.addEventListener('pointermove', event => {
   if (!light.checked) return;
@@ -216,7 +231,8 @@ function relabel() {
   for (const node of skinOptions.querySelectorAll('[data-label]')) node.textContent = t(node.dataset.label);
   const original = compare.getAttribute('aria-pressed') === 'true';
   compare.textContent = original ? t('back') : t('compare');
-  name.textContent = original ? t('original') : `${skinTitle(skinById.get(selected))} · #${selected}`;
+  name.textContent = original ? t('original') : skinTitle(skinById.get(selected));
+  showNumber(original ? null : selected);
   applyLink.textContent = t('inDemo');
   randomSkin.title = t('random');
   randomSkin.setAttribute('aria-label', t('random'));

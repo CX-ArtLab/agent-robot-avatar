@@ -1,8 +1,9 @@
 import { SKINS, SKIN_NAMES, SKIN_SERIES, loadSkins } from '../agent-robot-avatar.js';
 import { featured, demoSkins } from './skin-catalog-data.js';
 
-// The showcase switches skins constantly, so it loads every painter up front.
-await loadSkins();
+// The showcase switches skins constantly, so every painter loads in the
+// background while the page appears; a skin set earlier loads its own first.
+export const skinsReady = loadSkins();
 
 // The demo shows the component's own numbered skins. Pages here add only what a
 // showcase needs: filters, stage colors, a demo-only floor shadow, and a light
@@ -59,7 +60,8 @@ export function applySkin(avatar, id, { groundShadow = false } = {}) {
 // Render thumbnails from the real component without starting an animation loop
 // or registering hundreds of pointer listeners in the gallery.
 const thumbnails = new Map();
-export function skinThumbnail(id) {
+export async function skinThumbnail(id) {
+  await skinsReady;
   if (thumbnails.has(id)) return thumbnails.get(id);
   const avatar = document.createElement('agent-robot-avatar');
   avatar.setAttribute('motion', 'reduce');

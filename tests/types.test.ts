@@ -45,8 +45,8 @@ avatar
   .setPointerFollow(false)
   .setAntennaFlash(true)
   .setHeadRoundness(50)
-  .setSkin('103')
-  .setSkin(188)
+  .setSkin('1001')
+  .setSkin(1717)
   .setSkin(null)
   .reset();
 
@@ -55,7 +55,7 @@ const skin: AgentRobotAvatarSkin | null = avatar.getSkin();
 void skin;
 const firstSkin: AgentRobotAvatarSkin | undefined = SKIN_NAMES[0];
 void firstSkin;
-const skinTitle: string = SKINS['13'].titleEn;
+const skinTitle: string = SKINS['301'].titleEn;
 void skinTitle;
 const seriesSkins: readonly AgentRobotAvatarSkin[] | undefined = SKIN_SERIES[0]?.skins;
 void seriesSkins;

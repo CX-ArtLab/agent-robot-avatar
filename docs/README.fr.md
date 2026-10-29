@@ -148,7 +148,7 @@ try {
 | `motion` | Politique d’animation : `auto`, `reduce` ou `full` |
 | `press-squeeze` | Maintenir le centre pour comprimer ; `false` désactive le geste |
 | `antenna-drag` | Glisser et faire rebondir l’antenne avec réaction de colère ; `false` désactive le geste |
-| `skin` | Numéro de skin, `1`–`188` ; à omettre pour la couleur unie |
+| `skin` | Numéro de skin, par exemple `301` ; à omettre pour la couleur unie |
 
 Contrôles courants à l’exécution :
 
@@ -163,14 +163,14 @@ Maintenir le centre lance la compression. Après plus de 4 pixels CSS de déplac
 
 ## Skins
 
-188 skins en 17 séries, avec une lumière qui suit le pointeur. Chaque skin a un numéro permanent : les noms peuvent changer, les numéros jamais.
+188 skins en 17 séries, avec une lumière qui suit le pointeur. Chaque skin a un numéro permanent : le numéro de série suivi de deux chiffres, donc 305 est le cinquième skin de la série 3. Les noms peuvent changer ; les numéros jamais, et ils ne sont pas réutilisés.
 
 ```html
-<agent-robot-avatar skin="13"></agent-robot-avatar>
+<agent-robot-avatar skin="301"></agent-robot-avatar>
 ```
 
 ```js
-avatar.setSkin(2);    // ou '2'
+avatar.setSkin(102);  // ou '102'
 avatar.setSkin(null); // retour à la couleur unie
 ```
 
@@ -178,23 +178,23 @@ Retrouvez tous les skins et leur numéro dans la [galerie des skins](https://cx-
 
 | Série | Numéros |
 | --- | --- |
-| Émail | 1–6 |
-| Verre glacé | 7–12 |
-| Gomme | 13–24 |
-| Verre bonbon | 25–30 |
-| Acrylique | 31–42 |
-| Gelée | 43–54 |
-| Dégradé | 55–66 |
-| Verre dépoli | 67–72 |
-| Métal | 73–102 |
-| Pierres et céramique | 103–114 |
-| Bois | 115–120 |
-| Balles | 121–130 |
-| Transparent et chatoyant | 131–135 |
-| Tissu et cuir | 136–147 |
-| Douceurs et fruits | 148–159 |
-| Nature | 160–171 |
-| Motifs et tech | 172–188 |
+| Émail | 101–106 |
+| Verre glacé | 201–206 |
+| Gomme | 301–312 |
+| Verre bonbon | 401–406 |
+| Acrylique | 501–512 |
+| Gelée | 601–612 |
+| Dégradé | 701–712 |
+| Verre dépoli | 801–806 |
+| Métal | 901–930 |
+| Pierres et céramique | 1001–1012 |
+| Bois | 1101–1106 |
+| Balles | 1201–1210 |
+| Transparent et chatoyant | 1301–1305 |
+| Tissu et cuir | 1401–1412 |
+| Douceurs et fruits | 1501–1512 |
+| Nature | 1601–1612 |
+| Motifs et tech | 1701–1717 |
 
 Le code qui dessine les skins est téléchargé la première fois qu’un skin est utilisé : une page sans skin ne le charge jamais. `await loadSkins()` le charge à l’avance. `SKINS` donne les noms chinois et anglais et les couleurs de chaque skin, `SKIN_SERIES` les séries et `SKIN_NAMES` tous les numéros.
 

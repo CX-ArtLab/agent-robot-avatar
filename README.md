@@ -148,7 +148,7 @@ try {
 | `motion` | Motion policy: `auto`, `reduce`, or `full` |
 | `press-squeeze` | Center press-and-hold squeeze; set to `false` to disable |
 | `antenna-drag` | Antenna drag, spring return, and angry reaction; set to `false` to disable |
-| `skin` | Skin number, `1`–`188`; leave it out for the flat color |
+| `skin` | Skin number, such as `301`; leave it out for the flat color |
 
 Common runtime controls:
 
@@ -163,14 +163,14 @@ The avatar center begins the squeeze interaction. Moving more than 4 CSS pixels 
 
 ## Skins
 
-188 skins in 17 series, with light that follows the pointer. Every skin has a permanent number: titles may be reworded later, numbers never change.
+188 skins in 17 series, with light that follows the pointer. Every skin has a permanent number: the series number followed by two digits, so 305 is the fifth skin of series 3. Titles may be reworded later; numbers never change and are never reused.
 
 ```html
-<agent-robot-avatar skin="13"></agent-robot-avatar>
+<agent-robot-avatar skin="301"></agent-robot-avatar>
 ```
 
 ```js
-avatar.setSkin(2);    // or '2'
+avatar.setSkin(102);  // or '102'
 avatar.setSkin(null); // back to the flat color
 ```
 
@@ -178,23 +178,23 @@ See every skin with its number in the [skin gallery](https://cx-artlab.github.io
 
 | Series | Numbers |
 | --- | --- |
-| Glaze | 1–6 |
-| Ice glass | 7–12 |
-| Gummy | 13–24 |
-| Candy glass | 25–30 |
-| Acrylic | 31–42 |
-| Jelly | 43–54 |
-| Gradient | 55–66 |
-| Frosted glass | 67–72 |
-| Metal | 73–102 |
-| Gems and ceramics | 103–114 |
-| Wood | 115–120 |
-| Balls | 121–130 |
-| Clear and shimmer | 131–135 |
-| Fabric and leather | 136–147 |
-| Sweets and fruit | 148–159 |
-| Nature | 160–171 |
-| Patterns and tech | 172–188 |
+| Glaze | 101–106 |
+| Ice glass | 201–206 |
+| Gummy | 301–312 |
+| Candy glass | 401–406 |
+| Acrylic | 501–512 |
+| Jelly | 601–612 |
+| Gradient | 701–712 |
+| Frosted glass | 801–806 |
+| Metal | 901–930 |
+| Gems and ceramics | 1001–1012 |
+| Wood | 1101–1106 |
+| Balls | 1201–1210 |
+| Clear and shimmer | 1301–1305 |
+| Fabric and leather | 1401–1412 |
+| Sweets and fruit | 1501–1512 |
+| Nature | 1601–1612 |
+| Patterns and tech | 1701–1717 |
 
 Skin painters download the first time a skin is used, so a page without skins never loads them. `await loadSkins()` loads them in advance. `SKINS` holds each skin’s Chinese and English titles and colors, `SKIN_SERIES` the series, and `SKIN_NAMES` every number.
 

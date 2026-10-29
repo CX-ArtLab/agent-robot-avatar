@@ -148,7 +148,7 @@ try {
 | `motion` | Bewegungsstrategie: `auto`, `reduce` oder `full` |
 | `press-squeeze` | Mitte gedrückt halten und stauchen; `false` deaktiviert die Geste |
 | `antenna-drag` | Antenne ziehen, federnd zurückkehren und wütend reagieren; `false` deaktiviert sie |
-| `skin` | Skin-Nummer `1`–`188`; weglassen für die flache Farbe |
+| `skin` | Skin-Nummer, z. B. `301`; weglassen für die flache Farbe |
 
 Häufige Runtime-Steuerungen:
 
@@ -163,14 +163,14 @@ Gedrückthalten in der Mitte startet die Stauchung. Nach mehr als 4 CSS-Pixeln B
 
 ## Skins
 
-188 Skins in 17 Serien; das Licht folgt dem Zeiger. Jeder Skin hat eine feste Nummer: Namen können sich ändern, Nummern nie.
+188 Skins in 17 Serien; das Licht folgt dem Zeiger. Jeder Skin hat eine feste Nummer: die Seriennummer und zwei Ziffern, 305 ist also der fünfte Skin der Serie 3. Namen können sich ändern, Nummern nie, und sie werden nicht wiederverwendet.
 
 ```html
-<agent-robot-avatar skin="13"></agent-robot-avatar>
+<agent-robot-avatar skin="301"></agent-robot-avatar>
 ```
 
 ```js
-avatar.setSkin(2);    // oder '2'
+avatar.setSkin(102);  // oder '102'
 avatar.setSkin(null); // zurück zur flachen Farbe
 ```
 
@@ -178,23 +178,23 @@ Alle Skins mit Nummer zeigt die [Skin-Galerie](https://cx-artlab.github.io/agent
 
 | Serie | Nummern |
 | --- | --- |
-| Glasur | 1–6 |
-| Eisglas | 7–12 |
-| Gummi | 13–24 |
-| Bonbonglas | 25–30 |
-| Acryl | 31–42 |
-| Gelee | 43–54 |
-| Verlauf | 55–66 |
-| Milchglas | 67–72 |
-| Metall | 73–102 |
-| Edelsteine und Keramik | 103–114 |
-| Holz | 115–120 |
-| Bälle | 121–130 |
-| Klar und schimmernd | 131–135 |
-| Stoff und Leder | 136–147 |
-| Süßes und Obst | 148–159 |
-| Natur | 160–171 |
-| Muster und Technik | 172–188 |
+| Glasur | 101–106 |
+| Eisglas | 201–206 |
+| Gummi | 301–312 |
+| Bonbonglas | 401–406 |
+| Acryl | 501–512 |
+| Gelee | 601–612 |
+| Verlauf | 701–712 |
+| Milchglas | 801–806 |
+| Metall | 901–930 |
+| Edelsteine und Keramik | 1001–1012 |
+| Holz | 1101–1106 |
+| Bälle | 1201–1210 |
+| Klar und schimmernd | 1301–1305 |
+| Stoff und Leder | 1401–1412 |
+| Süßes und Obst | 1501–1512 |
+| Natur | 1601–1612 |
+| Muster und Technik | 1701–1717 |
 
 Der Code, der die Skins zeichnet, wird erst beim ersten Skin geladen; eine Seite ohne Skins lädt ihn nie. `await loadSkins()` lädt ihn vorab. `SKINS` enthält die chinesischen und englischen Namen und Farben jedes Skins, `SKIN_SERIES` die Serien und `SKIN_NAMES` alle Nummern.
 
