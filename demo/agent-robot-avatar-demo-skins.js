@@ -4,7 +4,7 @@ const face = document.getElementById('face');
 const navigation = document.createElement('nav');
 navigation.className = 'demo-nav';
 navigation.setAttribute('aria-label', '页面导航');
-navigation.innerHTML = '<a href="./index.html" aria-current="page">演示</a><a href="./skins.html" data-skin-link>皮肤</a>';
+navigation.innerHTML = '<a href="./index.html" aria-current="page">演示</a><a class="demo-nav-skins" href="./skins.html" data-skin-link>皮肤</a>';
 document.getElementById('canvas').append(navigation);
 const skinsTab = navigation.querySelector('[data-skin-link]');
 skinsTab.classList.add('is-new');
