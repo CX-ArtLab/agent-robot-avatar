@@ -9,3 +9,5 @@
 .demo-skin-entry:hover{background:#e7e8ea}
 .demo-skin-entry:focus-visible{outline:2px solid #777d86;outline-offset:3px}
 @media(max-width:800px){.canvas>.demo-nav{top:70px}.demo-nav a{padding:6px 16px}}
+.demo-panel-toggle.demo-skin-button{width:auto!important;display:flex!important;align-items:center;gap:5px;padding:0 11px 0 8px!important;color:#3f444a!important;font:600 12px Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;text-decoration:none;white-space:nowrap}
+.demo-skin-button .demo-skin-eye{fill:currentColor;stroke:none}

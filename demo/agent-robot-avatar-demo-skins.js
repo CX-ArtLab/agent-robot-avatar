@@ -8,6 +8,13 @@ navigation.className = 'demo-nav';
 navigation.setAttribute('aria-label', '页面导航');
 navigation.innerHTML = '<a href="./index.html" aria-current="page">演示</a><a href="./skins.html" data-skin-link>皮肤</a>';
 document.getElementById('canvas').append(navigation);
+// A labelled way into the skins, next to the color tools.
+const skinButton = document.createElement('a');
+skinButton.className = 'demo-panel-toggle demo-skin-button is-new';
+skinButton.href = './skins.html';
+skinButton.dataset.skinLink = '';
+skinButton.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="8" width="16" height="12.5" rx="4"/><path d="M12 8V5"/><circle cx="12" cy="4" r="1.2"/><circle class="demo-skin-eye" cx="9.4" cy="14.2" r="1.5"/><circle class="demo-skin-eye" cx="14.6" cy="14.2" r="1.5"/></svg><span></span>';
+document.getElementById('demoColorsGroup').append(skinButton);
 
 restoreAppearance();
 
@@ -28,6 +35,8 @@ function updateLinks() {
   const links = navigation.querySelectorAll('a');
   links[0].textContent = t('demo');
   links[1].textContent = t('skins');
+  skinButton.querySelector('span').textContent = t('skins');
+  skinButton.title = t('skins');
   for (const link of document.querySelectorAll('[data-skin-link]')) {
     const url = new URL('./skins.html', location.href);
     url.searchParams.set('skin', selected);
