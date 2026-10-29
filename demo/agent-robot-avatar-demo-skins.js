@@ -8,16 +8,15 @@ navigation.className = 'demo-nav';
 navigation.setAttribute('aria-label', '页面导航');
 navigation.innerHTML = '<a href="./index.html" aria-current="page">演示</a><a href="./skins.html" data-skin-link>皮肤</a>';
 document.getElementById('canvas').append(navigation);
-// The way into the skins: its own button under the controls, with the usual
-// "opens another page" mark so it never reads as a panel toggle.
+// The way into the skins: its own button under the controls, apart from the
+// panel toggles.
 const skinButton = document.createElement('a');
-skinButton.className = 'demo-skin-page-link is-new';
+skinButton.className = 'demo-skin-page-link';
 skinButton.href = './skins.html';
 skinButton.dataset.skinLink = '';
 // The icon is a picture of skin 402, so the demo page loads no skin code for it.
 skinButton.innerHTML = '<img class="demo-skin-head" src="./skin-entry.webp" width="24" height="24" alt="">'
-  + '<span></span>'
-  + '<svg class="demo-skin-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg>';
+  + '<span></span>';
 document.querySelector('.demo-control-stack').append(skinButton);
 
 restoreAppearance();
