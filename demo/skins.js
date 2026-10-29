@@ -38,11 +38,6 @@ skinOptions.innerHTML = `
   <label class="demo-option demo-toggle"><span data-label="light"></span><input type="checkbox" id="follow-light" checked><span class="demo-switch" aria-hidden="true"></span></label>
   <label class="demo-option demo-toggle"><span data-label="shadow"></span><input type="checkbox" id="ground-shadow" checked><span class="demo-switch" aria-hidden="true"></span></label>`;
 document.querySelector('.demo-options').append(skinOptions);
-const applyLink = document.createElement('a');
-applyLink.id = 'apply-skin';
-applyLink.className = 'demo-skin-entry';
-applyLink.href = './index.html';
-document.querySelector('.library-footer').prepend(applyLink);
 const compare = document.getElementById('compare');
 const light = document.getElementById('follow-light');
 const shadow = document.getElementById('ground-shadow');
@@ -143,7 +138,6 @@ function updateLinks() {
   const destination = new URL('./index.html', location.href);
   destination.searchParams.set('skin', selected);
   destination.searchParams.set('lang', document.documentElement.lang);
-  applyLink.href = destination.href;
   document.getElementById('demo-link').href = destination.href;
   const home = new URL('./skins.html', location.href);
   home.search = destination.search;
@@ -234,12 +228,10 @@ function relabel() {
   compare.textContent = original ? t('back') : t('compare');
   name.textContent = original ? t('original') : skinTitle(skinById.get(selected));
   showNumber(original ? null : selected);
-  applyLink.textContent = t('inDemo');
   randomSkin.title = t('random');
   randomSkin.setAttribute('aria-label', t('random'));
   randomLabel.textContent = t('random');
   for (const button of document.querySelectorAll('[data-filter]')) button.textContent = t(button.dataset.filter);
-  document.getElementById('collection-count').textContent = t('count', publicSkins.length);
   document.getElementById('library-title').textContent = t('skins');
   document.getElementById('skin-home').textContent = t('backFeatured');
   document.getElementById('all-skins-link').textContent = `${t('allSkins')} ↗`;
@@ -254,7 +246,7 @@ function relabel() {
   renderCards();
 }
 new MutationObserver(() => { relabel(); updateLinks(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
-for (const link of [applyLink, document.getElementById('demo-link')]) link.addEventListener('click', () => {
+for (const link of [document.getElementById('demo-link')]) link.addEventListener('click', () => {
   saveAppearance();
   try { localStorage.setItem(SKIN_STORAGE_KEY, selected); } catch { /* URL also carries the selection. */ }
 });
