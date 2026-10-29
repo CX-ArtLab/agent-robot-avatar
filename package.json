@@ -14,6 +14,11 @@
       "types": "./index.d.ts",
       "import": "./agent-robot-avatar.js",
       "default": "./agent-robot-avatar.js"
+    },
+    "./lite": {
+      "types": "./lite.d.ts",
+      "import": "./agent-robot-avatar-lite.js",
+      "default": "./agent-robot-avatar-lite.js"
     }
   },
   "sideEffects": true,
@@ -33,10 +38,10 @@
   },
   "files": [
     "agent-robot-avatar.js",
+    "agent-robot-avatar-lite.js",
     "index.d.ts",
+    "lite.d.ts",
     "src/",
-    "assets/support/",
-    "docs/",
     "README.md",
     "CHANGELOG.md",
     "LICENSE"

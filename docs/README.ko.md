@@ -69,6 +69,16 @@ import 'agent-robot-avatar';
 
 별도의 초기화 코드는 필요하지 않습니다. 아바타는 자동으로 기본 idle 상태로 들어갑니다.
 
+### 경량판
+
+스킨을 쓰지 않는 페이지라면 `agent-robot-avatar/lite`를 쓸 수 있습니다. 아바타와 모든 표정은 같고 스킨 코드만 빠져 있습니다:
+
+```js
+import 'agent-robot-avatar/lite';
+```
+
+경량판은 `skin` 속성을 무시하고, 스킨에는 전체판이 필요하다고 콘솔에 알려 줍니다.
+
 ## 기본 사용법
 
 ```js

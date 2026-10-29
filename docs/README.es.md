@@ -69,6 +69,16 @@ Después añade el componente:
 
 No hace falta código de inicialización. El avatar entra automáticamente en su estado idle predeterminado.
 
+### Versión ligera
+
+Para páginas que nunca usan skins, `agent-robot-avatar/lite` es el mismo avatar sin el código de los skins:
+
+```js
+import 'agent-robot-avatar/lite';
+```
+
+La versión ligera ignora el atributo `skin` y avisa en la consola de que los skins necesitan la versión completa.
+
 ## Uso básico
 
 ```js

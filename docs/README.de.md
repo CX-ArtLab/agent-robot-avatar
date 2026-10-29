@@ -69,6 +69,16 @@ Dann die Komponente hinzufügen:
 
 Es ist kein Initialisierungscode nötig. Der Avatar wechselt automatisch in seinen standardmäßigen Idle-Zustand.
 
+### Schlanke Version
+
+Für Seiten ohne Skins ist `agent-robot-avatar/lite` derselbe Avatar ganz ohne Skin-Code:
+
+```js
+import 'agent-robot-avatar/lite';
+```
+
+Die schlanke Version ignoriert das Attribut `skin` und weist in der Konsole darauf hin, dass Skins die vollständige Version brauchen.
+
 ## Grundlegende Verwendung
 
 ```js

@@ -30,7 +30,11 @@ test('package contains the complete runtime and excludes the demo', async () => 
   const files = new Set(pack.files.map(file => file.path));
   const required = [
     'agent-robot-avatar.js',
+    'agent-robot-avatar-lite.js',
     'index.d.ts',
+    'lite.d.ts',
+    'src/agent-robot-avatar-skins.js',
+    'src/skins/catalog.js',
     'src/agent-robot-avatar-core.js',
     'src/agent-robot-avatar-geometry.js',
     'src/agent-robot-avatar-actions.js',
@@ -47,7 +51,10 @@ test('package contains the complete runtime and excludes the demo', async () => 
   ];
 
   for (const file of required) assert.ok(files.has(file), `Missing package file: ${file}`);
-  assert.ok([...files].every(file => !file.startsWith('demo/')), 'Demo files must not ship in the package');
+  // Only what a page runs: no demo, examples, translated docs or images.
+  for (const folder of ['demo/', 'examples/', 'docs/', 'assets/', 'tests/']) {
+    assert.ok([...files].every(file => !file.startsWith(folder)), `${folder} must not ship in the package`);
+  }
 
   for (const file of required.filter(file => file.endsWith('.js'))) {
     const source = await readFile(path.join(root, file), 'utf8');
@@ -104,6 +111,12 @@ test('packed package installs and can be imported without browser globals', asyn
       "import('agent-robot-avatar').then(module => console.log(Object.keys(module).sort().join(',')))",
     ], { cwd: consumer });
     assert.match(imported, /AgentRobotAvatar,SKINS,SKIN_NAMES,SKIN_SERIES,VERSION,default,loadSkins/);
+    const lite = run(process.execPath, [
+      '--input-type=module',
+      '--eval',
+      "import('agent-robot-avatar/lite').then(module => console.log(Object.keys(module).sort().join(',')))",
+    ], { cwd: consumer });
+    assert.match(lite, /AgentRobotAvatar,VERSION,default/);
 
     const packageJson = JSON.parse(await readFile(path.join(consumer, 'node_modules', 'agent-robot-avatar', 'package.json'), 'utf8'));
     assert.notEqual(packageJson.sideEffects, false);

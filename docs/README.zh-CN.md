@@ -69,6 +69,16 @@ import 'agent-robot-avatar';
 
 无需初始化代码，头像会自动进入默认待机状态。
 
+### 精简版
+
+如果页面完全用不到皮肤，可以改用 `agent-robot-avatar/lite`，头像和所有表情都一样，只是不含任何皮肤代码：
+
+```js
+import 'agent-robot-avatar/lite';
+```
+
+精简版会忽略 `skin` 属性，并在控制台提示：皮肤需要使用完整版。
+
 ## 基础用法
 
 ```js
@@ -251,5 +261,4 @@ MIT License。详见 [`LICENSE`](../LICENSE)。
 | Ko-fi | 支付宝 | 微信支付 |
 | --- | --- | --- |
 | <a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a> | <img src="../assets/support/alipay.png" alt="支付宝收款码" width="160"> | <img src="../assets/support/wechat-pay.png" alt="微信支付收款码" width="160"> |
-
 

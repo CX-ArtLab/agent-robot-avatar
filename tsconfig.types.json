@@ -7,5 +7,5 @@
     "strict": true,
     "target": "ES2022"
   },
-  "include": ["tests/types.test.ts"]
+  "include": ["tests/types.test.ts", "tests/types-lite.test.ts"]
 }

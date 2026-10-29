@@ -69,6 +69,16 @@ Then add the component:
 
 No initialization code is required. The avatar enters its default idle behavior automatically.
 
+### Lite build
+
+For pages that never use skins, `agent-robot-avatar/lite` is the same avatar without any skin code:
+
+```js
+import 'agent-robot-avatar/lite';
+```
+
+In the lite build the `skin` attribute is ignored, and the console notes that skins need the full build.
+
 ## Basic usage
 
 ```js
@@ -247,5 +257,4 @@ MIT License. See [`LICENSE`](./LICENSE).
 If this project is useful to you, you can buy me a coffee.
 
 <a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
-
 

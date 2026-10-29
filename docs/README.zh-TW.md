@@ -69,6 +69,16 @@ import 'agent-robot-avatar';
 
 不需要初始化程式碼，頭像會自動進入預設待機狀態。
 
+### 精簡版
+
+如果頁面完全用不到皮膚，可以改用 `agent-robot-avatar/lite`，頭像和所有表情都一樣，只是不含任何皮膚程式：
+
+```js
+import 'agent-robot-avatar/lite';
+```
+
+精簡版會忽略 `skin` 屬性，並在主控台提示：皮膚需要使用完整版。
+
 ## 基本用法
 
 ```js
