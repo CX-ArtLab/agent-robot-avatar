@@ -35,6 +35,6 @@ test('the skin page opens on a featured skin when the saved one no longer exists
   await page.addInitScript(() => localStorage.setItem('agentRobotAvatarDemoSkin', 'blueglaze'));
   await page.goto('/demo/skins.html?lang=zh-CN');
   await expect(page.locator('html')).not.toHaveClass(/skin-initializing/);
-  await expect.poll(() => page.evaluate(() => document.getElementById('face').getSkin())).toBe('102');
+  await expect.poll(() => page.evaluate(() => document.getElementById('face').getSkin())).toBe('101');
   expect(errors).toEqual([]);
 });

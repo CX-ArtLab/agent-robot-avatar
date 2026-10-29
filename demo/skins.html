@@ -37,9 +37,9 @@
     <section class="preview" aria-label="皮肤预览"><div id="demo-root"></div></section>
     <section class="library" aria-labelledby="library-title">
       <a class="skin-home-link" id="skin-home" href="./skins.html" hidden>← 返回精选</a>
-      <div class="library-header"><h1 id="library-title">皮肤</h1></div>
+      <h1 id="library-title" class="sr-only">皮肤</h1>
       <div class="filters" id="skin-filters" aria-label="皮肤分类"></div>
-      <div class="results-line"><span id="results-label">精选</span><span id="results-count" role="status"></span></div>
+      <p class="sr-only" role="status"><span id="results-label">精选</span> <span id="results-count"></span></p>
       <div class="skin-grid" id="skin-grid" aria-label="选择皮肤"></div>
       <div class="empty-state" id="empty-state" hidden><p>未找到皮肤</p><button type="button" id="clear-search">查看全部</button></div>
       <footer class="library-footer">

@@ -114,6 +114,8 @@ function renderCards() {
   }
   grid.replaceChildren(fragment);
   grid.dataset.view = effectiveCategory === 'featured' && !query ? 'featured' : 'list';
+  // Featured skins all show at once, four to a row, sized to fit the panel.
+  grid.style.gridTemplateRows = grid.dataset.view === 'featured' ? `repeat(${Math.ceil(matches.length / 4)}, minmax(0, 1fr))` : '';
   grid.scrollTop = 0;
   grid.hidden = !matches.length;
   document.getElementById('empty-state').hidden = !!matches.length;

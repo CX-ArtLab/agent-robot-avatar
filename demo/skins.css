@@ -26,7 +26,7 @@
 .search-label{display:block}
 #skin-search{width:100%;border:1px solid #e4e5e5;border-radius:10px;background:#f8f8f6;padding:10px 12px;color:#555b63;font:12px Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif}
 #skin-search::placeholder{color:#969ba2}
-.filters{display:flex;flex-wrap:wrap;gap:5px;margin:12px 0}
+.filters{display:flex;flex-wrap:wrap;gap:5px;margin:0 0 12px}
 .filters button{font-size:11px;padding:7px 9px;color:#72777e}
 .filters button[aria-pressed="true"]{background:#dfe1e4;color:#202327}
 .results-line{display:flex;justify-content:space-between;margin:2px 0 10px}
@@ -35,10 +35,10 @@
 .skin-card:hover{border-color:#d3d6da;box-shadow:0 3px 10px rgba(0,0,0,.05)}
 .skin-card[aria-pressed="true"]{border-color:#858b94}
 .skin-card img{display:block;width:64px;height:64px;max-width:100%;object-fit:contain}
-.skin-grid[data-view="featured"]{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-.skin-grid[data-view="featured"] .skin-card{padding:9px 4px 10px}
-.skin-grid[data-view="featured"] .skin-card img{width:80px;height:80px}
-.skin-grid[data-view="featured"] .skin-card span{font-size:11px}
+.skin-grid[data-view="featured"]{flex:1;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;overflow:hidden;align-content:stretch}
+.skin-grid[data-view="featured"] .skin-card{min-height:0;padding:5px 4px 6px;justify-content:center}
+.skin-grid[data-view="featured"] .skin-card img{flex:0 1 auto;min-height:0;width:auto;height:auto;max-width:78%;max-height:80px;aspect-ratio:1/1}
+.skin-grid[data-view="featured"] .skin-card span{flex-shrink:0;font-size:11px}
 .skin-card span{font-size:10px;line-height:1.35;text-align:center;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .library-footer{display:flex;align-items:center;gap:10px;margin-top:auto;padding-top:12px}
 .library-footer .search-label{flex:1;min-width:0}
