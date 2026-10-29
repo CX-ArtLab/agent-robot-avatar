@@ -1,7 +1,5 @@
 import { restoreAppearance, saveAppearance } from './agent-robot-avatar-demo-appearance.js';
 import { t } from './skins-i18n.js';
-import { SKIN_NAMES } from '../agent-robot-avatar.js';
-const SKIN_COUNT = SKIN_NAMES.length;
 const face = document.getElementById('face');
 const params = new URLSearchParams(location.search);
 const storageKey = 'agentRobotAvatarDemoSkin';
@@ -13,7 +11,7 @@ document.getElementById('canvas').append(navigation);
 // The way into the skins: its own button under the controls, with the usual
 // "opens another page" mark so it never reads as a panel toggle.
 const skinButton = document.createElement('a');
-skinButton.className = 'demo-skin-page-link';
+skinButton.className = 'demo-skin-page-link is-new';
 skinButton.href = './skins.html';
 skinButton.dataset.skinLink = '';
 skinButton.innerHTML = '<svg class="demo-skin-head" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="8" width="16" height="12.5" rx="4"/><path d="M12 8V5"/><circle cx="12" cy="4" r="1.2"/><circle class="demo-skin-eye" cx="9.4" cy="14.2" r="1.5"/><circle class="demo-skin-eye" cx="14.6" cy="14.2" r="1.5"/></svg>'
@@ -40,7 +38,7 @@ function updateLinks() {
   const links = navigation.querySelectorAll('a');
   links[0].textContent = t('demo');
   links[1].textContent = t('skins');
-  skinButton.querySelector('span').textContent = t('browse', SKIN_COUNT);
+  skinButton.querySelector('span').textContent = t('entry');
   skinButton.title = t('openSkins');
   for (const link of document.querySelectorAll('[data-skin-link]')) {
     const url = new URL('./skins.html', location.href);
