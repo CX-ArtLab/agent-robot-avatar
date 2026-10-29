@@ -15,9 +15,7 @@ const skinButton = document.createElement('a');
 skinButton.className = 'demo-skin-page-link';
 skinButton.href = './skins.html';
 skinButton.dataset.skinLink = '';
-// The icon is a picture of skin 402, so the demo page loads no skin code for it.
-skinButton.innerHTML = '<img class="demo-skin-head" src="./skin-entry.webp" width="24" height="24" alt="">'
-  + '<span></span>';
+skinButton.innerHTML = '<span></span>';
 document.querySelector('.demo-control-stack').append(skinButton);
 
 restoreAppearance();
