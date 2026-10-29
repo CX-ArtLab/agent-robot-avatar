@@ -2,6 +2,8 @@
 .demo-nav{display:flex;align-items:center;gap:4px;padding:5px;border:1px solid rgba(0,0,0,.045);border-radius:15px;background:rgba(255,255,255,.9);box-shadow:0 4px 18px rgba(0,0,0,.05);font:500 14px/1.4 Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif}
 .demo-nav a{color:#787d84;text-decoration:none;border-radius:11px;padding:9px 24px;white-space:nowrap;transition:background .15s,color .15s}
 .demo-nav a:hover{background:#f1f2f3;color:#333}
+.demo-nav a.is-new{position:relative}
+.demo-nav a.is-new::after{content:'';position:absolute;top:6px;right:9px;width:7px;height:7px;border-radius:50%;background:#e5484d;box-shadow:0 0 0 2px rgba(255,255,255,.95);pointer-events:none}
 .demo-nav a[aria-current=page]{background:#eceeef;color:#30343a}
 .demo-nav a:focus-visible{outline:2px solid #777d86;outline-offset:3px}
 .canvas>.demo-nav{position:absolute;top:18px;left:50%;transform:translateX(-50%);z-index:30}

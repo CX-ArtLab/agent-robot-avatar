@@ -104,3 +104,33 @@ export async function copySkinNumber(id, button, lang = skinLanguage()) {
     button.setAttribute('aria-label', `${t('copy', 0, lang)} ${id}`);
   }, 1400);
 }
+
+// Red dots mark what is new. Each one goes away for good once it is clicked;
+// the browser remembers which ones were seen.
+const SEEN_KEY = 'agentRobotAvatarDemoSeen';
+function seenDots() {
+  try { return new Set(JSON.parse(localStorage.getItem(SEEN_KEY) || '[]')); } catch { return new Set(); }
+}
+export function markDotSeen(key) {
+  const seen = seenDots();
+  if (seen.has(key)) return;
+  seen.add(key);
+  try { localStorage.setItem(SEEN_KEY, JSON.stringify([...seen])); } catch { /* the dot just shows again next time */ }
+}
+const dotKey = element => element.dataset.newKey || (element.dataset.action ? `action:${element.dataset.action}` : element.id);
+export function settleNewDots(root = document) {
+  const seen = seenDots();
+  for (const element of root.querySelectorAll('.is-new')) {
+    if (seen.has(dotKey(element))) element.classList.remove('is-new');
+  }
+  if (document._newDotsWatched) return;
+  document._newDotsWatched = true;
+  // One listener for the page, so dots added later are covered as well.
+  document.addEventListener('click', event => {
+    const element = event.target.closest?.('.is-new');
+    const key = element && dotKey(element);
+    if (!key) return;
+    element.classList.remove('is-new');
+    markDotSeen(key);
+  }, true);
+}

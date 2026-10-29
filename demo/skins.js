@@ -1,7 +1,10 @@
 import './agent-robot-avatar-demo.js';
 import { restoreAppearance, saveAppearance } from './agent-robot-avatar-demo-appearance.js';
 import { publicSkins, skinById, featured, filters, applySkin, skinThumbnail, storedSkin, SKIN_STORAGE_KEY } from './skin-catalog.js';
-import { t, skinTitle, copySkinNumber } from './skins-i18n.js';
+import { t, skinTitle, copySkinNumber, markDotSeen, settleNewDots } from './skins-i18n.js';
+
+// Arriving here counts as having seen the new skins.
+markDotSeen('nav-skins');
 
 // Language switching stays with the shared demo; this page relabels itself
 // whenever the document language changes.
@@ -255,4 +258,5 @@ selectSkin(selected);
 relabel();
 const { balanceControls } = await import('./agent-robot-avatar-demo-layout.js');
 balanceControls();
+settleNewDots();
 document.documentElement.classList.remove('skin-initializing');
