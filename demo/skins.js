@@ -83,7 +83,6 @@ for (const [id] of filters) {
 }
 
 function renderCards() {
-  document.getElementById('skin-home').hidden = category === 'featured' && !search.value.trim();
   thumbnails.disconnect();
   const query = search.value.trim().toLocaleLowerCase();
   const effectiveCategory = category === 'featured' && query ? 'all' : category;
@@ -114,8 +113,9 @@ function renderCards() {
   }
   grid.replaceChildren(fragment);
   grid.dataset.view = effectiveCategory === 'featured' && !query ? 'featured' : 'list';
-  // Featured skins all show at once, four to a row, sized to fit the panel.
-  grid.style.gridTemplateRows = grid.dataset.view === 'featured' ? `repeat(${Math.ceil(matches.length / 4)}, minmax(0, 1fr))` : '';
+  // Featured skins fill the panel four to a row; below their usual size they
+  // keep it and the panel scrolls instead.
+  grid.style.gridTemplateRows = grid.dataset.view === 'featured' ? `repeat(${Math.ceil(matches.length / 4)}, minmax(98px, 1fr))` : '';
   grid.scrollTop = 0;
   grid.hidden = !matches.length;
   document.getElementById('empty-state').hidden = !!matches.length;
@@ -144,7 +144,6 @@ function updateLinks() {
   const home = new URL('./skins.html', location.href);
   home.search = destination.search;
   document.querySelector('.demo-nav [aria-current="page"]').href = home.href;
-  document.getElementById('skin-home').href = home.href;
   const gallery = new URL('./materials/index.html', location.href);
   gallery.search = destination.search;
   document.getElementById('all-skins-link').href = gallery.href;
@@ -158,7 +157,6 @@ function goHome(event) {
   writeRoute(true);
   renderCards();
 }
-document.getElementById('skin-home').addEventListener('click', goHome);
 document.querySelector('.demo-nav [aria-current="page"]').addEventListener('click', goHome);
 window.addEventListener('popstate', () => {
   const route = new URLSearchParams(location.search);
@@ -235,7 +233,6 @@ function relabel() {
   randomLabel.textContent = t('random');
   for (const button of document.querySelectorAll('[data-filter]')) button.textContent = t(button.dataset.filter);
   document.getElementById('library-title').textContent = t('skins');
-  document.getElementById('skin-home').textContent = t('backFeatured');
   document.getElementById('all-skins-link').textContent = `${t('allSkins')} ↗`;
   search.placeholder = t('search');
   document.querySelector('.search-label .sr-only').textContent = t('search');
