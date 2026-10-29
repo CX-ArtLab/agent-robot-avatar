@@ -1,6 +1,6 @@
 :root{--demo-paper:#f8f8f6;--demo-ink:#25282d;--demo-muted:#72777f;--demo-line:#e4e5e5;--demo-radius:16px}
-.demo-nav{display:flex;align-items:center;gap:3px;padding:4px;border:1px solid rgba(0,0,0,.045);border-radius:13px;background:rgba(255,255,255,.88);box-shadow:0 3px 15px rgba(0,0,0,.035);font:12px/1.4 Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif}
-.demo-nav a{color:#787d84;text-decoration:none;border-radius:9px;padding:7px 18px;white-space:nowrap;transition:background .15s,color .15s}
+.demo-nav{display:flex;align-items:center;gap:4px;padding:5px;border:1px solid rgba(0,0,0,.045);border-radius:15px;background:rgba(255,255,255,.9);box-shadow:0 4px 18px rgba(0,0,0,.05);font:500 14px/1.4 Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif}
+.demo-nav a{color:#787d84;text-decoration:none;border-radius:11px;padding:9px 24px;white-space:nowrap;transition:background .15s,color .15s}
 .demo-nav a:hover{background:#f1f2f3;color:#333}
 .demo-nav a[aria-current=page]{background:#eceeef;color:#30343a}
 .demo-nav a:focus-visible{outline:2px solid #777d86;outline-offset:3px}
@@ -8,9 +8,8 @@
 .demo-skin-entry{display:inline-flex;align-items:center;justify-content:center;min-height:32px;padding:0 12px;margin-left:4px;border-radius:9px;background:#f1f2f3;color:#555c65;text-decoration:none;font:11px Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif}
 .demo-skin-entry:hover{background:#e7e8ea}
 .demo-skin-entry:focus-visible{outline:2px solid #777d86;outline-offset:3px}
-@media(max-width:800px){.canvas>.demo-nav{top:70px}.demo-nav a{padding:6px 16px}}
+@media(max-width:800px){.canvas>.demo-nav{top:70px}.demo-nav{font-size:13px}.demo-nav a{padding:7px 18px}}
 .demo-skin-page-link{position:relative;justify-self:center;display:inline-flex;align-items:center;gap:8px;margin-top:4px;padding:11px 18px 11px 14px;border:1px solid rgba(0,0,0,.06);border-radius:14px;background:rgba(255,255,255,.92);box-shadow:0 7px 30px rgba(0,0,0,.08);color:#2c3035;font:600 13px Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;text-decoration:none;white-space:nowrap;transition:background .15s,box-shadow .15s,transform .15s}
-.demo-skin-page-link span{letter-spacing:.08em}
 .demo-skin-page-link:hover{background:#fff;box-shadow:0 9px 32px rgba(0,0,0,.12);transform:translateY(-1px)}
 .demo-skin-page-link:focus-visible{outline:2px solid #777d86;outline-offset:3px}
 .demo-skin-page-link .demo-skin-head{display:block;width:24px;height:24px;margin:-3px 0}
