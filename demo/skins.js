@@ -35,7 +35,7 @@ const compare = document.getElementById('compare');
 const light = document.getElementById('follow-light');
 const shadow = document.getElementById('ground-shadow');
 const params = new URLSearchParams(location.search);
-let selected = [params.get('skin'), storedSkin(), 'blueglaze'].find(id => id !== 'classic' && skinById.has(id));
+let selected = [params.get('skin'), storedSkin(), '2'].find(id => id !== 'classic' && skinById.has(id));
 let category = filters.some(([id]) => id === params.get('view')) ? params.get('view') : 'featured';
 search.value = params.get('q') || '';
 let material;

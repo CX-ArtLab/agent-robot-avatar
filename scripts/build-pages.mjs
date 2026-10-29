@@ -16,9 +16,8 @@ for (const file of publicDemoFiles) {
   if (!destination.startsWith(`${output}${path.sep}`)) throw new Error(`Invalid public path: ${file}`);
   let source = await readFile(path.join(demo, file), 'utf8');
   // The deployed demo sits at the artifact root, one directory above local demo/.
-  if (file === 'index.html' || file === 'agent-robot-avatar-demo.js') source = source.replaceAll('../agent-robot-avatar.js', './agent-robot-avatar.js');
+  if (['index.html', 'agent-robot-avatar-demo.js', 'skin-catalog.js'].includes(file)) source = source.replaceAll('../agent-robot-avatar.js', './agent-robot-avatar.js');
   if (file === 'materials/gallery.js') source = source.replaceAll('../../agent-robot-avatar.js', '../agent-robot-avatar.js');
-  if (file === 'materials/catalog-renderer.js') source = source.replaceAll('../../src/', '../src/');
   await mkdir(path.dirname(destination), {recursive:true});
   await writeFile(destination, source);
 }
