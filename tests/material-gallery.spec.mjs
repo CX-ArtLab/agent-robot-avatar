@@ -38,3 +38,15 @@ test('the skin page opens on a featured skin when the saved one no longer exists
   await expect.poll(() => page.evaluate(() => document.getElementById('face').getSkin())).toBe('101');
   expect(errors).toEqual([]);
 });
+
+test('the demo keeps the original avatar after a visit to the skin page, which remembers its skin', async ({page}) => {
+  await page.goto('/demo/skins.html?skin=305&lang=zh-CN');
+  await expect(page.locator('html')).not.toHaveClass(/skin-initializing/);
+  await page.locator('#demo-link').click();
+  await expect(page.locator('html')).toHaveAttribute('data-demo-ready', 'true');
+  expect(new URL(page.url()).searchParams.get('skin')).toBeNull();
+  expect(await page.evaluate(() => document.getElementById('face').getSkin())).toBeNull();
+  await page.goto('/demo/skins.html?lang=zh-CN');
+  await expect(page.locator('html')).not.toHaveClass(/skin-initializing/);
+  await expect.poll(() => page.evaluate(() => document.getElementById('face')?.getSkin?.())).toBe('305');
+});

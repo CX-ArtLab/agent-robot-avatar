@@ -136,16 +136,19 @@ function writeRoute(push = false) {
   updateLinks();
 }
 
+// The demo always opens on the original avatar; only the skin pages pass the
+// chosen skin between them.
 function updateLinks() {
+  const lang = document.documentElement.lang;
   const destination = new URL('./index.html', location.href);
-  destination.searchParams.set('skin', selected);
-  destination.searchParams.set('lang', document.documentElement.lang);
+  destination.searchParams.set('lang', lang);
   document.getElementById('demo-link').href = destination.href;
   const home = new URL('./skins.html', location.href);
-  home.search = destination.search;
+  home.searchParams.set('skin', selected);
+  home.searchParams.set('lang', lang);
   document.querySelector('.demo-nav [aria-current="page"]').href = home.href;
   const gallery = new URL('./materials/index.html', location.href);
-  gallery.search = destination.search;
+  gallery.search = home.search;
   document.getElementById('all-skins-link').href = gallery.href;
 }
 
@@ -187,6 +190,8 @@ function selectSkin(id, updateUrl = true) {
   showNumber(id);
   for (const card of grid.querySelectorAll('.skin-card')) card.setAttribute('aria-pressed', String(card.dataset.skin === id));
   if (updateUrl) writeRoute();
+  // The skin page reopens on the skin seen last.
+  try { localStorage.setItem(SKIN_STORAGE_KEY, id); } catch { /* the URL carries it too */ }
   updateLinks();
 }
 
@@ -245,10 +250,7 @@ function relabel() {
   renderCards();
 }
 new MutationObserver(() => { relabel(); updateLinks(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
-for (const link of [document.getElementById('demo-link')]) link.addEventListener('click', () => {
-  saveAppearance();
-  try { localStorage.setItem(SKIN_STORAGE_KEY, selected); } catch { /* URL also carries the selection. */ }
-});
+document.getElementById('demo-link').addEventListener('click', saveAppearance);
 selectSkin(selected);
 relabel();
 const { balanceControls } = await import('./agent-robot-avatar-demo-layout.js');
