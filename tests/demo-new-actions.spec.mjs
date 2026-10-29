@@ -54,6 +54,8 @@ test('the new demo buttons play their real actions and stay labelled in every la
   expect(await page.evaluate(() => document.getElementById('face')._demoActions))
     .toEqual(expect.arrayContaining(['love:start', 'love:end', 'random:start', 'random:end']));
 
+  // The clicks above retired two dots; start each language as a first visit.
+  await page.evaluate(() => localStorage.removeItem('agentRobotAvatarDemoSeen'));
   for (const lang of ['zh-CN', 'zh-TW', 'ja', 'ko', 'es', 'pt', 'de', 'fr']) {
     await openDemo(page, `?lang=${lang}`);
     await expect(page.locator('.controls button.is-new')).toHaveCount(3);
@@ -107,3 +109,20 @@ for (const [name, viewport] of [['phone', { width: 390, height: 844 }], ['small 
   });
 }
 
+
+test('a red dot goes away for good once clicked, and the skins dot once the skin page is seen', async ({ page }) => {
+  await openDemo(page, '?lang=zh-CN');
+  await expect(page.locator('html')).toHaveAttribute('data-demo-ready', 'true');
+  await expect(page.locator('.demo-nav a.is-new')).toHaveCount(1);
+  await page.locator('button[data-action="love"]').click();
+  await expect(page.locator('button[data-action="love"]')).not.toHaveClass(/is-new/);
+  await page.locator('#demoColorPanelToggle').click();
+  await openDemo(page, '?lang=zh-CN');
+  await expect(page.locator('button[data-action="love"]')).not.toHaveClass(/is-new/);
+  await expect(page.locator('#demoColorPanelToggle')).not.toHaveClass(/is-new/);
+  await expect(page.locator('button[data-action="random"]')).toHaveClass(/is-new/);
+  await page.goto('/demo/skins.html?lang=zh-CN');
+  await expect(page.locator('html')).not.toHaveClass(/skin-initializing/);
+  await openDemo(page, '?lang=zh-CN');
+  await expect(page.locator('.demo-nav a.is-new')).toHaveCount(0);
+});

@@ -26,7 +26,7 @@ Agent Robot Avatar 还可作为 AG-UI 风格 Agent 界面的视觉反馈层。
 
 ## 在线 Demo
 
-[打开交互 Demo](https://cx-artlab.github.io/agent-robot-avatar/?lang=zh-CN)
+[打开交互 Demo](https://cx-artlab.github.io/agent-robot-avatar/?lang=zh-CN) · [逛逛皮肤美术馆](https://cx-artlab.github.io/agent-robot-avatar/skins.html?lang=zh-CN)
 
 ## 特点
 
@@ -42,7 +42,8 @@ Agent Robot Avatar 还可作为 AG-UI 风格 Agent 界面的视觉反馈层。
 - 支持减少动态效果
 - 可配置自动睡眠行为
 - 可调头部圆角
-- 42 种材质与图案皮肤，光线跟随鼠标
+- 188 款编号皮肤，分 17 个系列，光线跟随鼠标
+- 不含皮肤的精简版，适合对大小特别在意的页面
 - 内置 TypeScript 类型声明
 
 ## 安装
@@ -68,6 +69,16 @@ import 'agent-robot-avatar';
 ```
 
 无需初始化代码，头像会自动进入默认待机状态。
+
+### 精简版
+
+如果页面完全用不到皮肤，可以改用 `agent-robot-avatar/lite`，头像和所有表情都一样，只是不含任何皮肤代码：
+
+```js
+import 'agent-robot-avatar/lite';
+```
+
+精简版会忽略 `skin` 属性，并在控制台提示：皮肤需要使用完整版。
 
 ## 基础用法
 
@@ -148,7 +159,7 @@ try {
 | `motion` | 动态效果策略：`auto`、`reduce` 或 `full` |
 | `press-squeeze` | 按住头像中心进行挤压；设为 `false` 可关闭 |
 | `antenna-drag` | 拖动天线、弹簧复原并接愤怒表情；设为 `false` 可关闭 |
-| `skin` | 材质：`obsidian`, `porcelain`, `gold` … (42)；不写则为纯色 |
+| `skin` | 皮肤编号，例如 `301`；不写则为纯色 |
 
 常用运行时控制：
 
@@ -161,28 +172,44 @@ avatar.setAntennaDrag(true);
 
 按住头像中心会开始挤压；移动超过 4 个 CSS 像素后，同一次指针操作会切换为原有的头部拖动。拖动天线沿用头部拖动的距离限制，复原后接原有的愤怒反应。
 
-## 皮肤
+## 皮肤 · 0.7 新功能
 
-共 42 种皮肤，分五类，光线会跟随鼠标：
+共 188 款皮肤，分 17 个系列，光线会跟随鼠标。每款皮肤都有固定编号：前面是系列号，后两位是系列内序号，例如 305 是第 3 个系列的第 5 款。名字以后可能调整，编号永远不变，也不会重复使用。
+
+<img src="../assets/readme/skin-gallery.jpg" alt="皮肤美术馆：精选皮肤、分类筛选和搜索" width="100%">
 
 ```html
-<agent-robot-avatar skin="obsidian"></agent-robot-avatar>
+<agent-robot-avatar skin="301"></agent-robot-avatar>
 ```
 
 ```js
-avatar.setSkin('porcelain'); // 下方任一名称
-avatar.setSkin(null);        // 回到纯色
+avatar.setSkin(102);  // 也可以写 '102'
+avatar.setSkin(null); // 回到纯色
 ```
 
-| 类别 | 皮肤 |
-| --- | --- |
-| 玻璃与宝石 | `obsidian`, `midnight`, `jade`, `amber`, `ruby`, `sapphire`, `emerald`, `neon` |
-| 瓷、粉彩与陶土 | `porcelain`, `pearl`, `sakura`, `mint`, `lavender`, `lemon`, `sky`, `peach`, `terracotta` |
-| 金属 | `gold`, `silver`, `copper`, `titanium`, `rose-gold`, `graphite` |
-| 渐变 | `aurora`, `ocean`, `forest`, `candy` |
-| 印花图案 | `tartan`, `polka`, `terrazzo`, `marble`, `black-marble`, `wood`, `pixel`, `confetti`, `rainbow`, `denim`, `graph-paper`, `halftone`, `leaves`, `blossoms`, `brick` |
+所有皮肤及编号见[全部皮肤页](https://cx-artlab.github.io/agent-robot-avatar/materials/?lang=zh-CN)。
 
-`SKIN_NAMES` 导出了全部名称，可用于制作皮肤选择器。
+| 系列 | 编号 |
+| --- | --- |
+| 彩色玻璃 | 101–106 |
+| 淡彩玻璃 | 201–206 |
+| 软糖 | 301–312 |
+| 糖果玻璃 | 401–406 |
+| 亚克力 | 501–512 |
+| 果冻 | 601–612 |
+| 渐变 | 701–712 |
+| 磨砂玻璃 | 801–806 |
+| 磨砂金属 | 901–930 |
+| 宝石与陶瓷 | 1001–1012 |
+| 木 | 1101–1106 |
+| 球类 | 1201–1210 |
+| 透明与流光 | 1301–1305 |
+| 织物与皮革 | 1401–1412 |
+| 甜点与水果 | 1501–1512 |
+| 自然 | 1601–1612 |
+| 图案与科技 | 1701–1717 |
+
+皮肤的绘制代码在第一次用到皮肤时才下载，不用皮肤的页面完全不加载。`await loadSkins()` 可以提前加载。`SKINS` 提供每款皮肤的中英文名称和颜色，`SKIN_SERIES` 提供系列，`SKIN_NAMES` 提供全部编号。
 
 所有表情和手势都能配合皮肤使用。去掉皮肤后，`color` 属性会重新生效。
 
@@ -237,5 +264,4 @@ MIT License。详见 [`LICENSE`](../LICENSE)。
 | Ko-fi | 支付宝 | 微信支付 |
 | --- | --- | --- |
 | <a href='https://ko-fi.com/P0E625WIOI' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a> | <img src="../assets/support/alipay.png" alt="支付宝收款码" width="160"> | <img src="../assets/support/wechat-pay.png" alt="微信支付收款码" width="160"> |
-
 

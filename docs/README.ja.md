@@ -26,7 +26,7 @@ Agent Robot Avatar は、AG-UI スタイルの Agent インターフェースに
 
 ## ライブデモ
 
-[インタラクティブデモを開く](https://cx-artlab.github.io/agent-robot-avatar/?lang=ja)
+[インタラクティブデモを開く](https://cx-artlab.github.io/agent-robot-avatar/?lang=ja) · [スキンギャラリーを見る](https://cx-artlab.github.io/agent-robot-avatar/skins.html?lang=ja)
 
 ## 特長
 
@@ -42,7 +42,8 @@ Agent Robot Avatar は、AG-UI スタイルの Agent インターフェースに
 - Reduced Motion 対応
 - 設定可能なスリープ動作
 - 頭部の丸みを調整可能
-- 光がポインターを追う 42 種類の素材・柄スキン
+- 17 シリーズ・188 種類の番号付きスキン。光はポインターを追います
+- スキンを含まない軽量版も用意
 - TypeScript 型定義を同梱
 
 ## インストール
@@ -68,6 +69,16 @@ import 'agent-robot-avatar';
 ```
 
 初期化コードは不要です。アバターは自動的にデフォルトの idle 状態になります。
+
+### 軽量版
+
+スキンを使わないページでは `agent-robot-avatar/lite` を使えます。アバターとすべての表情は同じで、スキンのコードだけを含みません：
+
+```js
+import 'agent-robot-avatar/lite';
+```
+
+軽量版では `skin` 属性は無視され、スキンにはフル版が必要だとコンソールに表示されます。
 
 ## 基本的な使い方
 
@@ -148,7 +159,7 @@ try {
 | `motion` | モーション方針：`auto`、`reduce`、`full` |
 | `press-squeeze` | 中央を長押しして圧縮。`false` で無効化 |
 | `antenna-drag` | アンテナのドラッグ、ばね復帰、怒り反応。`false` で無効化 |
-| `skin` | 素材：`obsidian`, `porcelain`, `gold` … (42)。省略すると単色 |
+| `skin` | スキン番号（例：`301`）。省略すると単色 |
 
 よく使うランタイム制御：
 
@@ -161,28 +172,44 @@ avatar.setAntennaDrag(true);
 
 中央の長押しで圧縮が始まり、4 CSS ピクセルを超えて動かすと、同じポインタージェスチャーが従来の頭部ドラッグへ切り替わります。アンテナには頭部ドラッグと同じ距離制限が適用され、復帰後に従来の怒り反応が続きます。
 
-## スキン
+## スキン · 0.7 の新機能
 
-5 系統・42 種類のスキン。光はポインターを追いかけます：
+17 シリーズ・188 種類のスキン。光はポインターを追いかけます。各スキンの番号は固定です：シリーズ番号のあとに 2 桁が続き、305 はシリーズ 3 の 5 番目です。名前は今後変わることがありますが、番号は変わらず、再利用もされません。
+
+<img src="../assets/readme/skin-gallery.jpg" alt="スキンギャラリー：おすすめ、絞り込み、検索" width="100%">
 
 ```html
-<agent-robot-avatar skin="obsidian"></agent-robot-avatar>
+<agent-robot-avatar skin="301"></agent-robot-avatar>
 ```
 
 ```js
-avatar.setSkin('porcelain'); // 下の一覧の名前
-avatar.setSkin(null);        // 単色に戻す
+avatar.setSkin(102);  // '102' でも可
+avatar.setSkin(null); // 単色に戻す
 ```
 
-| 系統 | スキン |
-| --- | --- |
-| ガラスと宝石 | `obsidian`, `midnight`, `jade`, `amber`, `ruby`, `sapphire`, `emerald`, `neon` |
-| 磁器・パステル・粘土 | `porcelain`, `pearl`, `sakura`, `mint`, `lavender`, `lemon`, `sky`, `peach`, `terracotta` |
-| メタル | `gold`, `silver`, `copper`, `titanium`, `rose-gold`, `graphite` |
-| グラデーション | `aurora`, `ocean`, `forest`, `candy` |
-| プリント柄 | `tartan`, `polka`, `terrazzo`, `marble`, `black-marble`, `wood`, `pixel`, `confetti`, `rainbow`, `denim`, `graph-paper`, `halftone`, `leaves`, `blossoms`, `brick` |
+すべてのスキンと番号は[スキン一覧ページ](https://cx-artlab.github.io/agent-robot-avatar/materials/?lang=ja)で確認できます。
 
-`SKIN_NAMES` で全名称を取得でき、スキン選択 UI などに使えます。
+| シリーズ | 番号 |
+| --- | --- |
+| グレーズ | 101–106 |
+| アイスガラス | 201–206 |
+| グミ | 301–312 |
+| キャンディガラス | 401–406 |
+| アクリル | 501–512 |
+| ゼリー | 601–612 |
+| グラデーション | 701–712 |
+| すりガラス | 801–806 |
+| メタル | 901–930 |
+| 宝石と陶磁器 | 1001–1012 |
+| 木 | 1101–1106 |
+| ボール | 1201–1210 |
+| 透明・きらめき | 1301–1305 |
+| 布と革 | 1401–1412 |
+| スイーツとフルーツ | 1501–1512 |
+| 自然 | 1601–1612 |
+| 柄とテック | 1701–1717 |
+
+スキンの描画コードは初めてスキンを使うときに読み込まれ、スキンを使わないページでは読み込まれません。`await loadSkins()` で事前に読み込めます。`SKINS` は各スキンの中国語・英語名と色、`SKIN_SERIES` はシリーズ、`SKIN_NAMES` は全番号です。
 
 すべての表情とジェスチャーはスキンと一緒に使えます。スキンを外すと `color` 属性が再び適用されます。
 

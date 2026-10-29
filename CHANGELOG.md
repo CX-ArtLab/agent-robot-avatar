@@ -4,11 +4,17 @@ All notable user-facing changes to Agent Robot Avatar are documented here.
 
 The project follows Semantic Versioning for public releases. Internal development build numbers are not part of the public version history.
 
-## [Unreleased]
+## [0.7.0] - 2026-10-29
 
 ### Added
 
-- Added 42 skins in five families: glass and gems, porcelain and pastel, metal, gradients, and printed patterns. `skin="obsidian"` (or `setSkin()`) dresses the head in a material with a soft shine, a rim and a ground shadow, and its light follows the pointer the same way the eyes do. Printed patterns sit under the same shading, and busy ones outline the eyes so they stay readable. Every expression and gesture works with a skin: the eyelids cut the eyes through a mask instead of painting over them, so the material runs unbroken across the lids. `getSkin()` returns the active skin and the new `SKIN_NAMES` export lists every name. Removing the skin brings back the `color` attribute. An unknown name in markup logs a warning and falls back to the flat color; `setSkin()` throws for it.
+- 188 skins in 17 series. Pick one by number with `skin="301"` or `setSkin(301)`; `setSkin(null)` goes back to the flat color.
+- Skin numbers are permanent: the series number plus two digits, so 305 is the fifth skin of series 3. New skins take the next free number, and numbers are never reused.
+- Every skin works with every expression and gesture, and its light follows the pointer.
+- `SKINS`, `SKIN_SERIES` and `SKIN_NAMES` list the skins, for building a skin picker.
+- Skin code loads only when a page uses a skin. `loadSkins()` loads it in advance.
+- `agent-robot-avatar/lite`: the same avatar without any skin code.
+- The demo has a Skin Gallery and a page with every skin.
 
 ## [0.6.0] - 2026-10-23
 

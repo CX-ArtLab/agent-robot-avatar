@@ -1,0 +1,46 @@
+/* The full catalog in the demo's language: the dotted canvas, white panels,
+   grey buttons and the same skin cards as the skin page. */
+.catalog-header{height:78px}
+.catalog-header>.title{margin:0}
+.catalog-content{display:grid;grid-template-columns:220px minmax(0,1fr);gap:28px;max-width:1360px;margin:auto;padding:0 28px 40px;align-items:start}
+.catalog-sidebar.library{position:sticky;top:20px;height:auto;min-height:0;max-height:calc(100dvh - 40px);overflow:auto;scrollbar-width:thin}
+.catalog-sidebar .library-header{margin-bottom:12px}
+.catalog-content .filters{display:flex;flex-direction:column;gap:2px;margin:12px 0 0}
+.catalog-content .filters button{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;padding:8px 10px;background:transparent;font-size:12px;color:#72777e;text-align:left}
+.catalog-content .filters button:hover{background:#f0f1f1}
+.catalog-content .filters button[aria-pressed="true"]{background:#dfe1e4;color:#202327}
+.filter-count{font-size:11px;color:#a0a5ab;font-variant-numeric:tabular-nums}
+.catalog-results{min-width:0}
+.catalog-sections{display:flex;flex-direction:column;gap:18px}
+.catalog-category{padding:18px 20px 20px;border:1px solid #e1e3e5;border-radius:16px}
+.category-heading{display:flex;align-items:baseline;gap:8px;margin:0 0 14px;font-size:13px;font-weight:600;color:#555b63}
+.category-heading span{font-size:11px;font-weight:400;color:#858990}
+.category-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.catalog-content .skin-card{display:block;padding:0;overflow:hidden;background:#fff;border:1px solid #e4e5e5;border-radius:14px}
+.catalog-content .card-link{display:flex;flex-direction:column;color:inherit;text-decoration:none}
+.catalog-content .skin-card:hover{border-color:#c5c9ce;box-shadow:0 5px 14px rgba(0,0,0,.06)}
+.catalog-content .stage{position:relative;align-self:stretch;display:grid;place-items:center;aspect-ratio:1/1;background:#f1f2f3}
+/* A soft floor shadow, for showing the skins only. */
+.catalog-content .stage::after{content:"";position:absolute;bottom:15%;left:30%;right:30%;height:6%;background:radial-gradient(ellipse,rgba(10,16,32,.16),transparent 70%);pointer-events:none}
+.catalog-content .avatar-slot{position:relative;z-index:1;display:grid;place-items:center;width:96px;height:96px}
+/* Clicks go to the card's link; the eyes follow the pointer from anywhere. */
+.catalog-content .avatar-slot img,.catalog-content .avatar-slot agent-robot-avatar{grid-area:1/1;width:96px;height:96px;pointer-events:none}
+.catalog-content .avatar-slot.is-live img{visibility:hidden}
+.catalog-content .caption{display:flex;align-self:stretch;align-items:center;gap:7px;padding:11px 64px 12px 12px;min-width:0}
+.catalog-content .swatch{flex-shrink:0;width:8px;height:8px;border-radius:50%}
+.catalog-content .skin-card .skin-label{display:block;text-align:left;flex:1;min-width:0;font-size:12px;font-weight:600;color:#555b63;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* The number is a copy button over the caption's right end. */
+.catalog-content .skin-card .copy-number{position:absolute;right:8px;bottom:8px;padding:3px 7px;background:transparent;font-size:11px;font-weight:600;color:#a0a5ab}
+.catalog-content .skin-card:hover .copy-number,.catalog-content .skin-card .copy-number:focus-visible{background:#f1f2f3;color:#555b63}
+.catalog-content .skin-card .copy-number:hover{background:#e7e8ea}
+.catalog-content .skin-card{position:relative}
+.catalog-page .empty-state{height:auto;padding:30px 0}
+@media(max-width:1050px){.catalog-content{grid-template-columns:190px minmax(0,1fr);gap:16px;padding-inline:16px}}
+@media(max-width:760px){
+  .catalog-content{display:block;padding:0 12px 28px}
+  .catalog-sidebar.library{position:static;max-height:none;margin-bottom:14px;padding:16px}
+  .catalog-content .filters{flex-direction:row;flex-wrap:wrap;gap:5px}
+  .catalog-content .filters button{width:auto;padding:7px 9px;font-size:11px}
+  .catalog-category{padding:14px}
+  .category-cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+}

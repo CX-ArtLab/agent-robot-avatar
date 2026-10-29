@@ -1,6 +1,6 @@
 {
   "name": "agent-robot-avatar",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "A lightweight expressive robot avatar Web Component for AI agents and interactive applications.",
   "type": "module",
   "main": "./agent-robot-avatar.js",
@@ -14,6 +14,11 @@
       "types": "./index.d.ts",
       "import": "./agent-robot-avatar.js",
       "default": "./agent-robot-avatar.js"
+    },
+    "./lite": {
+      "types": "./lite.d.ts",
+      "import": "./agent-robot-avatar-lite.js",
+      "default": "./agent-robot-avatar-lite.js"
     }
   },
   "sideEffects": true,
@@ -21,21 +26,22 @@
     "dev": "node scripts/serve.mjs",
     "build:pages": "node scripts/build-pages.mjs",
     "check": "node scripts/check-source.mjs",
-    "test": "npm run check && npm run test:types && npm run test:release && npm run test:package && npm run test:waiting && npm run test:browser && npm run build:pages",
+    "test": "npm run check && npm run test:types && npm run test:release && npm run test:package && npm run test:waiting && npm run test:browser && npm run test:pages",
     "release:check": "npm test && npm publish --dry-run --ignore-scripts --tag latest",
     "prepublishOnly": "npm test && node scripts/check-publish-tag.mjs",
     "test:types": "tsc -p tsconfig.types.json",
     "test:release": "node --test tests/release.test.mjs",
     "test:package": "node --test tests/package.test.mjs",
     "test:waiting": "node --test tests/waiting-wave.test.mjs",
-    "test:browser": "playwright test"
+    "test:browser": "playwright test",
+    "test:pages": "node --test tests/pages-public.test.mjs"
   },
   "files": [
     "agent-robot-avatar.js",
+    "agent-robot-avatar-lite.js",
     "index.d.ts",
+    "lite.d.ts",
     "src/",
-    "assets/support/",
-    "docs/",
     "README.md",
     "CHANGELOG.md",
     "LICENSE"
@@ -76,4 +82,3 @@
     "typescript": "7.0.2"
   }
 }
-

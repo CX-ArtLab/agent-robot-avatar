@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN" translate="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="google" content="notranslate">
+  <title>全部皮肤 · Agent Robot Avatar</title>
+  <link rel="icon" href="data:,">
+  <link rel="modulepreload" href="../../agent-robot-avatar.js">
+  <link rel="modulepreload" href="../skin-catalog.js">
+  <link rel="modulepreload" href="../../src/skins/catalog.js">
+  <link rel="modulepreload" href="../../src/skins/paints.js">
+  <link rel="modulepreload" href="../../src/skins/eyelids.js">
+  <link rel="modulepreload" href="../../src/skins/native.js">
+  <link rel="modulepreload" href="../../src/skins/material-library.js">
+  <link rel="stylesheet" href="../agent-robot-avatar-demo.css">
+  <link rel="stylesheet" href="../demo-shell.css">
+  <link rel="stylesheet" href="../skins.css">
+  <link rel="stylesheet" href="./gallery.css">
+</head>
+<body class="skins-page catalog-page">
+  <header class="page-header catalog-header">
+    <p class="title">Agent Robot Avatar / SVG + Vanilla JS / Web Component</p>
+    <nav class="demo-nav" aria-label="页面导航"><a id="nav-demo" href="../index.html">演示</a><a id="nav-skins" class="demo-nav-skins" href="../skins.html" aria-current="page">皮肤</a></nav>
+    <div class="build-badge" id="catalog-build"></div>
+  </header>
+  <main class="catalog-content">
+    <aside class="catalog-sidebar library" aria-label="筛选皮肤">
+      <a class="skin-home-link" id="back-to-skins" href="../skins.html">← 返回皮肤首页</a>
+      <div class="library-header"><h1>全部皮肤</h1><span id="catalog-count"></span></div>
+      <label class="search-label"><span class="sr-only">搜索皮肤</span><input id="skin-search" type="search" placeholder="搜索皮肤" autocomplete="off"></label>
+      <div class="filters" id="skin-filters" aria-label="皮肤分类"></div>
+    </aside>
+    <div class="catalog-results">
+      <div class="catalog-sections" id="skin-grid" aria-label="选择皮肤"></div>
+      <div class="empty-state library" id="empty-state" hidden><p>未找到皮肤</p><button id="clear-search" type="button">查看全部</button></div>
+    </div>
+  </main>
+  <noscript>请启用 JavaScript。<a href="../skins.html">返回皮肤首页</a></noscript>
+  <script type="module" src="./gallery.js"></script>
+</body>
+</html>

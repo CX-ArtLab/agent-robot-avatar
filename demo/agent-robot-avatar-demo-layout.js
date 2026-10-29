@@ -30,7 +30,8 @@ function balanceControls() {
   // Room for longer labels, e.g. from a browser page translator, before adding a row;
   // short labels still settle at their own narrower even width below.
   const phone = window.innerWidth <= 600;
-  const limit = phone ? window.innerWidth - 16 : Math.min(900, window.innerWidth - 20);
+  const availableWidth = document.getElementById('canvas').clientWidth;
+  const limit = Math.min(900, availableWidth - (phone ? 16 : 20));
   // Measure with the column at full width so every tried wrap width fits inside it.
   stack.style.setProperty('--demo-stack-width', `${limit}px`);
   const toolbar = stack.querySelector('.demo-panel-toolbar');
@@ -70,6 +71,8 @@ function balanceControls() {
 // then, when an open panel would run past the bottom edge, raise it just enough to
 // keep the panel on screen, never past the title.
 function placeComposition() {
+  // The skin route puts the same column in a responsive two-column page.
+  if (document.body.dataset.page === 'skins') return;
   const stack = document.querySelector('.demo-control-stack');
   const canvas = document.getElementById('canvas');
   const title = document.querySelector('.title');

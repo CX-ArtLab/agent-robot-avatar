@@ -1,0 +1,169 @@
+import { VERSION } from '../../agent-robot-avatar.js';
+import { publicSkins, skinById, skinThumbnail, catalogCategories as materialCategories } from '../skin-catalog.js';
+import { t, skinLanguage, skinTitle, seriesTitle, copySkinNumber } from '../skins-i18n.js';
+
+const params = new URLSearchParams(location.search);
+document.getElementById('catalog-build').textContent = `Demo ${VERSION}`;
+const language = params.get('lang') || 'zh-CN';
+const lang = skinLanguage(language);
+document.documentElement.lang = lang;
+document.title = `${t('allSkins', 0, lang)} · Agent Robot Avatar`;
+for (const [selector, key] of [['#nav-demo', 'demo'], ['#nav-skins', 'skins'], ['#back-to-skins', 'backHome'], ['.library-header h1', 'allSkins'], ['.search-label .sr-only', 'search'], ['#empty-state p', 'none'], ['#clear-search', 'showAll']]) {
+  document.querySelector(selector).textContent = t(key, 0, lang);
+}
+document.getElementById('skin-search').placeholder = t('search', 0, lang);
+const home = new URL('../skins.html', location.href);
+home.searchParams.set('lang', language);
+if (skinById.has(params.get('skin'))) home.searchParams.set('skin', params.get('skin'));
+document.getElementById('back-to-skins').href = home.href;
+document.getElementById('nav-skins').href = home.href;
+const demoPage = new URL('../index.html', location.href);
+demoPage.searchParams.set('lang', language);
+document.getElementById('nav-demo').href = demoPage.href;
+document.getElementById('catalog-count').textContent = t('count', publicSkins.length, lang);
+const grid = document.getElementById('skin-grid');
+const search = document.getElementById('skin-search');
+const categories = [{id:'all', label:t('all', 0, lang), labelEn:t('all', 0, lang), names:publicSkins.map(skin => skin.id)}, ...materialCategories];
+let category = categories.some(({id}) => id === params.get('view')) ? params.get('view') : 'all';
+search.value = params.get('q') || '';
+// Cards show a still picture of their skin. The ones near the pointer swap it
+// for a live avatar whose eyes and light follow the pointer, and swap back once
+// the pointer has moved on, so only a handful animate at a time.
+const observer = new IntersectionObserver(entries => {
+  for (const {isIntersecting, target} of entries) if (isIntersecting) {
+    skinThumbnail(target.dataset.skin).then(url => { target.querySelector('img').src = url; });
+    observer.unobserve(target);
+  }
+}, {rootMargin:'160px'});
+
+const NEAR = 260, FAR = 340;
+const live = new Map();
+function wake(slot) {
+  if (live.has(slot)) { live.get(slot).seen = performance.now(); return; }
+  const avatar = document.createElement('agent-robot-avatar');
+  avatar.setAttribute('size', '96');
+  avatar.setAttribute('auto-sleep', '0');
+  avatar.setAttribute('skin', slot.dataset.skin);
+  slot.append(avatar);
+  slot.classList.add('is-live');
+  live.set(slot, { avatar, seen: performance.now() });
+}
+function rest(slot) {
+  live.get(slot)?.avatar.remove();
+  slot.classList.remove('is-live');
+  live.delete(slot);
+}
+let pointer = null, frame = 0, settle = 0;
+// Measured only when the pointer moves, plus once after it stops so the cards
+// it left behind can go back to their pictures.
+function follow() {
+  frame = 0;
+  if (!pointer) return;
+  const now = performance.now();
+  for (const slot of grid.querySelectorAll('.avatar-slot')) {
+    const box = slot.getBoundingClientRect();
+    if (box.bottom < -FAR || box.top > innerHeight + FAR) { if (live.has(slot)) rest(slot); continue; }
+    const distance = Math.hypot(box.left + box.width / 2 - pointer.x, box.top + box.height / 2 - pointer.y);
+    if (distance < NEAR) wake(slot);
+    // The eyes settle back to the middle before the picture returns.
+    else if (live.has(slot) && distance > FAR && now - live.get(slot).seen > 900) rest(slot);
+  }
+  clearTimeout(settle);
+  if (live.size) settle = setTimeout(follow, 1000);
+}
+function moved(x, y) {
+  pointer = { x, y };
+  if (!frame) frame = requestAnimationFrame(follow);
+}
+addEventListener('pointermove', event => moved(event.clientX, event.clientY), { passive: true });
+addEventListener('scroll', () => pointer && moved(pointer.x, pointer.y), { passive: true });
+document.addEventListener('pointerleave', () => moved(-1e4, -1e4));
+for (const {id, label, labelEn, names} of categories) {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.dataset.filter = id;
+  const text=document.createElement('span');text.textContent=seriesTitle({label, labelEn}, lang);
+  const count=document.createElement('span');count.className='filter-count';count.textContent=names.length;
+  button.append(text,count);
+  button.addEventListener('click', () => { category = id; search.value = ''; render(); });
+  document.getElementById('skin-filters').append(button);
+}
+function render() {
+  const query = search.value.trim().toLowerCase();
+  const skins = publicSkins.filter(skin => (category === 'all' || categories.find(({id}) => id === category).names.includes(skin.id))
+    && `${skin.id} ${skin.label} ${skin.english} ${skin.description}`.toLowerCase().includes(query));
+  const matches = new Set(skins.map(skin => skin.id));
+  observer.disconnect();
+  const fragment = document.createDocumentFragment();
+  for (const group of materialCategories) {
+    const members = group.names.filter(id => matches.has(id)).map(id => skinById.get(id));
+    if (!members.length) continue;
+    const section=document.createElement('section');
+    section.className='catalog-category';section.dataset.category=group.id;
+    const cards=document.createElement('div');cards.className='category-cards';
+    const heading = document.createElement('h2');
+    heading.className = 'category-heading';
+    heading.textContent = seriesTitle(group, lang);
+    const count = document.createElement('span');
+    count.textContent = t('count', members.length, lang);
+    heading.append(count);
+    heading.id=`category-${group.id}`;section.setAttribute('aria-labelledby',heading.id);
+    section.append(heading,cards);fragment.append(section);
+    for (const skin of members) {
+      const card = document.createElement('div');
+      card.className = 'skin-card';
+      card.dataset.skin = skin.id;
+      const link = document.createElement('a');
+      link.className = 'card-link';
+      const url = new URL(home);
+      url.searchParams.set('skin', skin.id);
+      link.href = url.href;
+      link.setAttribute('aria-label', t('preview', skinTitle(skin, lang), lang));
+      // A stage in the skin's own color above, the name and number below.
+      const stage = document.createElement('div');
+      stage.className = 'stage';
+      if (skin.stage) stage.style.background = skin.stage;
+      const slot = document.createElement('div');
+      slot.className = 'avatar-slot';
+      slot.dataset.skin = skin.id;
+      const img = document.createElement('img');
+      img.alt = '';
+      img.width = img.height = 96;
+      slot.append(img);
+      stage.append(slot);
+      const caption = document.createElement('div');
+      caption.className = 'caption';
+      const swatch = document.createElement('span');
+      swatch.className = 'swatch';
+      swatch.style.background = skin.base[1];
+      swatch.setAttribute('aria-hidden', 'true');
+      const label = document.createElement('span');
+      label.className = 'skin-label';
+      label.textContent = skinTitle(skin, lang);
+      caption.append(swatch, label);
+      link.append(stage, caption);
+      // The number copies itself, so it sits outside the link.
+      const number = document.createElement('button');
+      number.type = 'button';
+      number.className = 'skin-number copy-number';
+      number.textContent = `#${skin.id}`;
+      number.title = t('copy', 0, lang);
+      number.setAttribute('aria-label', `${t('copy', 0, lang)} ${skin.id}`);
+      number.addEventListener('click', () => copySkinNumber(skin.id, number, lang));
+      card.append(link, number);
+      cards.append(card);
+      observer.observe(slot);
+    }
+  }
+  for (const slot of [...live.keys()]) rest(slot);
+  grid.replaceChildren(fragment);
+  document.getElementById('empty-state').hidden = !!skins.length;
+  document.querySelectorAll('[data-filter]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.filter === category)));
+  const url = new URL(location.href);
+  if (category === 'all') url.searchParams.delete('view'); else url.searchParams.set('view', category);
+  if (query) url.searchParams.set('q', search.value.trim()); else url.searchParams.delete('q');
+  history.replaceState(null, '', url);
+}
+search.addEventListener('input', render);
+document.getElementById('clear-search').addEventListener('click', () => { category = 'all'; search.value = ''; render(); search.focus(); });
+render();

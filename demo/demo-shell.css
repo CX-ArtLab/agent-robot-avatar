@@ -1,0 +1,39 @@
+:root{--demo-paper:#f8f8f6;--demo-ink:#25282d;--demo-muted:#72777f;--demo-line:#e4e5e5;--demo-radius:16px}
+.demo-nav{display:flex;align-items:center;gap:4px;padding:5px;border:1px solid rgba(0,0,0,.045);border-radius:15px;background:rgba(255,255,255,.9);box-shadow:0 4px 18px rgba(0,0,0,.05);font:500 14px/1.4 Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif}
+.demo-nav a{color:#787d84;text-decoration:none;border-radius:11px;padding:9px 24px;white-space:nowrap;transition:background .15s,color .15s}
+.demo-nav a:hover{background:#f1f2f3;color:#333}
+.demo-nav a.is-new{position:relative}
+.demo-nav a.is-new::after{content:'';position:absolute;top:6px;right:9px;width:7px;height:7px;border-radius:50%;background:#e5484d;box-shadow:0 0 0 2px rgba(255,255,255,.95);pointer-events:none}
+.demo-nav a[aria-current=page]{background:#eceeef;color:#30343a}
+.demo-nav a:focus-visible{outline:2px solid #777d86;outline-offset:3px}
+.canvas>.demo-nav{position:absolute;top:18px;left:50%;transform:translateX(-50%);z-index:30}
+@media(max-width:800px){.canvas>.demo-nav{top:70px}.demo-nav{font-size:13px}.demo-nav a{padding:7px 18px}}
+.demo-skin-page-link{justify-self:center;display:inline-flex;align-items:center;gap:9px;margin-top:4px;padding:11px 20px 11px 16px;border-radius:14px;background:rgba(255,255,255,.92);box-shadow:0 7px 30px rgba(0,0,0,.08);color:#2c3035;font:600 13px Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;text-decoration:none;white-space:nowrap;transition:transform .15s,color .25s}
+/* At rest a small sphere like skin 705's antenna marks the button; it turns
+   plain white once the button glows. */
+.demo-skin-page-link::after{content:'';order:-1;width:11px;height:11px;border-radius:50%;background:radial-gradient(circle at 32% 28%,#fff4fb 0,#ffc3df 16%,#ff9cc8 40%,#b18cff 78%,#7f6bd6 100%);transition:background .25s}
+.demo-skin-page-link:hover::after,.demo-skin-page-link:focus-visible::after{background:#fff}
+.demo-skin-page-link:hover,.demo-skin-page-link:focus-visible{transform:translateY(-1px);color:#3d2350}
+.demo-skin-page-link:focus-visible{outline:2px solid #777d86;outline-offset:3px}
+@media(prefers-reduced-motion:reduce){.demo-skin-page-link{transition:none}.demo-skin-page-link:hover{transform:none}}
+/* The way into the skins glows in the colors of skin 705: soft pink, violet
+   and sky blobs on a pale pink ground under a top highlight, slowly drifting.
+   Both fade it in on hover. */
+.demo-nav a.demo-nav-skins,.demo-skin-page-link{position:relative;isolation:isolate}
+.demo-nav a.demo-nav-skins::before,.demo-skin-page-link::before{content:'';position:absolute;inset:0;z-index:-1;border-radius:inherit;transition:opacity .25s ease,box-shadow .25s ease;
+  background:radial-gradient(120% 120% at 22% 0%,rgba(255,255,255,.85),rgba(255,255,255,0) 46%),
+    radial-gradient(70% 110% at 0% 100%,#ff9cc8,rgba(255,156,200,0) 72%),
+    radial-gradient(70% 110% at 100% 100%,#7fd4ff,rgba(127,212,255,0) 72%),
+    radial-gradient(80% 120% at 70% 0%,#b18cff,rgba(177,140,255,0) 74%),
+    #ffd3ea;
+  background-size:100% 100%,170% 170%,170% 170%,170% 170%,100% 100%;
+  animation:demo-skin-glow 3s ease-in-out infinite alternate}
+.demo-nav a.demo-nav-skins::before,.demo-skin-page-link::before{opacity:0;animation-play-state:paused}
+.demo-nav a.demo-nav-skins:hover,.demo-nav a.demo-nav-skins:focus-visible{color:#3d2350;background:transparent}
+.demo-nav a.demo-nav-skins:hover::before,.demo-nav a.demo-nav-skins:focus-visible::before,.demo-skin-page-link:hover::before,.demo-skin-page-link:focus-visible::before{opacity:1;animation-play-state:running;box-shadow:0 4px 16px rgba(177,140,255,.38)}
+.demo-nav a.demo-nav-skins[aria-current=page]{color:#3d2350;background:transparent}
+.demo-nav a.demo-nav-skins[aria-current=page]::before{opacity:1;animation-play-state:running;box-shadow:0 4px 16px rgba(177,140,255,.38)}
+@keyframes demo-skin-glow{
+  from{background-position:0 0,0% 100%,100% 100%,70% 0%}
+  to{background-position:0 0,45% 55%,55% 35%,25% 90%}}
+@media(prefers-reduced-motion:reduce){.demo-nav a.demo-nav-skins::before,.demo-skin-page-link::before{animation:none}}

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN" translate="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="google" content="notranslate">
+  <script>document.documentElement.classList.add("demo-initializing", "skin-initializing");</script>
+  <title>皮肤 · Agent Robot Avatar</title>
+  <link rel="icon" href="data:,">
+  <link rel="modulepreload" href="../agent-robot-avatar.js">
+  <link rel="modulepreload" href="./agent-robot-avatar-demo.js">
+  <link rel="modulepreload" href="./skin-catalog.js">
+  <link rel="modulepreload" href="./agent-robot-avatar-demo-controls.js">
+  <link rel="modulepreload" href="./agent-robot-avatar-demo-extras.js">
+  <link rel="modulepreload" href="./agent-robot-avatar-demo-roundness.js">
+  <link rel="modulepreload" href="./agent-robot-avatar-demo-layout.js">
+  <link rel="modulepreload" href="./agent-robot-avatar-demo-dialog-i18n.js">
+  <link rel="modulepreload" href="./agent-robot-avatar-demo-chat-avatar-mode.js">
+  <link rel="modulepreload" href="./agent-robot-avatar-demo-reply-loop.js">
+  <link rel="modulepreload" href="./agent-robot-avatar-demo-ui.js">
+  <link rel="modulepreload" href="./agent-robot-avatar-demo-appearance.js">
+  <link rel="modulepreload" href="../src/skins/catalog.js">
+  <link rel="modulepreload" href="../src/skins/paints.js">
+  <link rel="modulepreload" href="../src/skins/eyelids.js">
+  <link rel="modulepreload" href="../src/skins/native.js">
+  <link rel="modulepreload" href="../src/skins/material-library.js">
+  <link rel="stylesheet" href="./agent-robot-avatar-demo.css">
+  <link rel="stylesheet" href="./demo-shell.css">
+  <link rel="stylesheet" href="./skins.css">
+</head>
+<body class="skins-page" data-page="skins" data-avatar-size="160">
+  <p class="demo-load-status" id="demoLoadStatus" role="status">Loading demo…</p>
+  <header class="page-header" id="page-header">
+    <nav class="demo-nav" aria-label="页面导航"><a id="demo-link" href="./index.html">演示</a><a class="demo-nav-skins" href="./skins.html" aria-current="page">皮肤</a></nav>
+  </header>
+  <main class="workspace">
+    <section class="preview" aria-label="皮肤预览"><div id="demo-root"></div></section>
+    <section class="library" aria-labelledby="library-title">
+      <h1 id="library-title" class="sr-only">皮肤</h1>
+      <div class="filters" id="skin-filters" aria-label="皮肤分类"></div>
+      <p class="sr-only" role="status"><span id="results-label">精选</span> <span id="results-count"></span></p>
+      <div class="skin-grid" id="skin-grid" aria-label="选择皮肤"></div>
+      <div class="empty-state" id="empty-state" hidden><p>未找到皮肤</p><button type="button" id="clear-search">查看全部</button></div>
+      <footer class="library-footer">
+        <label class="search-label"><span class="sr-only">搜索皮肤</span><input id="skin-search" type="search" placeholder="搜索皮肤" autocomplete="off"></label>
+        <a id="all-skins-link" href="./materials/index.html">全部皮肤 ↗</a>
+      </footer>
+    </section>
+  </main>
+  <noscript><p>请启用 JavaScript。</p></noscript>
+  <script type="module" src="./skins.js"></script>
+</body>
+</html>

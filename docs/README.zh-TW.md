@@ -26,7 +26,7 @@ Agent Robot Avatar 也可作為 AG-UI 風格 Agent 介面的視覺回饋層。
 
 ## 線上 Demo
 
-[開啟互動 Demo](https://cx-artlab.github.io/agent-robot-avatar/?lang=zh-TW)
+[開啟互動 Demo](https://cx-artlab.github.io/agent-robot-avatar/?lang=zh-TW) · [逛逛皮膚美術館](https://cx-artlab.github.io/agent-robot-avatar/skins.html?lang=zh-TW)
 
 ## 特點
 
@@ -42,7 +42,8 @@ Agent Robot Avatar 也可作為 AG-UI 風格 Agent 介面的視覺回饋層。
 - 支援減少動態效果
 - 可設定自動睡眠行為
 - 可調整頭部圓角
-- 42 種材質與圖案皮膚，光線跟隨滑鼠
+- 188 款編號皮膚，分 17 個系列，光線跟隨滑鼠
+- 不含皮膚的精簡版，適合對大小特別在意的頁面
 - 內含 TypeScript 型別宣告
 
 ## 安裝
@@ -68,6 +69,16 @@ import 'agent-robot-avatar';
 ```
 
 不需要初始化程式碼，頭像會自動進入預設待機狀態。
+
+### 精簡版
+
+如果頁面完全用不到皮膚，可以改用 `agent-robot-avatar/lite`，頭像和所有表情都一樣，只是不含任何皮膚程式：
+
+```js
+import 'agent-robot-avatar/lite';
+```
+
+精簡版會忽略 `skin` 屬性，並在主控台提示：皮膚需要使用完整版。
 
 ## 基本用法
 
@@ -148,7 +159,7 @@ try {
 | `motion` | 動態效果策略：`auto`、`reduce` 或 `full` |
 | `press-squeeze` | 按住頭像中心進行擠壓；設為 `false` 可關閉 |
 | `antenna-drag` | 拖曳天線、彈簧復原並接憤怒表情；設為 `false` 可關閉 |
-| `skin` | 材質：`obsidian`, `porcelain`, `gold` … (42)；不寫則為純色 |
+| `skin` | 皮膚編號，例如 `301`；不寫則為純色 |
 
 常用執行階段控制：
 
@@ -161,28 +172,44 @@ avatar.setAntennaDrag(true);
 
 按住頭像中心會開始擠壓；移動超過 4 個 CSS 像素後，同一次指標操作會切換為原有的頭部拖曳。拖曳天線沿用頭部拖曳的距離限制，復原後接原有的憤怒反應。
 
-## 皮膚
+## 皮膚 · 0.7 新功能
 
-共 42 種皮膚，分五類，光線會跟隨滑鼠：
+共 188 款皮膚，分 17 個系列，光線會跟隨滑鼠。每款皮膚都有固定編號：前面是系列號，後兩位是系列內序號，例如 305 是第 3 個系列的第 5 款。名稱日後可能調整，編號永遠不變，也不會重複使用。
+
+<img src="../assets/readme/skin-gallery.jpg" alt="皮膚美術館：精選皮膚、分類篩選與搜尋" width="100%">
 
 ```html
-<agent-robot-avatar skin="obsidian"></agent-robot-avatar>
+<agent-robot-avatar skin="301"></agent-robot-avatar>
 ```
 
 ```js
-avatar.setSkin('porcelain'); // 下方任一名稱
-avatar.setSkin(null);        // 回到純色
+avatar.setSkin(102);  // 也可以寫 '102'
+avatar.setSkin(null); // 回到純色
 ```
 
-| 類別 | 皮膚 |
-| --- | --- |
-| 玻璃與寶石 | `obsidian`, `midnight`, `jade`, `amber`, `ruby`, `sapphire`, `emerald`, `neon` |
-| 瓷、粉彩與陶土 | `porcelain`, `pearl`, `sakura`, `mint`, `lavender`, `lemon`, `sky`, `peach`, `terracotta` |
-| 金屬 | `gold`, `silver`, `copper`, `titanium`, `rose-gold`, `graphite` |
-| 漸層 | `aurora`, `ocean`, `forest`, `candy` |
-| 印花圖案 | `tartan`, `polka`, `terrazzo`, `marble`, `black-marble`, `wood`, `pixel`, `confetti`, `rainbow`, `denim`, `graph-paper`, `halftone`, `leaves`, `blossoms`, `brick` |
+所有皮膚及編號請見[全部皮膚頁](https://cx-artlab.github.io/agent-robot-avatar/materials/?lang=zh-TW)。
 
-`SKIN_NAMES` 匯出了全部名稱，可用於製作皮膚選擇器。
+| 系列 | 編號 |
+| --- | --- |
+| 彩色玻璃 | 101–106 |
+| 淡彩玻璃 | 201–206 |
+| 軟糖 | 301–312 |
+| 糖果玻璃 | 401–406 |
+| 壓克力 | 501–512 |
+| 果凍 | 601–612 |
+| 漸層 | 701–712 |
+| 磨砂玻璃 | 801–806 |
+| 磨砂金屬 | 901–930 |
+| 寶石與陶瓷 | 1001–1012 |
+| 木 | 1101–1106 |
+| 球類 | 1201–1210 |
+| 透明與流光 | 1301–1305 |
+| 織物與皮革 | 1401–1412 |
+| 甜點與水果 | 1501–1512 |
+| 自然 | 1601–1612 |
+| 圖案與科技 | 1701–1717 |
+
+皮膚的繪製程式在第一次用到皮膚時才下載，不用皮膚的頁面完全不載入。`await loadSkins()` 可以提前載入。`SKINS` 提供每款皮膚的中英文名稱與顏色，`SKIN_SERIES` 提供系列，`SKIN_NAMES` 提供全部編號。
 
 所有表情和手勢都能搭配皮膚使用。移除皮膚後，`color` 屬性會重新生效。
 

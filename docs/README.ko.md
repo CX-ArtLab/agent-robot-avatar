@@ -26,7 +26,7 @@ Agent Robot Avatar는 AG-UI 스타일 Agent 인터페이스를 위한 시각적 
 
 ## 라이브 데모
 
-[인터랙티브 데모 열기](https://cx-artlab.github.io/agent-robot-avatar/?lang=ko)
+[인터랙티브 데모 열기](https://cx-artlab.github.io/agent-robot-avatar/?lang=ko) · [스킨 갤러리 둘러보기](https://cx-artlab.github.io/agent-robot-avatar/skins.html?lang=ko)
 
 ## 주요 특징
 
@@ -42,7 +42,8 @@ Agent Robot Avatar는 AG-UI 스타일 Agent 인터페이스를 위한 시각적 
 - Reduced Motion 지원
 - 설정 가능한 수면 동작
 - 조절 가능한 머리 둥글기
-- 빛이 포인터를 따라가는 42가지 재질·패턴 스킨
+- 17개 시리즈, 188가지 번호 스킨. 빛이 포인터를 따라갑니다
+- 스킨을 뺀 경량판 제공
 - TypeScript 선언 포함
 
 ## 설치
@@ -68,6 +69,16 @@ import 'agent-robot-avatar';
 ```
 
 별도의 초기화 코드는 필요하지 않습니다. 아바타는 자동으로 기본 idle 상태로 들어갑니다.
+
+### 경량판
+
+스킨을 쓰지 않는 페이지라면 `agent-robot-avatar/lite`를 쓸 수 있습니다. 아바타와 모든 표정은 같고 스킨 코드만 빠져 있습니다:
+
+```js
+import 'agent-robot-avatar/lite';
+```
+
+경량판은 `skin` 속성을 무시하고, 스킨에는 전체판이 필요하다고 콘솔에 알려 줍니다.
 
 ## 기본 사용법
 
@@ -148,7 +159,7 @@ try {
 | `motion` | 모션 정책: `auto`, `reduce`, `full` |
 | `press-squeeze` | 중앙을 길게 눌러 압축; `false`로 비활성화 |
 | `antenna-drag` | 안테나 드래그, 스프링 복귀, 화난 반응; `false`로 비활성화 |
-| `skin` | 재질: `obsidian`, `porcelain`, `gold` … (42). 생략하면 단색 |
+| `skin` | 스킨 번호(예: `301`). 생략하면 단색 |
 
 자주 쓰는 런타임 제어:
 
@@ -161,28 +172,44 @@ avatar.setAntennaDrag(true);
 
 중앙을 길게 누르면 압축이 시작됩니다. 4 CSS 픽셀을 넘게 움직이면 같은 포인터 제스처가 기존 머리 드래그로 전환됩니다. 안테나는 머리 드래그와 같은 거리 제한을 사용하며 복귀 후 기존 화난 반응이 이어집니다.
 
-## 스킨
+## 스킨 · 0.7 새 기능
 
-다섯 계열, 42가지 스킨이 있으며 빛이 포인터를 따라갑니다:
+17개 시리즈, 188가지 스킨이 있으며 빛이 포인터를 따라갑니다. 모든 스킨에는 고정 번호가 있습니다. 시리즈 번호 뒤에 두 자리가 붙어 305는 3번 시리즈의 다섯 번째 스킨입니다. 이름은 바뀔 수 있지만 번호는 바뀌지 않고 다시 쓰이지 않습니다.
+
+<img src="../assets/readme/skin-gallery.jpg" alt="스킨 갤러리: 추천 스킨, 분류, 검색" width="100%">
 
 ```html
-<agent-robot-avatar skin="obsidian"></agent-robot-avatar>
+<agent-robot-avatar skin="301"></agent-robot-avatar>
 ```
 
 ```js
-avatar.setSkin('porcelain'); // 아래 목록의 이름
-avatar.setSkin(null);        // 단색으로 돌아가기
+avatar.setSkin(102);  // '102'도 가능
+avatar.setSkin(null); // 단색으로 돌아가기
 ```
 
-| 계열 | 스킨 |
-| --- | --- |
-| 유리와 보석 | `obsidian`, `midnight`, `jade`, `amber`, `ruby`, `sapphire`, `emerald`, `neon` |
-| 도자기·파스텔·점토 | `porcelain`, `pearl`, `sakura`, `mint`, `lavender`, `lemon`, `sky`, `peach`, `terracotta` |
-| 금속 | `gold`, `silver`, `copper`, `titanium`, `rose-gold`, `graphite` |
-| 그라데이션 | `aurora`, `ocean`, `forest`, `candy` |
-| 프린트 패턴 | `tartan`, `polka`, `terrazzo`, `marble`, `black-marble`, `wood`, `pixel`, `confetti`, `rainbow`, `denim`, `graph-paper`, `halftone`, `leaves`, `blossoms`, `brick` |
+모든 스킨과 번호는 [전체 스킨 페이지](https://cx-artlab.github.io/agent-robot-avatar/materials/?lang=ko)에서 볼 수 있습니다.
 
-`SKIN_NAMES`로 모든 이름을 가져와 스킨 선택기 등을 만들 수 있습니다.
+| 시리즈 | 번호 |
+| --- | --- |
+| 글레이즈 | 101–106 |
+| 아이스 글라스 | 201–206 |
+| 젤리곰 | 301–312 |
+| 캔디 글라스 | 401–406 |
+| 아크릴 | 501–512 |
+| 젤리 | 601–612 |
+| 그라데이션 | 701–712 |
+| 반투명 유리 | 801–806 |
+| 메탈 | 901–930 |
+| 보석과 도자기 | 1001–1012 |
+| 나무 | 1101–1106 |
+| 공 | 1201–1210 |
+| 투명·반짝임 | 1301–1305 |
+| 패브릭과 가죽 | 1401–1412 |
+| 디저트와 과일 | 1501–1512 |
+| 자연 | 1601–1612 |
+| 패턴과 테크 | 1701–1717 |
+
+스킨 그리기 코드는 스킨을 처음 쓸 때 내려받으므로, 스킨을 쓰지 않는 페이지는 이를 불러오지 않습니다. `await loadSkins()`로 미리 불러올 수 있습니다. `SKINS`는 각 스킨의 중국어·영어 이름과 색상을, `SKIN_SERIES`는 시리즈를, `SKIN_NAMES`는 모든 번호를 제공합니다.
 
 모든 표정과 제스처를 스킨과 함께 쓸 수 있습니다. 스킨을 제거하면 `color` 속성이 다시 적용됩니다.
 

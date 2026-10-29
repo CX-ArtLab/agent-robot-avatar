@@ -26,7 +26,7 @@ Agent Robot Avatar kann außerdem als visuelle Feedback-Ebene für Agent-Oberfl�
 
 ## Live-Demo
 
-[Interaktive Demo öffnen](https://cx-artlab.github.io/agent-robot-avatar/?lang=de)
+[Interaktive Demo öffnen](https://cx-artlab.github.io/agent-robot-avatar/?lang=de) · [Zur Skin-Galerie](https://cx-artlab.github.io/agent-robot-avatar/skins.html?lang=de)
 
 ## Besondere Merkmale
 
@@ -42,7 +42,8 @@ Agent Robot Avatar kann außerdem als visuelle Feedback-Ebene für Agent-Oberfl�
 - Unterstützung für reduzierte Bewegung
 - Konfigurierbares Schlafverhalten
 - Einstellbare Kopfrundung
-- 42 Material- und Muster-Skins mit Licht, das dem Zeiger folgt
+- 188 nummerierte Skins in 17 Serien, mit Licht, das dem Zeiger folgt
+- Schlanke Version ohne Skins für besonders kleine Seiten
 - TypeScript-Deklarationen enthalten
 
 ## Installation
@@ -68,6 +69,16 @@ Dann die Komponente hinzufügen:
 ```
 
 Es ist kein Initialisierungscode nötig. Der Avatar wechselt automatisch in seinen standardmäßigen Idle-Zustand.
+
+### Schlanke Version
+
+Für Seiten ohne Skins ist `agent-robot-avatar/lite` derselbe Avatar ganz ohne Skin-Code:
+
+```js
+import 'agent-robot-avatar/lite';
+```
+
+Die schlanke Version ignoriert das Attribut `skin` und weist in der Konsole darauf hin, dass Skins die vollständige Version brauchen.
 
 ## Grundlegende Verwendung
 
@@ -148,7 +159,7 @@ try {
 | `motion` | Bewegungsstrategie: `auto`, `reduce` oder `full` |
 | `press-squeeze` | Mitte gedrückt halten und stauchen; `false` deaktiviert die Geste |
 | `antenna-drag` | Antenne ziehen, federnd zurückkehren und wütend reagieren; `false` deaktiviert sie |
-| `skin` | Material: `obsidian`, `porcelain`, `gold` … (42); weglassen für die flache Farbe |
+| `skin` | Skin-Nummer, z. B. `301`; weglassen für die flache Farbe |
 
 Häufige Runtime-Steuerungen:
 
@@ -161,28 +172,44 @@ avatar.setAntennaDrag(true);
 
 Gedrückthalten in der Mitte startet die Stauchung. Nach mehr als 4 CSS-Pixeln Bewegung wechselt dieselbe Zeigergeste zum vorhandenen Kopfziehen. Die Antenne verwendet dessen Distanzlimit und endet mit der vorhandenen Wutreaktion.
 
-## Skins
+## Skins · Neu in 0.7
 
-42 Skins in fünf Familien; das Licht folgt dem Zeiger:
+188 Skins in 17 Serien; das Licht folgt dem Zeiger. Jeder Skin hat eine feste Nummer: die Seriennummer und zwei Ziffern, 305 ist also der fünfte Skin der Serie 3. Namen können sich ändern, Nummern nie, und sie werden nicht wiederverwendet.
+
+<img src="../assets/readme/skin-gallery.jpg" alt="Skin-Galerie: Empfehlungen, Filter und Suche" width="100%">
 
 ```html
-<agent-robot-avatar skin="obsidian"></agent-robot-avatar>
+<agent-robot-avatar skin="301"></agent-robot-avatar>
 ```
 
 ```js
-avatar.setSkin('porcelain'); // ein Name aus der Liste
-avatar.setSkin(null);        // zurück zur flachen Farbe
+avatar.setSkin(102);  // oder '102'
+avatar.setSkin(null); // zurück zur flachen Farbe
 ```
 
-| Familie | Skins |
-| --- | --- |
-| Glas und Edelsteine | `obsidian`, `midnight`, `jade`, `amber`, `ruby`, `sapphire`, `emerald`, `neon` |
-| Porzellan, Pastell und Ton | `porcelain`, `pearl`, `sakura`, `mint`, `lavender`, `lemon`, `sky`, `peach`, `terracotta` |
-| Metall | `gold`, `silver`, `copper`, `titanium`, `rose-gold`, `graphite` |
-| Verläufe | `aurora`, `ocean`, `forest`, `candy` |
-| Druckmuster | `tartan`, `polka`, `terrazzo`, `marble`, `black-marble`, `wood`, `pixel`, `confetti`, `rainbow`, `denim`, `graph-paper`, `halftone`, `leaves`, `blossoms`, `brick` |
+Alle Skins mit Nummer zeigt die [Seite mit allen Skins](https://cx-artlab.github.io/agent-robot-avatar/materials/?lang=de).
 
-Der Export `SKIN_NAMES` listet alle Namen, etwa für eine Auswahl.
+| Serie | Nummern |
+| --- | --- |
+| Glasur | 101–106 |
+| Eisglas | 201–206 |
+| Gummi | 301–312 |
+| Bonbonglas | 401–406 |
+| Acryl | 501–512 |
+| Gelee | 601–612 |
+| Verlauf | 701–712 |
+| Milchglas | 801–806 |
+| Metall | 901–930 |
+| Edelsteine und Keramik | 1001–1012 |
+| Holz | 1101–1106 |
+| Bälle | 1201–1210 |
+| Klar und schimmernd | 1301–1305 |
+| Stoff und Leder | 1401–1412 |
+| Süßes und Obst | 1501–1512 |
+| Natur | 1601–1612 |
+| Muster und Technik | 1701–1717 |
+
+Der Code, der die Skins zeichnet, wird erst beim ersten Skin geladen; eine Seite ohne Skins lädt ihn nie. `await loadSkins()` lädt ihn vorab. `SKINS` enthält die chinesischen und englischen Namen und Farben jedes Skins, `SKIN_SERIES` die Serien und `SKIN_NAMES` alle Nummern.
 
 Alle Ausdrücke und Gesten funktionieren mit einem Skin. Ohne Skin gilt wieder das Attribut `color`.
 

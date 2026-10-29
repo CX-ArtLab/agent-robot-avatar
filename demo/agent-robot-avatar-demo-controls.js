@@ -354,6 +354,8 @@ function mountDemoControls() {
   function paintColors(background, head, eyes) {
     shown = { background, head, eyes };
     stage.style.setProperty('--demo-stage-bg', stageOverride ?? background);
+    // Preview materials own their surface; palette changes still color the stage.
+    if (face.dataset.skin && face.dataset.skin !== 'classic') return;
     face.setAttribute('color', head);
     const shadow = face.shadowRoot;
     if (!shadow) return;
@@ -833,6 +835,15 @@ function mountDemoControls() {
     scene.start();
   }
 
+  if (document.body.dataset.page === 'skins') return;
+  // Coming back from the skin pages goes straight to the avatar; the opening
+  // show plays on a fresh visit.
+  let fromSkins = false;
+  try {
+    const referrer = new URL(document.referrer);
+    fromSkins = referrer.origin === location.origin && /\/(skins\.html|materials\/)/.test(referrer.pathname);
+  } catch { /* no referrer */ }
+  if (fromSkins) return;
   if (document.documentElement.dataset.demoReady) playIntro();
   else {
     const ready = new MutationObserver(() => {

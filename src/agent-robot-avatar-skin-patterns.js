@@ -20,15 +20,20 @@ function wrap(size, x, y, r, draw) {
   return out;
 }
 
-function ring(cx, cy, f, steps = 64, squash = 1) {
-  let d = '';
-  for (let i = 0; i <= steps; i++) {
-    const a = i / steps * Math.PI * 2;
-    const r = f(a);
-    d += `${i ? 'L' : 'M'}${n(cx + Math.cos(a) * r)} ${n(cy + Math.sin(a) * r * squash)}`;
-  }
-  return `${d}Z`;
+// Turns a point on the unit sphere, for the patterns drawn on balls.
+function rotate([x, y, z], [yaw, pitch, roll]) {
+  let c = Math.cos(yaw), s = Math.sin(yaw);
+  [x, z] = [x * c + z * s, -x * s + z * c];
+  c = Math.cos(pitch); s = Math.sin(pitch);
+  [y, z] = [y * c - z * s, y * s + z * c];
+  c = Math.cos(roll); s = Math.sin(roll);
+  [x, y] = [x * c - y * s, x * s + y * c];
+  return [x, y, z];
 }
+
+
+
+
 
 const PATTERNS = {
   tartan({ colors: [a, b, c], size = 56 }) {
@@ -73,16 +78,6 @@ const PATTERNS = {
     }
     return { size: [240, 240], body };
   },
-  wood({ colors: [c], seed = 23 }) {
-    const random = rng(seed);
-    let body = '';
-    for (let k = 1; k < 34; k++) {
-      const base = k * 11 + random() * 4, p1 = random() * 6, p2 = random() * 6;
-      const d = ring(60, 330, a => base + Math.sin(a * 3 + p1) * 3 + Math.sin(a * 7 + p2) * 1.5, 120, .62);
-      body += `<path d="${d}" fill="none" stroke="${c}" stroke-width="${n(.8 + random() * 1.4)}" opacity="${n(.25 + random() * .3)}"/>`;
-    }
-    return { size: [240, 240], body };
-  },
   pixel({ colors, cell = 10, size = 80, seed = 31, opacity = .9 }) {
     const random = rng(seed);
     let body = '';
@@ -103,18 +98,6 @@ const PATTERNS = {
     }
     return { size: [size, size], body };
   },
-  rainbow({ colors, opacity = .85 }) {
-    const h = 240 / colors.length;
-    return { size: [240, 240], body: colors.map((c, i) => `<rect y="${n(i * h)}" width="240" height="${n(h + .5)}" fill="${c}" opacity="${opacity}"/>`).join('') };
-  },
-  denim({ colors: [c], size = 5, opacity = .16 }) {
-    return { size: [size, size], transform: 'rotate(-30)', body: `<rect width="1.6" height="${size}" fill="${c}" opacity="${opacity}"/><rect x="3" width=".8" height="${size}" fill="#000" opacity=".12"/>` };
-  },
-  grid({ colors: [c], size = 50, step = 10, opacity = .5 }) {
-    let body = `<path d="M0 0H${size}M0 0V${size}" stroke="${c}" stroke-width="1.6" opacity="${opacity}"/>`;
-    for (let i = step; i < size; i += step) body += `<path d="M0 ${i}H${size}M${i} 0V${size}" stroke="${c}" stroke-width=".7" opacity="${opacity * .7}"/>`;
-    return { size: [size, size], body };
-  },
   halftone({ colors: [c], step = 12, opacity = .7 }) {
     let body = '';
     for (let y = 6; y < 240; y += step) for (let x = 6 + ((y / step) % 2) * step / 2; x < 240; x += step) {
@@ -133,9 +116,98 @@ const PATTERNS = {
     }
     return { size: [size, size], body };
   },
-  brick({ colors: [c], w = 40, h = 20, opacity = .8 }) {
-    const r = h / 2;
-    return { size: [w, h], body: `<path d="M0 0H${w}M0 ${r}H${w}M0 0V${r}M${w / 2} 0V${r}M${w / 4} ${r}V${h}M${w * .75} ${r}V${h}" stroke="${c}" stroke-width="1.6" opacity="${opacity}"/>` };
+  grooves({ colors: [line, shadow], radius = 138, angles = [.5, -.45, .2] }) {
+    // A modern ball: rings of fine grooves wrapping the surface in three directions.
+    let body = '';
+    for (const axis of [[1, 0, 0], [0, 1, 0], [0, 0, 1]]) {
+      for (const lat of [-.42, 0, .42]) {
+        const pts = [];
+        for (let k = 0; k <= 72; k++) {
+          const a = k / 72 * Math.PI * 2, r = Math.cos(lat), h = Math.sin(lat);
+          const p = axis[0] ? [h, r * Math.cos(a), r * Math.sin(a)] : axis[1] ? [r * Math.cos(a), h, r * Math.sin(a)] : [r * Math.cos(a), r * Math.sin(a), h];
+          pts.push(rotate(p, angles));
+        }
+        let d = '';
+        pts.forEach(([x, y, z], i) => { d += `${i && z > 0 && pts[i - 1][2] > 0 ? 'L' : 'M'}${n(120 + x * radius)} ${n(120 + y * radius)}`; });
+        body += `<path d="${d}" fill="none" stroke="${shadow}" stroke-width="3" opacity=".6" transform="translate(.8 1)"/><path d="${d}" fill="none" stroke="${line}" stroke-width="1.6"/>`;
+      }
+    }
+    return { size: [240, 240], body };
+  },
+  // Balls: each is drawn once across the whole head instead of repeating.
+  basketball({ colors: [seam, grain] }) {
+    return {
+      size: [240, 240],
+      defs: tex => `<pattern id="${tex}" patternUnits="userSpaceOnUse" width="6" height="6"><circle cx="3" cy="3" r=".9" fill="${grain}" opacity=".32"/></pattern>`,
+      body: tex => `<rect width="240" height="240" fill="url(#${tex})"/><path d="M120 0V240M0 120H240M52 18Q100 120 52 222M188 18Q140 120 188 222" fill="none" stroke="#ffd2a6" stroke-width="2.4" stroke-linecap="round" opacity=".55" transform="translate(1.2 1.6)"/><path d="M120 0V240M0 120H240M52 18Q100 120 52 222M188 18Q140 120 188 222" fill="none" stroke="${seam}" stroke-width="3.4" stroke-linecap="round"/>`,
+    };
+  },
+
+
+
+
+
+  tennis({ colors: [seam, fuzz] }) {
+    return {
+      size: [240, 240],
+      defs: tex => `<pattern id="${tex}" patternUnits="userSpaceOnUse" width="7" height="7"><circle cx="1.5" cy="2" r=".7" fill="${fuzz}" opacity=".35"/><circle cx="5" cy="5.5" r=".6" fill="#ffffff" opacity=".3"/></pattern>`,
+      body: tex => `<rect width="240" height="240" fill="url(#${tex})"/><path d="M14 62C92 34 92 206 14 178M226 62C148 34 148 206 226 178" fill="none" stroke="#f7ffd0" stroke-width="6.5" stroke-linecap="round" opacity=".45" transform="translate(1 1.6)"/><path d="M14 62C92 34 92 206 14 178M226 62C148 34 148 206 226 178" fill="none" stroke="#4a6000" stroke-width="6.5" stroke-linecap="round" opacity=".38" transform="translate(-1 -1.6)"/><path d="M14 62C92 34 92 206 14 178M226 62C148 34 148 206 226 178" fill="none" stroke="${seam}" stroke-width="5" stroke-linecap="round"/>`,
+    };
+  },
+  baseball({ colors: [seam, stitch] }) {
+    const arc = (x0, cx) => {
+      let stitches = '';
+      for (let t = .06; t < .96; t += .055) {
+        const x = (1 - t) ** 2 * x0 + 2 * (1 - t) * t * cx + t * t * x0, y = (1 - t) ** 2 * 26 + 2 * (1 - t) * t * 120 + t * t * 214;
+        const dx = 2 * (1 - t) * (cx - x0) + 2 * t * (x0 - cx), dy = 2 * (1 - t) * 94 + 2 * t * 94, len = Math.hypot(dx, dy);
+        const nx = -dy / len * 5, ny = dx / len * 5, tx = dx / len * 2.2, ty = dy / len * 2.2;
+        stitches += `M${n(x - nx - tx)} ${n(y - ny - ty)}L${n(x)} ${n(y)}L${n(x + nx - tx)} ${n(y + ny - ty)}`;
+      }
+      return `<path d="M${x0} 26Q${cx} 120 ${x0} 214" fill="none" stroke="${seam}" stroke-width="1.3"/><path d="${stitches}" fill="none" stroke="${stitch}" stroke-width="2" stroke-linecap="round"/>`;
+    };
+    return { size: [240, 240], body: arc(44, 104) + arc(196, 136) };
+  },
+  cricket({ colors: [seam, stitch] }) {
+    // A raised seam arching over the forehead with three rows of stitches each side.
+    const y = (x, lift) => 84 - Math.sin(x / 240 * Math.PI) * 26 + lift;
+    const curve = lift => {
+      let d = '';
+      for (let x = -4; x <= 244; x += 8) d += `${x < 0 ? 'M' : 'L'}${x} ${n(y(x, lift))}`;
+      return d;
+    };
+    let rows = '';
+    for (const lift of [-11, -7, -3, 3, 7, 11]) {
+      for (let x = 2; x < 240; x += 6) rows += `M${x} ${n(y(x, lift))}l2.6 -1.2`;
+    }
+    return { size: [240, 240], body: `<path d="${curve(0)}" fill="none" stroke="${seam}" stroke-width="15" stroke-linecap="round" opacity=".55"/><path d="${curve(0)}" fill="none" stroke="${seam}" stroke-width="2"/><path d="${rows}" fill="none" stroke="${stitch}" stroke-width="1.5" stroke-linecap="round"/>` };
+  },
+
+
+
+
+
+
+
+
+
+  golf({ colors: [shade, shine], r = 5.6 }) {
+    const w = 15, h = w * Math.sqrt(3);
+    const dimple = (x, y) => `<circle cx="${n(x)}" cy="${n(y)}" r="${r}" fill="${shade}" opacity=".55"/><circle cx="${n(x + .9)}" cy="${n(y + 1)}" r="${n(r * .55)}" fill="${shine}" opacity=".8"/>`;
+    return { size: [w, n(h)], body: dimple(0, 0) + dimple(w, 0) + dimple(w / 2, h / 2) + dimple(0, h) + dimple(w, h) };
+  },
+  football({ colors: [lace, grain, seam] }) {
+    // Lying on its side: laces run along the top, stripes ring both ends.
+    let stitches = '';
+    for (let x = 90; x <= 150; x += 10) stitches += `M${x} 44V60`;
+    return {
+      size: [240, 240],
+      defs: tex => `<pattern id="${tex}" patternUnits="userSpaceOnUse" width="5" height="5"><circle cx="2.5" cy="2.5" r=".8" fill="${grain}" opacity=".35"/></pattern>`,
+      body: tex => `<rect width="240" height="240" fill="url(#${tex})"/>`
+        + `<path d="M-10 40Q120 62 250 40M-10 210Q120 188 250 210" fill="none" stroke="${seam}" stroke-width="1.4" opacity=".7"/>`
+        + `<g transform="translate(1 1.6)" opacity=".35"><path d="M84 52H156" stroke="#1a0800" stroke-width="2"/><path d="${stitches}" stroke="#1a0800" stroke-width="3.6" stroke-linecap="round"/></g>`
+        + `<path d="M84 52H156" stroke="${lace}" stroke-width="2"/><path d="${stitches}" stroke="${lace}" stroke-width="3.4" stroke-linecap="round"/>`
+        + `<path d="M34 20Q46 120 34 220M46 20Q58 120 46 220M206 20Q194 120 206 220M194 20Q182 120 194 220" fill="none" stroke="${lace}" stroke-width="5"/>`,
+    };
   },
 };
 
@@ -144,11 +216,19 @@ const SHAPES = {
   blossom: (k, c, accent) => `${[0, 72, 144, 216, 288].map(a => `<ellipse cy="${n(-.5 * k)}" rx="${n(.3 * k)}" ry="${n(.45 * k)}" fill="${c}" transform="rotate(${a})"/>`).join('')}<circle r="${n(.2 * k)}" fill="${accent}"/>`,
 };
 
+// A generator may also return defs (for example a fine texture tile) that its
+// body refers to; both receive the texture id.
+// Generated tiles are cached per spec; ball layouts take a moment to work out.
+const tiles = new Map();
 function patternMarkup(id, spec) {
   const make = PATTERNS[spec.kind];
   if (!make) return '';
-  const { size: [w, h], transform, body } = make(spec);
-  return `<pattern id="${id}" patternUnits="userSpaceOnUse" width="${w}" height="${h}"${transform ? ` patternTransform="${transform}"` : ''}>${body}</pattern>`;
+  const key = JSON.stringify(spec);
+  if (!tiles.has(key)) tiles.set(key, make(spec));
+  const { size: [w, h], transform, body, defs } = tiles.get(key);
+  const tex = `${id}-texture`;
+  const inner = typeof body === 'function' ? body(tex) : body;
+  return `${defs ? defs(tex) : ''}<pattern id="${id}" patternUnits="userSpaceOnUse" width="${w}" height="${h}"${transform ? ` patternTransform="${transform}"` : ''}>${inner}</pattern>`;
 }
 
 export { PATTERNS, patternMarkup };
