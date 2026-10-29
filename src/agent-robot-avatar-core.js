@@ -374,8 +374,11 @@ const AgentRobotAvatar = (() => {
       const near = Math.max(r.width, r.height) * 2.55;
       const dist = Math.hypot(dx, dy);
       const influence = clamp(1 - dist / near, 0, 1);
-      this._pointer.x = clamp(dx * .42, -48, 48);
-      this._pointer.y = clamp(dy * .38, -34, 34);
+      // Measure the pointer offset as if the avatar were demo-sized, so a large
+      // avatar does not look further than a small one for the same gesture.
+      const scale = Math.min(1, 120 / Math.max(1, r.width, r.height));
+      this._pointer.x = clamp(dx * .42 * scale, -48, 48);
+      this._pointer.y = clamp(dy * .38 * scale, -34, 34);
       this._pointer.active = influence > 0.001;
       this._pointer.influence = influence;
       this._pointer.lastMove = performance.now();

@@ -406,6 +406,8 @@ function applyMaterial(avatar, name, { groundShadow = false } = {}) {
   for (const side of ['left', 'right']) {
     const eye = root.getElementById(`${side}Eye`);
     const lidGroup = root.getElementById(`${side}Top`).parentElement;
+    // The skin module may already have moved the lids into a mask of its own.
+    if (lidGroup.parentElement?.tagName === 'mask') continue;
     originalEyes.push({ eye, children: [...eye.children], lids: [...lidGroup.children].map(node => [node, node.style.fill]) });
     const mask = svgElement('mask', {
       id: `${id}-${side}-mask`, maskUnits: 'userSpaceOnUse', maskContentUnits: 'userSpaceOnUse',
