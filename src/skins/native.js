@@ -15,37 +15,6 @@ const SHEENS = Object.freeze({
   slab: { top: .26, reach: .3, bottom: 0, slab: true },
 });
 
-// Glass jelly, after photographic references: a deep saturated top face, a
-// darker refraction ring just inside the rim, crisp white light on the rim, a
-// broad bright gloss over the top, and a paler side wall visible along the
-// bottom with a sharp bright line where it meets the top face.
-function paintGlassJelly(skin, look) {
-  const p = skin.sheenParts;
-  const [band] = p.bevel.children;
-  const replace = (id, tag, attrs, stops) => {
-    skin.defs.querySelector(`#${id}`)?.remove();
-    return gradient(skin.defs, tag, id, attrs, stops);
-  };
-  replace('skin-sheen-band', 'linearGradient', { x1: '0', y1: '0', x2: '0', y2: '1' },
-    [[0, look.base[3], .2], [.5, look.base[3], .38], [1, look.base[3], .2]]);
-  band.setAttribute('stroke-width', '24');
-  replace('skin-sheen-glint', 'linearGradient', { x1: '0', y1: '0', x2: '1', y2: '1' },
-    [[0, '#ffffff', 1], [.38, '#ffffff', .95], [.55, '#ffffff', .35], [.75, '#ffffff', .3], [.92, '#ffffff', .9], [1, '#ffffff', 1]]);
-  replace('skin-sheen-top', 'linearGradient', { x1: '0', y1: '0', x2: '0', y2: '1' },
-    [[0, '#ffffff', .92], [.1, '#ffffff', .62], [.24, '#ffffff', .18], [.34, '#ffffff', 0], [1, '#ffffff', 0]]);
-  const wall = mixHex(look.base[3], '#ffffff', .45);
-  replace('skin-side-fill', 'linearGradient', { x1: '0', y1: '0', x2: '1', y2: '0' },
-    [[0, mixHex(look.base[0], '#ffffff', .4), .75], [.5, wall, .7], [1, mixHex(look.base[3], '#ffffff', .35), .8]]);
-  replace('skin-side-line', 'linearGradient', { x1: '0', y1: '0', x2: '0', y2: '1' },
-    [[0, '#ffffff', 0], [.7, '#ffffff', 0], [.82, '#ffffff', .85], [1, '#ffffff', .95]]);
-  p.side.style.display = '';
-  p.bottom.style.display = 'none';
-  p.top.removeAttribute('filter');
-  p.top.setAttribute('filter', 'url(#skin-crisp-top)');
-  skin.defs.querySelector('#skin-crisp-top')?.remove();
-  skin.defs.insertAdjacentHTML('beforeend', '<filter id="skin-crisp-top" filterUnits="userSpaceOnUse" x="-20" y="-20" width="280" height="280"><feGaussianBlur stdDeviation="1.4"/></filter>');
-  skin.defs.querySelector('#skin-soft-edge feGaussianBlur')?.setAttribute('stdDeviation', '4');
-}
 
 // Live tuning for the faithful acrylic, read each time the skin is painted. A
 // tuner page can set window.AgentRobotAvatarAcrylicConfig and repaint.
@@ -252,13 +221,7 @@ function applyAcrylicTuning(skin, look) {
   // Fade toward the left and right sides with a mask.
   defs.querySelector('#skin-sideline-mask')?.remove();
   defs.querySelector('#skin-sideline-mask-grad')?.remove();
-  if (t.sideLineSideFade > 0) {
-    const f = Math.min(.5, t.sideLineSideFade);
-    gradient(defs, 'linearGradient', 'skin-sideline-mask-grad', { x1: '0', y1: '0', x2: '1', y2: '0' },
-      [[0, white, 0], [f, white, 1], [1 - f, white, 1], [1, white, 0]]);
-    defs.insertAdjacentHTML('beforeend', '<mask id="skin-sideline-mask" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" x="-20" y="-20" width="280" height="280"><rect x="20" y="-20" width="200" height="280" fill="url(#skin-sideline-mask-grad)"/></mask>');
-    skin.sideLine.setAttribute('mask', 'url(#skin-sideline-mask)');
-  } else skin.sideLine.removeAttribute('mask');
+  skin.sideLine.removeAttribute('mask');
 
   // Eyes.
   skin.parts.eyeGlass = replace('skin-eye-glass', 'linearGradient', { x1: '1', y1: '0', x2: '0', y2: '1' },
@@ -277,10 +240,6 @@ function applyAcrylicTuning(skin, look) {
     + `<feFlood flood-color="${shadowColor}" flood-opacity="${t.shadowOpacity}"/><feComposite in2="b" operator="in" result="s"/>`
     + `<feGaussianBlur in="SourceGraphic" stdDeviation="${t.eyeSoftness}" result="g"/><feMerge><feMergeNode in="s"/><feMergeNode in="g"/></feMerge></filter>`);
   skin.parts.eyeSink = defs.querySelector('#skin-eye-sink-offset');
-  if (!(t.shadowOpacity > 0) && !(t.eyeSoftness > 0)) {
-    for (const group of skin.eyeGroups) group.removeAttribute('filter');
-    skin.parts.eyeSink = null;
-  }
   skin.fixedShadowAngle = t.shadowFollow ? null : t.shadowAngle;
   skin.shadowDistance = t.shadowDistance;
 
@@ -499,10 +458,7 @@ function paintSkin(skin, name) {
               : look.bright
               ? [[0, '#ffffff', .75], [.1, lit, .5], [.3, lit, .22], [.7, lit, .26], [.9, '#ffffff', .75], [1, '#ffffff', .95]]
               : [[0, lit, .55], [.12, lit, .25], [.5, lit, .08], [.8, lit, .16], [.93, lit, .7], [1, lit, .9]]);
-        if (look.wet) {
-          gradient(skin.defs, 'radialGradient', 'skin-sheen-face', { cx: '.5', cy: '.55', r: '.5' },
-            [[0, look.base[3], .32], [.6, look.base[3], .16], [1, look.base[3], 0]]);
-        } else if (look.faithful) {
+        if (look.faithful) {
           gradient(skin.defs, 'radialGradient', 'skin-sheen-face', { cx: String(tune.faceX), cy: String(tune.faceY), r: String(tune.faceSize) },
             [[0, '#ffffff', tune.faceGlow], [1, '#ffffff', 0]]);
         } else {
@@ -522,11 +478,6 @@ function paintSkin(skin, name) {
         skin.defs.insertAdjacentHTML('beforeend', `<filter id="skin-eye-sink" filterUnits="userSpaceOnUse" x="-90" y="-90" width="180" height="180"><feOffset id="skin-eye-sink-offset" in="SourceAlpha" dx="-6" dy="8" result="o"/><feGaussianBlur in="o" stdDeviation="${look.faithful ? tune.shadowBlur : look.wet ? 3 : 6}" result="b"/><feFlood flood-color="${look.faithful ? mixHex(look.base[2], look.base[3], tune.shadowDarkness) : look.base[3]}" flood-opacity="${look.faithful ? tune.shadowOpacity : look.wet ? .45 : .8}"/><feComposite in2="b" operator="in" result="s"/><feGaussianBlur in="SourceGraphic" stdDeviation="${look.faithful ? tune.eyeSoftness : 0}" result="g"/><feMerge><feMergeNode in="s"/><feMergeNode in="g"/></feMerge></filter>`);
         skin.parts.eyeSink = skin.defs.querySelector('#skin-eye-sink-offset');
       }
-      if (look.metal) {
-        // A directional face: bright at the upper left, darker toward the lower right.
-        gradient(skin.defs, 'linearGradient', 'skin-sheen-face', { x1: '.15', y1: '.05', x2: '.85', y2: '.95' },
-          [[0, '#ffffff', .75], [.35, '#ffffff', .18], [.6, look.base[3], .12], [1, look.base[3], .42]]);
-      }
       gradient(skin.defs, 'linearGradient', 'skin-sheen-line', { x1: '0', y1: '0', x2: '0', y2: '1' },
         [[0, '#ffffff', .55], [.5, look.faithful ? look.base[2] : look.base[3], .25], [1, look.faithful ? mixHex(look.base[0], '#ffffff', .5) : '#ffffff', .35]]);
       gradient(skin.defs, 'linearGradient', 'skin-sheen-glint', look.wet ? { x1: '0', y1: '0', x2: '1', y2: '1' } : look.faithful ? { x1: '1', y1: '0', x2: '0', y2: '1' } : { x1: '0', y1: '0', x2: '1', y2: '1' }, look.wet
@@ -534,10 +485,6 @@ function paintSkin(skin, name) {
         : look.faithful
         ? [[0, '#ffffff', 0], [.05, '#ffffff', tune.glintUpper], [.3, '#ffffff', tune.glintUpper * .9], [.4, '#ffffff', 0], [.55, '#ffffff', 0], [.65, '#ffffff', tune.glintLower], [.85, '#ffffff', tune.glintLower * .85], [.95, '#ffffff', 0], [1, '#ffffff', 0]]
         : [[0, '#ffffff', 0], [.08, '#ffffff', .95], [.3, '#ffffff', .9], [.42, '#ffffff', 0], [.6, '#ffffff', 0], [.72, '#ffffff', .85], [.82, '#ffffff', 0], [1, '#ffffff', 0]]);
-      if (look.glow) {
-        gradient(skin.defs, 'radialGradient', 'skin-sheen-glow', { cx: '.5', cy: '1.02', r: '.62' },
-          [[0, look.glow, .85], [.55, look.glow, .3], [1, look.glow, 0]]);
-      }
     }
     const p = skin.sheenParts;
     p.bottom.style.display = sheen.bottom ? '' : 'none';
@@ -546,24 +493,16 @@ function paintSkin(skin, name) {
     p.bevelLine.style.display = look.acrylic && !look.faithful ? 'none' : '';
     p.top.style.display = look.faithful ? 'none' : '';
     const [band] = p.bevel.children;
-    if (look.wet) {
-      p.bevel.removeAttribute('filter');
-      band.setAttribute('filter', 'url(#skin-soft-edge)');
-      band.setAttribute('stroke-width', '40');
-      p.top.setAttribute('filter', 'url(#skin-soft-top)');
-    } else {
-      band.removeAttribute('filter');
-      band.setAttribute('stroke-width', String(look.faithful ? tune.bandWidth : 26));
-      p.bevel.children[2].setAttribute('stroke-width', String(look.faithful ? tune.glintWidth : 3.2));
-      p.bevelLine.setAttribute('opacity', String(look.faithful ? tune.lineOpacity : 1));
-      p.top.removeAttribute('filter');
-      if (look.acrylic) p.bevel.setAttribute('filter', 'url(#skin-soft-edge)');
-      else p.bevel.removeAttribute('filter');
-    }
+    band.removeAttribute('filter');
+    band.setAttribute('stroke-width', String(look.faithful ? tune.bandWidth : 26));
+    p.bevel.children[2].setAttribute('stroke-width', String(look.faithful ? tune.glintWidth : 3.2));
+    p.bevelLine.setAttribute('opacity', String(look.faithful ? tune.lineOpacity : 1));
+    p.top.removeAttribute('filter');
+    if (look.acrylic) p.bevel.setAttribute('filter', 'url(#skin-soft-edge)');
+    else p.bevel.removeAttribute('filter');
     p.glow.style.display = sheen.slab && look.glow ? '' : 'none';
     p.face.style.display = sheen.slab && (look.metal || (look.acrylic && !look.bright)) ? '' : 'none';
     p.side.style.display = 'none';
-    if (look.wet) paintGlassJelly(skin, look);
 
   }
   skin.sheen.style.display = sheen ? '' : 'none';
@@ -658,19 +597,7 @@ function applyLight(skin, x, y) {
     set(skin, spark, 'eyeSpark', 'cy', t.eyeSparkY - dy);
   }
   // A following inner line keeps its bright end toward the light.
-  if (skin.lineFollow && skin.lineGradient) {
-    const len = Math.hypot(x, y) || 1, k = Math.SQRT1_2;
-    set(skin, skin.lineGradient, 'line', 'x1', .5 + x / len * k);
-    set(skin, skin.lineGradient, 'line', 'y1', .5 + y / len * k);
-    set(skin, skin.lineGradient, 'line', 'x2', .5 - x / len * k);
-    set(skin, skin.lineGradient, 'line', 'y2', .5 - y / len * k);
-  }
   // Tuned glints can slide toward the light.
-  if (skin.glintFollow) {
-    const glint = skin.sheenParts.bevel.children[2];
-    const t = `translate(${((x - REST_LIGHT.x) * skin.glintFollow).toFixed(2)} ${((y - REST_LIGHT.y) * skin.glintFollow).toFixed(2)}) ${skin.glintTransform}`;
-    if (skin.shown.glint !== t) { skin.shown.glint = t; glint.setAttribute('transform', t); }
-  }
   // The sheen drifts a little with the light.
   if (SKINS[skin.name].sheen) {
     const t = `translate(${((x - REST_LIGHT.x) * 7).toFixed(2)} ${((y - REST_LIGHT.y) * 4).toFixed(2)})`;

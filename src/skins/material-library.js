@@ -39,10 +39,6 @@ function texture(defs, id, kind) {
   if (kind === 'stripes') {
     svgElement('rect', { width: 14, height: 32, fill: '#fff4f6', opacity: .88 }, pattern);
     svgElement('rect', { x: 20, width: 3, height: 32, fill: '#fff4f6', opacity: .48 }, pattern);
-  } else if (kind === 'brushed') {
-    for (const [y, opacity] of [[1, .19], [3, .10], [6, .17]]) {
-      svgElement('path', { d: `M0 ${y}H8`, stroke: '#fff', 'stroke-width': .45, opacity }, pattern);
-    }
   } else if (kind === 'grain') {
     // A fixed small tile gives the matte finish texture without image assets.
     for (let i = 0; i < 64; i++) {
@@ -54,23 +50,6 @@ function texture(defs, id, kind) {
   } else if (kind === 'dots') {
     for (const [cx, cy] of [[8, 8], [24, 24]]) {
       svgElement('circle', { cx, cy, r: 4.6, fill: '#f6db7b' }, pattern);
-    }
-  } else if (kind === 'pixels') {
-    svgElement('path', { d: 'M0 0H32V32', fill: 'none', stroke: '#9bf6d2', opacity: .11 }, pattern);
-    for (const [x, y, color] of [[2, 2, '#69d8ac'], [10, 2, '#69d8ac'], [10, 10, '#69d8ac'], [22, 22, '#f0d184']]) {
-      svgElement('rect', { x, y, width: 6, height: 6, fill: color, opacity: .65 }, pattern);
-    }
-  } else if (kind === 'wood') {
-    for (let i = -2; i < 18; i++) {
-      const x = i * 8;
-      svgElement('path', {d:`M${x} -5 C${x-22} 25 ${x+26} 42 ${x+8} 69 S${x-12} 104 ${x} 125`, fill:'none', stroke:i%3 ? '#4b2816' : '#efd1a3', 'stroke-width':i%3 ? 1.1 : .8, opacity:.22}, pattern);
-    }
-    for (const r of [4, 9, 15]) svgElement('ellipse', {cx:76,cy:58,rx:r*.55,ry:r,fill:'none',stroke:'#5a321b','stroke-width':1,opacity:.32}, pattern);
-  } else if (kind === 'marble') {
-    const veins = ['M-10 20L40 39 52 68 93 83 116 125 159 144 180 193 230 217','M52 68L22 88 10 125 -10 138','M116 125L141 94 147 63 177 42 190 -10','M159 144L198 130 230 144'];
-    for (const d of veins) {
-      svgElement('path',{d,fill:'none',stroke:'#8ca99c','stroke-width':4,opacity:.15,'stroke-linejoin':'round'},pattern);
-      svgElement('path',{d,fill:'none',stroke:'#5c8073','stroke-width':.8,opacity:.48},pattern);
     }
   } else if (kind === 'denim') {
     svgElement('path',{d:'M-4 8L8-4M0 12L12 0',stroke:'#b9d2df','stroke-width':1,opacity:.34},pattern);
@@ -118,27 +97,14 @@ function texture(defs, id, kind) {
       },pattern);
     }
     svgElement('path',{d:'M156 164h14m-7-7v14M44 40h11m-5.5-5.5v11M177 72h9m-4.5-4.5v9',stroke:'#fff2ce','stroke-width':1,opacity:.95},pattern);
-  } else if (kind === 'lava') {
-    for(const d of ['M4-5L19 25 8 43 36 66 28 94 47 125','M19 25L56 16 75 33 104 19 125 32','M36 66L72 59 90 79 125 65','M90 79L77 105 84 125']) {
-      svgElement('path',{d,fill:'none',stroke:'#e95128','stroke-width':5,'stroke-linejoin':'round',opacity:.82},pattern);
-      svgElement('path',{d,fill:'none',stroke:'#ffcf77','stroke-width':1.25,'stroke-linejoin':'round',opacity:.92},pattern);
-    }
   } else if (kind === 'terrazzo') {
     const colors=['#a47d73','#789b91','#d3a963','#a9a1b8','#e0b2a4'];
     for(let i=0;i<24;i++) {
       const x=(i*29.17)%80,y=(i*i*13.31)%80,s=3+(i%4)*1.4;
       svgElement('path',{d:`M${x} ${y}l${s} ${s*.4} ${-s*.3} ${s} ${-s*.9} ${-s*.3}Z`,fill:colors[i%colors.length],opacity:.75},pattern);
     }
-  } else if (kind === 'cow') {
-    for(const d of ['M-8 14C9 0 37 2 44 23S32 62 10 53-14 69-8 14Z','M96 50C119 34 151 45 154 68S136 99 116 91 84 72 96 50Z','M38 114C50 94 77 101 87 122S73 157 49 151 26 139 38 114Z']) {
-      svgElement('path',{d,fill:'#252735'},pattern);
-    }
   } else if (kind === 'seeds') {
     for(const [cx,cy,angle] of [[13,13,-20],[39,39,25]]) svgElement('ellipse',{cx,cy,rx:1.5,ry:3.2,fill:'#824248',opacity:.75,transform:`rotate(${angle} ${cx} ${cy})`},pattern);
-  } else if (kind === 'honey') {
-    for(const [x,y] of [[0,0],[24,14],[0,28],[48,0],[48,28]]) {
-      svgElement('path',{d:`M${x} ${y-14}l12 7v14l-12 7-12-7v-14Z`,fill:'none',stroke:'#fff3bd','stroke-width':1.4,opacity:.45},pattern);
-    }
   } else if (kind === 'blueprint') {
     for(let p=0;p<=80;p+=10) svgElement('path',{d:`M${p} 0v80M0 ${p}h80`,stroke:'#d0eeff','stroke-width':p%40===0?.7:.35,opacity:p%40===0?.37:.18},pattern);
     svgElement('circle',{cx:40,cy:40,r:21,fill:'none',stroke:'#dbf3ff','stroke-width':.6,opacity:.36},pattern);

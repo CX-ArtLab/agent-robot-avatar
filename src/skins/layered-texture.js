@@ -40,7 +40,6 @@ function drawRibbon(layer, shape, values, key) {
     return node;
   };
   const span = values[`${key}Length`] / 100;
-  if (span <= 0) { layer.replaceChildren(); return; }
   const total = shape.getTotalLength();
   const start = values[`${key}Start`] / 100;
   const fadeRange = values[`${key}FadeRange`] / 100;
