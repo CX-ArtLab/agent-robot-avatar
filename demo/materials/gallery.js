@@ -1,16 +1,24 @@
 import '../../agent-robot-avatar.js';
 import { publicSkins, skinById, skinThumbnail, catalogCategories as materialCategories } from '../skin-catalog.js';
+import { t, skinLanguage, skinTitle, seriesTitle } from '../skins-i18n.js';
 
 const params = new URLSearchParams(location.search);
 const language = params.get('lang') || 'zh-CN';
+const lang = skinLanguage(language);
+document.documentElement.lang = lang;
+document.title = `${t('allSkins', 0, lang)} · Agent Robot Avatar`;
+for (const [selector, key] of [['#back-to-skins', 'backHome'], ['.catalog-header h1', 'allSkins'], ['.search-label .sr-only', 'search'], ['#empty-state p', 'none'], ['#clear-search', 'showAll']]) {
+  document.querySelector(selector).textContent = t(key, 0, lang);
+}
+document.getElementById('skin-search').placeholder = t('search', 0, lang);
 const home = new URL('../skins.html', location.href);
 home.searchParams.set('lang', language);
 if (skinById.has(params.get('skin'))) home.searchParams.set('skin', params.get('skin'));
 document.getElementById('back-to-skins').href = home.href;
-document.getElementById('catalog-count').textContent = `${publicSkins.length} 款`;
+document.getElementById('catalog-count').textContent = t('count', publicSkins.length, lang);
 const grid = document.getElementById('skin-grid');
 const search = document.getElementById('skin-search');
-const categories = [{id:'all', label:'全部', names:publicSkins.map(skin => skin.id)}, ...materialCategories];
+const categories = [{id:'all', label:t('all', 0, lang), labelEn:t('all', 0, lang), names:publicSkins.map(skin => skin.id)}, ...materialCategories];
 let category = categories.some(({id}) => id === params.get('view')) ? params.get('view') : 'all';
 search.value = params.get('q') || '';
 const observer = new IntersectionObserver(entries => {
@@ -19,11 +27,11 @@ const observer = new IntersectionObserver(entries => {
     observer.unobserve(target);
   }
 }, {rootMargin:'160px'});
-for (const {id, label, names} of categories) {
+for (const {id, label, labelEn, names} of categories) {
   const button = document.createElement('button');
   button.type = 'button';
   button.dataset.filter = id;
-  const text=document.createElement('span');text.textContent=label;
+  const text=document.createElement('span');text.textContent=seriesTitle({label, labelEn}, lang);
   const count=document.createElement('span');count.className='filter-count';count.textContent=names.length;
   button.append(text,count);
   button.addEventListener('click', () => { category = id; search.value = ''; render(); });
@@ -32,7 +40,7 @@ for (const {id, label, names} of categories) {
 function render() {
   const query = search.value.trim().toLowerCase();
   const skins = publicSkins.filter(skin => (category === 'all' || categories.find(({id}) => id === category).names.includes(skin.id))
-    && `${skin.label} ${skin.english} ${skin.description}`.toLowerCase().includes(query));
+    && `${skin.id} ${skin.label} ${skin.english} ${skin.description}`.toLowerCase().includes(query));
   const matches = new Set(skins.map(skin => skin.id));
   observer.disconnect();
   const fragment = document.createDocumentFragment();
@@ -44,9 +52,9 @@ function render() {
     const cards=document.createElement('div');cards.className='category-cards';
     const heading = document.createElement('h2');
     heading.className = 'category-heading';
-    heading.textContent = group.label;
+    heading.textContent = seriesTitle(group, lang);
     const count = document.createElement('span');
-    count.textContent = `${members.length} 款`;
+    count.textContent = t('count', members.length, lang);
     heading.append(count);
     heading.id=`category-${group.id}`;section.setAttribute('aria-labelledby',heading.id);
     section.append(heading,cards);fragment.append(section);
@@ -57,7 +65,7 @@ function render() {
       const url = new URL(home);
       url.searchParams.set('skin', skin.id);
       card.href = url.href;
-      card.setAttribute('aria-label', `预览${skin.label}`);
+      card.setAttribute('aria-label', t('preview', skinTitle(skin, lang), lang));
       const stage = document.createElement('div');
       stage.className = 'stage';
       if (skin.stage) stage.style.background = skin.stage;
@@ -68,12 +76,16 @@ function render() {
       const caption = document.createElement('div');
       caption.className = 'caption';
       const label = document.createElement('h3');
-      label.textContent = skin.label;
+      label.textContent = skinTitle(skin, lang);
       const swatch = document.createElement('span');
       swatch.className = 'swatch';
       swatch.style.background = skin.base[1];
       swatch.setAttribute('aria-hidden', 'true');
       label.prepend(swatch);
+      const number = document.createElement('span');
+      number.className = 'skin-number';
+      number.textContent = `#${skin.id}`;
+      label.append(number);
       caption.append(label);
       stage.append(img);
       card.append(stage, caption);
@@ -83,7 +95,8 @@ function render() {
   }
   grid.replaceChildren(fragment);
   document.getElementById('empty-state').hidden = !!skins.length;
-  document.getElementById('catalog-summary').textContent = `${query ? '搜索结果' : categories.find(({id}) => id === category).label} · ${skins.length} 款`;
+  const shown = categories.find(({id}) => id === category);
+  document.getElementById('catalog-summary').textContent = `${query ? t('results', 0, lang) : seriesTitle(shown, lang)} · ${t('count', skins.length, lang)}`;
   document.querySelectorAll('[data-filter]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.filter === category)));
   const url = new URL(location.href);
   if (category === 'all') url.searchParams.delete('view'); else url.searchParams.set('view', category);
@@ -93,6 +106,3 @@ function render() {
 search.addEventListener('input', render);
 document.getElementById('clear-search').addEventListener('click', () => { category = 'all'; search.value = ''; render(); search.focus(); });
 render();
-window.addEventListener('storage',event=>{
-  if(event.key==='robot-public-catalog-revision')location.reload();
-});

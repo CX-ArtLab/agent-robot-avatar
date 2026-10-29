@@ -1,9 +1,10 @@
 import './agent-robot-avatar-demo.js';
 import { restoreAppearance, saveAppearance } from './agent-robot-avatar-demo-appearance.js';
 import { publicSkins, skinById, featured, filters, applySkin, skinThumbnail, storedSkin, SKIN_STORAGE_KEY } from './skin-catalog.js';
+import { t, skinTitle } from './skins-i18n.js';
 
-// New skin copy is reviewed in Chinese first. Existing demo strings and language
-// switching remain owned by the shared demo, including all chat messages.
+// Language switching stays with the shared demo; this page relabels itself
+// whenever the document language changes.
 const face = document.getElementById('face');
 const canvas = document.getElementById('canvas');
 const overlay = document.getElementById('agentOverlay');
@@ -19,16 +20,14 @@ document.getElementById('demoStage').append(name);
 
 const skinOptions = document.createElement('div');
 skinOptions.className = 'demo-options-group skin-options';
-skinOptions.setAttribute('aria-label', '皮肤预览设置');
 skinOptions.innerHTML = `
-  <button type="button" id="compare" aria-pressed="false">对比原版</button>
-  <label class="demo-option demo-toggle"><span>光线跟随</span><input type="checkbox" id="follow-light" checked><span class="demo-switch" aria-hidden="true"></span></label>
-  <label class="demo-option demo-toggle"><span>地面阴影</span><input type="checkbox" id="ground-shadow" checked><span class="demo-switch" aria-hidden="true"></span></label>`;
+  <button type="button" id="compare" aria-pressed="false"></button>
+  <label class="demo-option demo-toggle"><span data-label="light"></span><input type="checkbox" id="follow-light" checked><span class="demo-switch" aria-hidden="true"></span></label>
+  <label class="demo-option demo-toggle"><span data-label="shadow"></span><input type="checkbox" id="ground-shadow" checked><span class="demo-switch" aria-hidden="true"></span></label>`;
 document.querySelector('.demo-options').append(skinOptions);
 const applyLink = document.createElement('a');
 applyLink.id = 'apply-skin';
 applyLink.className = 'demo-skin-entry';
-applyLink.textContent = '在演示中查看';
 applyLink.href = './index.html';
 document.querySelector('.library-footer').prepend(applyLink);
 const compare = document.getElementById('compare');
@@ -39,22 +38,17 @@ let selected = [params.get('skin'), storedSkin(), '2'].find(id => id !== 'classi
 let category = filters.some(([id]) => id === params.get('view')) ? params.get('view') : 'featured';
 search.value = params.get('q') || '';
 let material;
-document.getElementById('collection-count').textContent = `${publicSkins.length} 款`;
 // Reuse the demo styling and valid preview controls, not its color tools.
 // Cloning the dice drops the original palette listener completely.
 const randomSkin = document.getElementById('demoRandomColors').cloneNode(true);
 randomSkin.id = 'random-skin';
 randomSkin.classList.remove('is-new');
 randomSkin.classList.add('skin-random');
-randomSkin.title = '随机皮肤';
-randomSkin.setAttribute('aria-label', '随机皮肤');
 const randomLabel = document.createElement('span');
-randomLabel.textContent = '随机皮肤';
 randomSkin.append(randomLabel);
 document.getElementById('demoColorsGroup').replaceChildren(randomSkin);
 document.getElementById('demoColorPanel').remove();
 document.getElementById('demoStageReset').remove();
-document.querySelector('.controls [data-action="random"]')?.remove();
 restoreAppearance();
 randomSkin.addEventListener('click', () => {
   const choices = publicSkins.filter(skin => skin.id !== selected);
@@ -70,10 +64,9 @@ const thumbnails = new IntersectionObserver(entries => {
   }
 }, { rootMargin: '160px' });
 
-for (const [id, name] of filters) {
+for (const [id] of filters) {
   const button = document.createElement('button');
   button.type = 'button';
-  button.textContent = name;
   button.dataset.filter = id;
   button.setAttribute('aria-pressed', String(id === category));
   button.addEventListener('click', () => { category = id; search.value = ''; writeRoute(true); renderCards(); });
@@ -88,7 +81,7 @@ function renderCards() {
   const list = effectiveCategory === 'featured'
     ? featured.map(id => skinById.get(id)).filter(Boolean)
     : publicSkins.filter(skin => effectiveCategory === 'all' || skin.group === effectiveCategory);
-  const matches = list.filter(skin => `${skin.label} ${skin.english} ${skin.description}`.toLocaleLowerCase().includes(query));
+  const matches = list.filter(skin => `#${skin.id} ${skin.label} ${skin.english} ${skin.description}`.toLocaleLowerCase().includes(query));
   const fragment = document.createDocumentFragment();
   for (const skin of matches) {
     const card = document.createElement('button');
@@ -96,14 +89,14 @@ function renderCards() {
     card.className = 'skin-card';
     card.dataset.skin = skin.id;
     card.setAttribute('aria-pressed', String(skin.id === selected));
-    card.setAttribute('aria-label', skin.label);
+    card.setAttribute('aria-label', skinTitle(skin));
     const img = document.createElement('img');
     img.alt = '';
     img.width = 80;
     img.height = 80;
     img.dataset.skin = skin.id;
     const label = document.createElement('span');
-    label.textContent = skin.label;
+    label.textContent = skinTitle(skin);
     card.append(img, label);
     fragment.append(card);
     thumbnails.observe(img);
@@ -112,8 +105,8 @@ function renderCards() {
   grid.scrollTop = 0;
   grid.hidden = !matches.length;
   document.getElementById('empty-state').hidden = !!matches.length;
-  document.getElementById('results-label').textContent = query ? '搜索结果' : filters.find(([id]) => id === effectiveCategory)[1];
-  document.getElementById('results-count').textContent = `${matches.length} 款`;
+  document.getElementById('results-label').textContent = query ? t('results') : t(effectiveCategory);
+  document.getElementById('results-count').textContent = t('count', matches.length);
   document.querySelectorAll('[data-filter]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.filter === effectiveCategory)));
 }
 
@@ -174,11 +167,11 @@ function selectSkin(id, updateUrl = true) {
   if (selected !== id) face.reset();
   selected = id;
   compare.setAttribute('aria-pressed', 'false');
-  compare.textContent = '对比原版';
+  compare.textContent = t('compare');
   compare.disabled = id === 'classic';
   material = applySkin(face, id);
   syncShadow();
-  name.textContent = skin.label;
+  name.textContent = `${skinTitle(skin)} · #${id}`;
   for (const card of grid.querySelectorAll('.skin-card')) card.setAttribute('aria-pressed', String(card.dataset.skin === id));
   if (updateUrl) writeRoute();
   updateLinks();
@@ -200,8 +193,8 @@ compare.addEventListener('click', () => {
   const original = compare.getAttribute('aria-pressed') !== 'true';
   material?.setOriginal(original);
   compare.setAttribute('aria-pressed', String(original));
-  compare.textContent = original ? '返回皮肤' : '对比原版';
-  name.textContent = original ? '原版（对比）' : skinById.get(selected).label;
+  compare.textContent = original ? t('back') : t('compare');
+  name.textContent = original ? t('original') : `${skinTitle(skinById.get(selected))} · #${selected}`;
 });
 canvas.addEventListener('pointermove', event => {
   if (!light.checked) return;
@@ -213,13 +206,39 @@ canvas.addEventListener('pointerleave', resetLight);
 light.addEventListener('change', resetLight);
 shadow.addEventListener('change', syncShadow);
 new MutationObserver(syncShadow).observe(overlay, { attributes: true, attributeFilter: ['class'] });
-new MutationObserver(updateLinks).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+// Every label on this page, in the current language.
+function relabel() {
+  skinOptions.setAttribute('aria-label', t('settings'));
+  for (const node of skinOptions.querySelectorAll('[data-label]')) node.textContent = t(node.dataset.label);
+  const original = compare.getAttribute('aria-pressed') === 'true';
+  compare.textContent = original ? t('back') : t('compare');
+  name.textContent = original ? t('original') : `${skinTitle(skinById.get(selected))} · #${selected}`;
+  applyLink.textContent = t('inDemo');
+  randomSkin.title = t('random');
+  randomSkin.setAttribute('aria-label', t('random'));
+  randomLabel.textContent = t('random');
+  for (const button of document.querySelectorAll('[data-filter]')) button.textContent = t(button.dataset.filter);
+  document.getElementById('collection-count').textContent = t('count', publicSkins.length);
+  document.getElementById('library-title').textContent = t('skins');
+  document.getElementById('skin-home').textContent = t('backFeatured');
+  document.getElementById('all-skins-link').textContent = `${t('allSkins')} ↗`;
+  search.placeholder = t('search');
+  document.querySelector('.search-label .sr-only').textContent = t('search');
+  document.querySelector('#empty-state p').textContent = t('none');
+  document.getElementById('clear-search').textContent = t('showAll');
+  const nav = document.querySelectorAll('.demo-nav a');
+  nav[0].textContent = t('demo');
+  nav[1].textContent = t('skins');
+  document.title = `${t('skins')} · Agent Robot Avatar`;
+  renderCards();
+}
+new MutationObserver(() => { relabel(); updateLinks(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
 for (const link of [applyLink, document.getElementById('demo-link')]) link.addEventListener('click', () => {
   saveAppearance();
   try { localStorage.setItem(SKIN_STORAGE_KEY, selected); } catch { /* URL also carries the selection. */ }
 });
 selectSkin(selected);
-renderCards();
+relabel();
 const { balanceControls } = await import('./agent-robot-avatar-demo-layout.js');
 balanceControls();
 document.documentElement.classList.remove('skin-initializing');

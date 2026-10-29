@@ -5,7 +5,7 @@ import { featured, demoSkins } from './skin-catalog-data.js';
 // showcase needs: filters, stage colors, a demo-only floor shadow, and a light
 // that follows the pointer over the whole stage.
 export { featured };
-export const catalogCategories = SKIN_SERIES.map(series => ({ id: series.id, label: series.title, names: [...series.skins] }));
+export const catalogCategories = SKIN_SERIES.map(series => ({ id: series.id, label: series.title, labelEn: series.titleEn, names: [...series.skins] }));
 export const filters = [
   ['featured', '精选'], ['all', '全部'], ['metal', '金属'], ['glaze', '釉面与透明'],
   ['soft', '柔软'], ['natural', '自然'], ['pattern', '图案'],
