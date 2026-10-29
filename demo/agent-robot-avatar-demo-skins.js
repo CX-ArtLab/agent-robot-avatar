@@ -14,7 +14,7 @@ const skinButton = document.createElement('a');
 skinButton.className = 'demo-skin-page-link is-new';
 skinButton.href = './skins.html';
 skinButton.dataset.skinLink = '';
-// The icon is a picture of skin 103, so the demo page loads no skin code for it.
+// The icon is a picture of skin 402, so the demo page loads no skin code for it.
 skinButton.innerHTML = '<img class="demo-skin-head" src="./skin-entry.webp" width="24" height="24" alt="">'
   + '<span></span>'
   + '<svg class="demo-skin-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg>';
