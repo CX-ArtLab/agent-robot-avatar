@@ -1,5 +1,7 @@
 import { restoreAppearance, saveAppearance } from './agent-robot-avatar-demo-appearance.js';
 import { t } from './skins-i18n.js';
+import { SKIN_NAMES } from '../agent-robot-avatar.js';
+const SKIN_COUNT = SKIN_NAMES.length;
 const face = document.getElementById('face');
 const params = new URLSearchParams(location.search);
 const storageKey = 'agentRobotAvatarDemoSkin';
@@ -8,13 +10,16 @@ navigation.className = 'demo-nav';
 navigation.setAttribute('aria-label', '页面导航');
 navigation.innerHTML = '<a href="./index.html" aria-current="page">演示</a><a href="./skins.html" data-skin-link>皮肤</a>';
 document.getElementById('canvas').append(navigation);
-// A labelled way into the skins, next to the color tools.
+// The way into the skins: its own button under the controls, with the usual
+// "opens another page" mark so it never reads as a panel toggle.
 const skinButton = document.createElement('a');
-skinButton.className = 'demo-panel-toggle demo-skin-button is-new';
+skinButton.className = 'demo-skin-page-link';
 skinButton.href = './skins.html';
 skinButton.dataset.skinLink = '';
-skinButton.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="8" width="16" height="12.5" rx="4"/><path d="M12 8V5"/><circle cx="12" cy="4" r="1.2"/><circle class="demo-skin-eye" cx="9.4" cy="14.2" r="1.5"/><circle class="demo-skin-eye" cx="14.6" cy="14.2" r="1.5"/></svg><span></span>';
-document.getElementById('demoColorsGroup').append(skinButton);
+skinButton.innerHTML = '<svg class="demo-skin-head" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="8" width="16" height="12.5" rx="4"/><path d="M12 8V5"/><circle cx="12" cy="4" r="1.2"/><circle class="demo-skin-eye" cx="9.4" cy="14.2" r="1.5"/><circle class="demo-skin-eye" cx="14.6" cy="14.2" r="1.5"/></svg>'
+  + '<span></span>'
+  + '<svg class="demo-skin-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg>';
+document.querySelector('.demo-control-stack').append(skinButton);
 
 restoreAppearance();
 
@@ -35,8 +40,8 @@ function updateLinks() {
   const links = navigation.querySelectorAll('a');
   links[0].textContent = t('demo');
   links[1].textContent = t('skins');
-  skinButton.querySelector('span').textContent = t('skins');
-  skinButton.title = t('skins');
+  skinButton.querySelector('span').textContent = t('browse', SKIN_COUNT);
+  skinButton.title = t('openSkins');
   for (const link of document.querySelectorAll('[data-skin-link]')) {
     const url = new URL('./skins.html', location.href);
     url.searchParams.set('skin', selected);
