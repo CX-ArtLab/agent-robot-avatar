@@ -26,12 +26,58 @@ const search = document.getElementById('skin-search');
 const categories = [{id:'all', label:t('all', 0, lang), labelEn:t('all', 0, lang), names:publicSkins.map(skin => skin.id)}, ...materialCategories];
 let category = categories.some(({id}) => id === params.get('view')) ? params.get('view') : 'all';
 search.value = params.get('q') || '';
+// Cards show a still picture of their skin. The ones near the pointer swap it
+// for a live avatar whose eyes and light follow the pointer, and swap back once
+// the pointer has moved on, so only a handful animate at a time.
 const observer = new IntersectionObserver(entries => {
   for (const {isIntersecting, target} of entries) if (isIntersecting) {
-    skinThumbnail(target.dataset.skin).then(url => { target.src = url; });
+    skinThumbnail(target.dataset.skin).then(url => { target.querySelector('img').src = url; });
     observer.unobserve(target);
   }
 }, {rootMargin:'160px'});
+
+const NEAR = 260, FAR = 340;
+const live = new Map();
+function wake(slot) {
+  if (live.has(slot)) { live.get(slot).seen = performance.now(); return; }
+  const avatar = document.createElement('agent-robot-avatar');
+  avatar.setAttribute('size', '96');
+  avatar.setAttribute('auto-sleep', '0');
+  avatar.setAttribute('skin', slot.dataset.skin);
+  slot.append(avatar);
+  slot.classList.add('is-live');
+  live.set(slot, { avatar, seen: performance.now() });
+}
+function rest(slot) {
+  live.get(slot)?.avatar.remove();
+  slot.classList.remove('is-live');
+  live.delete(slot);
+}
+let pointer = null, frame = 0, settle = 0;
+// Measured only when the pointer moves, plus once after it stops so the cards
+// it left behind can go back to their pictures.
+function follow() {
+  frame = 0;
+  if (!pointer) return;
+  const now = performance.now();
+  for (const slot of grid.querySelectorAll('.avatar-slot')) {
+    const box = slot.getBoundingClientRect();
+    if (box.bottom < -FAR || box.top > innerHeight + FAR) { if (live.has(slot)) rest(slot); continue; }
+    const distance = Math.hypot(box.left + box.width / 2 - pointer.x, box.top + box.height / 2 - pointer.y);
+    if (distance < NEAR) wake(slot);
+    // The eyes settle back to the middle before the picture returns.
+    else if (live.has(slot) && distance > FAR && now - live.get(slot).seen > 900) rest(slot);
+  }
+  clearTimeout(settle);
+  if (live.size) settle = setTimeout(follow, 1000);
+}
+function moved(x, y) {
+  pointer = { x, y };
+  if (!frame) frame = requestAnimationFrame(follow);
+}
+addEventListener('pointermove', event => moved(event.clientX, event.clientY), { passive: true });
+addEventListener('scroll', () => pointer && moved(pointer.x, pointer.y), { passive: true });
+document.addEventListener('pointerleave', () => moved(-1e4, -1e4));
 for (const {id, label, labelEn, names} of categories) {
   const button = document.createElement('button');
   button.type = 'button';
@@ -77,11 +123,14 @@ function render() {
       const stage = document.createElement('div');
       stage.className = 'stage';
       if (skin.stage) stage.style.background = skin.stage;
+      const slot = document.createElement('div');
+      slot.className = 'avatar-slot';
+      slot.dataset.skin = skin.id;
       const img = document.createElement('img');
       img.alt = '';
-      img.width = img.height = 120;
-      img.dataset.skin = skin.id;
-      stage.append(img);
+      img.width = img.height = 96;
+      slot.append(img);
+      stage.append(slot);
       const caption = document.createElement('div');
       caption.className = 'caption';
       const swatch = document.createElement('span');
@@ -103,13 +152,12 @@ function render() {
       number.addEventListener('click', () => copySkinNumber(skin.id, number, lang));
       card.append(link, number);
       cards.append(card);
-      observer.observe(img);
+      observer.observe(slot);
     }
   }
+  for (const slot of [...live.keys()]) rest(slot);
   grid.replaceChildren(fragment);
   document.getElementById('empty-state').hidden = !!skins.length;
-  const shown = categories.find(({id}) => id === category);
-  document.getElementById('catalog-summary').textContent = `${query ? t('results', 0, lang) : seriesTitle(shown, lang)} · ${t('count', skins.length, lang)}`;
   document.querySelectorAll('[data-filter]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.filter === category)));
   const url = new URL(location.href);
   if (category === 'all') url.searchParams.delete('view'); else url.searchParams.set('view', category);

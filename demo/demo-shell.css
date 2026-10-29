@@ -16,3 +16,8 @@
 .demo-skin-page-link:focus-visible{outline:2px solid #777d86;outline-offset:3px}
 .demo-skin-page-link .demo-skin-head{display:block;width:24px;height:24px;margin:-3px 0}
 @media(prefers-reduced-motion:reduce){.demo-skin-page-link{transition:none}.demo-skin-page-link:hover{transform:none}}
+/* The skins tab shimmers on hover in the pastel sheen of the new skins: two
+   rounds of the same colors, so sliding by one round loops seamlessly. */
+.demo-nav a[data-skin-link]:hover,.demo-nav a[data-skin-link]:focus-visible{color:#2f2a3a;background:linear-gradient(110deg,#d6c1ff,#ffb6da,#a9d0ff,#ffd2b6,#d6c1ff,#ffb6da,#a9d0ff,#ffd2b6,#d6c1ff);background-size:200% 100%;animation:demo-skin-sheen 2.2s linear infinite}
+@keyframes demo-skin-sheen{from{background-position:0 0}to{background-position:100% 0}}
+@media(prefers-reduced-motion:reduce){.demo-nav a[data-skin-link]:hover,.demo-nav a[data-skin-link]:focus-visible{animation:none}}

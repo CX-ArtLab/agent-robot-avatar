@@ -11,7 +11,6 @@
 .catalog-content .filters button[aria-pressed="true"]{background:#dfe1e4;color:#202327}
 .filter-count{font-size:11px;color:#a0a5ab;font-variant-numeric:tabular-nums}
 .catalog-results{min-width:0}
-#catalog-summary{margin:4px 2px 12px;font-size:11px;color:#858990}
 .catalog-sections{display:flex;flex-direction:column;gap:18px}
 .catalog-category{padding:18px 20px 20px;border:1px solid #e1e3e5;border-radius:16px}
 .category-heading{display:flex;align-items:baseline;gap:8px;margin:0 0 14px;font-size:13px;font-weight:600;color:#555b63}
@@ -23,7 +22,10 @@
 .catalog-content .stage{position:relative;align-self:stretch;display:grid;place-items:center;aspect-ratio:1/1;background:#f1f2f3}
 /* A soft floor shadow, for showing the skins only. */
 .catalog-content .stage::after{content:"";position:absolute;bottom:15%;left:30%;right:30%;height:6%;background:radial-gradient(ellipse,rgba(10,16,32,.16),transparent 70%);pointer-events:none}
-.catalog-content .skin-card img{position:relative;z-index:1;width:62%;height:auto;aspect-ratio:1/1}
+.catalog-content .avatar-slot{position:relative;z-index:1;display:grid;place-items:center;width:96px;height:96px}
+/* Clicks go to the card's link; the eyes follow the pointer from anywhere. */
+.catalog-content .avatar-slot img,.catalog-content .avatar-slot agent-robot-avatar{grid-area:1/1;width:96px;height:96px;pointer-events:none}
+.catalog-content .avatar-slot.is-live img{visibility:hidden}
 .catalog-content .caption{display:flex;align-self:stretch;align-items:center;gap:7px;padding:11px 64px 12px 12px;min-width:0}
 .catalog-content .swatch{flex-shrink:0;width:8px;height:8px;border-radius:50%}
 .catalog-content .skin-card .skin-label{display:block;text-align:left;flex:1;min-width:0;font-size:12px;font-weight:600;color:#555b63;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}

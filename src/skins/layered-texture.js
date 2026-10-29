@@ -137,10 +137,25 @@ export function createLayerTexture(defs,id,name,el,gradient) {
   add('edge','use',{href:'#headShape',fill:'none',filter:blur('edge')},p);
   setLayers(key => nodes.get(key),values,shape);
   p._layerValues = values;
-  // Keep the curved highlights attached to the animated head during squeezing.
+  // Keep the curved highlights attached to the animated head. Tracing them is
+  // costly, so a squeeze or drag redraws them at once, while the tiny changes
+  // of idle breathing redraw them a few times a second.
+  let drawn = shape.getBBox(), drawnAt = performance.now(), pending = 0;
+  const redraw = () => {
+    pending = 0;
+    if (!p.isConnected) return;
+    for (const key of arcLayers) drawRibbon(nodes.get(key),shape,p._layerValues,key);
+    drawn = shape.getBBox();
+    drawnAt = performance.now();
+  };
   const observer = new MutationObserver(() => {
     if (!p.isConnected) { observer.disconnect(); return; }
-    for (const key of arcLayers) drawRibbon(nodes.get(key),shape,p._layerValues,key);
+    const box = shape.getBBox();
+    const moved = Math.max(Math.abs(box.x - drawn.x), Math.abs(box.y - drawn.y),
+      Math.abs(box.width - drawn.width), Math.abs(box.height - drawn.height));
+    if (moved > 1.5) redraw();
+    // Under half a pixel the ribbons would look the same.
+    else if (moved > .5 && !pending) pending = setTimeout(redraw, Math.max(0, 250 - (performance.now() - drawnAt)));
   });
   observer.observe(shape,{attributes:true,attributeFilter:['d']});
   return p;

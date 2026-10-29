@@ -9,7 +9,6 @@ markDotSeen('nav-skins');
 // Language switching stays with the shared demo; this page relabels itself
 // whenever the document language changes.
 const face = document.getElementById('face');
-const canvas = document.getElementById('canvas');
 const overlay = document.getElementById('agentOverlay');
 const grid = document.getElementById('skin-grid');
 const search = document.getElementById('skin-search');
@@ -218,13 +217,22 @@ compare.addEventListener('click', () => {
   name.textContent = original ? t('original') : skinTitle(skinById.get(selected));
   showNumber(original ? null : selected);
 });
-canvas.addEventListener('pointermove', event => {
+// The eyes and the light follow the pointer only while it is over the stage, so
+// reaching for the expression buttons below does not make the avatar look down.
+const stage = document.getElementById('demoStage');
+const followToggle = document.getElementById('demoPointerFollow');
+let overStage = false;
+const syncFollow = () => face.setPointerFollow(overStage && (followToggle?.checked ?? true));
+stage.addEventListener('pointerenter', () => { overStage = true; syncFollow(); });
+stage.addEventListener('pointerleave', () => { overStage = false; syncFollow(); resetLight(); });
+followToggle?.addEventListener('change', syncFollow);
+syncFollow();
+stage.addEventListener('pointermove', event => {
   if (!light.checked) return;
-  const bounds = canvas.getBoundingClientRect();
+  const bounds = stage.getBoundingClientRect();
   material?.light((event.clientX - bounds.left) / bounds.width * 2 - 1, (event.clientY - bounds.top) / bounds.height * 2 - 1);
 });
 function resetLight() { material?.light(-.5, -.5); }
-canvas.addEventListener('pointerleave', resetLight);
 light.addEventListener('change', resetLight);
 shadow.addEventListener('change', syncShadow);
 new MutationObserver(syncShadow).observe(overlay, { attributes: true, attributeFilter: ['class'] });
