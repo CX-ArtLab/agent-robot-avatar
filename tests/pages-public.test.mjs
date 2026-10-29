@@ -43,11 +43,11 @@ test('published JS module imports resolve inside the artifact', () => {
     }
   }
 });
-test('featured skins are varied, unique and exclude the unskinned original', () => {
-  assert.equal(featured.length, 15);
+test('featured skins are the chosen ones, unique and exclude the unskinned original', () => {
+  assert.deepEqual(featured, ['101', '102', '201', '206', '302', '310', '403', '504', '510', '505', '611', '711',
+    '805', '906', '914', '926', '1008', '1102', '1207', '1303', '1401', '1402', '1409', '1503']);
   assert.equal(new Set(featured).size, featured.length);
   assert.ok(featured.every(id => id !== 'classic' && skinById.has(id)));
-  assert.equal(new Set(featured.map(id => skinById.get(id).group)).size, 5);
   assert.ok(publicSkins.every(skin => skin.id !== 'classic'));
 });
 
