@@ -4,7 +4,7 @@ All notable user-facing changes to Agent Robot Avatar are documented here.
 
 The project follows Semantic Versioning for public releases. Internal development build numbers are not part of the public version history.
 
-## [Unreleased]
+## [0.7.0] - 2026-10-29
 
 ### Added
 
