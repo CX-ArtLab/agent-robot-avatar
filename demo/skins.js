@@ -47,7 +47,8 @@ const compare = document.getElementById('compare');
 const light = document.getElementById('follow-light');
 const shadow = document.getElementById('ground-shadow');
 const params = new URLSearchParams(location.search);
-let selected = [params.get('skin'), storedSkin(), '2'].find(id => id !== 'classic' && skinById.has(id));
+// A link or the last visit picks the skin; otherwise the first featured one.
+let selected = [params.get('skin'), storedSkin(), featured[0]].find(id => id !== 'classic' && skinById.has(id)) || publicSkins[0].id;
 let category = filters.some(([id]) => id === params.get('view')) ? params.get('view') : 'featured';
 search.value = params.get('q') || '';
 let material;

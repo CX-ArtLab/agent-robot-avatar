@@ -27,3 +27,14 @@ test('ice skin previews and catalog thumbnails preserve the original eye colors'
     expect(exportedEye, `${skin} thumbnail`).toBe(color);
   }
 });
+
+test('the skin page opens on a featured skin when the saved one no longer exists', async ({page}) => {
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  // A number from before the skins were renumbered.
+  await page.addInitScript(() => localStorage.setItem('agentRobotAvatarDemoSkin', 'blueglaze'));
+  await page.goto('/demo/skins.html?lang=zh-CN');
+  await expect(page.locator('html')).not.toHaveClass(/skin-initializing/);
+  await expect.poll(() => page.evaluate(() => document.getElementById('face').getSkin())).toBe('102');
+  expect(errors).toEqual([]);
+});
