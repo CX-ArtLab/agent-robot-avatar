@@ -44,7 +44,7 @@ test('published JS module imports resolve inside the artifact', () => {
   }
 });
 test('featured skins are the chosen ones, unique and exclude the unskinned original', () => {
-  assert.deepEqual(featured, ['101', '102', '201', '206', '302', '310', '403', '504', '510', '505', '611', '711',
+  assert.deepEqual(featured, ['101', '102', '201', '206', '302', '310', '403', '504', '510', '705', '611', '711',
     '805', '906', '914', '926', '1008', '1102', '1207', '1303', '1401', '1402', '1409', '1503']);
   assert.equal(new Set(featured).size, featured.length);
   assert.ok(featured.every(id => id !== 'classic' && skinById.has(id)));
