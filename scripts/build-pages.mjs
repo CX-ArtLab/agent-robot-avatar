@@ -14,6 +14,12 @@ await cp(path.join(root, 'src'), path.join(output, 'src'), {recursive:true});
 for (const file of publicDemoFiles) {
   const destination = path.resolve(output, file);
   if (!destination.startsWith(`${output}${path.sep}`)) throw new Error(`Invalid public path: ${file}`);
+  // Pictures are copied as they are; only text files need their paths moved.
+  if (/\.(?:webp|png|gif|svg)$/.test(file)) {
+    await mkdir(path.dirname(destination), {recursive:true});
+    await cp(path.join(demo, file), destination);
+    continue;
+  }
   let source = await readFile(path.join(demo, file), 'utf8');
   // The deployed demo sits at the artifact root, one directory above local demo/.
   // The demo moves up one level: demo/ becomes the root, next to src/.

@@ -16,6 +16,6 @@
 .demo-skin-page-link:hover{background:#fff;box-shadow:0 9px 32px rgba(0,0,0,.12);transform:translateY(-1px)}
 .demo-skin-page-link:focus-visible{outline:2px solid #777d86;outline-offset:3px}
 .demo-skin-page-link svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.demo-skin-page-link .demo-skin-eye{fill:currentColor;stroke:none}
+.demo-skin-page-link .demo-skin-head{display:block;width:24px;height:24px;margin:-3px 0}
 .demo-skin-page-link .demo-skin-open{width:15px;height:15px;margin-left:2px;color:#72777e}
 @media(prefers-reduced-motion:reduce){.demo-skin-page-link{transition:none}.demo-skin-page-link:hover{transform:none}}

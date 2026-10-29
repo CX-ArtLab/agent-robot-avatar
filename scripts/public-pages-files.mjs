@@ -8,5 +8,6 @@ export const publicDemoFiles = [
   'agent-robot-avatar-demo-roundness.js', 'agent-robot-avatar-demo-layout.js',
   'agent-robot-avatar-demo-dialog-i18n.js', 'agent-robot-avatar-demo-chat-avatar-mode.js',
   'agent-robot-avatar-demo-reply-loop.js',
+  'skin-entry.webp',
   'materials/index.html', 'materials/gallery.js', 'materials/gallery.css',
 ];
