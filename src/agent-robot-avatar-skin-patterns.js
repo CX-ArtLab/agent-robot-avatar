@@ -20,21 +20,7 @@ function wrap(size, x, y, r, draw) {
   return out;
 }
 
-function ring(cx, cy, f, steps = 64, squash = 1) {
-  let d = '';
-  for (let i = 0; i <= steps; i++) {
-    const a = i / steps * Math.PI * 2;
-    const r = f(a);
-    d += `${i ? 'L' : 'M'}${n(cx + Math.cos(a) * r)} ${n(cy + Math.sin(a) * r * squash)}`;
-  }
-  return `${d}Z`;
-}
-
-// A small 3D helper for balls: polygons on a unit sphere are rotated, their
-// edges bent along the surface, and drawn back to front with an orthographic
-// view centred on the head.
-const norm = ([x, y, z]) => { const l = Math.hypot(x, y, z) || 1; return [x / l, y / l, z / l]; };
-const mixv = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
+// Turns a point on the unit sphere, for the patterns drawn on balls.
 function rotate([x, y, z], [yaw, pitch, roll]) {
   let c = Math.cos(yaw), s = Math.sin(yaw);
   [x, z] = [x * c + z * s, -x * s + z * c];
@@ -44,93 +30,10 @@ function rotate([x, y, z], [yaw, pitch, roll]) {
   [x, y] = [x * c - y * s, x * s + y * c];
   return [x, y, z];
 }
-function sphereFaces(faces, angles, radius, cx = 120, cy = 120, steps = 6) {
-  const drawn = [];
-  for (const face of faces) {
-    const points = face.points.map(p => rotate(norm(p), angles));
-    const center = norm(points.reduce((a, p) => [a[0] + p[0], a[1] + p[1], a[2] + p[2]], [0, 0, 0]));
-    if (center[2] < -.35) continue;
-    let d = '';
-    points.forEach((p, i) => {
-      const q = points[(i + 1) % points.length];
-      for (let k = 0; k < steps; k++) {
-        const [x, y] = norm(mixv(p, q, k / steps));
-        d += `${i || k ? 'L' : 'M'}${n(cx + x * radius)} ${n(cy + y * radius)}`;
-      }
-    });
-    drawn.push({ z: center[2], d: `${d}Z`, face, center: [cx + center[0] * radius, cy + center[1] * radius] });
-  }
-  return drawn.sort((a, b) => a.z - b.z);
-}
 
-function truncatedIcosahedron() {
-  const t = (1 + Math.sqrt(5)) / 2;
-  const v = [[-1, t, 0], [1, t, 0], [-1, -t, 0], [1, -t, 0], [0, -1, t], [0, 1, t], [0, -1, -t], [0, 1, -t], [t, 0, -1], [t, 0, 1], [-t, 0, -1], [-t, 0, 1]];
-  const edge = Math.hypot(...v[0].map((x, i) => x - v[1][i]));
-  const near = (a, b) => Math.abs(Math.hypot(...v[a].map((x, i) => x - v[b][i])) - edge) < 1e-6;
-  const faces = [];
-  // Pentagons around each icosahedron vertex, hexagons inside each triangle.
-  const order = (center, pts) => {
-    const c = norm(center), up = Math.abs(c[1]) < .9 ? [0, 1, 0] : [1, 0, 0];
-    const ux = norm([up[1] * c[2] - up[2] * c[1], up[2] * c[0] - up[0] * c[2], up[0] * c[1] - up[1] * c[0]]);
-    const uy = [c[1] * ux[2] - c[2] * ux[1], c[2] * ux[0] - c[0] * ux[2], c[0] * ux[1] - c[1] * ux[0]];
-    return pts.sort((a, b) => Math.atan2(a.reduce((s, x, i) => s + x * uy[i], 0), a.reduce((s, x, i) => s + x * ux[i], 0)) - Math.atan2(b.reduce((s, x, i) => s + x * uy[i], 0), b.reduce((s, x, i) => s + x * ux[i], 0)));
-  };
-  for (let a = 0; a < 12; a++) {
-    const pts = [];
-    for (let b = 0; b < 12; b++) if (b !== a && near(a, b)) pts.push(mixv(v[a], v[b], 1 / 3));
-    faces.push({ kind: 'pentagon', points: order(v[a], pts) });
-  }
-  for (let a = 0; a < 12; a++) for (let b = a + 1; b < 12; b++) for (let c = b + 1; c < 12; c++) {
-    if (!near(a, b) || !near(b, c) || !near(a, c)) continue;
-    const pts = [mixv(v[a], v[b], 1 / 3), mixv(v[a], v[b], 2 / 3), mixv(v[b], v[c], 1 / 3), mixv(v[b], v[c], 2 / 3), mixv(v[c], v[a], 1 / 3), mixv(v[c], v[a], 2 / 3)];
-    faces.push({ kind: 'hexagon', points: order(mixv(mixv(v[a], v[b], .5), v[c], 1 / 3), pts) });
-  }
-  return faces;
-}
 
-function icosahedron() {
-  const t = (1 + Math.sqrt(5)) / 2;
-  const v = [[-1, t, 0], [1, t, 0], [-1, -t, 0], [1, -t, 0], [0, -1, t], [0, 1, t], [0, -1, -t], [0, 1, -t], [t, 0, -1], [t, 0, 1], [-t, 0, -1], [-t, 0, 1]].map(norm);
-  const edge = Math.hypot(...v[0].map((x, i) => x - v[1][i]));
-  const near = (a, b) => Math.abs(Math.hypot(...v[a].map((x, i) => x - v[b][i])) - edge) < 1e-6;
-  const triangles = [];
-  for (let a = 0; a < 12; a++) for (let b = a + 1; b < 12; b++) for (let c = b + 1; c < 12; c++) {
-    if (near(a, b) && near(b, c) && near(a, c)) triangles.push([v[a], v[b], v[c]]);
-  }
-  return { vertices: v, triangles };
-}
 
-// A circle on the unit sphere around a direction, as a polygon.
-function sphereCircle(center, radius, steps = 40) {
-  const c = norm(center), up = Math.abs(c[1]) < .9 ? [0, 1, 0] : [1, 0, 0];
-  const ux = norm([up[1] * c[2] - up[2] * c[1], up[2] * c[0] - up[0] * c[2], up[0] * c[1] - up[1] * c[0]]);
-  const uy = [c[1] * ux[2] - c[2] * ux[1], c[2] * ux[0] - c[0] * ux[2], c[0] * ux[1] - c[1] * ux[0]];
-  const points = [];
-  for (let i = 0; i < steps; i++) {
-    const a = i / steps * Math.PI * 2, s = Math.sin(radius), k = Math.cos(radius);
-    points.push(norm([c[0] * k + (ux[0] * Math.cos(a) + uy[0] * Math.sin(a)) * s, c[1] * k + (ux[1] * Math.cos(a) + uy[1] * Math.sin(a)) * s, c[2] * k + (ux[2] * Math.cos(a) + uy[2] * Math.sin(a)) * s]));
-  }
-  return points;
-}
 
-function cubePanels() {
-  // Six panel groups, one per cube face, each cut into three strips; neighbouring
-  // groups run at right angles, as on an indoor volleyball.
-  const faces = [];
-  const axes = [[0, 1, 2], [1, 2, 0], [2, 0, 1]];
-  for (const [ai, bi, ci] of axes) for (const sign of [1, -1]) {
-    for (let k = 0; k < 3; k++) {
-      const corner = (u, w) => { const p = [0, 0, 0]; p[ai] = sign; p[bi] = u; p[ci] = w; return p; };
-      const u0 = -1 + k * 2 / 3, u1 = u0 + 2 / 3;
-      const pts = [];
-      for (let i = 0; i <= 4; i++) pts.push(corner(u0, -1 + i / 2));
-      for (let i = 0; i <= 4; i++) pts.push(corner(u1, 1 - i / 2));
-      faces.push({ kind: 'strip', strip: k, group: ai * 2 + (sign > 0 ? 0 : 1), points: pts });
-    }
-  }
-  return faces;
-}
 
 const PATTERNS = {
   tartan({ colors: [a, b, c], size = 56 }) {
@@ -175,16 +78,6 @@ const PATTERNS = {
     }
     return { size: [240, 240], body };
   },
-  wood({ colors: [c], seed = 23 }) {
-    const random = rng(seed);
-    let body = '';
-    for (let k = 1; k < 34; k++) {
-      const base = k * 11 + random() * 4, p1 = random() * 6, p2 = random() * 6;
-      const d = ring(60, 330, a => base + Math.sin(a * 3 + p1) * 3 + Math.sin(a * 7 + p2) * 1.5, 120, .62);
-      body += `<path d="${d}" fill="none" stroke="${c}" stroke-width="${n(.8 + random() * 1.4)}" opacity="${n(.25 + random() * .3)}"/>`;
-    }
-    return { size: [240, 240], body };
-  },
   pixel({ colors, cell = 10, size = 80, seed = 31, opacity = .9 }) {
     const random = rng(seed);
     let body = '';
@@ -205,18 +98,6 @@ const PATTERNS = {
     }
     return { size: [size, size], body };
   },
-  rainbow({ colors, opacity = .85 }) {
-    const h = 240 / colors.length;
-    return { size: [240, 240], body: colors.map((c, i) => `<rect y="${n(i * h)}" width="240" height="${n(h + .5)}" fill="${c}" opacity="${opacity}"/>`).join('') };
-  },
-  denim({ colors: [c], size = 5, opacity = .16 }) {
-    return { size: [size, size], transform: 'rotate(-30)', body: `<rect width="1.6" height="${size}" fill="${c}" opacity="${opacity}"/><rect x="3" width=".8" height="${size}" fill="#000" opacity=".12"/>` };
-  },
-  grid({ colors: [c], size = 50, step = 10, opacity = .5 }) {
-    let body = `<path d="M0 0H${size}M0 0V${size}" stroke="${c}" stroke-width="1.6" opacity="${opacity}"/>`;
-    for (let i = step; i < size; i += step) body += `<path d="M0 ${i}H${size}M${i} 0V${size}" stroke="${c}" stroke-width=".7" opacity="${opacity * .7}"/>`;
-    return { size: [size, size], body };
-  },
   halftone({ colors: [c], step = 12, opacity = .7 }) {
     let body = '';
     for (let y = 6; y < 240; y += step) for (let x = 6 + ((y / step) % 2) * step / 2; x < 240; x += step) {
@@ -234,21 +115,6 @@ const PATTERNS = {
       body += wrap(size, x, y, r * 1.3, (px, py) => `<g transform="translate(${n(px)} ${n(py)}) rotate(${n(turn)})">${art}</g>`);
     }
     return { size: [size, size], body };
-  },
-  brick({ colors: [c], w = 40, h = 20, opacity = .8 }) {
-    const r = h / 2;
-    return { size: [w, h], body: `<path d="M0 0H${w}M0 ${r}H${w}M0 0V${r}M${w / 2} 0V${r}M${w / 4} ${r}V${h}M${w * .75} ${r}V${h}" stroke="${c}" stroke-width="1.6" opacity="${opacity}"/>` };
-  },  swirl({ colors, seed = 73 }) {
-    // Soft marbled resin: wide translucent loops with a few thin bright threads.
-    const random = rng(seed);
-    let body = '';
-    for (let i = 0; i < 9; i++) {
-      const color = colors[i % colors.length], x = random() * 240, y = random() * 240, r = 40 + random() * 70;
-      const d = `M${n(x - r)} ${n(y)}C${n(x - r)} ${n(y - r * 1.1)} ${n(x + r)} ${n(y - r * .6)} ${n(x + r * .6)} ${n(y + r * .2)}S${n(x - r * .2)} ${n(y + r)} ${n(x - r * .8)} ${n(y + r * .5)}`;
-      body += `<path d="${d}" fill="none" stroke="${color}" stroke-width="${n(14 + random() * 20)}" stroke-linecap="round" opacity="${n(.22 + random() * .2)}"/>`;
-      if (i % 3 === 0) body += `<path d="${d}" fill="none" stroke="#ffffff" stroke-width="1" opacity=".35"/>`;
-    }
-    return { size: [240, 240], body };
   },
   grooves({ colors: [line, shadow], radius = 138, angles = [.5, -.45, .2] }) {
     // A modern ball: rings of fine grooves wrapping the surface in three directions.
@@ -275,19 +141,6 @@ const PATTERNS = {
       defs: tex => `<pattern id="${tex}" patternUnits="userSpaceOnUse" width="6" height="6"><circle cx="3" cy="3" r=".9" fill="${grain}" opacity=".32"/></pattern>`,
       body: tex => `<rect width="240" height="240" fill="url(#${tex})"/><path d="M120 0V240M0 120H240M52 18Q100 120 52 222M188 18Q140 120 188 222" fill="none" stroke="#ffd2a6" stroke-width="2.4" stroke-linecap="round" opacity=".55" transform="translate(1.2 1.6)"/><path d="M120 0V240M0 120H240M52 18Q100 120 52 222M188 18Q140 120 188 222" fill="none" stroke="${seam}" stroke-width="3.4" stroke-linecap="round"/>`,
     };
-  },
-  soccer({ colors: [light, line] }) {
-    // A pitch seen from above: mowing stripes, touchlines, the halfway line and a
-    // centre circle that the two eyes stand in, with a penalty area at each end.
-    let stripes = '';
-    for (let x = 0; x < 240; x += 40) stripes += `<rect x="${x}" width="20" height="240" fill="${light}" opacity=".22"/>`;
-    const box = side => {
-      const x0 = side < 0 ? 34 : 206, d = side < 0 ? 1 : -1;
-      return `M${x0} 80H${x0 + d * 30}V160H${x0}M${x0} 102H${x0 + d * 12}V138H${x0}M${x0 + d * 30} 104A22 22 0 0 ${side < 0 ? 1 : 0} ${x0 + d * 30} 136`;
-    };
-    const lines = `M34 40H206V200H34ZM120 40V200M120 61A59 59 0 0 1 120 179A59 59 0 0 1 120 61Z${box(-1)}${box(1)}`
-      + 'M34 48A8 8 0 0 0 42 40M198 40A8 8 0 0 0 206 48M206 192A8 8 0 0 0 198 200M42 200A8 8 0 0 0 34 192';
-    return { size: [240, 240], body: `${stripes}<path d="${lines}" fill="none" stroke="${line}" stroke-width="2.6" stroke-linejoin="round" opacity=".92"/><circle cx="120" cy="120" r="2.6" fill="${line}"/>` };
   },
 
 
@@ -329,29 +182,6 @@ const PATTERNS = {
     return { size: [240, 240], body: `<path d="${curve(0)}" fill="none" stroke="${seam}" stroke-width="15" stroke-linecap="round" opacity=".55"/><path d="${curve(0)}" fill="none" stroke="${seam}" stroke-width="2"/><path d="${rows}" fill="none" stroke="${stitch}" stroke-width="1.5" stroke-linecap="round"/>` };
   },
 
-  volleyball({ colors, seam, radius = 150, angles = [-.422, .38, 4], clear = [[86, 126], [154, 126]] }) {
-    // Leather panels that puff up like the real ball: every panel is white in the
-    // middle and darkens softly toward its seams, and the seams are deep grooves.
-    // Three panel groups meet on the forehead; around the eyes the shading fades
-    // out so the eyes never sit on a seam.
-    const drawn = sphereFaces(cubePanels(), angles, radius, 120, 120, 10);
-    const grooves = drawn.map(f => f.d).join('');
-    const puff = drawn.map((f, i) => `<g clip-path="url(#__TEX__-c${i})">`
-      + `<path d="${f.d}" fill="none" stroke="${seam}" stroke-width="16" stroke-linejoin="round" opacity=".42" filter="url(#__TEX__-soft)"/>`
-      + '</g>').join('');
-    return {
-      size: [240, 240],
-      defs: tex => drawn.map((f, i) => `<clipPath id="${tex}-c${i}"><path d="${f.d}"/></clipPath>`).join('')
-        + `<filter id="${tex}-soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="6"/></filter>`
-        + `<radialGradient id="${tex}-fade"><stop offset=".6" stop-color="#000"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>`
-        + `<mask id="${tex}-clear" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" x="-20" y="-20" width="280" height="280"><rect x="-20" y="-20" width="280" height="280" fill="#fff"/>`
-        + clear.map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="48" ry="44" fill="url(#${tex}-fade)"/>`).join('') + '</mask>',
-      body: tex => drawn.map(f => `<path d="${f.d}" fill="${colors[0]}"/>`).join('')
-        + `<g mask="url(#${tex}-clear)">${puff.replaceAll('__TEX__', tex)}`
-        + `<path d="${grooves}" fill="none" stroke="#ffffff" stroke-width="1.3" stroke-linejoin="round" opacity=".9" transform="translate(.9 1.3)"/>`
-        + `<path d="${grooves}" fill="none" stroke="${seam}" stroke-width="2.6" stroke-linejoin="round" opacity=".85"/></g>`,
-    };
-  },
 
 
 
@@ -364,20 +194,6 @@ const PATTERNS = {
     const w = 15, h = w * Math.sqrt(3);
     const dimple = (x, y) => `<circle cx="${n(x)}" cy="${n(y)}" r="${r}" fill="${shade}" opacity=".55"/><circle cx="${n(x + .9)}" cy="${n(y + 1)}" r="${n(r * .55)}" fill="${shine}" opacity=".8"/>`;
     return { size: [w, n(h)], body: dimple(0, 0) + dimple(w, 0) + dimple(w / 2, h / 2) + dimple(0, h) + dimple(w, h) };
-  },
-  beachball({ colors }) {
-    let body = '';
-    const pole = [120, 8], count = colors.length;
-    for (let i = 0; i < count; i++) {
-      const a0 = Math.PI * (.08 + .84 * i / count), a1 = Math.PI * (.08 + .84 * (i + 1) / count);
-      body += `<path d="M${pole[0]} ${pole[1]}L${n(pole[0] + Math.cos(a0) * 400)} ${n(pole[1] + Math.sin(a0) * 400)}L${n(pole[0] + Math.cos(a1) * 400)} ${n(pole[1] + Math.sin(a1) * 400)}Z" fill="${colors[i]}"/>`;
-    }
-    let edges = '';
-    for (let i = 1; i < count; i++) {
-      const a = Math.PI * (.08 + .84 * i / count);
-      edges += `M${pole[0]} ${pole[1]}L${n(pole[0] + Math.cos(a) * 400)} ${n(pole[1] + Math.sin(a) * 400)}`;
-    }
-    return { size: [240, 240], body: `${body}<path d="${edges}" stroke="#000000" stroke-width="2.2" opacity=".1"/><path d="${edges}" stroke="#ffffff" stroke-width=".9" opacity=".5" transform="translate(-1 0)"/><circle cx="${pole[0]}" cy="${pole[1] + 18}" r="16" fill="#ffffff"/>` };
   },
   football({ colors: [lace, grain, seam] }) {
     // Lying on its side: laces run along the top, stripes ring both ends.
