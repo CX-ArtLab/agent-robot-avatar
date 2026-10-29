@@ -8,16 +8,18 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 ### Added
 
-- Added 188 skins in 17 series: glazes, ice glass, gummy, candy glass, acrylic, jelly, gradients, frosted glass, metals, gems and ceramics, wood, balls, clear and shimmer, fabric and leather, sweets and fruit, nature, and patterns. A skin is chosen by its permanent number, `skin="301"` or `setSkin(301)`: the series number followed by two digits, so 305 is the fifth skin of series 3. Titles may be reworded later; numbers never change and are never reused. Light follows the pointer the same way the eyes do, and every expression and gesture works with a skin; in `love` the two eyes join into one heart. Removing the skin brings back the `color` attribute. An unknown number in markup logs a warning and falls back to the flat color; `setSkin()` throws for it.
-- Added the `SKINS`, `SKIN_SERIES` and `SKIN_NAMES` exports for building skin pickers: each skin's Chinese and English titles and colors, the series, and every number in display order.
-- Skin code downloads the first time a page uses a skin, so pages without skins never load it. `loadSkins()` loads it in advance.
-- Added the lite build, `agent-robot-avatar/lite`: the same avatar and expressions without any skin code, for pages that never use skins.
-- The demo has a skin gallery with featured skins, every skin by series, search, and a button that copies a skin's number.
+- 188 skins in 17 series. Pick one by number with `skin="301"` or `setSkin(301)`; `setSkin(null)` goes back to the flat color.
+- Skin numbers are permanent: the series number plus two digits, so 305 is the fifth skin of series 3. New skins take the next free number, and numbers are never reused.
+- Every skin works with every expression and gesture, and its light follows the pointer.
+- `SKINS`, `SKIN_SERIES` and `SKIN_NAMES` list the skins, for building a skin picker.
+- Skin code loads only when a page uses a skin. `loadSkins()` loads it in advance.
+- `agent-robot-avatar/lite`: the same avatar without any skin code.
+- The demo has a Skin Gallery and a page with every skin.
 
 ### Changed
 
-- A large avatar no longer looks further toward the pointer than a small one for the same pointer movement.
-- The package no longer includes the translated READMEs or the support images; they remain on GitHub.
+- A large avatar no longer looks further toward the pointer than a small one.
+- The npm package no longer includes the translated READMEs and support images; they stay on GitHub.
 
 ## [0.6.0] - 2026-10-23
 
