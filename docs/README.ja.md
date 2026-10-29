@@ -42,7 +42,7 @@ Agent Robot Avatar は、AG-UI スタイルの Agent インターフェースに
 - Reduced Motion 対応
 - 設定可能なスリープ動作
 - 頭部の丸みを調整可能
-- 光がポインターを追う 42 種類の素材・柄スキン
+- 17 シリーズ・188 種類の番号付きスキン。光はポインターを追います
 - TypeScript 型定義を同梱
 
 ## インストール
@@ -148,7 +148,7 @@ try {
 | `motion` | モーション方針：`auto`、`reduce`、`full` |
 | `press-squeeze` | 中央を長押しして圧縮。`false` で無効化 |
 | `antenna-drag` | アンテナのドラッグ、ばね復帰、怒り反応。`false` で無効化 |
-| `skin` | 素材：`obsidian`, `porcelain`, `gold` … (42)。省略すると単色 |
+| `skin` | スキン番号 `1`–`188`。省略すると単色 |
 
 よく使うランタイム制御：
 
@@ -163,26 +163,40 @@ avatar.setAntennaDrag(true);
 
 ## スキン
 
-5 系統・42 種類のスキン。光はポインターを追いかけます：
+17 シリーズ・188 種類のスキン。光はポインターを追いかけます。各スキンの番号は固定です：名前は今後変わることがありますが、番号は変わりません。
 
 ```html
-<agent-robot-avatar skin="obsidian"></agent-robot-avatar>
+<agent-robot-avatar skin="13"></agent-robot-avatar>
 ```
 
 ```js
-avatar.setSkin('porcelain'); // 下の一覧の名前
-avatar.setSkin(null);        // 単色に戻す
+avatar.setSkin(2);    // '2' でも可
+avatar.setSkin(null); // 単色に戻す
 ```
 
-| 系統 | スキン |
-| --- | --- |
-| ガラスと宝石 | `obsidian`, `midnight`, `jade`, `amber`, `ruby`, `sapphire`, `emerald`, `neon` |
-| 磁器・パステル・粘土 | `porcelain`, `pearl`, `sakura`, `mint`, `lavender`, `lemon`, `sky`, `peach`, `terracotta` |
-| メタル | `gold`, `silver`, `copper`, `titanium`, `rose-gold`, `graphite` |
-| グラデーション | `aurora`, `ocean`, `forest`, `candy` |
-| プリント柄 | `tartan`, `polka`, `terrazzo`, `marble`, `black-marble`, `wood`, `pixel`, `confetti`, `rainbow`, `denim`, `graph-paper`, `halftone`, `leaves`, `blossoms`, `brick` |
+すべてのスキンと番号は[スキン一覧](https://cx-artlab.github.io/agent-robot-avatar/materials/)で確認できます。
 
-`SKIN_NAMES` で全名称を取得でき、スキン選択 UI などに使えます。
+| シリーズ | 番号 |
+| --- | --- |
+| グレーズ | 1–6 |
+| アイスガラス | 7–12 |
+| グミ | 13–24 |
+| キャンディガラス | 25–30 |
+| アクリル | 31–42 |
+| ゼリー | 43–54 |
+| グラデーション | 55–66 |
+| すりガラス | 67–72 |
+| メタル | 73–102 |
+| 宝石と陶磁器 | 103–114 |
+| 木 | 115–120 |
+| ボール | 121–130 |
+| 透明・きらめき | 131–135 |
+| 布と革 | 136–147 |
+| スイーツとフルーツ | 148–159 |
+| 自然 | 160–171 |
+| 柄とテック | 172–188 |
+
+スキンの描画コードは初めてスキンを使うときに読み込まれ、スキンを使わないページでは読み込まれません。`await loadSkins()` で事前に読み込めます。`SKINS` は各スキンの中国語・英語名と色、`SKIN_SERIES` はシリーズ、`SKIN_NAMES` は全番号です。
 
 すべての表情とジェスチャーはスキンと一緒に使えます。スキンを外すと `color` 属性が再び適用されます。
 

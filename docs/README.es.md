@@ -42,7 +42,7 @@ Agent Robot Avatar también puede utilizarse como capa de retroalimentación vis
 - Compatibilidad con movimiento reducido
 - Comportamiento de sueño configurable
 - Redondez de la cabeza ajustable
-- 42 skins de materiales y estampados con luz que sigue al puntero
+- 188 skins numerados en 17 series, con luz que sigue al puntero
 - Declaraciones TypeScript incluidas
 
 ## Instalación
@@ -148,7 +148,7 @@ try {
 | `motion` | Política de movimiento: `auto`, `reduce` o `full` |
 | `press-squeeze` | Mantener pulsado el centro para comprimir; `false` lo desactiva |
 | `antenna-drag` | Arrastre y rebote de antena con reacción de enfado; `false` lo desactiva |
-| `skin` | Material: `obsidian`, `porcelain`, `gold` … (42); omítelo para el color plano |
+| `skin` | Número de skin, `1`–`188`; omítelo para el color plano |
 
 Controles habituales en tiempo de ejecución:
 
@@ -163,26 +163,40 @@ Mantener pulsado el centro inicia la compresión. Al mover más de 4 píxeles CS
 
 ## Skins
 
-42 skins en cinco familias, con una luz que sigue al puntero:
+188 skins en 17 series, con una luz que sigue al puntero. Cada skin tiene un número permanente: los nombres pueden cambiar, los números nunca.
 
 ```html
-<agent-robot-avatar skin="obsidian"></agent-robot-avatar>
+<agent-robot-avatar skin="13"></agent-robot-avatar>
 ```
 
 ```js
-avatar.setSkin('porcelain'); // cualquier nombre de la lista
-avatar.setSkin(null);        // vuelve al color plano
+avatar.setSkin(2);    // o '2'
+avatar.setSkin(null); // vuelve al color plano
 ```
 
-| Familia | Skins |
-| --- | --- |
-| Vidrio y gemas | `obsidian`, `midnight`, `jade`, `amber`, `ruby`, `sapphire`, `emerald`, `neon` |
-| Porcelana, pastel y arcilla | `porcelain`, `pearl`, `sakura`, `mint`, `lavender`, `lemon`, `sky`, `peach`, `terracotta` |
-| Metal | `gold`, `silver`, `copper`, `titanium`, `rose-gold`, `graphite` |
-| Degradados | `aurora`, `ocean`, `forest`, `candy` |
-| Estampados | `tartan`, `polka`, `terrazzo`, `marble`, `black-marble`, `wood`, `pixel`, `confetti`, `rainbow`, `denim`, `graph-paper`, `halftone`, `leaves`, `blossoms`, `brick` |
+Consulta todos los skins con su número en la [galería de skins](https://cx-artlab.github.io/agent-robot-avatar/materials/).
 
-La exportación `SKIN_NAMES` enumera todos los nombres, por ejemplo para crear un selector.
+| Serie | Números |
+| --- | --- |
+| Esmalte | 1–6 |
+| Vidrio hielo | 7–12 |
+| Gominola | 13–24 |
+| Vidrio caramelo | 25–30 |
+| Acrílico | 31–42 |
+| Gelatina | 43–54 |
+| Degradado | 55–66 |
+| Vidrio esmerilado | 67–72 |
+| Metal | 73–102 |
+| Gemas y cerámica | 103–114 |
+| Madera | 115–120 |
+| Pelotas | 121–130 |
+| Transparente y brillo | 131–135 |
+| Tela y cuero | 136–147 |
+| Dulces y fruta | 148–159 |
+| Naturaleza | 160–171 |
+| Estampados y tecnología | 172–188 |
+
+El código que pinta los skins se descarga la primera vez que se usa uno, así que una página sin skins nunca lo carga. `await loadSkins()` lo carga por adelantado. `SKINS` contiene los nombres en chino e inglés y los colores de cada skin, `SKIN_SERIES` las series y `SKIN_NAMES` todos los números.
 
 Todas las expresiones y gestos funcionan con un skin. Al quitar el skin, el atributo `color` vuelve a aplicarse.
 

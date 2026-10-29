@@ -42,7 +42,7 @@ Agent Robot Avatar 还可作为 AG-UI 风格 Agent 界面的视觉反馈层。
 - 支持减少动态效果
 - 可配置自动睡眠行为
 - 可调头部圆角
-- 42 种材质与图案皮肤，光线跟随鼠标
+- 188 款编号皮肤，分 17 个系列，光线跟随鼠标
 - 内置 TypeScript 类型声明
 
 ## 安装
@@ -148,7 +148,7 @@ try {
 | `motion` | 动态效果策略：`auto`、`reduce` 或 `full` |
 | `press-squeeze` | 按住头像中心进行挤压；设为 `false` 可关闭 |
 | `antenna-drag` | 拖动天线、弹簧复原并接愤怒表情；设为 `false` 可关闭 |
-| `skin` | 材质：`obsidian`, `porcelain`, `gold` … (42)；不写则为纯色 |
+| `skin` | 皮肤编号 `1`–`188`；不写则为纯色 |
 
 常用运行时控制：
 
@@ -163,26 +163,40 @@ avatar.setAntennaDrag(true);
 
 ## 皮肤
 
-共 42 种皮肤，分五类，光线会跟随鼠标：
+共 188 款皮肤，分 17 个系列，光线会跟随鼠标。每款皮肤都有固定编号：名字以后可能调整，编号永远不变。
 
 ```html
-<agent-robot-avatar skin="obsidian"></agent-robot-avatar>
+<agent-robot-avatar skin="13"></agent-robot-avatar>
 ```
 
 ```js
-avatar.setSkin('porcelain'); // 下方任一名称
-avatar.setSkin(null);        // 回到纯色
+avatar.setSkin(2);    // 也可以写 '2'
+avatar.setSkin(null); // 回到纯色
 ```
 
-| 类别 | 皮肤 |
-| --- | --- |
-| 玻璃与宝石 | `obsidian`, `midnight`, `jade`, `amber`, `ruby`, `sapphire`, `emerald`, `neon` |
-| 瓷、粉彩与陶土 | `porcelain`, `pearl`, `sakura`, `mint`, `lavender`, `lemon`, `sky`, `peach`, `terracotta` |
-| 金属 | `gold`, `silver`, `copper`, `titanium`, `rose-gold`, `graphite` |
-| 渐变 | `aurora`, `ocean`, `forest`, `candy` |
-| 印花图案 | `tartan`, `polka`, `terrazzo`, `marble`, `black-marble`, `wood`, `pixel`, `confetti`, `rainbow`, `denim`, `graph-paper`, `halftone`, `leaves`, `blossoms`, `brick` |
+所有皮肤及编号见[皮肤馆](https://cx-artlab.github.io/agent-robot-avatar/materials/)。
 
-`SKIN_NAMES` 导出了全部名称，可用于制作皮肤选择器。
+| 系列 | 编号 |
+| --- | --- |
+| 彩色玻璃 | 1–6 |
+| 淡彩玻璃 | 7–12 |
+| 软糖 | 13–24 |
+| 糖果玻璃 | 25–30 |
+| 亚克力 | 31–42 |
+| 果冻 | 43–54 |
+| 渐变 | 55–66 |
+| 磨砂玻璃 | 67–72 |
+| 磨砂金属 | 73–102 |
+| 宝石与陶瓷 | 103–114 |
+| 木 | 115–120 |
+| 球类 | 121–130 |
+| 透明与流光 | 131–135 |
+| 织物与皮革 | 136–147 |
+| 甜点与水果 | 148–159 |
+| 自然 | 160–171 |
+| 图案与科技 | 172–188 |
+
+皮肤的绘制代码在第一次用到皮肤时才下载，不用皮肤的页面完全不加载。`await loadSkins()` 可以提前加载。`SKINS` 提供每款皮肤的中英文名称和颜色，`SKIN_SERIES` 提供系列，`SKIN_NAMES` 提供全部编号。
 
 所有表情和手势都能配合皮肤使用。去掉皮肤后，`color` 属性会重新生效。
 

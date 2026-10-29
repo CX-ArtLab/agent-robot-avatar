@@ -42,7 +42,7 @@ Built with SVG and vanilla JavaScript, it works as a native custom element with 
 - Reduced-motion support
 - Configurable sleep behavior
 - Adjustable head roundness
-- 42 material and pattern skins with light that follows the pointer
+- 188 numbered skins in 17 series, with light that follows the pointer
 - TypeScript declarations included
 
 ## Install
@@ -148,7 +148,7 @@ try {
 | `motion` | Motion policy: `auto`, `reduce`, or `full` |
 | `press-squeeze` | Center press-and-hold squeeze; set to `false` to disable |
 | `antenna-drag` | Antenna drag, spring return, and angry reaction; set to `false` to disable |
-| `skin` | Material: `obsidian`, `porcelain`, `gold` … (42); leave it out for the flat color |
+| `skin` | Skin number, `1`–`188`; leave it out for the flat color |
 
 Common runtime controls:
 
@@ -163,26 +163,40 @@ The avatar center begins the squeeze interaction. Moving more than 4 CSS pixels 
 
 ## Skins
 
-42 skins in five families. Light follows the pointer:
+188 skins in 17 series, with light that follows the pointer. Every skin has a permanent number: titles may be reworded later, numbers never change.
 
 ```html
-<agent-robot-avatar skin="obsidian"></agent-robot-avatar>
+<agent-robot-avatar skin="13"></agent-robot-avatar>
 ```
 
 ```js
-avatar.setSkin('porcelain'); // any name below
-avatar.setSkin(null);        // back to the flat color
+avatar.setSkin(2);    // or '2'
+avatar.setSkin(null); // back to the flat color
 ```
 
-| Family | Skins |
-| --- | --- |
-| Glass and gems | `obsidian`, `midnight`, `jade`, `amber`, `ruby`, `sapphire`, `emerald`, `neon` |
-| Porcelain, pastel and clay | `porcelain`, `pearl`, `sakura`, `mint`, `lavender`, `lemon`, `sky`, `peach`, `terracotta` |
-| Metal | `gold`, `silver`, `copper`, `titanium`, `rose-gold`, `graphite` |
-| Gradients | `aurora`, `ocean`, `forest`, `candy` |
-| Printed patterns | `tartan`, `polka`, `terrazzo`, `marble`, `black-marble`, `wood`, `pixel`, `confetti`, `rainbow`, `denim`, `graph-paper`, `halftone`, `leaves`, `blossoms`, `brick` |
+See every skin with its number in the [skin gallery](https://cx-artlab.github.io/agent-robot-avatar/materials/).
 
-The `SKIN_NAMES` export lists every name, for example to build a picker.
+| Series | Numbers |
+| --- | --- |
+| Glaze | 1–6 |
+| Ice glass | 7–12 |
+| Gummy | 13–24 |
+| Candy glass | 25–30 |
+| Acrylic | 31–42 |
+| Jelly | 43–54 |
+| Gradient | 55–66 |
+| Frosted glass | 67–72 |
+| Metal | 73–102 |
+| Gems and ceramics | 103–114 |
+| Wood | 115–120 |
+| Balls | 121–130 |
+| Clear and shimmer | 131–135 |
+| Fabric and leather | 136–147 |
+| Sweets and fruit | 148–159 |
+| Nature | 160–171 |
+| Patterns and tech | 172–188 |
+
+Skin painters download the first time a skin is used, so a page without skins never loads them. `await loadSkins()` loads them in advance. `SKINS` holds each skin’s Chinese and English titles and colors, `SKIN_SERIES` the series, and `SKIN_NAMES` every number.
 
 Every expression and gesture works with a skin. When the skin is removed, the `color` attribute applies again.
 

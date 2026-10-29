@@ -42,7 +42,7 @@ Agent Robot Avatar는 AG-UI 스타일 Agent 인터페이스를 위한 시각적 
 - Reduced Motion 지원
 - 설정 가능한 수면 동작
 - 조절 가능한 머리 둥글기
-- 빛이 포인터를 따라가는 42가지 재질·패턴 스킨
+- 17개 시리즈, 188가지 번호 스킨. 빛이 포인터를 따라갑니다
 - TypeScript 선언 포함
 
 ## 설치
@@ -148,7 +148,7 @@ try {
 | `motion` | 모션 정책: `auto`, `reduce`, `full` |
 | `press-squeeze` | 중앙을 길게 눌러 압축; `false`로 비활성화 |
 | `antenna-drag` | 안테나 드래그, 스프링 복귀, 화난 반응; `false`로 비활성화 |
-| `skin` | 재질: `obsidian`, `porcelain`, `gold` … (42). 생략하면 단색 |
+| `skin` | 스킨 번호 `1`–`188`. 생략하면 단색 |
 
 자주 쓰는 런타임 제어:
 
@@ -163,26 +163,40 @@ avatar.setAntennaDrag(true);
 
 ## 스킨
 
-다섯 계열, 42가지 스킨이 있으며 빛이 포인터를 따라갑니다:
+17개 시리즈, 188가지 스킨이 있으며 빛이 포인터를 따라갑니다. 모든 스킨에는 고정 번호가 있습니다. 이름은 바뀔 수 있지만 번호는 바뀌지 않습니다.
 
 ```html
-<agent-robot-avatar skin="obsidian"></agent-robot-avatar>
+<agent-robot-avatar skin="13"></agent-robot-avatar>
 ```
 
 ```js
-avatar.setSkin('porcelain'); // 아래 목록의 이름
-avatar.setSkin(null);        // 단색으로 돌아가기
+avatar.setSkin(2);    // '2'도 가능
+avatar.setSkin(null); // 단색으로 돌아가기
 ```
 
-| 계열 | 스킨 |
-| --- | --- |
-| 유리와 보석 | `obsidian`, `midnight`, `jade`, `amber`, `ruby`, `sapphire`, `emerald`, `neon` |
-| 도자기·파스텔·점토 | `porcelain`, `pearl`, `sakura`, `mint`, `lavender`, `lemon`, `sky`, `peach`, `terracotta` |
-| 금속 | `gold`, `silver`, `copper`, `titanium`, `rose-gold`, `graphite` |
-| 그라데이션 | `aurora`, `ocean`, `forest`, `candy` |
-| 프린트 패턴 | `tartan`, `polka`, `terrazzo`, `marble`, `black-marble`, `wood`, `pixel`, `confetti`, `rainbow`, `denim`, `graph-paper`, `halftone`, `leaves`, `blossoms`, `brick` |
+모든 스킨과 번호는 [스킨 갤러리](https://cx-artlab.github.io/agent-robot-avatar/materials/)에서 볼 수 있습니다.
 
-`SKIN_NAMES`로 모든 이름을 가져와 스킨 선택기 등을 만들 수 있습니다.
+| 시리즈 | 번호 |
+| --- | --- |
+| 글레이즈 | 1–6 |
+| 아이스 글라스 | 7–12 |
+| 젤리곰 | 13–24 |
+| 캔디 글라스 | 25–30 |
+| 아크릴 | 31–42 |
+| 젤리 | 43–54 |
+| 그라데이션 | 55–66 |
+| 반투명 유리 | 67–72 |
+| 메탈 | 73–102 |
+| 보석과 도자기 | 103–114 |
+| 나무 | 115–120 |
+| 공 | 121–130 |
+| 투명·반짝임 | 131–135 |
+| 패브릭과 가죽 | 136–147 |
+| 디저트와 과일 | 148–159 |
+| 자연 | 160–171 |
+| 패턴과 테크 | 172–188 |
+
+스킨 그리기 코드는 스킨을 처음 쓸 때 내려받으므로, 스킨을 쓰지 않는 페이지는 이를 불러오지 않습니다. `await loadSkins()`로 미리 불러올 수 있습니다. `SKINS`는 각 스킨의 중국어·영어 이름과 색상을, `SKIN_SERIES`는 시리즈를, `SKIN_NAMES`는 모든 번호를 제공합니다.
 
 모든 표정과 제스처를 스킨과 함께 쓸 수 있습니다. 스킨을 제거하면 `color` 속성이 다시 적용됩니다.
 
