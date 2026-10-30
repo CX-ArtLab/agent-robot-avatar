@@ -155,6 +155,10 @@ try {
   // Swapping the colours trades eye and background on screen.
   await page.locator('#color-swap').click();
   assert.deepEqual(await page.evaluate(()=>[document.getElementById('eye-color').value,document.getElementById('bg-color').value]),['#000000','#ffffff']);
+  // A palette puts the face colour on the panel and the background colour in the eyes.
+  await page.locator('#palettes [title="Claude"]').click();
+  assert.deepEqual(await page.evaluate(()=>[document.getElementById('eye-color').value,document.getElementById('bg-color').value]),['#faf9f5','#d97757']);
+  assert.equal(await page.locator('#palettes [title="Claude"]').getAttribute('aria-pressed'),'true');
   await page.locator('#color-reset').click();
   // Layout is remembered per screen.
   await choose('landscape');

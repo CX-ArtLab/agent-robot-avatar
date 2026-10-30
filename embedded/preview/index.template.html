@@ -158,6 +158,16 @@ html,body{height:auto}
 .wiring code{font:11px ui-monospace,monospace;background:#fff;border-radius:5px;padding:2px 5px}
 .wiring a{color:#4a6fa5}
 .colors-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto auto;gap:6px}
+/* The Web demo's palettes, turned for a screen: the face colour around a
+   round eye in the background colour. */
+.swatches{display:grid;grid-template-columns:repeat(8,26px);justify-content:center;gap:8px 8px;padding-top:2px}
+.swatch{position:relative;width:26px;height:26px;padding:0;border-radius:7px;background:var(--face);box-shadow:inset 0 0 0 1px rgba(0,0,0,.1);transition:transform .15s ease,box-shadow .15s ease}
+.swatch::before{content:'';position:absolute;left:50%;top:50%;width:11px;height:11px;margin:-5.5px 0 0 -5.5px;border-radius:50%;background:var(--eye);box-shadow:0 0 0 .5px rgba(0,0,0,.08)}
+.swatch:hover{background:var(--face);transform:translateY(-2px) scale(1.08)}
+.swatch:active{transform:none}
+.swatch[aria-pressed=true]{box-shadow:0 0 0 2px #25282c}
+.swatch[aria-pressed=true]:hover{transform:none}
+@media(prefers-reduced-motion:reduce){.swatch{transition:none}}
 .icon-button{display:grid;place-items:center;width:36px;padding:0!important}
 .icon-button svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 #size-error{font-size:11px;color:#a36f78}
@@ -286,6 +296,7 @@ html,body{height:auto}
       <button type="button" class="small-button icon-button" id="color-swap" title="互换眼睛和底色" aria-label="互换眼睛和底色"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h15l-4-4M20 16H5l4 4"/></svg></button>
       <button type="button" class="small-button" id="color-reset" title="恢复白眼睛、黑底色">恢复</button>
     </div>
+    <div class="swatches" id="palettes" role="group" aria-label="配色"></div>
     <div class="field" id="mono-options"><span>OLED 发光</span><div class="seg push" id="mono-chips" role="group" aria-label="OLED 发光颜色"></div></div>
   </section>
 

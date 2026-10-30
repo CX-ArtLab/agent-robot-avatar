@@ -28,6 +28,15 @@
   const ZOOM_SNAPS = [1,1.5,2,3,4,5,6,8,10,12,16];
   const BARE_PITCH_MM = .15; // presets without physical data (raw canvas, custom sizes)
   const DEFAULT_COLORS = {eye:'#ffffff',bg:'#000000'};
+  // The Web demo's palettes. There the head sits on the background and the
+  // eyes show the background through; on a screen the face fills the panel
+  // and the eyes take the background colour.
+  const PALETTES = [
+    ['Claude','#faf9f5','#d97757'],['ChatGPT','#ffffff','#0fa578'],['ComfyUI','#211927','#f2ff59'],['Ubuntu','#e95420','#ffffff'],
+    ['Dribbble','#ea4c89','#ffffff'],['Discord','#5865f2','#ffffff'],['Telegram','#229ed9','#ffffff'],['Snapchat','#fffc00','#000000'],
+    ['YouTube','#ffffff','#ff0000'],['Netflix','#141414','#e50914'],['Spotify','#121212','#1ed760'],['湖人','#fdb927','#552583'],
+    ['勇士','#1d428a','#ffc72c'],['凯尔特人','#007a33','#ffffff'],['巴萨','#a50044','#edbb00'],['曼城','#6cabdd','#1c2c5b']
+  ].map(([name,eye,bg])=>({name,eye,bg}));
   // Gaze settings for the simulated nearby object. The library exposes them
   // all; the preview keeps one switch and these defaults.
   const GAZE = {radius:72,range:1,holdMs:600,responseMs:140,motionPx:3};
@@ -382,7 +391,11 @@
   }
   function syncControls() {
     const oled=base.panel==='oled';
-    $('color-options').hidden=oled;$('mono-options').hidden=!oled;
+    $('color-options').hidden=oled;$('palettes').hidden=oled;$('mono-options').hidden=!oled;
+    document.querySelectorAll('[data-palette]').forEach(b=>{
+      const p=PALETTES[Number(b.dataset.palette)];
+      b.setAttribute('aria-pressed',String(p.eye===colors.eye&&p.bg===colors.bg));
+    });
     document.querySelectorAll('[data-mono]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mono===mono)));
     $('eye-color').value=colors.eye;$('bg-color').value=colors.bg;
     // Square and round screens look the same turned, so there is nothing to rotate.
@@ -585,6 +598,16 @@
       $('eye-color').oninput=()=>{colors.eye=$('eye-color').value;saveColors();};
       $('bg-color').oninput=()=>{colors.bg=$('bg-color').value;saveColors();};
       $('color-reset').onclick=()=>{colors={...DEFAULT_COLORS};saveColors();};
+      $('palettes').append(...PALETTES.map((p,i)=>{
+        const b=document.createElement('button');b.type='button';b.className='swatch';b.dataset.palette=String(i);
+        b.title=p.name;b.style.setProperty('--face',p.bg);b.style.setProperty('--eye',p.eye);
+        b.setAttribute('aria-label',p.name);b.setAttribute('aria-pressed','false');return b;
+      }));
+      $('palettes').onclick=event=>{
+        const b=event.target.closest('[data-palette]');if(!b)return;
+        const p=PALETTES[Number(b.dataset.palette)];colors={eye:p.eye,bg:p.bg};saveColors();
+      };
+      syncControls();
       $('color-swap').onclick=()=>{colors={eye:colors.bg,bg:colors.eye};saveColors();};
       $('mono-chips').onclick=event=>{const b=event.target.closest('[data-mono]');if(b){mono=b.dataset.mono;store.set('mono',mono);syncControls();renderPanel();}};
       for(const id of ['show-area','glass-glare'])$(id).onchange=()=>{resizeDisplay();saveSettings();};
