@@ -8,7 +8,7 @@
 
 ![Version](https://img.shields.io/badge/version-v0.7.1-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](./LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
-![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square)
+![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square) ![Hardware](https://img.shields.io/badge/Hardware-ESP32%20%7C%20Pico-E7352C?style=flat-square&logo=espressif&logoColor=white)
 
 A lightweight, expressive robot avatar Web Component for AI agents and interactive applications.
 
@@ -20,13 +20,15 @@ Agent Robot Avatar can also be used as a visual feedback layer for AG-UI-style a
 
 Built with SVG and vanilla JavaScript, it works as a native custom element with zero runtime dependencies.
 
+**New: the same eyes on real hardware.** A C++ [hardware version](#hardware-version--new) brings the expressions to robot and dev-board screens, with ready-made firmware for ESP32, ESP32-S3 and Raspberry Pi Pico boards and a browser preview that exports ready-to-build settings.
+
 <p align="center">
   <img src="./assets/demo/agent-robot-avatar-demo.gif" alt="Agent Robot Avatar interactive animation demo" width="560">
 </p>
 
 ## Live Demo
 
-[Open the interactive demo](https://cx-artlab.github.io/agent-robot-avatar/) · [Visit the Skin Gallery](https://cx-artlab.github.io/agent-robot-avatar/skins.html)
+[Open the interactive demo](https://cx-artlab.github.io/agent-robot-avatar/) · [Visit the Skin Gallery](https://cx-artlab.github.io/agent-robot-avatar/skins.html) · [Try the hardware preview](https://cx-artlab.github.io/agent-robot-avatar/hardware/)
 
 ## Highlights
 
@@ -45,6 +47,7 @@ Built with SVG and vanilla JavaScript, it works as a native custom element with 
 - 188 numbered skins in 17 series, with light that follows the pointer
 - A lite build without skins for the smallest pages
 - TypeScript declarations included
+- Hardware version: the same expressions on 26 ESP32 and Raspberry Pi Pico board and screen setups, tuned in a browser preview and exported straight into the firmware
 
 ## Install
 

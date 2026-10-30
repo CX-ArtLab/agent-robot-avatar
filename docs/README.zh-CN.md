@@ -8,7 +8,7 @@
 
 ![Version](https://img.shields.io/badge/version-v0.7.1-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
-![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square)
+![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square) ![Hardware](https://img.shields.io/badge/Hardware-ESP32%20%7C%20Pico-E7352C?style=flat-square&logo=espressif&logoColor=white)
 
 一个轻量、富表现力的机器人头像 Web Component，适用于 AI Agent 与交互式应用。
 
@@ -20,13 +20,15 @@
 
 Agent Robot Avatar 还可作为 AG-UI 风格 Agent 界面的视觉反馈层。
 
+**新：同样的眼睛，跑在真实硬件上。** C++ 写的[硬件表情版](#硬件表情版--新功能)把这些表情带到机器人和开发板的屏幕上，提供 ESP32、ESP32-S3 和树莓派 Pico 的现成固件；还有一个浏览器预览，调好后可直接导出设置用于编译。
+
 <p align="center">
   <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Agent Robot Avatar 交互动画演示" width="560">
 </p>
 
 ## 在线 Demo
 
-[打开交互 Demo](https://cx-artlab.github.io/agent-robot-avatar/?lang=zh-CN) · [逛逛皮肤美术馆](https://cx-artlab.github.io/agent-robot-avatar/skins.html?lang=zh-CN)
+[打开交互 Demo](https://cx-artlab.github.io/agent-robot-avatar/?lang=zh-CN) · [逛逛皮肤美术馆](https://cx-artlab.github.io/agent-robot-avatar/skins.html?lang=zh-CN) · [试试硬件预览](https://cx-artlab.github.io/agent-robot-avatar/hardware/)
 
 ## 特点
 
@@ -45,6 +47,7 @@ Agent Robot Avatar 还可作为 AG-UI 风格 Agent 界面的视觉反馈层。
 - 188 款编号皮肤，分 17 个系列，光线跟随鼠标
 - 不含皮肤的精简版，适合对大小特别在意的页面
 - 内置 TypeScript 类型声明
+- 硬件表情版：同样的表情跑在 26 种 ESP32 和树莓派 Pico 开发板与屏幕组合上，在浏览器预览里调好后直接导出到固件
 
 ## 安装
 
