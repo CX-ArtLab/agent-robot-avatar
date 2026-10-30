@@ -22,6 +22,26 @@ Download [`preview/agent-robot-eyes-preview.html`](preview/agent-robot-eyes-prev
 
 The preview runs **this exact embedded C++ engine compiled to WebAssembly**, not the separate Web avatar renderer. It offers 18 actions (17 original expressions plus the added waiting-wave variant), cycling/manual interruption, pause/step, playback speed, explicit gaze, blink/transition switches, and 33 screen presets in five groups (round, square, bar, dev kits and OLEDs) plus custom resolutions from 16 to 512 pixels per axis. Layout controls include aspect-preserving fit, crop-to-fill, zoom, offsets and circular clipping. Named presets use SVG front views of specific reference modules; see [artwork sources](preview/frames/README.md). TFT mode centers a 240×160 mask inside a 240×240 canvas, matching the Arduino example. OLED mode renders a 128×64 mask; it does not emulate the display driver's page conversion. Changing the screen restarts the simulation; timing, layout and display changes apply without restarting, and hidden tabs freeze its clock. This validates animation, not board performance or screen electronics. See [preview/README.md](preview/README.md) for rebuilding and tests.
 
+## From the preview to your board
+
+Tune the eyes in the preview, then build the firmware with exactly those settings, without editing code:
+
+1. Open the preview and pick your screen. The **型号与接线 (Model and wiring)** panel shows the board, its wiring and the build command.
+2. Adjust layout, colours, frame rate, blinking and transitions, and turn the module if it is mounted turned.
+3. Press **导出设置 (Export settings)**, then copy or download the text as `eyes_settings.h`.
+4. Put the file in `embedded/examples/arduino/`, next to `main.cpp`.
+5. Build and upload the environment named in the file's first lines, for example `pio run -d embedded -e esp32-s3-st7789 -t upload`.
+
+| Setting in `eyes_settings.h` | Preview control |
+| --- | --- |
+| `EYES_MAX_FPS`, `EYES_AUTO_BLINK`, `EYES_TRANSITION_MS` | Frame-rate cap, blinking, transitions |
+| `EYES_FIT_COVER`, `EYES_ZOOM`, `EYES_OFFSET_X`, `EYES_OFFSET_Y` | Layout: fit or fill, size, position |
+| `EYES_INK_RGB`, `EYES_BACKGROUND_RGB` | Eye and background colours, or a palette (colour panels only) |
+| `EYES_TURN` | Screen rotation 90°; if the eyes appear upside down, change `3` to `1` |
+| `EYES_FULL_PANEL` | On the 240×240 reference module, use the whole panel instead of the 240×160 strip |
+
+Without the file the firmware uses its defaults, and git ignores it. Gaze following needs a camera or distance sensor on the board, so it is not part of the export: the library's `GazeTracker` (`lib/AgentRobotEyes/src/AgentRobotGaze.h`) takes the target position your sensor reports.
+
 ## Reference configurations
 
 | PlatformIO environment | Controller | Display | Validation scope |
@@ -78,7 +98,7 @@ pio run -d embedded -e pico-st7789
 pio run -d embedded -e esp32-ssd1306
 ```
 
-To use settings from the preview, press **导出设置 (Export settings)** there, save the text as `eyes_settings.h` in `embedded/examples/arduino/` next to `main.cpp`, and build the environment named in its first lines. It sets the frame-rate cap, blinking, transitions, layout (fit, zoom, offsets), a 90° turn of the whole module, whether the 240×240 reference module uses the whole panel instead of its 240×160 strip, and, on colour panels, the eye and background colours. Without the file the firmware uses its defaults; the file is ignored by git.
+To build with settings tuned in the preview, see [From the preview to your board](#from-the-preview-to-your-board).
 
 Upload **only the environment matching your board and wiring**:
 
