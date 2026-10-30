@@ -24,7 +24,8 @@ Built with SVG and vanilla JavaScript, it works as a native custom element with 
   <img src="./assets/demo/agent-robot-avatar-demo.gif" alt="Agent Robot Avatar interactive animation demo" width="560">
 </p>
 
-**Newly supported: the [embedded version](#embedded-version--new)** (for the screens of ESP32, STM32, Raspberry Pi Pico and similar boards, or any C++ program). It draws the eyes and expressions on robots and devices, with ready-made firmware and a browser preview that exports ready-to-build settings.
+**Newly supported: the [embedded version](#embedded-version--new)**\
+(for the screens of ESP32, STM32, Raspberry Pi Pico and similar boards, or any C++ program). It draws the eyes and expressions on robots and devices, with ready-made firmware and a browser preview that exports ready-to-build settings.
 
 ## Live Demo
 
