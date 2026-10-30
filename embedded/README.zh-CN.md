@@ -31,6 +31,8 @@
 | `waveshare-amoled-175` | 微雪 ESP32-S3-Touch-AMOLED-1.75 | 板载 AMOLED 圆屏 |
 | `t-rgb-21` | LilyGO T-RGB 2.1″ | 板载 RGB 圆屏 |
 | `guition-4848s040` | Guition ESP32-4848S040（86 面板） | 板载 RGB 方屏 |
+| `nucleo-f411re-st7789` | ST 官方 NUCLEO-F411RE（STM32F411） | ST7789，240×240，SPI，接在 Arduino 排针上 |
+| `blackpill-f411-ssd1306` | WeAct Black Pill STM32F411CE | SSD1306，128×64，I²C，地址 `0x3C` |
 
 每个配置的屏幕驱动在 `examples/arduino/boards.h` 中各占一小段，主程序共用。引脚依据厂商资料；T-RGB、86 面板和 BOX-3 采用 Arduino_GFX 自带的板型配置，AMOLED 的引脚来自 ESPHome 设备库。实机上需要留意：ST7735 有多种版本（画面错位时可改用 `INITR_GREENTAB`）；AMOLED 可能需要微调列偏移；T-RGB 不同批次的初始化序列不同。眼睛是黑底白色，屏幕的红蓝顺序不影响显示。所有配置都在 CI 中编译通过，尚未实机验证；如果你在实物上运行过，欢迎提交"实机验证报告"Issue，预览器里会标记为"社区已实机验证"。
 
@@ -66,19 +68,21 @@
 
 以下是 GPIO 编号，不是排针的物理序号。使用逻辑电平、电源均兼容 3.3 V、且引出 CS/DC/RST 的屏幕模块；带屏开发板需要按其原理图修改配置。
 
-| ST7789 引脚 | ESP32-S3 | Pico |
-| --- | --- | --- |
-| SCK / SCL | GPIO12 | GP18 |
-| MOSI / SDA | GPIO11 | GP19 |
-| CS | GPIO10 | GP17 |
-| DC | GPIO9 | GP20 |
-| RST / RES | GPIO8 | GP21 |
-| VCC | 3.3 V | 3.3 V |
-| GND | GND | GND |
+| ST7789 引脚 | ESP32-S3 | Pico | NUCLEO-F411RE |
+| --- | --- | --- | --- |
+| SCK / SCL | GPIO12 | GP18 | D13（PA5） |
+| MOSI / SDA | GPIO11 | GP19 | D11（PA7） |
+| CS | GPIO10 | GP17 | D10（PB6） |
+| DC | GPIO9 | GP20 | D9（PC7） |
+| RST / RES | GPIO8 | GP21 | D8（PA9） |
+| VCC | 3.3 V | 3.3 V | 3V3 |
+| GND | GND | GND | GND |
 
 不连接 MISO。背光按屏幕模块说明接线，例程不控制背光引脚。
 
 ESP32 OLED 例程使用：SDA → GPIO21，SCL → GPIO22，VCC → 兼容模块的 3.3 V，GND → GND；若模块地址不同，需要修改 `0x3C`。
+
+STM32 Black Pill 的 OLED：SDA → PB7，SCL → PB6。用 USB 线以 DFU 方式上传（按住 BOOT0 再按一下 NRST），串口命令也走同一根 USB 线。NUCLEO 通过板上 ST-LINK 的 USB 口上传和收发串口。
 
 ## 编译与使用
 

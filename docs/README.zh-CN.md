@@ -8,7 +8,7 @@
 
 ![Version](https://img.shields.io/badge/version-v0.7.1-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
-![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square) ![Embedded](https://img.shields.io/badge/Embedded-ESP32%20%7C%20Pico-E7352C?style=flat-square&logo=espressif&logoColor=white)
+![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square) ![Embedded](https://img.shields.io/badge/Embedded-ESP32%20%7C%20STM32%20%7C%20Pico-E7352C?style=flat-square&logo=espressif&logoColor=white)
 
 一个轻量、富表现力的机器人头像 Web Component，适用于 AI Agent 与交互式应用。
 
@@ -20,7 +20,7 @@
 
 Agent Robot Avatar 还可作为 AG-UI 风格 Agent 界面的视觉反馈层。
 
-**新：同样的眼睛，跑在真实硬件上。** C++ 写的[嵌入式设备版](#嵌入式设备版--新功能)把这些表情带到机器人和开发板的屏幕上，提供 ESP32、ESP32-S3 和树莓派 Pico 的现成固件；还有一个浏览器预览，调好后可直接导出设置用于编译。
+**新：同样的眼睛，跑在真实硬件上。** [嵌入式设备版](#嵌入式设备版--新功能)（用于 ESP32、STM32、树莓派 Pico 等开发板的屏幕，也可以编译进其他 C++ 程序）把这些表情带到机器人和各种设备上，提供现成固件；还有一个浏览器预览，调好后可直接导出设置用于编译。
 
 <p align="center">
   <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Agent Robot Avatar 交互动画演示" width="560">
@@ -47,7 +47,7 @@ Agent Robot Avatar 还可作为 AG-UI 风格 Agent 界面的视觉反馈层。
 - 188 款编号皮肤，分 17 个系列，光线跟随鼠标
 - 不含皮肤的精简版，适合对大小特别在意的页面
 - 内置 TypeScript 类型声明
-- 嵌入式设备版：同样的表情跑在 26 种 ESP32 和树莓派 Pico 开发板与屏幕组合上，在浏览器预览里调好后直接导出到固件
+- 嵌入式设备版：同样的表情跑在 28 种 ESP32、STM32 和树莓派 Pico 开发板与屏幕组合上，在浏览器预览里调好后直接导出到固件
 
 ## 安装
 
@@ -220,7 +220,13 @@ avatar.setSkin(null); // 回到纯色
 
 ## 嵌入式设备版 · 新功能
 
-同样的眼睛，显示在机器人和开发板的屏幕上。一个小巧的 C++ 库画出全部 18 种表情，动作取样自这个 Web 头像，动起来的样子和节奏都一样。现成的固件支持 26 种开发板和屏幕组合，覆盖 ESP32、ESP32-S3 和树莓派 Pico：圆形和方形 TFT、长条屏、AMOLED 和单色 OLED。
+同样的眼睛，显示在机器人和开发板的屏幕上。一个小巧的 C++ 库画出全部 18 种表情，动作取样自这个 Web 头像，动起来的样子和节奏都一样。现成的固件支持 28 种开发板和屏幕组合，覆盖 ESP32、ESP32-S3、STM32 和树莓派 Pico：圆形和方形 TFT、长条屏、AMOLED 和单色 OLED。
+
+| 你的设备 | 用哪个 |
+| --- | --- |
+| 网页、App、安卓平板、带浏览器的机器人 | 网页版（本组件）：完整头像、皮肤和互动 |
+| ESP32、STM32、树莓派 Pico 等开发板 | 嵌入式设备版，有现成固件 |
+| 其他单片机或 C++ 程序 | 嵌入式设备版的 C++ 库，自己接屏幕驱动 |
 
 <img src="../assets/readme/hardware-preview.jpg" alt="嵌入式设备版预览：圆形 TFT 模组显示眼睛，旁边是布局、颜色和导出设置" width="100%">
 

@@ -64,6 +64,9 @@ constexpr uint16_t INK = rgb565(EYES_INK_RGB), BACKGROUND = rgb565(EYES_BACKGROU
 #include <Adafruit_ST7789.h>
 #if defined(EYES_ESP32_S3)
 constexpr int TFT_CS = 10, TFT_DC = 9, TFT_RST = 8;
+#elif defined(EYES_STM32_NUCLEO)
+// NUCLEO-F411RE Arduino header: CS D10 (PB6), DC D9 (PC7), RST D8 (PA9).
+constexpr int TFT_CS = D10, TFT_DC = D9, TFT_RST = D8;
 #else
 constexpr int TFT_CS = 17, TFT_DC = 20, TFT_RST = 21;
 #endif
@@ -74,7 +77,8 @@ bool displayBegin() {
 #if defined(EYES_ESP32_S3)
   SPI.begin(12, -1, 11, TFT_CS); // SCK, MISO (unused), MOSI, CS
 #else
-  SPI.begin(); // Pico defaults: SCK GP18, MOSI GP19, MISO GP16 (unused)
+  // Pico: SCK GP18, MOSI GP19. NUCLEO: SCK D13 (PA5), MOSI D11 (PA7).
+  SPI.begin();
 #endif
   display.init(240, 240);
   display.setRotation(EYES_ROT(0));
@@ -369,7 +373,7 @@ void displayPresent(const agent_robot::Eyes& eyes) {
 
 // ---------------------------------------------------------------------------
 #else
-// SSD1306 OLED on I2C (ESP32 default pins 21/22). EYES_PANEL_H selects the
+// SSD1306 OLED on I2C (ESP32 pins 21/22; Black Pill PB7 SDA, PB6 SCL). EYES_PANEL_H selects the
 // 0.96" 128 x 64 (default, original reference) or the 0.91" 128 x 32 panel.
 #include <Wire.h>
 #include <Adafruit_SSD1306.h>
@@ -380,7 +384,12 @@ Adafruit_SSD1306 display(128, EYES_PANEL_H, &Wire, -1);
 constexpr uint16_t WIDTH = EYES_W(128, EYES_PANEL_H), HEIGHT = EYES_H(128, EYES_PANEL_H), OFFSET_Y = 0;
 constexpr bool ROUND = false;
 bool displayBegin() {
+#if defined(EYES_STM32_BLACKPILL)
+  Wire.setSDA(PB7); Wire.setSCL(PB6); // Black Pill I2C1
+  Wire.begin();
+#else
   Wire.begin(21, 22);
+#endif
   if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) return false;
   display.setRotation(EYES_ROT(0));
   Wire.setClock(400000);

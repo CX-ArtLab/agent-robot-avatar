@@ -8,7 +8,7 @@
 
 ![Version](https://img.shields.io/badge/version-v0.7.1-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](./LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
-![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square) ![Embedded](https://img.shields.io/badge/Embedded-ESP32%20%7C%20Pico-E7352C?style=flat-square&logo=espressif&logoColor=white)
+![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square) ![Embedded](https://img.shields.io/badge/Embedded-ESP32%20%7C%20STM32%20%7C%20Pico-E7352C?style=flat-square&logo=espressif&logoColor=white)
 
 A lightweight, expressive robot avatar Web Component for AI agents and interactive applications.
 
@@ -20,7 +20,7 @@ Agent Robot Avatar can also be used as a visual feedback layer for AG-UI-style a
 
 Built with SVG and vanilla JavaScript, it works as a native custom element with zero runtime dependencies.
 
-**New: the same eyes on real hardware.** A C++ [embedded version](#embedded-version--new) brings the expressions to robot and dev-board screens, with ready-made firmware for ESP32, ESP32-S3 and Raspberry Pi Pico boards and a browser preview that exports ready-to-build settings.
+**New: the same eyes on real hardware.** The [embedded version](#embedded-version--new) (for the screens of ESP32, STM32, Raspberry Pi Pico and similar boards, or any C++ program) brings the expressions to robots and devices, with ready-made firmware and a browser preview that exports ready-to-build settings.
 
 <p align="center">
   <img src="./assets/demo/agent-robot-avatar-demo.gif" alt="Agent Robot Avatar interactive animation demo" width="560">
@@ -47,7 +47,7 @@ Built with SVG and vanilla JavaScript, it works as a native custom element with 
 - 188 numbered skins in 17 series, with light that follows the pointer
 - A lite build without skins for the smallest pages
 - TypeScript declarations included
-- Embedded version: the same expressions on 26 ESP32 and Raspberry Pi Pico board and screen setups, tuned in a browser preview and exported straight into the firmware
+- Embedded version: the same expressions on 28 ESP32, STM32 and Raspberry Pi Pico board and screen setups, tuned in a browser preview and exported straight into the firmware
 
 ## Install
 
@@ -220,7 +220,13 @@ Every expression and gesture works with a skin. When the skin is removed, the `c
 
 ## Embedded version · New
 
-The same eyes on robot and dev-board screens. A small C++ library draws all 18 expressions, sampled from this Web avatar, so they move and keep time the same way. Ready-made firmware covers 26 board and screen combinations on ESP32, ESP32-S3 and Raspberry Pi Pico: round and square TFTs, bar screens, AMOLED and monochrome OLEDs.
+The same eyes on robot and dev-board screens. A small C++ library draws all 18 expressions, sampled from this Web avatar, so they move and keep time the same way. Ready-made firmware covers 28 board and screen combinations on ESP32, ESP32-S3, STM32 and Raspberry Pi Pico: round and square TFTs, bar screens, AMOLED and monochrome OLEDs.
+
+| Your device | Use |
+| --- | --- |
+| Websites, apps, Android tablets, robots with a browser | The Web component (this package): full head, skins and interaction |
+| ESP32, STM32, Raspberry Pi Pico and similar boards | The embedded version, with ready-made firmware |
+| Other microcontrollers or C++ programs | The embedded version's C++ library, with your own screen driver |
 
 <img src="./assets/readme/hardware-preview.jpg" alt="Embedded version preview: a round TFT module showing the eyes, with layout, colour and export settings" width="100%">
 

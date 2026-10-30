@@ -67,6 +67,8 @@ Without the file the firmware uses its defaults, and git ignores it. Gaze follow
 | `waveshare-amoled-175` | Waveshare ESP32-S3-Touch-AMOLED-1.75 | CO5300 466×466 on quad SPI (pins from the ESPHome device page) | Build target; physical verification pending |
 | `t-rgb-21` | LilyGO T-RGB 2.1″ | ST7701S 480×480 RGB panel via XL9535, octal PSRAM | Build target; physical verification pending |
 | `guition-4848s040` | Guition ESP32-4848S040 (86 box) | ST7701S 480×480 RGB panel, octal PSRAM | Build target; physical verification pending |
+| `nucleo-f411re-st7789` | ST NUCLEO-F411RE (STM32F411) | ST7789, 240×240 SPI TFT on the Arduino header | Build target; physical verification pending |
+| `blackpill-f411-ssd1306` | WeAct Black Pill STM32F411CE | SSD1306, 128×64 I²C OLED, address `0x3C` | Build target; physical verification pending |
 
 `examples/arduino/boards.h` holds one small display adapter per configuration; the main program is shared. Pin numbers follow the vendors' documentation (Waveshare wiki, LilyGO `pin_config.h`, the CYD community pin list). The Dial and StickC Plus2 build on the StampS3 and M5Stick-C board definitions of the pinned PlatformIO platform; M5Unified identifies the actual board at runtime. Round panels enable the core's circular layout. T-RGB, the Guition panel and the BOX-3 follow the device configurations bundled with Arduino_GFX 1.4.9; the AMOLED pins come from the ESPHome device page rather than a vendor file. Known things to check on real hardware: ST7735 boards come in several variants (try `INITR_GREENTAB` if the picture is offset or garbled); the CO5300 may need a small column offset; T-RGB revisions differ in their ST7701 init sequence. The eyes are white on black, so a swapped red/blue order does not show. If you run one of these on real hardware, please open a *Hardware report* issue so the preview can mark it as community-verified.
 
@@ -76,17 +78,17 @@ The TFT example reserves a centered 240×160 eye viewport. Its mask is 4,800 byt
 
 Use the **GPIO names**, not the physical header pin numbers. This example assumes a 3.3 V-compatible screen module with exposed CS, DC and reset. Built-in screens and other module revisions need their own pin configuration and initialization.
 
-| ST7789 connection | ESP32-S3 GPIO | Pico GPIO |
-| --- | --- | --- |
-| SCK / SCL | 12 | GP18 |
-| MOSI / SDA | 11 | GP19 |
-| CS | 10 | GP17 |
-| DC | 9 | GP20 |
-| RST / RES | 8 | GP21 |
-| GND | GND | GND |
-| VCC | 3.3 V | 3.3 V |
+| ST7789 connection | ESP32-S3 GPIO | Pico GPIO | NUCLEO-F411RE |
+| --- | --- | --- | --- |
+| SCK / SCL | 12 | GP18 | D13 (PA5) |
+| MOSI / SDA | 11 | GP19 | D11 (PA7) |
+| CS | 10 | GP17 | D10 (PB6) |
+| DC | 9 | GP20 | D9 (PC7) |
+| RST / RES | 8 | GP21 | D8 (PA9) |
+| GND | GND | GND | GND |
+| VCC | 3.3 V | 3.3 V | 3V3 |
 
-MISO is unused. Backlight wiring depends on the screen module; follow its specification. The example does not drive a backlight pin. For the ESP32 OLED reference, connect SDA to GPIO21, SCL to GPIO22, GND to GND and the compatible module's VCC to 3.3 V. Change `0x3C` if the OLED uses another address.
+MISO is unused. Backlight wiring depends on the screen module; follow its specification. The example does not drive a backlight pin. For the ESP32 OLED reference, connect SDA to GPIO21, SCL to GPIO22, GND to GND and the compatible module's VCC to 3.3 V. Change `0x3C` if the OLED uses another address. On the Black Pill, connect the OLED's SDA to PB7 and SCL to PB6; upload over USB in DFU mode (hold BOOT0 and tap NRST), and the serial commands arrive over the same USB cable. The NUCLEO uploads and talks serial through its ST-LINK USB port.
 
 ### Build and run
 
