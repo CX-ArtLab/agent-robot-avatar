@@ -92,7 +92,7 @@ function syncActionLabels() {
   const wrapButton = ensureActionButton('waiting-wrap', 'waiting-spin');
   const waveButton = ensureActionButton('waiting-wave', 'waiting-wrap');
   // New actions go at the very end of the row, in the order they were added.
-  const loveButton = ensureActionButton('love', 'wake');
+  const loveButton = ensureActionButton('love', 'sleep');
   const randomButton = ensureActionButton('random', 'love');
   for (const button of [loveButton, randomButton]) if (button) markAsNew(button);
   if (inspectButton) inspectButton.textContent = inspect.action;

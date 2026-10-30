@@ -194,6 +194,22 @@ function mountDemoControls() {
   const status = document.getElementById('status');
   if (status) status.classList.add('demo-status');
 
+  // One button for sleep and wake: while the avatar falls asleep or sleeps,
+  // it reads Wake and wakes it.
+  const sleepButton = controls.querySelector('button[data-action="sleep"]');
+  let sleepRequested = false;
+  let wasAsleep = false;
+  const isAsleep = () => face._sleeping || face._state === 'sleep';
+  const fallingAsleep = () => !isAsleep() && sleepRequested && face._state === 'sleepy';
+  const sleepButtonWakes = () => isAsleep() || fallingAsleep();
+  function syncSleepButton() {
+    const asleep = isAsleep();
+    if (wasAsleep && !asleep) sleepRequested = false;
+    wasAsleep = asleep;
+    const actions = I18N[currentLanguage]?.actions;
+    if (sleepButton && actions) sleepButton.textContent = sleepButtonWakes() ? actions.wake : actions.sleep;
+  }
+
   const oldFollow = document.querySelector('.follow-control');
   const oldFollowInput = oldFollow?.querySelector('input[type=checkbox]') || null;
   if (oldFollow) oldFollow.classList.add('demo-original-follow');
@@ -324,6 +340,7 @@ function mountDemoControls() {
       const label = t.actions[button.dataset.action];
       if (label) button.textContent = label;
     });
+    syncSleepButton();
 
     options.querySelectorAll('.demo-language-option').forEach(button => {
       button.classList.toggle('demo-language-active', button.dataset.lang === currentLanguage);
@@ -500,6 +517,7 @@ function mountDemoControls() {
     currentState = String(event.detail?.state || 'idle');
     updateStatus();
   });
+  face.addEventListener('face-state', syncSleepButton);
 
   let loopEnabled = false;
   let loopToken = 0;
@@ -513,7 +531,7 @@ function mountDemoControls() {
     }
   });
 
-  const extraLoopDelay = Object.freeze({ idle:900, bored:3350, 'waiting-spin':0, 'waiting-wrap':0, input:900, sleep:800, wake:500 });
+  const extraLoopDelay = Object.freeze({ idle:900, bored:3350, 'waiting-spin':0, 'waiting-wrap':0, input:900, sleep:800 });
 
   async function playOneCycle(action, token) {
     if (action === 'waiting-spin' && loopEnabled) {
@@ -528,18 +546,21 @@ function mountDemoControls() {
       await face.startWaiting({ variant:'wave' });
       return;
     }
-    if (action === 'wake' && loopEnabled) {
-      if (!face._sleeping && face._state !== 'sleep') {
-        await Promise.resolve(face.play('sleep'));
-        if (token !== loopToken) return;
-        await wait(160);
-      }
-      if (token !== loopToken) return;
-      await Promise.resolve(face.play('wake'));
+    if (action === 'wake') {
+      // Any press already wakes a sleeping avatar; only wake it here if it
+      // still sleeps, or stop it falling asleep.
+      const cancel = fallingAsleep();
+      sleepRequested = false;
+      syncSleepButton();
+      if (isAsleep()) await Promise.resolve(face.play('wake'));
+      else if (cancel) await Promise.resolve(face.play('idle'));
       return;
     }
     if (action === 'input' && (face._inputWanted || face._state === 'input')) face.reset();
-    if (action === 'sleep' && face._sleeping) face.reset();
+    if (action === 'sleep') {
+      sleepRequested = true;
+      syncSleepButton();
+    }
     await Promise.resolve(face.play(action));
   }
 
@@ -549,14 +570,28 @@ function mountDemoControls() {
     do {
       if (token !== loopToken) return;
       await playOneCycle(action, token);
+      if (action === 'wake') return;
       if (['waiting-spin', 'waiting-wrap', 'waiting-wave'].includes(action) && loopEnabled) return;
       if (token !== loopToken || !loopEnabled) return;
       const delay = extraLoopDelay[action] ?? 140;
       if (delay > 0) await wait(delay);
       if (token !== loopToken || !loopEnabled) return;
-      if (action === 'input' || action === 'sleep') face.reset();
+      if (action === 'input') face.reset();
+      if (action === 'sleep') {
+        // Looping sleep shows the whole cycle: fall asleep, wake, again.
+        await Promise.resolve(face.play('wake'));
+        if (token !== loopToken || !loopEnabled) return;
+        await wait(900);
+      }
     } while (token === loopToken && loopEnabled && activeAction === action);
   }
+
+  // The press itself wakes a sleeping avatar before the click arrives, so
+  // decide what the sleep button does when it is pressed.
+  let pressWakes = null;
+  const notePress = () => { pressWakes = sleepButtonWakes(); };
+  controls.addEventListener('pointerdown', notePress, true);
+  controls.addEventListener('keydown', notePress, true);
 
   controls.addEventListener('click', event => {
     const button = event.target.closest('button[data-action]');
@@ -564,7 +599,10 @@ function mountDemoControls() {
     event.preventDefault();
     event.stopImmediatePropagation();
     controls.querySelectorAll('button[data-action]').forEach(item => item.classList.toggle('demo-active', item === button));
-    runAction(button.dataset.action);
+    const action = button.dataset.action;
+    const wakes = pressWakes ?? sleepButtonWakes();
+    pressWakes = null;
+    runAction(action === 'sleep' && wakes ? 'wake' : action);
   }, true);
 
   swapButton.addEventListener('click', () => {

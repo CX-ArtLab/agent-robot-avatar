@@ -96,12 +96,12 @@ test('interactive demo loads without runtime errors', async ({ page }) => {
   await page.goto('/demo/');
   await expect(page.locator('agent-robot-avatar')).toBeVisible();
   await expect(page.locator('[data-action="waiting-spin"]')).toBeVisible();
-  await expect(page.locator('#agent-demo-build')).toHaveText('Demo 0.7.0');
+  await expect(page.locator('#agent-demo-build')).toHaveText('Demo 0.7.1');
   const versions = await page.evaluate(() => ({
     runtime: window.AgentRobotAvatarVersion,
     demo: window.AgentRobotAvatarDemoBuild,
   }));
-  expect(versions).toEqual({ runtime: '0.7.0', demo: '0.7.0' });
+  expect(versions).toEqual({ runtime: '0.7.1', demo: '0.7.1' });
   expect(pageErrors).toEqual([]);
 });
 

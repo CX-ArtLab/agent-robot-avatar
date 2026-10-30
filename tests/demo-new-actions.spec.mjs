@@ -16,7 +16,7 @@ test.afterEach(async ({ page }) => {
 // (or ending the test) aborts in-flight imports and the browser reports page errors.
 async function openDemo(page, query = '') {
   await page.goto(`/demo/${query}`, { waitUntil: 'networkidle' });
-  await expect(page.locator('.controls button[data-action]')).toHaveCount(18);
+  await expect(page.locator('.controls button[data-action]')).toHaveCount(17);
   await expect(page.locator('#agent-demo-build')).toHaveText(/^Demo \d/);
 }
 
@@ -26,7 +26,7 @@ test('the demo lists the newest actions last, each flagged with a red dot', asyn
   await expect(buttons.last()).toHaveAttribute('data-action', 'random');
 
   const actions = await buttons.evaluateAll(list => list.map(button => button.dataset.action));
-  expect(actions.slice(-3)).toEqual(['wake', 'love', 'random']);
+  expect(actions.slice(-3)).toEqual(['sleep', 'love', 'random']);
 
   const flags = await buttons.evaluateAll(list => list.map(button => ({
     action: button.dataset.action,
@@ -100,7 +100,7 @@ for (const [name, viewport] of [['phone', { width: 390, height: 844 }], ['small 
           scrolls: document.documentElement.scrollWidth > innerWidth,
         };
       });
-      expect(layout.count).toBe(18);
+      expect(layout.count).toBe(17);
       expect(layout.outside).toBe(0);
       expect(layout.overlaps).toBe(0);
       expect(layout.scrolls).toBe(false);

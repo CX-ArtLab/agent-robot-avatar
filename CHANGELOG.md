@@ -4,6 +4,13 @@ All notable user-facing changes to Agent Robot Avatar are documented here.
 
 The project follows Semantic Versioning for public releases. Internal development build numbers are not part of the public version history.
 
+## [0.7.1] - 2026-10-30
+
+### Changed
+
+- Falling asleep now ends with the eyelids closing into a slit, instead of the eyes squashing flat.
+- The demo's Sleep button turns into Wake while the avatar sleeps.
+
 ## [0.7.0] - 2026-10-29
 
 ### Added
@@ -205,6 +212,8 @@ First public release.
 - npm-compatible package metadata for later package publication
 - Contribution guide, issue templates, pull request template, MIT License, and Ko-fi funding metadata
 
+[0.7.1]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.7.1
+[0.7.0]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.7.0
 [0.6.0]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.6.0
 [0.5.2]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.5.2
 [0.4.3]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.4.3
