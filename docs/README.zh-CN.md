@@ -29,7 +29,8 @@
 
 ## 在线 Demo
 
-[打开交互 Demo](https://cx-artlab.github.io/agent-robot-avatar/?lang=zh-CN) · [逛逛皮肤美术馆](https://cx-artlab.github.io/agent-robot-avatar/skins.html?lang=zh-CN) · [试试嵌入式设备版](https://cx-artlab.github.io/agent-robot-avatar/hardware/)
+[打开交互 Demo](https://cx-artlab.github.io/agent-robot-avatar/?lang=zh-CN) · [逛逛皮肤美术馆](https://cx-artlab.github.io/agent-robot-avatar/skins.html?lang=zh-CN)\
+[嵌入式设备版](https://cx-artlab.github.io/agent-robot-avatar/hardware/)（可预览 33 种屏幕）
 
 ## 特点
 
