@@ -221,6 +221,20 @@ avatar.setSkin(null); // 回到纯色
 
 所有表情和手势都能配合皮肤使用。去掉皮肤后，`color` 属性会重新生效。
 
+## 事件与集成
+
+组件通过 `face-state` 报告视觉状态变化，通过 `action-state` 报告语义动作生命周期变化。
+
+宿主应用集成和无障碍状态播报优先使用 `action-state`。可查看 [`examples/accessibility.html`](../examples/accessibility.html) 中的请求生命周期示例。
+
+最小集成示例位于 [`examples/basic.html`](../examples/basic.html)。
+
+## 兼容性
+
+面向支持 ES Modules、Custom Elements、SVG、Pointer Events、Web Animations API、`IntersectionObserver`、`ResizeObserver` 和 `matchMedia` 的现代浏览器。
+
+自动浏览器测试覆盖 Chromium、Firefox 和 WebKit。
+
 ## 新支持：嵌入式设备版
 
 与网页版相同的表情，现在也可以用在机器人和开发板的屏幕上。一个小巧的 C++ 库移植了网页版的全部表情，动作和节奏都与网页版一致。现成的固件支持 28 种开发板和屏幕组合，覆盖 ESP32、ESP32-S3、STM32 和树莓派 Pico：圆形和方形 TFT、长条屏、AMOLED 和单色 OLED，也可以自定义屏幕尺寸。
@@ -259,20 +273,6 @@ void loop() {
 ```
 
 实验版：所有配置都在 CI 中编译通过，但还没有在真实硬件上验证。如果你在实物上运行过，欢迎提交[实机验证报告](https://github.com/CX-ArtLab/agent-robot-avatar/issues/new?template=hardware_report.yml)。完整说明见[嵌入式设备版说明](../embedded/README.zh-CN.md)。
-
-## 事件与集成
-
-组件通过 `face-state` 报告视觉状态变化，通过 `action-state` 报告语义动作生命周期变化。
-
-宿主应用集成和无障碍状态播报优先使用 `action-state`。可查看 [`examples/accessibility.html`](../examples/accessibility.html) 中的请求生命周期示例。
-
-最小集成示例位于 [`examples/basic.html`](../examples/basic.html)。
-
-## 兼容性
-
-面向支持 ES Modules、Custom Elements、SVG、Pointer Events、Web Animations API、`IntersectionObserver`、`ResizeObserver` 和 `matchMedia` 的现代浏览器。
-
-自动浏览器测试覆盖 Chromium、Firefox 和 WebKit。
 
 ## 参与贡献
 
