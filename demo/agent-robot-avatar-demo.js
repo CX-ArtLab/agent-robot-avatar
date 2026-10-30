@@ -183,9 +183,16 @@ if (document.body.dataset.page === 'skins') {
   if (document.body.dataset.page !== 'skins') await import('./agent-robot-avatar-demo-skins.js');
   // Apply the final language and row width before exposing interactive content.
   await document.fonts.ready;
-  balanceControls();
-  placeComposition();
-  await new Promise(resolve => requestAnimationFrame(resolve));
+  // Place the column again until its height holds for a frame, so a late
+  // resize never moves it after it is shown.
+  const stack = document.querySelector('.demo-control-stack');
+  for (let frame = 0; frame < 10; frame++) {
+    const height = stack.getBoundingClientRect().height;
+    balanceControls();
+    placeComposition();
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    if (stack.getBoundingClientRect().height === height) break;
+  }
   document.getElementById('canvas').inert = false;
   document.getElementById('canvas').setAttribute('aria-busy', 'false');
   document.documentElement.classList.remove('demo-initializing');
