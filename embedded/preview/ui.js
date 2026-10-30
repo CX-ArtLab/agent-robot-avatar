@@ -154,24 +154,26 @@
     // The ring is centred on the screen and still takes in the whole board.
     return {cx,cy,x:rx,y:ry,ring:2*Math.max(rx,ry)};
   }
+  // Fit shows the whole module (and the sensing ring); beyond it the slider
+  // keeps zooming until the screen fills 80% of the stage, the housing
+  // running off the edges.
   function zoomRange(g) {
-    const r=$('stage').getBoundingClientRect(), k=reach(g);
-    // Room for the name above and the state below; with tracking on, the
-    // whole sensing ring stays on the stage too.
-    const w=r.width-40, h=r.height-96;
-    let max=Math.min(w/(2*k.x),h/(2*k.y));
-    if($('follow').checked)max=Math.min(max,(Math.min(r.width-32,r.height-64)-GAZE.radius*2)/k.ring);
-    max=Math.max(.05,max/CSS_PX_PER_MM);
-    return [Math.min(max*.2,1),max];
+    const r=$('stage').getBoundingClientRect(), k=reach(g), [,,dw,dh]=g.display;
+    // Room for the name above and the state below.
+    let fit=Math.min((r.width-40)/(2*k.x),(r.height-96)/(2*k.y));
+    if($('follow').checked)fit=Math.min(fit,(Math.min(r.width-32,r.height-64)-GAZE.radius*2)/k.ring);
+    fit=Math.max(.05,fit/CSS_PX_PER_MM);
+    const max=Math.max(fit,.8*Math.min(r.width/dw,r.height/dh)/CSS_PX_PER_MM);
+    return [Math.min(fit*.2,1),fit,max];
   }
   function currentScale(g) {
-    const [min,max]=zoomRange(g);
-    if(zoomMode==='fit')return max;
+    const [min,fit,max]=zoomRange(g);
+    if(zoomMode==='fit')return fit;
     if(zoomMode==='real')return Math.min(1,max);
     return Math.min(Math.max(zoomScale,min),max);
   }
   function syncZoom(g,scale) {
-    const [min,max]=zoomRange(g), span=Math.log(max/min);
+    const [min,,max]=zoomRange(g), span=Math.log(max/min);
     $('zoom').value=String(span>0?Math.round(Math.log(scale/min)/span*1000):1000);
     $('zoom-value').value=scale.toFixed(scale<10?1:0)+'×';
     $('zoom-fit').setAttribute('aria-pressed',String(zoomMode==='fit'));
@@ -180,10 +182,10 @@
     $('zoom-real').title=max<1?'窗口放不下实物大小':'按常见电脑屏幕估算，不同显示器会有偏差';
   }
   function zoomFromSlider() {
-    const g=geometry(), [min,max]=zoomRange(g), position=Number($('zoom').value);
-    if(position>=995){zoomMode='fit';resizeDisplay();saveSettings();return;}
+    const g=geometry(), [min,fit,max]=zoomRange(g), position=Number($('zoom').value);
     let scale=min*Math.exp(position/1000*Math.log(max/min));
-    // Weak snapping to common ratios.
+    // Weak snapping to the fitted size and to common ratios.
+    if(Math.abs(Math.log(scale/fit))<.045){zoomMode='fit';resizeDisplay();saveSettings();return;}
     for(const snap of ZOOM_SNAPS)if(snap>=min&&snap<=max&&Math.abs(Math.log(scale/snap))<.045)scale=snap;
     zoomMode='scale';zoomScale=scale;resizeDisplay();saveSettings();
   }
@@ -299,7 +301,8 @@
     syncZoom(g,scale);
     const k=reach(g);
     $('sensor-wrap').style.width=g.w*ppm+'px';$('sensor-wrap').style.height=g.h*ppm+'px';
-    $('sensor-wrap').style.transform='translate('+(g.w/2-k.cx)*ppm+'px,'+(g.h/2-k.cy)*ppm+'px)';
+    // Centred on the stage even when zoomed past its edges.
+    $('sensor-wrap').style.transform='translate(-50%,-50%) translate('+(g.w/2-k.cx)*ppm+'px,'+(g.h/2-k.cy)*ppm+'px)';
     device.dataset.profile=preset.frame;
     device.dataset.module=g.m?base.id:'';
     device.dataset.rotation=String(g.rot?90:0);

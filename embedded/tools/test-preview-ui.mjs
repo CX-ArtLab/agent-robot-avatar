@@ -140,12 +140,17 @@ try {
   const glassWidth=await page.locator('#glass').evaluate(el=>el.getBoundingClientRect().width);
   assert(Math.abs(glassWidth-240*.15*96/25.4)<.5,'actual-size zoom uses physical pixel pitch');
   await page.locator('[data-zoom="fit"]').click();
-  // The zoom slider never makes the module larger than the stage.
+  // The zoom slider runs from small to past the fitted size.
   const fitted=await glassBox();
   await page.locator('#zoom').fill('0');
   assert((await glassBox())[2]<fitted[2],'zoom slider shrinks the module');
+  // Past the fitted size the slider zooms until the screen fills 80% of the stage.
   await page.locator('#zoom').fill('1000');
-  assert.deepEqual(await glassBox(),fitted,'slider maximum is the fitted size');
+  const zoomed=await glassBox(), stage=await page.locator('#stage').evaluate(el=>[el.clientWidth,el.clientHeight]);
+  assert(zoomed[2]>fitted[2],'zoom goes past the fitted size');
+  assert(Math.abs(Math.max(zoomed[2]/stage[0],zoomed[3]/stage[1])-.8)<.02,'largest zoom fills 80% of the stage');
+  await page.locator('[data-zoom="fit"]').click();
+  assert.deepEqual(await glassBox(),fitted,'fit returns to the whole module');
   assert(await page.locator('#stage').evaluate(el=>el.scrollWidth<=el.clientWidth&&el.scrollHeight<=el.clientHeight),'no scrolling');
   // Panel character is display-only: the core framebuffer stays identical.
   const native=await frame();
