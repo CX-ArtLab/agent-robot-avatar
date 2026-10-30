@@ -37,7 +37,7 @@
     set(key,value){try{localStorage.setItem('robotEyesPreview.'+key,JSON.stringify(value));}catch(_){}}
   };
   // Every option is remembered in this browser, except screen-specific frame rate.
-  const CHECKBOXES = ['housing','show-area','raw-pixels','pixel-grid','glass-glare','blink','transitions','follow'];
+  const CHECKBOXES = ['housing','show-area','pixel-grid','glass-glare','blink','transitions','follow'];
   const SEGMENTS = ['speed'];
   const screen = $('screen'), ctx = screen.getContext('2d',{alpha:false});
   let panel = null;
@@ -204,7 +204,7 @@
   }
   function renderPanel() {
     if(!panel)return;
-    panel.render({panel:base.panel||'ips',plain:$('raw-pixels').checked,grid:$('pixel-grid').checked,
+    panel.render({panel:base.panel||'ips',plain:false,grid:$('pixel-grid').checked,
       glow:true,round:preset.frame==='round',corner:base.corner||0,mono});
   }
   function sensorInput() {
@@ -373,7 +373,9 @@
     $('color-options').hidden=oled;$('mono-options').hidden=!oled;
     document.querySelectorAll('[data-mono]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mono===mono)));
     $('eye-color').value=colors.eye;$('bg-color').value=colors.bg;
-    $('rotate').hidden=preset.frame==='round'||base.width===base.height;
+    // Square and round screens look the same turned, so there is nothing to rotate.
+    $('rotate').disabled=preset.frame==='round'||base.width===base.height;
+    $('rotate').title=$('rotate').disabled?'方形和圆形屏幕不需要旋转':'把屏幕模组整体转 90°';
     $('rotate').setAttribute('aria-pressed',String(rotated));
     syncColors();
   }
@@ -571,9 +573,10 @@
       $('eye-color').oninput=()=>{colors.eye=$('eye-color').value;saveColors();};
       $('bg-color').oninput=()=>{colors.bg=$('bg-color').value;saveColors();};
       $('color-reset').onclick=()=>{colors={...DEFAULT_COLORS};saveColors();};
+      $('color-swap').onclick=()=>{colors={eye:colors.bg,bg:colors.eye};saveColors();};
       $('mono-chips').onclick=event=>{const b=event.target.closest('[data-mono]');if(b){mono=b.dataset.mono;store.set('mono',mono);syncControls();renderPanel();}};
       for(const id of ['show-area','glass-glare'])$(id).onchange=()=>{resizeDisplay();saveSettings();};
-      for(const id of ['pixel-grid','raw-pixels'])$(id).onchange=()=>{renderPanel();saveSettings();};
+      $('pixel-grid').onchange=()=>{renderPanel();saveSettings();};
       $('download').onclick=()=>{
         const url=URL.createObjectURL(new Blob(['<!doctype html>\n'+INITIAL_DOCUMENT],{type:'text/html;charset=utf-8'}));
         const link=document.createElement('a');link.href=url;link.download='agent-robot-eyes-preview.html';

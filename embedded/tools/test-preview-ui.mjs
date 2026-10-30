@@ -149,9 +149,13 @@ try {
   assert(await page.locator('#stage').evaluate(el=>el.scrollWidth<=el.clientWidth&&el.scrollHeight<=el.clientHeight),'no scrolling');
   // Panel character is display-only: the core framebuffer stays identical.
   const native=await frame();
-  await page.locator('#raw-pixels').check(); await page.locator('#pixel-grid').uncheck();
+  await page.locator('#pixel-grid').uncheck();
   assert.equal((await frame()).hash,native.hash,'panel effects must not change native pixels');
-  await page.locator('#raw-pixels').uncheck(); await page.locator('#pixel-grid').check();
+  await page.locator('#pixel-grid').check();
+  // Swapping the colours trades eye and background on screen.
+  await page.locator('#color-swap').click();
+  assert.deepEqual(await page.evaluate(()=>[document.getElementById('eye-color').value,document.getElementById('bg-color').value]),['#000000','#ffffff']);
+  await page.locator('#color-reset').click();
   // Layout is remembered per screen.
   await choose('landscape');
   await page.locator('#face-scale').fill('1.5');

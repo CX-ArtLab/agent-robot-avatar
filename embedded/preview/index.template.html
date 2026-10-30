@@ -15,7 +15,7 @@ html,body{height:auto}
 .canvas.preview{height:auto;min-height:100vh;padding:0;background-color:#f8f8f6;background-image:radial-gradient(#d7d9dc 1px,transparent 1px);background-size:24px 24px}
 .preview .title span:not(:last-child)::after{content:' / '}
 .page-header{height:64px}
-.workspace{display:grid;grid-template-columns:minmax(0,720px) 452px;justify-content:center;max-width:1400px;margin:auto;padding:0 28px 24px;gap:28px;align-items:start;--column-height:clamp(600px,calc(100vh - 88px),960px)}
+.workspace{display:grid;grid-template-columns:minmax(0,720px) 380px;justify-content:center;max-width:1400px;margin:auto;padding:0 28px 24px;gap:28px;align-items:start;--column-height:clamp(600px,calc(100vh - 88px),960px)}
 .preview [hidden]{display:none!important}
 .preview button:disabled,.preview input:disabled,.preview select:disabled{opacity:.45;cursor:not-allowed;transform:none}
 .preview input:focus-visible,.preview select:focus-visible,.preview button:focus-visible,.preview a:focus-visible{outline:2px solid #858b94;outline-offset:2px}
@@ -63,6 +63,9 @@ html,body{height:auto}
 .preview .controls button[aria-pressed=true]{background:#dfe1e4;color:#202327}
 /* Quick controls: the demo's option bars, one for playback, one for viewing. */
 .bar{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px;padding:7px 9px;border-radius:14px}
+.view-bar{flex-direction:column;align-items:stretch;gap:0;padding:0 9px}
+.bar-row{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px;padding:7px 0}
+.bar-row + .bar-row{border-top:1px solid #f0f1f2}
 .bar .divider{width:1px;height:20px;background:#e6e7e9;margin:0 2px}
 .bar button,.bar .opt{min-height:30px;display:inline-flex;align-items:center;gap:7px;padding:4px 10px;border-radius:9px;background:#f4f5f6;color:#5f646a;font-size:11px;white-space:nowrap}
 .bar button:hover{background:#e9eaec}
@@ -154,7 +157,9 @@ html,body{height:auto}
 .wiring td:last-child{text-align:right;font-variant-numeric:tabular-nums;color:#2f343a;font-weight:600}
 .wiring code{font:11px ui-monospace,monospace;background:#fff;border-radius:5px;padding:2px 5px}
 .wiring a{color:#4a6fa5}
-.colors-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:6px}
+.colors-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto auto;gap:6px}
+.icon-button{display:grid;place-items:center;width:36px;padding:0!important}
+.icon-button svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 #size-error{font-size:11px;color:#a36f78}
 .side-footer{display:flex;align-items:center;gap:10px;padding:12px 12px 0 0;border-top:1px solid #f0f1f2}
 .side-footer .status{flex:1;min-width:0;font-size:10px;line-height:1.6;color:#999da4}
@@ -168,7 +173,7 @@ html,body{height:auto}
 .preset-list{display:grid;gap:4px}
 .preset-item{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;padding:4px 0;border-bottom:1px solid #eeeff0}
 
-@media(max-width:1180px){.workspace{grid-template-columns:minmax(0,1fr) 452px;gap:16px;padding-inline:16px}}
+@media(max-width:1180px){.workspace{grid-template-columns:minmax(0,1fr) 380px;gap:16px;padding-inline:16px}}
 @media(max-width:860px){
   .page-header{height:84px}
   .preview .title{left:16px;top:14px;max-width:calc(100% - 130px);line-height:1.5}
@@ -180,7 +185,7 @@ html,body{height:auto}
   .side-body{overflow:visible;padding-right:0}
   .side-footer{padding-right:0}
 }
-@media(max-width:420px){.pair,.colors-row{grid-template-columns:minmax(0,1fr)}.zoom-slider input{width:90px}}
+@media(max-width:420px){.pair{grid-template-columns:minmax(0,1fr)}.zoom-slider input{width:90px}}
 </style>
 </head>
 <body>
@@ -210,18 +215,20 @@ html,body{height:auto}
     <span class="divider" aria-hidden="true"></span>
     <div class="seg" id="speed" data-value="1" role="group" aria-label="播放速度"><button class="chip" type="button" data-value="0.25">0.25×</button><button class="chip" type="button" data-value="0.5">0.5×</button><button class="chip" type="button" data-value="1">1×</button><button class="chip" type="button" data-value="2">2×</button></div>
     <span class="clock" id="clock" title="模拟时间：暂停时停止，慢放时变慢">时间 0.0 s</span>
-    <span class="divider" aria-hidden="true"></span>
-    <label class="opt demo-toggle" title="开发板要外接摄像头，或距离／人体感应传感器，才知道物体在哪；这里用鼠标模拟靠近的物体"><span>注视跟随</span><input id="follow" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
   </div>
-  <div class="bar card" aria-label="显示">
-    <button class="chip" type="button" id="zoom-fit" data-zoom="fit">适合窗口</button>
-    <button class="chip" type="button" id="zoom-real" data-zoom="1">实物大小</button>
-    <label class="opt zoom-slider" title="缩放（相对实物大小），最大到放满窗口；在常用比例附近会轻轻吸附"><input id="zoom" type="range" min="0" max="1000" value="1000" aria-label="缩放"><output id="zoom-value">1.0×</output></label>
-    <button class="chip" type="button" id="rotate">旋转 90°</button>
-    <span class="divider" aria-hidden="true"></span>
-    <label class="opt demo-toggle"><span>外框</span><input id="housing" type="checkbox" checked disabled><span class="demo-switch" aria-hidden="true"></span></label>
-    <label class="opt demo-toggle"><span>像素区虚线</span><input id="show-area" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
-    <label class="opt demo-toggle"><span>原始像素</span><input id="raw-pixels" type="checkbox"><span class="demo-switch" aria-hidden="true"></span></label>
+  <div class="bar card view-bar" aria-label="显示">
+    <div class="bar-row">
+      <button class="chip" type="button" id="rotate">屏幕旋转 90°</button>
+      <span class="divider" aria-hidden="true"></span>
+      <button class="chip" type="button" id="zoom-fit" data-zoom="fit">适合窗口</button>
+      <button class="chip" type="button" id="zoom-real" data-zoom="1">实物大小</button>
+      <label class="opt zoom-slider" title="缩放（相对实物大小），最大到放满窗口；在常用比例附近会轻轻吸附"><input id="zoom" type="range" min="0" max="1000" value="1000" aria-label="缩放"><output id="zoom-value">1.0×</output></label>
+    </div>
+    <div class="bar-row">
+      <label class="opt demo-toggle"><span>外框</span><input id="housing" type="checkbox" checked disabled><span class="demo-switch" aria-hidden="true"></span></label>
+      <label class="opt demo-toggle"><span>像素区虚线</span><input id="show-area" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
+      <label class="opt demo-toggle" title="开发板要外接摄像头，或距离／人体感应传感器，才知道物体在哪；这里用鼠标模拟靠近的物体"><span>注视跟随</span><input id="follow" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
+    </div>
   </div>
   <canvas id="screen" width="240" height="240" aria-hidden="true"></canvas>
 </main>
@@ -276,6 +283,7 @@ html,body{height:auto}
     <div class="colors-row" id="color-options">
       <label class="field"><span>眼睛</span><input class="push" id="eye-color" type="color" value="#ffffff"></label>
       <label class="field"><span>底色</span><input class="push" id="bg-color" type="color" value="#000000"></label>
+      <button type="button" class="small-button icon-button" id="color-swap" title="互换眼睛和底色" aria-label="互换眼睛和底色"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h15l-4-4M20 16H5l4 4"/></svg></button>
       <button type="button" class="small-button" id="color-reset" title="恢复白眼睛、黑底色">恢复</button>
     </div>
     <div class="field" id="mono-options"><span>OLED 发光</span><div class="seg push" id="mono-chips" role="group" aria-label="OLED 发光颜色"></div></div>
