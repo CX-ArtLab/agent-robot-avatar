@@ -28,19 +28,19 @@ const frame = () => page.locator('#screen').evaluate(canvas => {
   return { hash,lit,width:canvas.width,height:canvas.height };
 });
 const choose = async id => {
-  // The picker shows one screen type at a time as cards: pick the type, then
-  // the screen. The 自定义 tab opens the raw canvas with editable size instead.
+  // The picker lists one screen type at a time: pick the type tab, then the
+  // screen. The 自定义 tab opens the raw canvas with editable size instead.
   const group = await page.evaluate(id => id === 'custom' ? 'other' : SCREEN_PRESETS.find(item => item.id === id).group || 'other', id);
   await page.locator(`[data-group="${group}"]`).click();
-  if (id !== 'custom') await page.locator(`#profile [data-profile="${id}"]`).click();
+  if (group !== 'other') await page.locator('#profile').selectOption(id);
 };
 const glassBox = () => page.locator('#glass').evaluate(el => { const r = el.getBoundingClientRect(); return [r.left, r.top, r.width, r.height].map(Math.round); });
 try {
   await page.clock.install();
   await page.goto(file);
   await page.waitForFunction(() => document.getElementById('status').textContent.includes('本机绘制'));
-  await page.locator('#gaze-mode [data-value="off"]').click();
-  assert.match(await page.locator('#gaze-hint').textContent(),/正视/);
+  // The eyes follow a simulated object; the hint names the sensor it needs.
+  assert.match(await page.locator('#gaze-hint').textContent(),/摄像头/);
   // The Web demo's 17 buttons: one of them sleeps and wakes.
   assert.equal(await page.locator('.action').count(),17);
   assert((await frame()).lit>1000);
@@ -92,17 +92,25 @@ try {
   assert.equal(await clock(),framingClock,'housing must not restart simulation');
   assert.equal(await page.locator('#device').evaluate(el=>el.classList.contains('bare')),true);
   await page.locator('#housing').check();
-  await page.locator('#gaze-mode [data-value="manual"]').click();
-  assert.match(await page.locator('#gaze-hint').textContent(),/lookAt/);
-  await page.locator('#gx').fill('1');
-  assert.notEqual((await frame()).hash,centered.hash);
-  // Gaze range changes how far the same gaze moves the eyes, not the centred pose.
-  const medium=await frame();
+  // A pointer inside the sensing ring is the nearby object; the eyes look at it.
+  await page.locator('#blink').uncheck();
+  await page.locator('#pause').click();
+  const lookAt = async () => {
+    const box = await page.locator('#device').boundingBox();
+    await page.mouse.move(box.x + box.width + 30, box.y + box.height / 2);
+    await page.clock.runFor(1500);
+    return (await frame()).hash;
+  };
+  const medium=await lookAt();
+  assert.notEqual(medium,centered.hash,'the eyes follow the object');
+  // Gaze range changes how far the same target moves the eyes.
   await page.locator('#gaze-range [data-value="2"]').click();
-  assert.notEqual((await frame()).hash,medium.hash,'large gaze range moves the eyes further');
+  assert.notEqual(await lookAt(),medium,'large gaze range moves the eyes further');
   await page.locator('#gaze-range [data-value="1"]').click();
-  assert.equal((await frame()).hash,medium.hash);
-  await page.locator('#center').click(); assert.equal((await frame()).hash,centered.hash);
+  await page.mouse.move(0, 0); await page.clock.runFor(2500);
+  assert.equal((await frame()).hash,centered.hash,'the eyes return when the object leaves');
+  await page.locator('#blink').check();
+  await page.locator('#pause').click();
   // The frame-rate cap follows the screen; changing timing keeps the animation.
   assert.match(await page.locator('#fps [data-value="max"]').textContent(),/^当前屏幕上限 \d+$/);
   assert.equal(await page.locator('#fps [data-value="60"]').count(),0,'tiers above the screen limit are not offered');
@@ -155,9 +163,9 @@ try {
   await page.locator('#rotate').click();
   assert.deepEqual([(await frame()).width,(await frame()).height],[170,320]);
   await page.locator('#next-profile').click();
-  assert.equal(await page.locator('#profile [aria-pressed="true"]').getAttribute('data-profile'),'t-display-114');
+  assert.equal(await page.locator('#profile').inputValue(),'t-display-114');
   await page.locator('#prev-profile').click();
-  assert.equal(await page.locator('#profile [aria-pressed="true"]').getAttribute('data-profile'),'t-display-s3');
+  assert.equal(await page.locator('#profile').inputValue(),'t-display-s3');
   // Every preset, reference or generic housing, renders its native framebuffer.
   for(const item of await page.evaluate(()=>SCREEN_PRESETS.map(preset=>preset.id))) {
     await choose(item);
@@ -169,7 +177,7 @@ try {
   assert.equal(overflowing,false,'mobile layout must not overflow');
   await choose('round');
   // A type chip narrows the picker to that type; the bus line estimates frame rate.
-  assert.deepEqual(await page.locator('#profile [data-profile]').evaluateAll(cards=>[...new Set(cards.map(c=>SCREEN_PRESETS.find(p=>p.id===c.dataset.profile).group))]),['round']);
+  assert.deepEqual(await page.locator('#profile option').evaluateAll(options=>[...new Set(options.map(o=>SCREEN_PRESETS.find(p=>p.id===o.value).group))]),['round']);
   assert.match(await page.locator('#screen-spec').textContent(),/SPI 40 MHz/);
   // Screens with a firmware example show the board, build command and wiring.
   await choose('gc9a01-128');

@@ -28,12 +28,8 @@
   const ZOOM_SNAPS = [1,1.5,2,3,4,5,6,8,10,12,16];
   const BARE_PITCH_MM = .15; // presets without physical data (raw canvas, custom sizes)
   const DEFAULT_COLORS = {eye:'#ffffff',bg:'#000000'};
-  // What each gaze source needs on a real board.
-  const GAZE_HINTS = {
-    track:'开发板需要外接摄像头，或距离／人体感应传感器来提供目标位置；这里用鼠标模拟靠近的物体。',
-    manual:'由你的程序指定看的方向（C++ 的 lookAt()），不需要额外硬件。',
-    off:'眼睛保持正视前方。'
-  };
+  // What following an object needs on a real board.
+  const GAZE_HINT = '开发板需要外接摄像头，或距离／人体感应传感器来提供目标位置；这里用鼠标模拟靠近的物体。';
   const $ = id => document.getElementById(id);
   const store = {
     get(key,fallback){try{const v=localStorage.getItem('robotEyesPreview.'+key);return v?JSON.parse(v):fallback;}catch(_){return fallback;}},
@@ -41,7 +37,7 @@
   };
   // Every option is remembered in this browser, except screen-specific frame rate.
   const CHECKBOXES = ['housing','show-area','raw-pixels','pixel-grid','glass-glare','blink','transitions','moving-only'];
-  const SEGMENTS = ['gaze-mode','gaze-range','motion-sensitivity','response','hold','speed'];
+  const SEGMENTS = ['gaze-range','motion-sensitivity','response','hold','speed'];
   const screen = $('screen'), ctx = screen.getContext('2d',{alpha:false});
   let panel = null;
   let api, image, base = SCREEN_PRESETS[0], preset = base, rotated = false, time = 0, paused = false;
@@ -148,10 +144,8 @@
     // whole sensing ring stays on the stage too.
     const w=r.width-40, h=r.height-96;
     let max=Math.min(w/g.w,h/g.h);
-    if(segValue('gaze-mode')==='track'){
-      const ring=Math.min(r.width-32,r.height-64)-Number($('sense-radius').value)*2;
-      max=Math.min(max,ring/Math.max(g.w,g.h));
-    }
+    const ring=Math.min(r.width-32,r.height-64)-Number($('sense-radius').value)*2;
+    max=Math.min(max,ring/Math.max(g.w,g.h));
     max=Math.max(.05,max/CSS_PX_PER_MM);
     return [Math.min(max*.2,1),max];
   }
@@ -216,7 +210,6 @@
       glow:true,round:preset.frame==='round',corner:base.corner||0,mono});
   }
   function sensorInput() {
-    if(segValue('gaze-mode')!=='track')return;
     const rect=$('device').getBoundingClientRect();
     const zone=$('sense-zone').getBoundingClientRect();
     const dx=pointer.x-(rect.left+rect.width/2), dy=pointer.y-(rect.top+rect.height/2);
@@ -233,10 +226,10 @@
   }
   // Gaze feedback sits right under the screen, where the eyes are watched.
   function updateTrackingStatus() {
-    const mode=segValue('gaze-mode'), locked=mode==='track'&&!!api.eyes_is_tracking();
+    const locked=!!api.eyes_is_tracking();
     $('sense-zone').classList.toggle('active',locked);
     const ignored=api.eyes_action()!==0;
-    const text=mode==='off'?'':mode==='manual'?'手动注视':ignored?'当前动作暂不应用注视方向'
+    const text=ignored?'当前动作暂不应用注视方向'
       :locked?'正在注视／离开后短暂停留':$('moving-only').checked?'在虚线范围内移动鼠标，眼睛就会看过去':'把鼠标移进虚线范围，眼睛就会看过去';
     if(text!==trackingText){$('tracking-note').textContent=text;trackingText=text;}
   }
@@ -303,7 +296,6 @@
     $('panel').width=Math.max(1,Math.round(cw*dpr));$('panel').height=Math.max(1,Math.round(ch*dpr));
     // A circular sensing zone around the module, whatever its aspect ratio.
     const radius=Number($('sense-radius').value), ring=Math.max(g.w,g.h)*ppm+radius*2;
-    $('sense-zone').hidden=segValue('gaze-mode')!=='track';
     $('sense-zone').style.width=$('sense-zone').style.height=ring+'px';
     // Label just above the module, inside the ring, so the stage never clips it.
     $('sense-zone').style.setProperty('--label-top',Math.max(4,(ring-g.h*ppm)/2-26)+'px');
@@ -410,24 +402,14 @@
     if(!api.eyes_gaze_config(.5,.4,Number(segValue('hold')),Number(segValue('response')),$('moving-only').checked?1:0))
       throw new Error('Invalid gaze configuration');
   }
-  // One gaze source at a time: a simulated nearby object, the manual
-  // sliders, or none.
+  // The eyes follow a simulated nearby object.
   function applyGazeMode(redraw=true) {
-    const mode=segValue('gaze-mode');
     pointer.detected=false;lastMotion=-Infinity;motionAnchor=null;
-    api.eyes_tracking(mode==='track'?1:0,now());
+    api.eyes_tracking(1,now());
     applyGazeConfig();
-    if(mode==='manual')api.eyes_gaze(Number($('gx').value),Number($('gy').value));
-    $('gaze-hint').textContent=GAZE_HINTS[mode];
-    $('track-options').hidden=mode!=='track';
-    $('manual-options').hidden=mode!=='manual';
+    $('gaze-hint').textContent=GAZE_HINT;
     $('motion-sensitivity').setAttribute('aria-disabled',String(!$('moving-only').checked));
     if(redraw){resizeDisplay();draw();}
-  }
-  function gaze() {
-    const x=Number($('gx').value),y=Number($('gy').value);
-    $('gx-value').value=x.toFixed(2);$('gy-value').value=y.toFixed(2);
-    api.eyes_gaze(x,y);draw();
   }
   function advance(delta) {
     time+=delta;
@@ -462,45 +444,13 @@
   // The picker lists one screen type at a time; the type tabs switch it.
   // The 自定义 tab edits a size directly instead of listing presets.
   function groupPresets(group) { return SCREEN_PRESETS.filter(item=>(item.group||'other')===group); }
-  // A card shows the module's own artwork, like a skin's thumbnail.
-  const thumbs={};
-  function thumbnail(item) {
-    if(!(item.id in thumbs)){
-      const m=item.module&&DISPLAY_FRAMES[item.module]?DISPLAY_FRAMES[item.module]:item.board?boards[item.id]||(boards[item.id]=buildBoard(item)):null;
-      let svg=m&&m.svg;
-      if(svg&&(item.rotation||0)%180===90){
-        const doc=new DOMParser().parseFromString(svg,'image/svg+xml').documentElement;
-        const group=document.createElementNS('http://www.w3.org/2000/svg','g');
-        group.setAttribute('transform','translate('+m.height+' 0) rotate(90)');
-        while(doc.firstChild)group.append(doc.firstChild);
-        doc.append(group);doc.setAttribute('viewBox','0 0 '+m.height+' '+m.width);
-        svg=new XMLSerializer().serializeToString(doc);
-      }
-      thumbs[item.id]=svg?'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg):'';
-    }
-    return thumbs[item.id];
-  }
-  function screenCard(item) {
-    const card=document.createElement('button');card.type='button';card.className='screen-card';
-    card.dataset.profile=item.id;card.title=item.name;
-    const thumb=document.createElement('div');thumb.className='thumb';
-    const src=thumbnail(item);
-    if(src){const img=document.createElement('img');img.alt='';img.src=src;thumb.append(img);}
-    else{
-      const bare=document.createElement('div');bare.className='bare';
-      const k=40/Math.max(item.width,item.height);
-      bare.style.width=item.width*k+'px';bare.style.height=item.height*k+'px';thumb.append(bare);
-    }
-    const name=document.createElement('b');name.textContent=item.name;
-    const size=document.createElement('span');size.textContent=item.width+' × '+item.height;
-    card.append(thumb,name,size);
-    return card;
-  }
   function renderProfiles() {
-    const items=groupPresets(screenGroup), grid=$('profile'), custom=screenGroup==='other';
-    if(grid.dataset.shown!==screenGroup){grid.replaceChildren(...items.map(screenCard));grid.dataset.shown=screenGroup;}
-    grid.querySelectorAll('[data-profile]').forEach(card=>card.setAttribute('aria-pressed',String(card.dataset.profile===base.id)));
-    grid.hidden=custom&&!items.length;$('custom-size').hidden=!custom;$('stepper').hidden=custom;
+    const items=groupPresets(screenGroup), select=$('profile'), custom=screenGroup==='other';
+    select.replaceChildren(...items.map(item=>{
+      const option=document.createElement('option');option.value=item.id;option.textContent=item.name+' · '+item.width+'×'+item.height;return option;
+    }));
+    select.value=base.id;
+    select.hidden=custom;$('custom-size').hidden=!custom;$('stepper').hidden=custom;
     document.querySelectorAll('[data-group]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.group===screenGroup)));
     const index=items.indexOf(base);
     $('profile-index').textContent=index<0?'':(index+1)+' / '+items.length;
@@ -568,7 +518,7 @@
       $('step').onclick=()=>{if(paused)advance(Math.ceil(1000/fpsValue()));};
       $('demo').onclick=()=>{setCycling(!cycling);if(cycling){cycleIndex=0;nextCycle=time+4000;play(0);}};
       $('reset').onclick=()=>configure();
-      $('profile').onclick=event=>{const card=event.target.closest('[data-profile]');if(card&&card.dataset.profile!==base.id)selectProfile(card.dataset.profile);};
+      $('profile').onchange=()=>selectProfile($('profile').value);
       $('prev-profile').onclick=()=>stepProfile(-1);
       $('next-profile').onclick=()=>stepProfile(1);
       $('screen-groups').onclick=event=>{
@@ -588,7 +538,6 @@
       for(const id of ['blink','transitions'])$(id).onchange=()=>{applyTiming();saveSettings();};
       $('housing').onchange=()=>{resizeDisplay();saveSettings();};
       $('sense-radius').oninput=()=>{resizeDisplay();saveSettings();};
-      bindSeg('gaze-mode',()=>applyGazeMode());
       for(const id of ['hold','response'])bindSeg(id,()=>{applyGazeConfig();updateTrackingStatus();});
       $('moving-only').onchange=()=>{applyGazeMode(false);updateTrackingStatus();saveSettings();};
       bindSeg('gaze-range',()=>{api.eyes_gaze_range(Number(segValue('gaze-range')));draw();});
@@ -597,8 +546,6 @@
       $('fit').onclick=event=>{const b=event.target.closest('[data-fit]');if(b){fit=b.dataset.fit;applyLayout(true);}};
       for(const id of ['face-scale','offset-x','offset-y'])$(id).oninput=()=>applyLayout(true);
       $('layout-reset').onclick=resetLayout;
-      $('gx').oninput=$('gy').oninput=gaze;
-      $('center').onclick=()=>{$('gx').value=$('gy').value='0';gaze();};
       $('zoom-fit').onclick=()=>{zoomMode='fit';resizeDisplay();saveSettings();};
       $('zoom-real').onclick=()=>{zoomMode='real';resizeDisplay();saveSettings();};
       $('zoom').oninput=zoomFromSlider;
