@@ -9,6 +9,10 @@
 // Pin numbers come from each manufacturer's documentation, or for a few boards
 // from the Arduino_GFX and ESPHome board lists (see README); none of these
 // boards has been tested on real hardware yet.
+//
+// Only the block for your board is compiled. To keep just that one, delete
+// the other blocks here and their [env:...] sections in platformio.ini; the
+// eyes library itself is the same for every board.
 
 #include <Arduino.h>
 #include <AgentRobotEyes.h>

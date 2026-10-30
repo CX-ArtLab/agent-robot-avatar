@@ -102,6 +102,8 @@ pio run -d embedded -e esp32-ssd1306
 
 To build with settings tuned in the preview, see [From the preview to your board](#from-the-preview-to-your-board).
 
+Every board shares the same eyes library; only its screen code differs. If you want a tidy copy for your project, keep your board's `[env:...]` section in `platformio.ini` and its block in `examples/arduino/boards.h`, and delete the others.
+
 Upload **only the environment matching your board and wiring**:
 
 ```sh
