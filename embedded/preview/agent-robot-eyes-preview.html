@@ -1190,8 +1190,8 @@ SUCH DAMAGE.
 -->
 <div class="canvas preview" id="demo-canvas">
 <header class="page-header">
-  <div class="title"><span>Agent Robot Avatar</span><span>C++ + WebAssembly</span><span>硬件表情版</span></div>
-  <div class="build-badge">硬件 0.1.0 · 实验版</div>
+  <div class="title"><span>Agent Robot Avatar</span><span>C++ + WebAssembly</span><span>嵌入式设备版</span></div>
+  <div class="build-badge">嵌入式设备版 0.1.0 · 实验版</div>
 </header>
 <div class="workspace">
 <main class="left">
@@ -1201,7 +1201,7 @@ SUCH DAMAGE.
       <div class="sense-zone" id="sense-zone" aria-hidden="true"></div>
       <div class="device" id="device" data-profile="tft">
         <div class="frame-art" id="frame-art" aria-hidden="true"></div>
-        <div class="glass" id="glass"><canvas id="panel" role="img" aria-label="硬件表情动画预览"></canvas><div class="glare" id="glare"></div></div>
+        <div class="glass" id="glass"><canvas id="panel" role="img" aria-label="嵌入式设备版表情动画预览"></canvas><div class="glare" id="glare"></div></div>
       </div>
     </div>
     <div class="status-pill" id="current" role="status">idle · 正常</div>
@@ -2140,7 +2140,7 @@ class PanelRenderer {
     const hex=color=>'0x'+color.slice(1).toUpperCase();
     const num=value=>Number(value).toFixed(2)+'f';
     const lines=[
-      '// Agent Robot Eyes 设置，由硬件预览导出。',
+      '// Agent Robot Eyes 设置，由嵌入式设备版预览导出。',
       '// 屏幕：'+base.name+'，'+preset.width+' × '+preset.height,
       fw?'// 编译：pio run -e '+fw.env:'// 这块屏幕还没有示例固件，需要自己接入屏幕驱动。',
       '#pragma once','',

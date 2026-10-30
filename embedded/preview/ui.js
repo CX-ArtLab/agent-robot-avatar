@@ -516,7 +516,7 @@
     const hex=color=>'0x'+color.slice(1).toUpperCase();
     const num=value=>Number(value).toFixed(2)+'f';
     const lines=[
-      '// Agent Robot Eyes 设置，由硬件预览导出。',
+      '// Agent Robot Eyes 设置，由嵌入式设备版预览导出。',
       '// 屏幕：'+base.name+'，'+preset.width+' × '+preset.height,
       fw?'// 编译：pio run -e '+fw.env:'// 这块屏幕还没有示例固件，需要自己接入屏幕驱动。',
       '#pragma once','',
