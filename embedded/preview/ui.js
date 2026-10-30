@@ -34,7 +34,9 @@
     ['Claude','#faf9f5','#d97757'],['ChatGPT','#ffffff','#0fa578'],['ComfyUI','#211927','#f2ff59'],['Ubuntu','#e95420','#ffffff'],
     ['Dribbble','#ea4c89','#ffffff'],['Discord','#5865f2','#ffffff'],['Telegram','#229ed9','#ffffff'],['Snapchat','#fffc00','#000000'],
     ['YouTube','#ffffff','#ff0000'],['Netflix','#141414','#e50914'],['Spotify','#121212','#1ed760'],['湖人','#fdb927','#552583'],
-    ['勇士','#1d428a','#ffc72c'],['凯尔特人','#007a33','#ffffff'],['巴萨','#a50044','#edbb00'],['曼城','#6cabdd','#1c2c5b']
+    ['勇士','#1d428a','#ffc72c'],['凯尔特人','#007a33','#ffffff'],['巴萨','#a50044','#edbb00'],['曼城','#6cabdd','#1c2c5b'],
+    // Four more for the screen only.
+    ['抹茶','#f4f1e6','#5b7f4a'],['薰衣草','#ffffff','#8e7cc3'],['珊瑚','#2b1d1a','#ff7f66'],['冰川','#0e2a47','#bfe6ff']
   ].map(([name,eye,bg])=>({name,eye,bg}));
   // Gaze settings for the simulated nearby object. The library exposes them
   // all; the preview keeps one switch and these defaults.
