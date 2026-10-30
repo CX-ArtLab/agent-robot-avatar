@@ -27,9 +27,12 @@
   const ZOOM_SNAPS = [1,1.5,2,3,4,5,6,8,10,12,16];
   const BARE_PITCH_MM = .15; // presets without physical data (raw canvas, custom sizes)
   const DEFAULT_COLORS = {eye:'#ffffff',bg:'#000000'};
-  // The Web demo's palettes. There the head sits on the background and the
-  // eyes show the background through; on a screen the face fills the panel
-  // and the eyes take the background colour.
+  function luminance(hex) {
+    const [r,g,b]=[1,3,5].map(i=>{const c=parseInt(hex.slice(i,i+2),16)/255;return c<=.04045?c/12.92:((c+.055)/1.055)**2.4;});
+    return .2126*r+.7152*g+.0722*b;
+  }
+  // The Web demo's palettes. On a screen the lighter colour lights the eyes
+  // and the darker one fills the panel.
   const PALETTES = [
     ['Claude','#faf9f5','#d97757'],['ChatGPT','#ffffff','#0fa578'],['ComfyUI','#211927','#f2ff59'],['Ubuntu','#e95420','#ffffff'],
     ['Dribbble','#ea4c89','#ffffff'],['Discord','#5865f2','#ffffff'],['Telegram','#229ed9','#ffffff'],['Snapchat','#fffc00','#000000'],
@@ -37,7 +40,7 @@
     ['勇士','#1d428a','#ffc72c'],['凯尔特人','#007a33','#ffffff'],['巴萨','#a50044','#edbb00'],['曼城','#6cabdd','#1c2c5b'],
     // Four more for the screen only.
     ['抹茶','#f4f1e6','#5b7f4a'],['薰衣草','#ffffff','#8e7cc3'],['珊瑚','#2b1d1a','#ff7f66'],['冰川','#0e2a47','#bfe6ff']
-  ].map(([name,eye,bg])=>({name,eye,bg}));
+  ].map(([name,a,b])=>luminance(a)>=luminance(b)?{name,eye:a,bg:b}:{name,eye:b,bg:a});
   // Gaze settings for the simulated nearby object. The library exposes them
   // all; the preview keeps one switch and these defaults.
   const GAZE = {radius:72,range:1,holdMs:600,responseMs:140,motionPx:3};
