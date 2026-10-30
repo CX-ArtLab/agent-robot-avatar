@@ -11,6 +11,11 @@
     ['surprise','惊讶'],['love','喜欢'],['random','随机'],['sleep','睡着'],['wake','醒来'],
     ['waiting-wave','等待 · 波动']
   ];
+  // The buttons follow the Web demo's order; one button sleeps and wakes.
+  const BUTTON_ORDER = ['idle','bored','waiting-spin','waiting-wrap','waiting-wave','input','affirm','success','failure',
+    'wary','inspect','angry','refuse','surprise','sleep','love','random'];
+  const actionIndex = name => ACTIONS.findIndex(([action])=>action===name);
+  const SLEEP = actionIndex('sleep'), WAKE = actionIndex('wake');
   const GROUPS = [['round','圆形'],['square','方形'],['bar','长条'],['kit','套件'],['mono','OLED'],['other','自定义']];
   // Whole-frame bandwidth of the usual wiring: [label, bits per second, bits per pixel].
   const BUSES = {
@@ -68,8 +73,12 @@
     const index=api.eyes_action();
     if(index===active)return;
     active=index;
-    buttons.forEach((button,i)=>button.setAttribute('aria-pressed',String(i===index)));
-    $('current').textContent=ACTIONS[index][1]+' · '+ACTIONS[index][0];
+    buttons.forEach(button=>button.setAttribute('aria-pressed',String(Number(button.dataset.index)===index)));
+    // While asleep the sleep button wakes the eyes.
+    const sleepButton=buttons.find(button=>Number(button.dataset.index)===SLEEP);
+    sleepButton.textContent=index===SLEEP?'醒来':'睡着';
+    sleepButton.title=index===SLEEP?'醒来 · wake':'睡着 · sleep';
+    $('current').textContent=ACTIONS[index][0]+' · '+ACTIONS[index][1];
   }
 
   // ---------- settings ----------
@@ -135,7 +144,15 @@
   // so the module is always fully visible without scrollbars.
   function zoomRange(g) {
     const r=$('stage').getBoundingClientRect();
-    const max=Math.max(.05,Math.min((r.width-40)/g.w,(r.height-40)/g.h)/CSS_PX_PER_MM);
+    // Room for the name above and the state below; with tracking on, the
+    // whole sensing ring stays on the stage too.
+    const w=r.width-40, h=r.height-96;
+    let max=Math.min(w/g.w,h/g.h);
+    if(segValue('gaze-mode')==='track'){
+      const ring=Math.min(r.width-32,r.height-64)-Number($('sense-radius').value)*2;
+      max=Math.min(max,ring/Math.max(g.w,g.h));
+    }
+    max=Math.max(.05,max/CSS_PX_PER_MM);
     return [Math.min(max*.2,1),max];
   }
   function currentScale(g) {
@@ -220,7 +237,7 @@
     $('sense-zone').classList.toggle('active',locked);
     const ignored=api.eyes_action()!==0;
     const text=mode==='off'?'':mode==='manual'?'手动注视':ignored?'当前动作暂不应用注视方向'
-      :'跟随物体 · '+(locked?'正在注视／离开后短暂停留':$('moving-only').checked?'等待范围内的移动目标':'鼠标进入虚线范围即注视');
+      :locked?'正在注视／离开后短暂停留':$('moving-only').checked?'在虚线范围内移动鼠标，眼睛就会看过去':'把鼠标移进虚线范围，眼睛就会看过去';
     if(text!==trackingText){$('tracking-note').textContent=text;trackingText=text;}
   }
   function draw(force=false) {
@@ -331,6 +348,8 @@
   function syncScreenInfo() {
     const bus=BUSES[base.bus];
     $('spec-res').textContent=preset.width+' × '+preset.height;
+    $('stage-title').textContent=base.name;
+    $('stage-res').textContent=preset.width+' × '+preset.height;
     $('spec-color').textContent=base.panel==='oled'?'单色':base.panel?'彩色':'1-bit 画布';
     $('spec-fps').textContent=bus?'最高约 '+screenLimit()+' FPS':'帧率不限';
     $('screen-spec').textContent=[base.id==='custom'?'自定义尺寸':base.id==='eyes'?'原始眼睛画布':base.controller,
@@ -443,13 +462,45 @@
   // The picker lists one screen type at a time; the type tabs switch it.
   // The 自定义 tab edits a size directly instead of listing presets.
   function groupPresets(group) { return SCREEN_PRESETS.filter(item=>(item.group||'other')===group); }
+  // A card shows the module's own artwork, like a skin's thumbnail.
+  const thumbs={};
+  function thumbnail(item) {
+    if(!(item.id in thumbs)){
+      const m=item.module&&DISPLAY_FRAMES[item.module]?DISPLAY_FRAMES[item.module]:item.board?boards[item.id]||(boards[item.id]=buildBoard(item)):null;
+      let svg=m&&m.svg;
+      if(svg&&(item.rotation||0)%180===90){
+        const doc=new DOMParser().parseFromString(svg,'image/svg+xml').documentElement;
+        const group=document.createElementNS('http://www.w3.org/2000/svg','g');
+        group.setAttribute('transform','translate('+m.height+' 0) rotate(90)');
+        while(doc.firstChild)group.append(doc.firstChild);
+        doc.append(group);doc.setAttribute('viewBox','0 0 '+m.height+' '+m.width);
+        svg=new XMLSerializer().serializeToString(doc);
+      }
+      thumbs[item.id]=svg?'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg):'';
+    }
+    return thumbs[item.id];
+  }
+  function screenCard(item) {
+    const card=document.createElement('button');card.type='button';card.className='screen-card';
+    card.dataset.profile=item.id;card.title=item.name;
+    const thumb=document.createElement('div');thumb.className='thumb';
+    const src=thumbnail(item);
+    if(src){const img=document.createElement('img');img.alt='';img.src=src;thumb.append(img);}
+    else{
+      const bare=document.createElement('div');bare.className='bare';
+      const k=40/Math.max(item.width,item.height);
+      bare.style.width=item.width*k+'px';bare.style.height=item.height*k+'px';thumb.append(bare);
+    }
+    const name=document.createElement('b');name.textContent=item.name;
+    const size=document.createElement('span');size.textContent=item.width+' × '+item.height;
+    card.append(thumb,name,size);
+    return card;
+  }
   function renderProfiles() {
-    const items=groupPresets(screenGroup), select=$('profile'), custom=screenGroup==='other';
-    select.replaceChildren(...items.map(item=>{
-      const option=document.createElement('option');option.value=item.id;option.textContent=item.name;return option;
-    }));
-    select.value=base.id;
-    select.hidden=custom;$('custom-size').hidden=!custom;$('stepper').hidden=custom;
+    const items=groupPresets(screenGroup), grid=$('profile'), custom=screenGroup==='other';
+    if(grid.dataset.shown!==screenGroup){grid.replaceChildren(...items.map(screenCard));grid.dataset.shown=screenGroup;}
+    grid.querySelectorAll('[data-profile]').forEach(card=>card.setAttribute('aria-pressed',String(card.dataset.profile===base.id)));
+    grid.hidden=custom&&!items.length;$('custom-size').hidden=!custom;$('stepper').hidden=custom;
     document.querySelectorAll('[data-group]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.group===screenGroup)));
     const index=items.indexOf(base);
     $('profile-index').textContent=index<0?'':(index+1)+' / '+items.length;
@@ -459,12 +510,12 @@
     const index=items.indexOf(base);
     selectProfile(items[(index+delta+items.length)%items.length].id);
   }
-  // Narrows the action bar to the smallest width that keeps its row count,
+  // Narrows the action row to the smallest width that keeps its row count,
   // so the buttons split evenly between rows.
   function balanceActions() {
     const bar=$('actions'), rows=()=>new Set([...bar.children].map(b=>b.offsetTop)).size;
     bar.style.width='';
-    let hi=Math.min(bar.parentElement.clientWidth,860);bar.style.width=hi+'px';
+    let hi=bar.parentElement.clientWidth-16;bar.style.width=hi+'px';
     const target=rows();
     let lo=Math.max(...[...bar.children].map(b=>b.offsetWidth));
     while(hi-lo>1){const mid=Math.floor((lo+hi)/2);bar.style.width=mid+'px';if(rows()<=target)hi=mid;else lo=mid;}
@@ -483,13 +534,14 @@
         }}
       });
       api=instance.exports;api._initialize();
-      ACTIONS.forEach(([name,label],index)=>{
+      for(const name of BUTTON_ORDER){
+        const index=actionIndex(name), label=ACTIONS[index][1];
         const button=document.createElement('button');
-        button.className='action';button.dataset.action=name;button.title=label+' · '+name;
+        button.className='action';button.dataset.action=name;button.dataset.index=String(index);button.title=label+' · '+name;
         button.textContent=label;button.setAttribute('aria-pressed','false');
-        button.onclick=()=>{setCycling(false);play(index);};
+        button.onclick=()=>{setCycling(false);play(index===SLEEP&&active===SLEEP?WAKE:index);};
         $('actions').append(button);buttons.push(button);
-      });
+      }
       for(const [group,label] of GROUPS) {
         const items=groupPresets(group);
         if(!items.length)continue;
@@ -516,7 +568,7 @@
       $('step').onclick=()=>{if(paused)advance(Math.ceil(1000/fpsValue()));};
       $('demo').onclick=()=>{setCycling(!cycling);if(cycling){cycleIndex=0;nextCycle=time+4000;play(0);}};
       $('reset').onclick=()=>configure();
-      $('profile').onchange=()=>selectProfile($('profile').value);
+      $('profile').onclick=event=>{const card=event.target.closest('[data-profile]');if(card&&card.dataset.profile!==base.id)selectProfile(card.dataset.profile);};
       $('prev-profile').onclick=()=>stepProfile(-1);
       $('next-profile').onclick=()=>stepProfile(1);
       $('screen-groups').onclick=event=>{

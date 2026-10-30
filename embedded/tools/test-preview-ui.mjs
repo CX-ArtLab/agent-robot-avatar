@@ -28,11 +28,11 @@ const frame = () => page.locator('#screen').evaluate(canvas => {
   return { hash,lit,width:canvas.width,height:canvas.height };
 });
 const choose = async id => {
-  // The picker lists one screen type at a time: pick the type tab, then the
-  // screen. The 自定义 tab opens the raw canvas with editable size instead.
+  // The picker shows one screen type at a time as cards: pick the type, then
+  // the screen. The 自定义 tab opens the raw canvas with editable size instead.
   const group = await page.evaluate(id => id === 'custom' ? 'other' : SCREEN_PRESETS.find(item => item.id === id).group || 'other', id);
   await page.locator(`[data-group="${group}"]`).click();
-  if (group !== 'other') await page.locator('#profile').selectOption(id);
+  if (id !== 'custom') await page.locator(`#profile [data-profile="${id}"]`).click();
 };
 const glassBox = () => page.locator('#glass').evaluate(el => { const r = el.getBoundingClientRect(); return [r.left, r.top, r.width, r.height].map(Math.round); });
 try {
@@ -41,7 +41,8 @@ try {
   await page.waitForFunction(() => document.getElementById('status').textContent.includes('本机绘制'));
   await page.locator('#gaze-mode [data-value="off"]').click();
   assert.match(await page.locator('#gaze-hint').textContent(),/正视/);
-  assert.equal(await page.locator('.action').count(),18);
+  // The Web demo's 17 buttons: one of them sleeps and wakes.
+  assert.equal(await page.locator('.action').count(),17);
   assert((await frame()).lit>1000);
   assert.equal(await page.locator('#step').isDisabled(),true);
   await page.locator('#pause').click();
@@ -64,11 +65,13 @@ try {
   await page.locator('[data-action="waiting-spin"]').click();
   assert.equal(await page.locator('#demo').getAttribute('aria-pressed'),'false');
   await page.clock.runFor(5100);
-  assert((await page.locator('#current').textContent()).endsWith('waiting-spin'));
+  assert((await page.locator('#current').textContent()).startsWith('waiting-spin'));
   await page.locator('[data-action="sleep"]').click(); await page.clock.runFor(3600);
   const sleeping=await frame(); await page.clock.runFor(5000);
   assert.equal((await frame()).hash,sleeping.hash);
-  await page.locator('[data-action="wake"]').click(); await page.clock.runFor(1200);
+  assert.equal(await page.locator('[data-action="sleep"]').textContent(),'醒来');
+  await page.locator('[data-action="sleep"]').click(); await page.clock.runFor(1200);
+  assert.equal(await page.locator('[data-action="sleep"]').textContent(),'睡着');
   assert((await page.locator('#current').textContent()).includes('idle'));
   await choose('oled');
   assert.deepEqual([(await frame()).width,(await frame()).height],[128,64]);
@@ -108,16 +111,16 @@ try {
   const loving=await clock();
   await page.locator('#fps [data-value="15"]').click();
   assert.equal(await clock(),loving,'changing the frame rate does not restart');
-  assert((await page.locator('#current').textContent()).endsWith('love'));
+  assert((await page.locator('#current').textContent()).startsWith('love'));
   const before=Number.parseFloat(await clock());
   await page.locator('#step').click();
   // One 15 FPS frame is 67 ms; the clock shows hundredths, so allow its rounding.
   assert(Math.abs(Number.parseFloat(await clock())-before-.067)<=.011);
   await page.locator('#blink').uncheck(); await page.locator('#transitions').uncheck();
-  assert((await page.locator('#current').textContent()).endsWith('love'),'blink/transition switches keep the action');
+  assert((await page.locator('#current').textContent()).startsWith('love'),'blink/transition switches keep the action');
   for(const action of ['input','angry','random','surprise','waiting-wave']) {
     await page.locator(`[data-action="${action}"]`).click();
-    assert((await page.locator('#current').textContent()).endsWith(action));
+    assert((await page.locator('#current').textContent()).startsWith(action+' '));
   }
   await choose('eyes');
   await page.locator('[data-zoom="1"]').click();
@@ -152,9 +155,9 @@ try {
   await page.locator('#rotate').click();
   assert.deepEqual([(await frame()).width,(await frame()).height],[170,320]);
   await page.locator('#next-profile').click();
-  assert.equal(await page.locator('#profile').inputValue(),'t-display-114');
+  assert.equal(await page.locator('#profile [aria-pressed="true"]').getAttribute('data-profile'),'t-display-114');
   await page.locator('#prev-profile').click();
-  assert.equal(await page.locator('#profile').inputValue(),'t-display-s3');
+  assert.equal(await page.locator('#profile [aria-pressed="true"]').getAttribute('data-profile'),'t-display-s3');
   // Every preset, reference or generic housing, renders its native framebuffer.
   for(const item of await page.evaluate(()=>SCREEN_PRESETS.map(preset=>preset.id))) {
     await choose(item);
@@ -166,7 +169,7 @@ try {
   assert.equal(overflowing,false,'mobile layout must not overflow');
   await choose('round');
   // A type chip narrows the picker to that type; the bus line estimates frame rate.
-  assert.deepEqual(await page.locator('#profile option').evaluateAll(options=>[...new Set(options.map(o=>SCREEN_PRESETS.find(p=>p.id===o.value).group))]),['round']);
+  assert.deepEqual(await page.locator('#profile [data-profile]').evaluateAll(cards=>[...new Set(cards.map(c=>SCREEN_PRESETS.find(p=>p.id===c.dataset.profile).group))]),['round']);
   assert.match(await page.locator('#screen-spec').textContent(),/SPI 40 MHz/);
   // Screens with a firmware example show the board, build command and wiring.
   await choose('gc9a01-128');
