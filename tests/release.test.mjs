@@ -29,3 +29,14 @@ test('release candidate rejects the latest npm tag', () => {
   assert.notEqual(result.status, 0);
   assert.match(result.stderr, /Refusing to publish prerelease/);
 });
+
+test('every README shows the package version in its badge and project status', async () => {
+  const { readFile, readdir } = await import('node:fs/promises');
+  const { version } = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8'));
+  const docs = (await readdir(path.join(root, 'docs'))).filter(name => /^README\..+\.md$/.test(name));
+  for (const file of ['README.md', ...docs.map(name => path.join('docs', name))]) {
+    const text = await readFile(path.join(root, file), 'utf8');
+    const versions = [...text.matchAll(/badge\/version-v([\d.]+)-|\*\*[^*\n]*v(\d+\.\d+\.\d+)\*\*/g)].map(match => match[1] || match[2]);
+    assert.deepEqual(versions, [version, version], file);
+  }
+});

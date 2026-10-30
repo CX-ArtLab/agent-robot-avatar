@@ -239,7 +239,7 @@ Issues und Pull Requests sind willkommen. Bitte vor Änderungen [`CONTRIBUTING.m
 
 ## Projektstatus
 
-**Aktuelle öffentliche Version: v0.6.0**
+**Aktuelle öffentliche Version: v0.7.1**
 
 Die öffentliche API bleibt bewusst kompakt, während sich das Projekt in Richtung einer zukünftigen Stabilitätszusage mit `1.0.0` entwickelt.
 
