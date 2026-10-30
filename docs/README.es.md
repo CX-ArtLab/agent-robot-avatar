@@ -176,7 +176,7 @@ Mantener pulsado el centro inicia la compresión. Al mover más de 4 píxeles CS
 
 188 skins en 17 series, con una luz que sigue al puntero. Cada skin tiene un número permanente: el número de serie seguido de dos cifras, así que 305 es el quinto skin de la serie 3. Los nombres pueden cambiar; los números nunca cambian ni se reutilizan.
 
-Todas las skins siguen siendo SVG puro: sin imágenes, canvas ni WebGL. Todas las skins juntas ocupan unos 70 KB por la red (unos 290 KB sin comprimir), y la mayor parte solo se carga cuando una página usa una skin.
+Todas las skins siguen siendo SVG puro: sin imágenes, canvas ni WebGL. Todas las skins juntas ocupan unos 70 KB por la red (unos 290 KB sin comprimir), y la mayor parte solo se carga cuando una página usa una skin. Como referencia, el avatar en sí (la versión lite, sin skins) ocupa unos 45 KB.
 
 <img src="../assets/readme/skin-gallery.jpg" alt="Galería de skins: destacados, filtros y búsqueda" width="100%">
 

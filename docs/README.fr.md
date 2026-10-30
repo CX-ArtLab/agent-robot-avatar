@@ -176,7 +176,7 @@ Maintenir le centre lance la compression. Après plus de 4 pixels CSS de déplac
 
 188 skins en 17 séries, avec une lumière qui suit le pointeur. Chaque skin a un numéro permanent : le numéro de série suivi de deux chiffres, donc 305 est le cinquième skin de la série 3. Les noms peuvent changer ; les numéros jamais, et ils ne sont pas réutilisés.
 
-Tous les skins restent en SVG pur : sans images, canvas ni WebGL. Tous les skins réunis pèsent environ 70 Ko sur le réseau (environ 290 Ko non compressés), et l’essentiel ne se charge que lorsqu’une page utilise un skin.
+Tous les skins restent en SVG pur : sans images, canvas ni WebGL. Tous les skins réunis pèsent environ 70 Ko sur le réseau (environ 290 Ko non compressés), et l’essentiel ne se charge que lorsqu’une page utilise un skin. À titre de comparaison, l’avatar lui-même (la version lite, sans skins) pèse environ 45 Ko.
 
 <img src="../assets/readme/skin-gallery.jpg" alt="Galerie de skins : sélection, filtres et recherche" width="100%">
 
