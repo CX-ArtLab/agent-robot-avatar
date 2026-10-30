@@ -75,6 +75,22 @@ html,body{height:auto}
 .bar .seg .chip[aria-pressed=true]{background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.08);color:#202327}
 .bar .opt{position:relative;cursor:pointer;user-select:none}
 .bar .opt > input[type=checkbox]{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;pointer-events:auto;cursor:pointer;z-index:1}
+/* The export: a button at the foot of the panel and a sheet with the file. */
+.side-footer{display:flex;align-items:center;gap:10px;padding:12px 12px 0 0;border-top:1px solid #f0f1f2}
+.side-footer .note{flex:1;font-size:11px;color:#9a9ea4}
+#export,.sheet-actions button{flex-shrink:0;padding:10px 14px;border-radius:10px;background:#f1f2f3;color:#30343a;font-size:13px;font-weight:600;white-space:nowrap}
+#export:hover,.sheet-actions button:hover{background:#e7e8ea;color:#15171a}
+.sheet-actions .primary{background:#30343a;color:#fff}
+.sheet-actions .primary:hover{background:#15171a;color:#fff}
+.sheet-backdrop{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:16px;background:rgba(20,22,26,.18);backdrop-filter:blur(3px)}
+.sheet{width:min(600px,100%);max-height:calc(100vh - 32px);display:flex;flex-direction:column;gap:10px;padding:18px 20px;background:#fff}
+.sheet-head{display:flex;align-items:center;justify-content:space-between}
+.sheet-head h2{margin:0;font-size:14px;font-weight:600;color:#30343a}
+.sheet-close{width:28px;height:28px;padding:0;border-radius:50%;background:#f1f2f3;color:#5f646a;font-size:16px;line-height:1}
+.sheet code{font:11px ui-monospace,monospace;background:#f1f2f3;border-radius:5px;padding:1px 5px}
+.sheet pre{flex:1;min-height:0;margin:0;overflow:auto;padding:12px 14px;border:1px solid #eeefef;border-radius:10px;background:#f8f8f6;color:#30343a;font:11.5px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre}
+.sheet-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px}
+.sheet-actions .note{flex:1;font-size:11px;color:#4f7a57}
 /* A short note inside an option, after its switch. */
 .opt-note{display:inline-flex;align-items:center;gap:3px;font-size:10px;color:#9a9ea4}
 .opt-note svg{width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round}
@@ -88,7 +104,7 @@ html,body{height:auto}
 .zoom-slider output{min-width:34px;font-size:11px;color:#6b7078;font-variant-numeric:tabular-nums;text-align:right}
 
 /* Right: the options panel, built like the skin library */
-.side{position:sticky;top:12px;height:var(--column-height);display:flex;flex-direction:column;min-width:0;padding:20px 8px 4px 20px;border:1px solid #e4e5e5;border-radius:16px;background:rgba(255,255,255,.88);box-shadow:0 7px 30px rgba(0,0,0,.035)}
+.side{position:sticky;top:12px;height:var(--column-height);display:flex;flex-direction:column;min-width:0;padding:20px 8px 16px 20px;border:1px solid #e4e5e5;border-radius:16px;background:rgba(255,255,255,.88);box-shadow:0 7px 30px rgba(0,0,0,.035)}
 .side-body{flex:1;min-height:0;overflow:auto;padding-right:12px;scrollbar-width:thin;scrollbar-color:#d8dade transparent}
 .section{display:grid;gap:8px;padding:0 0 18px}
 .section + .section{padding-top:16px;border-top:1px solid #f0f1f2}
@@ -310,9 +326,21 @@ __THIRD_PARTY__
   </section>
 
   </div>
+  <div class="side-footer">
+    <span class="note">调好后导出，放进固件就能用</span>
+    <button type="button" id="export" disabled>导出设置</button>
+  </div>
 </aside>
 </div>
 <div class="target-dot" id="target-dot" aria-hidden="true" hidden></div>
+<div class="sheet-backdrop" id="export-sheet" hidden>
+  <div class="sheet card" role="dialog" aria-modal="true" aria-labelledby="export-title">
+    <div class="sheet-head"><h2 id="export-title">导出设置</h2><button type="button" class="sheet-close" id="export-close" aria-label="关闭">×</button></div>
+    <p class="meta">保存为 <code>eyes_settings.h</code>，放在示例固件 <code>embedded/examples/arduino/</code> 里，和 <code>main.cpp</code> 同一个文件夹，再用下面注释里的命令编译。没有这个文件时，固件用默认设置。</p>
+    <pre id="export-code"></pre>
+    <div class="sheet-actions"><span class="note" id="export-status" role="status"></span><button type="button" id="export-download">下载文件</button><button type="button" id="export-copy" class="primary">复制</button></div>
+  </div>
+</div>
 </div>
 <script>
 /*__WASM__*/

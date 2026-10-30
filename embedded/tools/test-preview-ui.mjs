@@ -168,6 +168,14 @@ try {
   await page.locator('#palettes [title="Claude"]').click();
   assert.deepEqual(await page.evaluate(()=>[document.getElementById('eye-color').value,document.getElementById('bg-color').value]),['#faf9f5','#d97757']);
   assert.equal(await page.locator('#palettes [title="Claude"]').getAttribute('aria-pressed'),'true');
+  // Export writes the chosen settings as eyes_settings.h for the firmware.
+  await page.locator('#export').click();
+  const exported=await page.locator('#export-code').textContent();
+  assert.match(exported,/#define EYES_INK_RGB 0xFAF9F5/);
+  assert.match(exported,/#define EYES_BACKGROUND_RGB 0xD97757/);
+  assert.match(exported,/#define EYES_ZOOM \d\.\d\df/);
+  await page.keyboard.press('Escape');
+  assert.equal(await page.locator('#export-sheet').isHidden(),true);
   await page.locator('#color-reset').click();
   // Layout is remembered per screen.
   await choose('landscape');

@@ -13,7 +13,24 @@
 #include <Arduino.h>
 #include <AgentRobotEyes.h>
 
-constexpr uint16_t INK = 0xFFFF, BACKGROUND = 0x0000;
+// Settings exported from the hardware preview, if present next to main.cpp.
+#if defined(__has_include)
+#if __has_include("eyes_settings.h")
+#include "eyes_settings.h"
+#endif
+#endif
+
+// Eye and panel colours as 0xRRGGBB, drawn in RGB565 on colour panels.
+#ifndef EYES_INK_RGB
+#define EYES_INK_RGB 0xFFFFFF
+#endif
+#ifndef EYES_BACKGROUND_RGB
+#define EYES_BACKGROUND_RGB 0x000000
+#endif
+constexpr uint16_t rgb565(uint32_t rgb) {
+  return static_cast<uint16_t>(((rgb >> 8) & 0xF800) | ((rgb >> 5) & 0x07E0) | ((rgb >> 3) & 0x001F));
+}
+constexpr uint16_t INK = rgb565(EYES_INK_RGB), BACKGROUND = rgb565(EYES_BACKGROUND_RGB);
 
 #if defined(EYES_TFT) || defined(EYES_BOARD_GC9A01) || defined(EYES_BOARD_WAVESHARE_ROUND_128) || \
     defined(EYES_BOARD_CYD) || defined(EYES_BOARD_T_DISPLAY) || defined(EYES_BOARD_ST7789) || \

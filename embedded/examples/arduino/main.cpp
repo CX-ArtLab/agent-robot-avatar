@@ -5,6 +5,29 @@
 
 #include "boards.h"
 
+// Defaults when eyes_settings.h does not set them.
+#ifndef EYES_MAX_FPS
+#define EYES_MAX_FPS 25 // ceiling; actual frame rate depends on the device and bus
+#endif
+#ifndef EYES_AUTO_BLINK
+#define EYES_AUTO_BLINK 1
+#endif
+#ifndef EYES_TRANSITION_MS
+#define EYES_TRANSITION_MS 240
+#endif
+#ifndef EYES_FIT_COVER
+#define EYES_FIT_COVER 0
+#endif
+#ifndef EYES_ZOOM
+#define EYES_ZOOM 1.0f
+#endif
+#ifndef EYES_OFFSET_X
+#define EYES_OFFSET_X 0.0f
+#endif
+#ifndef EYES_OFFSET_Y
+#define EYES_OFFSET_Y 0.0f
+#endif
+
 agent_robot::Eyes eyes;
 uint8_t bitmap[((WIDTH + 7) / 8) * HEIGHT];
 bool ready = false, cycle = false, commandOverflow = false;
@@ -56,14 +79,18 @@ void setup() {
   agent_robot::EyesConfig config;
   config.width = WIDTH;
   config.height = HEIGHT;
-  config.maxFps = 25; // ceiling; actual frame rate depends on the device and bus
+  config.maxFps = EYES_MAX_FPS;
+  config.autoBlink = EYES_AUTO_BLINK != 0;
+  config.transitionMs = EYES_TRANSITION_MS;
   ready = eyes.begin(config, bitmap, sizeof(bitmap), millis());
   if (!ready) { Serial.println("Eyes buffer/configuration is invalid."); return; }
-  if (ROUND) {
-    agent_robot::EyesLayout layout;
-    layout.shape = agent_robot::ScreenShape::Circle; // keep the eyes inside the round glass
-    eyes.setLayout(layout);
-  }
+  agent_robot::EyesLayout layout;
+  layout.fit = EYES_FIT_COVER ? agent_robot::FitMode::Cover : agent_robot::FitMode::Contain;
+  layout.zoom = EYES_ZOOM;
+  layout.offsetX = EYES_OFFSET_X;
+  layout.offsetY = EYES_OFFSET_Y;
+  if (ROUND) layout.shape = agent_robot::ScreenShape::Circle; // keep the eyes inside the round glass
+  if (!eyes.setLayout(layout)) Serial.println("Layout settings are out of range; using defaults.");
   help();
 }
 

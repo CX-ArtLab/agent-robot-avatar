@@ -510,6 +510,47 @@
     while(hi-lo>1){const mid=Math.floor((lo+hi)/2);bar.style.width=mid+'px';if(rows()<=target)hi=mid;else lo=mid;}
     bar.style.width=hi+'px';
   }
+  // The current settings as eyes_settings.h for the example firmware.
+  function settingsFile() {
+    const fw=base.firmware, oled=base.panel==='oled';
+    const hex=color=>'0x'+color.slice(1).toUpperCase();
+    const num=value=>Number(value).toFixed(2)+'f';
+    const lines=[
+      '// Agent Robot Eyes 设置，由硬件预览导出。',
+      '// 屏幕：'+base.name+'，'+preset.width+' × '+preset.height,
+      fw?'// 编译：pio run -e '+fw.env:'// 这块屏幕还没有示例固件，需要自己接入屏幕驱动。',
+      '#pragma once','',
+      '#define EYES_MAX_FPS '+fpsValue(),
+      '#define EYES_AUTO_BLINK '+($('blink').checked?1:0),
+      '#define EYES_TRANSITION_MS '+($('transitions').checked?240:0),'',
+      '#define EYES_FIT_COVER '+(fit==='cover'?1:0)+'  // 0 完整显示，1 填满屏幕',
+      '#define EYES_ZOOM '+num($('face-scale').value),
+      '#define EYES_OFFSET_X '+num($('offset-x').value),
+      '#define EYES_OFFSET_Y '+num($('offset-y').value),''
+    ];
+    if(oled)lines.push('// 单色 OLED 的颜色由屏幕本身决定，这里不用设置。');
+    else lines.push('#define EYES_INK_RGB '+hex(colors.eye)+'         // 眼睛','#define EYES_BACKGROUND_RGB '+hex(colors.bg)+'  // 底色');
+    if(base.viewport&&fit!=='preset')lines.push('','// 示例固件在这块屏上只画中间 '+base.viewport[2]+' × '+base.viewport[3]+' 的区域，布局按这个区域计算。');
+    if(rotated)lines.push('','// 屏幕旋转 90° 需要在 boards.h 里改这块板子的 setRotation()。');
+    return lines.join('\n')+'\n';
+  }
+  function openExport(open) {
+    $('export-sheet').hidden=!open;
+    if(!open){$('export').focus();return;}
+    $('export-code').textContent=settingsFile();$('export-status').textContent='';
+    $('export-copy').focus();
+  }
+  async function copyExport() {
+    const text=$('export-code').textContent;
+    try{await navigator.clipboard.writeText(text);}
+    catch(_){
+      const range=document.createRange();range.selectNodeContents($('export-code'));
+      const selection=getSelection();selection.removeAllRanges();selection.addRange(range);
+      if(!document.execCommand('copy')){$('export-status').textContent='请手动选中复制';return;}
+      selection.removeAllRanges();
+    }
+    $('export-status').textContent='已复制';
+  }
   async function start() {
     try {
       if(!ctx||typeof WebAssembly==='undefined')throw new Error('Browser lacks Canvas or WebAssembly');
@@ -545,6 +586,17 @@
       const saved=SCREEN_PRESETS.find(item=>item.id===store.get('profile',''));
       if(saved)base=saved;
       configure(base,false);setPaused(false);balanceActions();
+      $('export').onclick=()=>openExport(true);
+      $('export-close').onclick=()=>openExport(false);
+      $('export-sheet').onclick=event=>{if(event.target===$('export-sheet'))openExport(false);};
+      $('export-sheet').onkeydown=event=>{if(event.key==='Escape')openExport(false);};
+      $('export-copy').onclick=copyExport;
+      $('export-download').onclick=()=>{
+        const url=URL.createObjectURL(new Blob([$('export-code').textContent],{type:'text/plain;charset=utf-8'}));
+        const link=document.createElement('a');link.href=url;link.download='eyes_settings.h';
+        document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);
+        $('export-status').textContent='已下载';
+      };
       document.documentElement.dataset.ready='true';
       $('pause').onclick=()=>setPaused(!paused);
       $('step').onclick=()=>{if(paused)advance(Math.ceil(1000/fpsValue()));};
