@@ -215,6 +215,39 @@ avatar.setSkin(null); // 回到纯色
 
 所有表情和手势都能配合皮肤使用。去掉皮肤后，`color` 属性会重新生效。
 
+## 硬件表情版 · 新功能
+
+同样的眼睛，显示在机器人和开发板的屏幕上。一个小巧的 C++ 库画出全部 18 种表情，动作取样自这个 Web 头像，动起来的样子和节奏都一样。现成的固件支持 26 种开发板和屏幕组合，覆盖 ESP32、ESP32-S3 和树莓派 Pico：圆形和方形 TFT、长条屏、AMOLED 和单色 OLED。
+
+<img src="../assets/readme/hardware-preview.jpg" alt="硬件预览：圆形 TFT 模组显示眼睛，旁边是布局、颜色和导出设置" width="100%">
+
+**没有板子也能先看。** [硬件预览](https://cx-artlab.github.io/agent-robot-avatar/hardware/)在浏览器里运行同一套 C++ 引擎，模拟 33 种屏幕，每种都画在它真实的模组上。
+
+**调好，就能直接用。** 选好你的屏幕，调整布局、颜色和帧率，点「导出设置」。把导出的 `eyes_settings.h` 放进示例固件再编译，板子上显示的就是预览里的样子。详见[操作步骤](../embedded/README.zh-CN.md#在预览里调好直接用到板子上)。
+
+**在你自己的程序里**，按名字播放表情：
+
+```cpp
+#include <AgentRobotEyes.h>
+agent_robot::Eyes eyes;
+uint8_t pixels[4800]; // 240 x 160，每个像素 1 位
+
+void setup() {
+  agent_robot::EyesConfig config;
+  eyes.begin(config, pixels, sizeof pixels, millis());
+}
+
+void loop() {
+  if (eyes.update(millis())) {
+    // 把 eyes.data() 发送到屏幕。
+  }
+}
+
+// 需要时：eyes.play("success", millis());
+```
+
+实验版：所有配置都在 CI 中编译通过，但还没有在真实硬件上验证。如果你在实物上运行过，欢迎提交[实机验证报告](https://github.com/CX-ArtLab/agent-robot-avatar/issues/new?template=hardware_report.yml)。完整说明见[硬件接入说明](../embedded/README.zh-CN.md)。
+
 ## 事件与集成
 
 组件通过 `face-state` 报告视觉状态变化，通过 `action-state` 报告语义动作生命周期变化。
@@ -228,10 +261,6 @@ avatar.setSkin(null); // 回到纯色
 面向支持 ES Modules、Custom Elements、SVG、Pointer Events、Web Animations API、`IntersectionObserver`、`ResizeObserver` 和 `matchMedia` 的现代浏览器。
 
 自动浏览器测试覆盖 Chromium、Firefox 和 WebKit。
-
-## 硬件表情版（开发中）
-
-在机器人和开发板屏幕上显示表情的 C++ 版本（只画眼睛）正在开发中，尚未发布。详见[硬件接入说明](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/embedded/README.zh-CN.md)。
 
 ## 参与贡献
 

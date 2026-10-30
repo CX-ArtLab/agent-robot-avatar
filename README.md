@@ -215,6 +215,39 @@ Skin painters download the first time a skin is used, so a page without skins ne
 
 Every expression and gesture works with a skin. When the skin is removed, the `color` attribute applies again.
 
+## Hardware version · New
+
+The same eyes on robot and dev-board screens. A small C++ library draws all 18 expressions, sampled from this Web avatar, so they move and keep time the same way. Ready-made firmware covers 26 board and screen combinations on ESP32, ESP32-S3 and Raspberry Pi Pico: round and square TFTs, bar screens, AMOLED and monochrome OLEDs.
+
+<img src="./assets/readme/hardware-preview.jpg" alt="Hardware preview: a round TFT module showing the eyes, with layout, colour and export settings" width="100%">
+
+**Try it without a board.** The [hardware preview](https://cx-artlab.github.io/agent-robot-avatar/hardware/) runs the same C++ engine in your browser on 33 simulated screens, each drawn on its real module.
+
+**Tune it, then build it.** Pick your screen, set the layout, colours and frame rate, and press **Export settings**. Put the exported `eyes_settings.h` next to the example firmware and build: the board shows what the preview showed. See the [step-by-step guide](embedded/README.md#from-the-preview-to-your-board).
+
+**In your own program**, play expressions by name:
+
+```cpp
+#include <AgentRobotEyes.h>
+agent_robot::Eyes eyes;
+uint8_t pixels[4800]; // 240 x 160, 1 bit per pixel
+
+void setup() {
+  agent_robot::EyesConfig config;
+  eyes.begin(config, pixels, sizeof pixels, millis());
+}
+
+void loop() {
+  if (eyes.update(millis())) {
+    // Send eyes.data() to your screen.
+  }
+}
+
+// Anywhere: eyes.play("success", millis());
+```
+
+Experimental: every configuration compiles in CI, but none is verified on real hardware yet. If you run one, please send a [hardware report](https://github.com/CX-ArtLab/agent-robot-avatar/issues/new?template=hardware_report.yml). Full guide: [embedded/README.md](embedded/README.md).
+
 ## Events and integration
 
 The component emits `face-state` for visual state changes and `action-state` for semantic action lifecycle changes.
@@ -228,10 +261,6 @@ A minimal integration example is available at [`examples/basic.html`](./examples
 Designed for modern browsers with support for ES Modules, Custom Elements, SVG, Pointer Events, Web Animations API, `IntersectionObserver`, `ResizeObserver`, and `matchMedia`.
 
 Automated browser tests cover Chromium, Firefox, and WebKit.
-
-## Hardware version (in development)
-
-A C++ version that shows the avatar's expressions on robot and dev-board screens (it draws only the eyes) is in development and not released yet. See the [hardware guide](https://github.com/CX-ArtLab/agent-robot-avatar/tree/main/embedded).
 
 ## Contributing
 
