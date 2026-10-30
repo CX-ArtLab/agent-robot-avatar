@@ -12,13 +12,11 @@
 
 一个轻量、富表现力的机器人头像 Web Component，适用于 AI Agent 与交互式应用。
 
-可用于 AI 助手、Agent 界面、桌面伙伴、虚拟宠物、数字吉祥物、聊天机器人头像及其他交互角色体验。
+适合作为 AI 助手和智能体的形象与状态反馈：类似 ChatGPT、Claude、Gemini、Grok、DeepSeek 的对话助手，类似 Codex、Claude Code、Cursor、Gemini CLI、OpenCode 的编程智能体，以及类似 OpenClaw、Hermes Agent、Manus 的个人智能体。
 
-可用于 AI 助手、Agent 界面，包括类似 ChatGPT、Claude、Codex、Cursor、Grok Bot、Gemini CLI 和 OpenCode 的产品与体验。
+也可用于桌面伙伴、虚拟宠物、数字吉祥物、聊天机器人头像等交互角色，或作为 AG-UI 风格 Agent 界面的视觉反馈层。
 
 使用 SVG 与原生 JavaScript 构建，以原生 Custom Element 运行，运行时零依赖。
-
-Agent Robot Avatar 还可作为 AG-UI 风格 Agent 界面的视觉反馈层。
 
 <p align="center">
   <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Agent Robot Avatar 交互动画演示" width="560">
@@ -251,6 +249,8 @@ avatar.setSkin(null); // 回到纯色
 
 **调好，就能直接用。** 选好你的屏幕，调整布局、颜色和帧率，点「导出设置」。把导出的 `eyes_settings.h` 放进示例固件再编译，板子上显示的就是预览里的样子。详见[操作步骤](../embedded/README.zh-CN.md#在预览里调好直接用到板子上)。
 
+**安装。** 在 Arduino IDE 的库管理器或 PlatformIO 里搜索 `AgentRobotEyes`；也可以从[发布页](https://github.com/CX-ArtLab/agent-robot-avatar/releases)下载 `AgentRobotEyes-x.y.z.zip`，在 Arduino IDE 里选「项目 → 导入库 → 添加 .ZIP 库」安装。
+
 **在你自己的程序里**，按名字播放表情：
 
 ```cpp
@@ -280,7 +280,8 @@ void loop() {
 
 ## 项目状态
 
-**当前公开版本：v0.7.1**
+**当前公开版本：v0.7.1**（网页版）\
+嵌入式设备版：v0.1.0
 
 公开 API 会在未来 `1.0.0` 稳定性承诺前继续保持精简并谨慎演进。
 
