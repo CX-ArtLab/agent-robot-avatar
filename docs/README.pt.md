@@ -239,7 +239,7 @@ Issues e Pull Requests são bem-vindos. Consulte [`CONTRIBUTING.md`](../CONTRIBU
 
 ## Status do projeto
 
-**Versão pública atual: v0.6.0**
+**Versão pública atual: v0.7.1**
 
 A API pública é mantida deliberadamente compacta enquanto o projeto evolui em direção a um futuro compromisso de estabilidade `1.0.0`.
 

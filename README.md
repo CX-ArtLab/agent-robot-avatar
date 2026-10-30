@@ -239,7 +239,7 @@ Issues and pull requests are welcome. See [`CONTRIBUTING.md`](./CONTRIBUTING.md)
 
 ## Project status
 
-**Current public version: v0.6.0**
+**Current public version: v0.7.1**
 
 The public API is intentionally kept compact while the project evolves toward a future `1.0.0` stability commitment.
 

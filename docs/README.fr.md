@@ -239,7 +239,7 @@ Issues et Pull Requests sont les bienvenus. Consultez [`CONTRIBUTING.md`](../CON
 
 ## État du projet
 
-**Version publique actuelle : v0.6.0**
+**Version publique actuelle : v0.7.1**
 
 L’API publique reste volontairement compacte pendant l’évolution du projet vers un futur engagement de stabilité `1.0.0`.
 

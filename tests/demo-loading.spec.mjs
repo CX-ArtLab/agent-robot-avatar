@@ -38,7 +38,7 @@ for (const [name, viewport, language] of [
     await expect(page.locator('#demoLoadStatus')).toBeHidden();
     await expect(page.locator('#face')).toBeVisible();
     await expect(page.locator('#canvas')).not.toHaveAttribute('inert');
-    const stable = await page.evaluate(async () => {
+    const moved = await page.evaluate(async () => {
       const elements = [...document.querySelectorAll('.avatar-home, .status-pill, .demo-control-stack, .controls button, .demo-panel-toolbar, .demo-roundness-control, #demoChatEntryHint')];
       const snapshot = () => elements.map(element => {
         const rect = element.getBoundingClientRect();
@@ -47,11 +47,17 @@ for (const [name, viewport, language] of [
       const first = snapshot();
       for (let frame = 0; frame < 20; frame++) {
         await new Promise(resolve => requestAnimationFrame(resolve));
-        if (JSON.stringify(snapshot()) !== JSON.stringify(first)) return false;
+        const now = snapshot();
+        // Name what moved, so a failure shows the cause.
+        const changes = now.flatMap((rect, index) => JSON.stringify(rect) === JSON.stringify(first[index]) ? [] : [{
+          element: `${elements[index].className || elements[index].id} ${elements[index].dataset.action || ''}`.trim(),
+          frame, from: first[index], to: rect,
+        }]);
+        if (changes.length) return changes;
       }
-      return true;
+      return [];
     });
-    expect(stable).toBe(true);
+    expect(moved).toEqual([]);
     await page.locator('#demoSettingsPanelToggle').click();
     await expect(page.locator('#demoSettingsPanel')).toBeVisible();
     await page.locator('#demoSettingsPanelToggle').click();
