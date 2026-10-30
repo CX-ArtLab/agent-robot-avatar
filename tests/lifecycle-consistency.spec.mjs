@@ -149,8 +149,8 @@ test('reduced motion auto-sleep runs without a continuous draw loop and ends vis
   const result = await avatar.evaluate(element => ({
     state: element._state,
     sleeping: element._sleeping,
-    leftRy: Number(element._leftBase.getAttribute('ry')),
-    rightRy: Number(element._rightBase.getAttribute('ry')),
+    leftGap: Number(element._leftBottom.getAttribute('y')) - Number(element._leftTop.getAttribute('y')) - 90,
+    rightGap: Number(element._rightBottom.getAttribute('y')) - Number(element._rightTop.getAttribute('y')) - 90,
     draws: element._drawCountForSleep,
     raf: element._raf,
     paused: element._framePaused,
@@ -158,8 +158,8 @@ test('reduced motion auto-sleep runs without a continuous draw loop and ends vis
   console.log('[reduced-auto-sleep]', JSON.stringify(result));
   expect(result.state).toBe('sleep');
   expect(result.sleeping).toBe(true);
-  expect(result.leftRy).toBeLessThanOrEqual(6);
-  expect(result.rightRy).toBeLessThanOrEqual(6);
+  expect(result.leftGap).toBeLessThanOrEqual(7);
+  expect(result.rightGap).toBeLessThanOrEqual(7);
   expect(result.paused || result.raf === 0).toBe(true);
   expect(result.draws).toBeLessThan(40);
 });
@@ -201,16 +201,16 @@ test('reduced manual sleep commits the final sleep SVG before frames pause', asy
   await waitForSleep(avatar, 4500);
   await page.waitForTimeout(100);
   const reduced = await avatar.evaluate(element => ({
-    leftRy: Number(element._leftBase.getAttribute('ry')),
-    rightRy: Number(element._rightBase.getAttribute('ry')),
+    leftGap: Number(element._leftBottom.getAttribute('y')) - Number(element._leftTop.getAttribute('y')) - 90,
+    rightGap: Number(element._rightBottom.getAttribute('y')) - Number(element._rightTop.getAttribute('y')) - 90,
     targetH: element._toPose.h,
     poseH: element._pose.h,
     raf: element._raf,
   }));
-  expect(reduced.targetH).toBe(10);
-  expect(reduced.poseH).toBe(10);
-  expect(reduced.leftRy).toBeLessThanOrEqual(6);
-  expect(reduced.rightRy).toBeLessThanOrEqual(6);
+  expect(reduced.targetH).toBe(56);
+  expect(reduced.poseH).toBe(56);
+  expect(reduced.leftGap).toBeLessThanOrEqual(7);
+  expect(reduced.rightGap).toBeLessThanOrEqual(7);
   expect(reduced.raf).toBe(0);
 });
 
@@ -232,13 +232,13 @@ test('full and reduced motion settle on the same closed-eye sleep SVG', async ({
   // Full motion enters the semantic sleep state before its visual morph has
   // finished. Compare only after the rendered eyes have actually settled.
   await expect.poll(
-    () => fullAvatar.evaluate(element => Number(element._leftBase.getAttribute('ry'))),
+    () => fullAvatar.evaluate(element => Number(element._leftBottom.getAttribute('y')) - Number(element._leftTop.getAttribute('y')) - 90),
     { timeout: 5000, intervals: [80, 150, 250] },
-  ).toBeLessThanOrEqual(6);
+  ).toBeLessThanOrEqual(7);
   await expect.poll(
-    () => fullAvatar.evaluate(element => Number(element._rightBase.getAttribute('ry'))),
+    () => fullAvatar.evaluate(element => Number(element._rightBottom.getAttribute('y')) - Number(element._rightTop.getAttribute('y')) - 90),
     { timeout: 5000, intervals: [80, 150, 250] },
-  ).toBeLessThanOrEqual(6);
+  ).toBeLessThanOrEqual(7);
   await page.waitForTimeout(80);
 
   const visual = await page.evaluate(() => {
@@ -246,8 +246,8 @@ test('full and reduced motion settle on the same closed-eye sleep SVG', async ({
       state: element._state,
       poseH: element._pose.h,
       targetH: element._toPose.h,
-      leftRy: Number(element._leftBase.getAttribute('ry')),
-      rightRy: Number(element._rightBase.getAttribute('ry')),
+      leftGap: Number(element._leftBottom.getAttribute('y')) - Number(element._leftTop.getAttribute('y')) - 90,
+      rightGap: Number(element._rightBottom.getAttribute('y')) - Number(element._rightTop.getAttribute('y')) - 90,
       raf: element._raf,
     });
     return {
@@ -258,13 +258,13 @@ test('full and reduced motion settle on the same closed-eye sleep SVG', async ({
   console.log('[sleep-visual-compare]', JSON.stringify(visual));
   expect(visual.reduced.state).toBe('sleep');
   expect(visual.full.state).toBe('sleep');
-  expect(visual.reduced.poseH).toBe(10);
-  expect(visual.reduced.targetH).toBe(10);
-  expect(visual.full.poseH).toBeCloseTo(10, 0);
-  expect(visual.reduced.leftRy).toBeLessThanOrEqual(6);
-  expect(visual.reduced.rightRy).toBeLessThanOrEqual(6);
-  expect(Math.abs(visual.reduced.leftRy - visual.full.leftRy)).toBeLessThanOrEqual(0.5);
-  expect(Math.abs(visual.reduced.rightRy - visual.full.rightRy)).toBeLessThanOrEqual(0.5);
+  expect(visual.reduced.poseH).toBe(56);
+  expect(visual.reduced.targetH).toBe(56);
+  expect(visual.full.poseH).toBeCloseTo(56, 0);
+  expect(visual.reduced.leftGap).toBeLessThanOrEqual(7);
+  expect(visual.reduced.rightGap).toBeLessThanOrEqual(7);
+  expect(Math.abs(visual.reduced.leftGap - visual.full.leftGap)).toBeLessThanOrEqual(0.5);
+  expect(Math.abs(visual.reduced.rightGap - visual.full.rightGap)).toBeLessThanOrEqual(0.5);
   expect(visual.reduced.raf).toBe(0);
 });
 

@@ -22,7 +22,7 @@ for (const [name, viewport, language] of [
       // Even the last module must be requested while the first is still held.
       await expect.poll(() => requests.has('agent-robot-avatar-demo-controls.js')
         && requests.has('agent-robot-avatar-demo-reply-loop.js')).toBe(true);
-      await expect(page.locator('.controls button[data-action]')).toHaveCount(18);
+      await expect(page.locator('.controls button[data-action]')).toHaveCount(17);
       await expect(page.locator('#demoSettingsPanelToggle')).toBeAttached();
       await expect(page.locator('#demoHeadRoundness')).toBeAttached();
       await expect(page.locator('#demoLoadStatus')).toBeVisible();
@@ -82,7 +82,7 @@ test('the deployed Pages entry loads all startup modules from its own directory'
   await page.goto('/.pages-site/?lang=zh-CN');
   await expect(page.locator('html')).toHaveAttribute('data-demo-ready', 'true');
   await expect(page.locator('#face')).toBeVisible();
-  await expect(page.locator('.controls button[data-action]')).toHaveCount(18);
+  await expect(page.locator('.controls button[data-action]')).toHaveCount(17);
   expect(errors).toEqual([]);
 });
 
