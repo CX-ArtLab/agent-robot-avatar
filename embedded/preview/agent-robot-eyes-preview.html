@@ -305,6 +305,9 @@ html,body{height:auto}
 .bar .seg .chip[aria-pressed=true]{background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.08);color:#202327}
 .bar .opt{position:relative;cursor:pointer;user-select:none}
 .bar .opt > input[type=checkbox]{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;pointer-events:auto;cursor:pointer;z-index:1}
+/* A short note inside an option, after its switch. */
+.opt-note{display:inline-flex;align-items:center;gap:3px;font-size:10px;color:#9a9ea4}
+.opt-note svg{width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round}
 .clock{font:11px/1.2 ui-monospace,monospace;font-variant-numeric:tabular-nums;padding:0 4px;color:#92969c;white-space:nowrap}
 /* Auto-cycle shows that it is running, not just pressed. */
 #demo[aria-pressed=true]{background:#666b72;color:#fff}
@@ -464,7 +467,7 @@ html,body{height:auto}
     <div class="bar-row">
       <label class="opt demo-toggle"><span>外框</span><input id="housing" type="checkbox" checked disabled><span class="demo-switch" aria-hidden="true"></span></label>
       <label class="opt demo-toggle"><span>像素区虚线</span><input id="show-area" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
-      <label class="opt demo-toggle" title="开发板要外接摄像头，或距离／人体感应传感器，才知道物体在哪；这里用鼠标模拟靠近的物体"><span>注视跟随</span><input id="follow" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
+      <label class="opt demo-toggle" title="开发板要外接摄像头，或距离／人体感应传感器，才知道物体在哪；这里用鼠标模拟靠近的物体"><span>注视跟随</span><input id="follow" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span><small class="opt-note"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5"/><path d="M8 7.2v4M8 4.9v.1"/></svg>需外接摄像头或传感器</small></label>
     </div>
   </div>
   <canvas id="screen" width="240" height="240" aria-hidden="true"></canvas>
