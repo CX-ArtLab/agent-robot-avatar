@@ -28,16 +28,17 @@
   const ZOOM_SNAPS = [1,1.5,2,3,4,5,6,8,10,12,16];
   const BARE_PITCH_MM = .15; // presets without physical data (raw canvas, custom sizes)
   const DEFAULT_COLORS = {eye:'#ffffff',bg:'#000000'};
-  // What following an object needs on a real board.
-  const GAZE_HINT = '开发板需要外接摄像头，或距离／人体感应传感器来提供目标位置；这里用鼠标模拟靠近的物体。';
+  // Gaze settings for the simulated nearby object. The library exposes them
+  // all; the preview keeps one switch and these defaults.
+  const GAZE = {radius:72,range:1,holdMs:600,responseMs:140,motionPx:3};
   const $ = id => document.getElementById(id);
   const store = {
     get(key,fallback){try{const v=localStorage.getItem('robotEyesPreview.'+key);return v?JSON.parse(v):fallback;}catch(_){return fallback;}},
     set(key,value){try{localStorage.setItem('robotEyesPreview.'+key,JSON.stringify(value));}catch(_){}}
   };
   // Every option is remembered in this browser, except screen-specific frame rate.
-  const CHECKBOXES = ['housing','show-area','raw-pixels','pixel-grid','glass-glare','blink','transitions','moving-only'];
-  const SEGMENTS = ['gaze-range','motion-sensitivity','response','hold','speed'];
+  const CHECKBOXES = ['housing','show-area','raw-pixels','pixel-grid','glass-glare','blink','transitions','follow'];
+  const SEGMENTS = ['speed'];
   const screen = $('screen'), ctx = screen.getContext('2d',{alpha:false});
   let panel = null;
   let api, image, base = SCREEN_PRESETS[0], preset = base, rotated = false, time = 0, paused = false;
@@ -93,7 +94,7 @@
     });
   }
   function saveSettings() {
-    const saved={zoomMode,zoomScale,senseRadius:Number($('sense-radius').value)};
+    const saved={zoomMode,zoomScale};
     for(const id of CHECKBOXES)saved[id]=$(id).checked;
     for(const id of SEGMENTS)saved[id]=segValue(id);
     store.set('settings',saved);
@@ -102,8 +103,6 @@
     const saved=store.get('settings',{});
     for(const id of CHECKBOXES)if(typeof saved[id]==='boolean')$(id).checked=saved[id];
     for(const id of SEGMENTS)if(saved[id]!=null&&$(id).querySelector(`[data-value="${saved[id]}"]`))setSeg(id,saved[id]);
-    if(saved['gaze-range']==null)setSeg('gaze-range',store.get('gazeRange',1));
-    if(saved.senseRadius)$('sense-radius').value=String(saved.senseRadius);
     if(['fit','real','scale'].includes(saved.zoomMode))zoomMode=saved.zoomMode;
     if(saved.zoomScale>0)zoomScale=saved.zoomScale;
   }
@@ -144,8 +143,7 @@
     // whole sensing ring stays on the stage too.
     const w=r.width-40, h=r.height-96;
     let max=Math.min(w/g.w,h/g.h);
-    const ring=Math.min(r.width-32,r.height-64)-Number($('sense-radius').value)*2;
-    max=Math.min(max,ring/Math.max(g.w,g.h));
+    if($('follow').checked)max=Math.min(max,(Math.min(r.width-32,r.height-64)-GAZE.radius*2)/Math.max(g.w,g.h));
     max=Math.max(.05,max/CSS_PX_PER_MM);
     return [Math.min(max*.2,1),max];
   }
@@ -210,6 +208,7 @@
       glow:true,round:preset.frame==='round',corner:base.corner||0,mono});
   }
   function sensorInput() {
+    if(!$('follow').checked){$('target-dot').hidden=true;return;}
     const rect=$('device').getBoundingClientRect();
     const zone=$('sense-zone').getBoundingClientRect();
     const dx=pointer.x-(rect.left+rect.width/2), dy=pointer.y-(rect.top+rect.height/2);
@@ -226,11 +225,10 @@
   }
   // Gaze feedback sits right under the screen, where the eyes are watched.
   function updateTrackingStatus() {
-    const locked=!!api.eyes_is_tracking();
+    const follow=$('follow').checked, locked=follow&&!!api.eyes_is_tracking();
     $('sense-zone').classList.toggle('active',locked);
-    const ignored=api.eyes_action()!==0;
-    const text=ignored?'当前动作暂不应用注视方向'
-      :locked?'正在注视／离开后短暂停留':$('moving-only').checked?'在虚线范围内移动鼠标，眼睛就会看过去':'把鼠标移进虚线范围，眼睛就会看过去';
+    const text=!follow?'':api.eyes_action()!==0?'当前动作暂不应用注视方向'
+      :locked?'正在注视／离开后短暂停留':'把鼠标移进虚线范围，眼睛就会看过去';
     if(text!==trackingText){$('tracking-note').textContent=text;trackingText=text;}
   }
   function draw(force=false) {
@@ -295,11 +293,11 @@
     const cw=dw*ppm, ch=dh*ppm, dpr=Math.min(window.devicePixelRatio||1,MAX_CANVAS_PX/cw,MAX_CANVAS_PX/ch);
     $('panel').width=Math.max(1,Math.round(cw*dpr));$('panel').height=Math.max(1,Math.round(ch*dpr));
     // A circular sensing zone around the module, whatever its aspect ratio.
-    const radius=Number($('sense-radius').value), ring=Math.max(g.w,g.h)*ppm+radius*2;
+    const ring=Math.max(g.w,g.h)*ppm+GAZE.radius*2;
+    $('sense-zone').hidden=!$('follow').checked;
     $('sense-zone').style.width=$('sense-zone').style.height=ring+'px';
     // Label just above the module, inside the ring, so the stage never clips it.
     $('sense-zone').style.setProperty('--label-top',Math.max(4,(ring-g.h*ppm)/2-26)+'px');
-    $('sense-value').value=radius+' px';
     const reference=g.m?g.m.name+(g.m.revision?' · '+g.m.revision:''):preset.name;
     $('stage-caption').textContent=reference+(g.rot!==((base.rotation||0)===90)?' · 旋转 90°':'')+' · '+Math.round(25.4/pitchMm())+' PPI'+
       (g.m?(!housing?' · 外框已隐藏':g.m.generic?' · 外框为通用示意':' · PCB '+g.w+' × '+g.h+' mm'):'');
@@ -390,7 +388,7 @@
     renderFps();
     if(!api.eyes_init(preset.width,preset.height,fpsValue(),
       $('blink').checked?1:0,$('transitions').checked?240:0,0))throw new Error('Core initialization failed');
-    api.eyes_gaze_range(Number(segValue('gaze-range')));
+    api.eyes_gaze_range(GAZE.range);
     applyGazeMode(false);
     screenGroup=base.id==='custom'?'other':base.group||'other';
     renderProfiles();
@@ -399,16 +397,14 @@
     syncScreenInfo();syncControls();loadLayout();resizeDisplay();applyLayout();setPaused(paused);
   }
   function applyGazeConfig() {
-    if(!api.eyes_gaze_config(.5,.4,Number(segValue('hold')),Number(segValue('response')),$('moving-only').checked?1:0))
+    if(!api.eyes_gaze_config(.5,.4,GAZE.holdMs,GAZE.responseMs,0))
       throw new Error('Invalid gaze configuration');
   }
-  // The eyes follow a simulated nearby object.
+  // With the switch on, the eyes follow a simulated nearby object.
   function applyGazeMode(redraw=true) {
     pointer.detected=false;lastMotion=-Infinity;motionAnchor=null;
-    api.eyes_tracking(1,now());
+    api.eyes_tracking($('follow').checked?1:0,now());
     applyGazeConfig();
-    $('gaze-hint').textContent=GAZE_HINT;
-    $('motion-sensitivity').setAttribute('aria-disabled',String(!$('moving-only').checked));
     if(redraw){resizeDisplay();draw();}
   }
   function advance(delta) {
@@ -445,12 +441,17 @@
   // The 自定义 tab edits a size directly instead of listing presets.
   function groupPresets(group) { return SCREEN_PRESETS.filter(item=>(item.group||'other')===group); }
   function renderProfiles() {
-    const items=groupPresets(screenGroup), select=$('profile'), custom=screenGroup==='other';
-    select.replaceChildren(...items.map(item=>{
-      const option=document.createElement('option');option.value=item.id;option.textContent=item.name+' · '+item.width+'×'+item.height;return option;
+    const items=groupPresets(screenGroup), picker=$('profile').parentElement, custom=screenGroup==='other';
+    $('profile-list').replaceChildren(...items.map(item=>{
+      const option=document.createElement('button');option.type='button';option.setAttribute('role','option');option.dataset.value=item.id;
+      option.setAttribute('aria-selected',String(item===base));
+      const name=document.createElement('span');name.className='name';name.textContent=item.name;
+      const size=document.createElement('span');size.className='res';size.textContent=item.width+' × '+item.height;
+      option.append(name,size);return option;
     }));
-    select.value=base.id;
-    select.hidden=custom;$('custom-size').hidden=!custom;$('stepper').hidden=custom;
+    $('profile').dataset.value=base.id;
+    $('profile-name').textContent=base.name;$('profile-res').textContent=preset.width+' × '+preset.height;
+    picker.hidden=custom;$('custom-size').hidden=!custom;$('stepper').hidden=custom;
     document.querySelectorAll('[data-group]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.group===screenGroup)));
     const index=items.indexOf(base);
     $('profile-index').textContent=index<0?'':(index+1)+' / '+items.length;
@@ -518,7 +519,27 @@
       $('step').onclick=()=>{if(paused)advance(Math.ceil(1000/fpsValue()));};
       $('demo').onclick=()=>{setCycling(!cycling);if(cycling){cycleIndex=0;nextCycle=time+4000;play(0);}};
       $('reset').onclick=()=>configure();
-      $('profile').onchange=()=>selectProfile($('profile').value);
+      // The screen list opens under its button and closes on a choice,
+      // Escape or a click elsewhere; arrow keys move through it.
+      const list=$('profile-list');
+      const openList=open=>{
+        list.hidden=!open;$('profile').setAttribute('aria-expanded',String(open));
+        if(open)(list.querySelector('[aria-selected=true]')||list.firstElementChild)?.focus({preventScroll:false});
+      };
+      $('profile').onclick=()=>openList(list.hidden);
+      list.onclick=event=>{
+        const option=event.target.closest('[data-value]');if(!option)return;
+        openList(false);$('profile').focus();
+        if(option.dataset.value!==base.id)selectProfile(option.dataset.value);
+      };
+      list.onkeydown=event=>{
+        const options=[...list.children], index=options.indexOf(document.activeElement);
+        if(event.key==='ArrowDown'||event.key==='ArrowUp'){event.preventDefault();options[(index+(event.key==='ArrowDown'?1:-1)+options.length)%options.length].focus();}
+        else if(event.key==='Escape'){openList(false);$('profile').focus();}
+        else if(event.key==='Tab')openList(false);
+      };
+      $('profile').onkeydown=event=>{if(event.key==='ArrowDown'&&list.hidden){event.preventDefault();openList(true);}};
+      document.addEventListener('pointerdown',event=>{if(!list.hidden&&!$('profile').parentElement.contains(event.target))openList(false);});
       $('prev-profile').onclick=()=>stepProfile(-1);
       $('next-profile').onclick=()=>stepProfile(1);
       $('screen-groups').onclick=event=>{
@@ -537,11 +558,7 @@
       });
       for(const id of ['blink','transitions'])$(id).onchange=()=>{applyTiming();saveSettings();};
       $('housing').onchange=()=>{resizeDisplay();saveSettings();};
-      $('sense-radius').oninput=()=>{resizeDisplay();saveSettings();};
-      for(const id of ['hold','response'])bindSeg(id,()=>{applyGazeConfig();updateTrackingStatus();});
-      $('moving-only').onchange=()=>{applyGazeMode(false);updateTrackingStatus();saveSettings();};
-      bindSeg('gaze-range',()=>{api.eyes_gaze_range(Number(segValue('gaze-range')));draw();});
-      bindSeg('motion-sensitivity',()=>{motionAnchor=null;lastMotion=-Infinity;});
+      $('follow').onchange=()=>{applyGazeMode();saveSettings();};
       bindSeg('speed',()=>{previous=null;});
       $('fit').onclick=event=>{const b=event.target.closest('[data-fit]');if(b){fit=b.dataset.fit;applyLayout(true);}};
       for(const id of ['face-scale','offset-x','offset-y'])$(id).oninput=()=>applyLayout(true);
@@ -564,7 +581,7 @@
       };
       const updatePointer=event=>{
         if(event.pointerType==='touch'&&event.buttons===0)return;
-        if(!motionAnchor||Math.hypot(event.clientX-motionAnchor.x,event.clientY-motionAnchor.y)>=Number(segValue('motion-sensitivity'))){
+        if(!motionAnchor||Math.hypot(event.clientX-motionAnchor.x,event.clientY-motionAnchor.y)>=GAZE.motionPx){
           if(motionAnchor)lastMotion=time;
           motionAnchor={x:event.clientX,y:event.clientY};
         }

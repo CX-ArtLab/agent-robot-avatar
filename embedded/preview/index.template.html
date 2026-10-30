@@ -97,8 +97,19 @@ html,body{height:auto}
 .filters .chip{font-size:11px;padding:7px 9px;border-radius:9px;background:#f1f2f3;color:#72777e}
 .filters .chip:hover{background:#e7e8ea}
 .filters .chip[aria-pressed=true]{background:#dfe1e4;color:#202327}
-.profile-select{width:100%;height:40px;padding:0 10px;border:1px solid #e4e5e5;border-radius:10px;background:#f8f8f6;color:#30343a;font:600 12.5px Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;cursor:pointer}
-.profile-select:hover{border-color:#d3d6da}
+/* The screen picker: a button and a rounded list in the page's own style. */
+.picker{position:relative}
+.profile-select{width:100%;height:40px;display:flex;align-items:center;gap:8px;padding:0 34px 0 12px;border:1px solid #e4e5e5;border-radius:10px;background:#f8f8f6;color:#30343a;font:600 12.5px Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;text-align:left;cursor:pointer;position:relative}
+.profile-select:hover{background:#f8f8f6;border-color:#d3d6da}
+.profile-select::after{content:'';position:absolute;right:14px;top:50%;width:6px;height:6px;margin-top:-5px;border-right:1.5px solid #858990;border-bottom:1.5px solid #858990;transform:rotate(45deg);transition:transform .15s,margin-top .15s}
+.profile-select[aria-expanded=true]{border-color:#d3d6da;background:#fff}
+.profile-select[aria-expanded=true]::after{transform:rotate(-135deg);margin-top:-1px}
+.profile-select #profile-name,.picker-list .name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.res{flex:0 0 auto;font-weight:400;font-size:11px;color:#9a9ea4;font-variant-numeric:tabular-nums}
+.picker-list{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:30;max-height:340px;overflow:auto;padding:5px;border:1px solid #e4e5e5;border-radius:12px;background:#fff;box-shadow:0 12px 34px rgba(0,0,0,.1);scrollbar-width:thin;scrollbar-color:#d8dade transparent}
+.picker-list button{width:100%;display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:8px;background:transparent;color:#4a4f56;font-size:12px;text-align:left}
+.picker-list button:hover,.picker-list button:focus-visible{background:#f4f5f6;outline:none}
+.picker-list button[aria-selected=true]{background:#f1f2f3;color:#202327;font-weight:600}
 .spec-badges{display:flex;flex-wrap:wrap;gap:5px}
 .spec-badges span{padding:4px 9px;border-radius:999px;background:#f1f2f3;color:#30343a;font-size:11.5px;font-weight:600;font-variant-numeric:tabular-nums}
 .meta{font-size:11px;line-height:1.6;color:#858990}
@@ -199,6 +210,8 @@ html,body{height:auto}
     <span class="divider" aria-hidden="true"></span>
     <div class="seg" id="speed" data-value="1" role="group" aria-label="播放速度"><button class="chip" type="button" data-value="0.25">0.25×</button><button class="chip" type="button" data-value="0.5">0.5×</button><button class="chip" type="button" data-value="1">1×</button><button class="chip" type="button" data-value="2">2×</button></div>
     <span class="clock" id="clock" title="模拟时间：暂停时停止，慢放时变慢">时间 0.0 s</span>
+    <span class="divider" aria-hidden="true"></span>
+    <label class="opt demo-toggle" title="开发板要外接摄像头，或距离／人体感应传感器，才知道物体在哪；这里用鼠标模拟靠近的物体"><span>注视跟随</span><input id="follow" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
   </div>
   <div class="bar card" aria-label="显示">
     <button class="chip" type="button" id="zoom-fit" data-zoom="fit">适合窗口</button>
@@ -221,7 +234,8 @@ html,body{height:auto}
       <div class="stepper" id="stepper"><button type="button" id="prev-profile" title="上一个型号" aria-label="上一个型号" disabled>‹</button><span id="profile-index"></span><button type="button" id="next-profile" title="下一个型号" aria-label="下一个型号" disabled>›</button></div>
     </div>
     <div class="filters" id="screen-groups" role="group" aria-label="屏幕类型"></div>
-    <select id="profile" class="profile-select" aria-label="屏幕型号" disabled></select>
+    <div class="picker"><button type="button" id="profile" class="profile-select" aria-haspopup="listbox" aria-expanded="false" aria-label="屏幕型号" disabled><span id="profile-name"></span><span class="res" id="profile-res"></span></button>
+      <div class="picker-list" id="profile-list" role="listbox" aria-label="屏幕型号" hidden></div></div>
     <div id="custom-size" class="group" hidden>
       <div class="field"><span>尺寸</span><input id="custom-width" type="number" min="16" max="512" value="240" aria-label="宽"><span>×</span><input id="custom-height" type="number" min="16" max="512" value="160" aria-label="高">
         <div class="seg push" id="custom-shape" data-value="0" role="group" aria-label="形状"><button class="chip" type="button" data-value="0">矩形</button><button class="chip" type="button" data-value="1">圆形</button></div></div>
@@ -246,20 +260,6 @@ html,body{height:auto}
       <label class="field"><span>垂直</span><input id="offset-y" type="range" min="-1" max="1" step=".05" value="0"><output id="offset-y-value">0.00</output></label>
     </div>
     <div class="row-end"><span class="note">每块屏单独保存</span><button type="button" id="layout-reset">恢复默认布局</button></div>
-  </section>
-
-  <section class="section">
-    <div class="section-head"><h2>注视</h2></div>
-    <div class="meta" id="gaze-hint"></div>
-    <div class="field"><span>注视幅度</span><div class="seg push" id="gaze-range" data-value="1" role="group" aria-label="注视幅度" title="眼睛看向一侧时移动多远；“大”会稍微越过表情区域边缘，眼睛在边缘处变窄"><button class="chip" type="button" data-value="0">小</button><button class="chip" type="button" data-value="1">中</button><button class="chip" type="button" data-value="2">大</button></div></div>
-    <div id="track-options" class="group">
-      <label class="field"><span>感应范围</span><input id="sense-radius" type="range" min="16" max="200" step="4" value="72"><output id="sense-value">72 px</output></label>
-      <div class="field"><label class="inline-toggle demo-toggle"><span>只看移动目标</span><input id="moving-only" type="checkbox"><span class="demo-switch" aria-hidden="true"></span></label>
-        <span class="sep push" aria-hidden="true"></span><span>灵敏度</span>
-        <div class="seg" id="motion-sensitivity" data-value="3" role="group" aria-label="移动灵敏度" title="打开“只看移动目标”后生效"><button class="chip" type="button" data-value="1">高</button><button class="chip" type="button" data-value="3">中</button><button class="chip" type="button" data-value="8">低</button></div></div>
-      <div class="field"><span>跟随速度</span><div class="seg push" id="response" data-value="140" role="group" aria-label="跟随速度"><button class="chip" type="button" data-value="60">快</button><button class="chip" type="button" data-value="140">正常</button><button class="chip" type="button" data-value="320">慢</button></div></div>
-      <div class="field"><span>离开后停留</span><div class="seg push" id="hold" data-value="600" role="group" aria-label="离开后停留"><button class="chip" type="button" data-value="0">立即</button><button class="chip" type="button" data-value="600">0.6 秒</button><button class="chip" type="button" data-value="1500">1.5 秒</button><button class="chip" type="button" data-value="3000">3 秒</button></div></div>
-    </div>
   </section>
 
   <section class="section">

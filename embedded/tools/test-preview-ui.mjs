@@ -32,15 +32,18 @@ const choose = async id => {
   // screen. The 自定义 tab opens the raw canvas with editable size instead.
   const group = await page.evaluate(id => id === 'custom' ? 'other' : SCREEN_PRESETS.find(item => item.id === id).group || 'other', id);
   await page.locator(`[data-group="${group}"]`).click();
-  if (group !== 'other') await page.locator('#profile').selectOption(id);
+  if (group !== 'other') {
+    await page.locator('#profile').click();
+    await page.locator(`#profile-list [data-value="${id}"]`).click();
+  }
 };
 const glassBox = () => page.locator('#glass').evaluate(el => { const r = el.getBoundingClientRect(); return [r.left, r.top, r.width, r.height].map(Math.round); });
 try {
   await page.clock.install();
   await page.goto(file);
   await page.waitForFunction(() => document.getElementById('status').textContent.includes('本机绘制'));
-  // The eyes follow a simulated object; the hint names the sensor it needs.
-  assert.match(await page.locator('#gaze-hint').textContent(),/摄像头/);
+  // The eyes follow a simulated object; the switch names the sensor it needs.
+  assert.match(await page.locator('#follow').locator('..').getAttribute('title'),/摄像头/);
   // The Web demo's 17 buttons: one of them sleeps and wakes.
   assert.equal(await page.locator('.action').count(),17);
   assert((await frame()).lit>1000);
@@ -101,14 +104,15 @@ try {
     await page.clock.runFor(1500);
     return (await frame()).hash;
   };
-  const medium=await lookAt();
-  assert.notEqual(medium,centered.hash,'the eyes follow the object');
-  // Gaze range changes how far the same target moves the eyes.
-  await page.locator('#gaze-range [data-value="2"]').click();
-  assert.notEqual(await lookAt(),medium,'large gaze range moves the eyes further');
-  await page.locator('#gaze-range [data-value="1"]').click();
+  assert.notEqual(await lookAt(),centered.hash,'the eyes follow the object');
   await page.mouse.move(0, 0); await page.clock.runFor(2500);
   assert.equal((await frame()).hash,centered.hash,'the eyes return when the object leaves');
+  // With following off, the same object leaves the eyes alone.
+  await page.locator('#follow').uncheck();
+  assert.equal(await page.locator('#sense-zone').isHidden(),true);
+  assert.equal(await lookAt(),centered.hash,'following off keeps the eyes centred');
+  await page.mouse.move(0, 0);
+  await page.locator('#follow').check();
   await page.locator('#blink').check();
   await page.locator('#pause').click();
   // The frame-rate cap follows the screen; changing timing keeps the animation.
@@ -163,9 +167,9 @@ try {
   await page.locator('#rotate').click();
   assert.deepEqual([(await frame()).width,(await frame()).height],[170,320]);
   await page.locator('#next-profile').click();
-  assert.equal(await page.locator('#profile').inputValue(),'t-display-114');
+  assert.equal(await page.locator('#profile').getAttribute('data-value'),'t-display-114');
   await page.locator('#prev-profile').click();
-  assert.equal(await page.locator('#profile').inputValue(),'t-display-s3');
+  assert.equal(await page.locator('#profile').getAttribute('data-value'),'t-display-s3');
   // Every preset, reference or generic housing, renders its native framebuffer.
   for(const item of await page.evaluate(()=>SCREEN_PRESETS.map(preset=>preset.id))) {
     await choose(item);
@@ -177,7 +181,7 @@ try {
   assert.equal(overflowing,false,'mobile layout must not overflow');
   await choose('round');
   // A type chip narrows the picker to that type; the bus line estimates frame rate.
-  assert.deepEqual(await page.locator('#profile option').evaluateAll(options=>[...new Set(options.map(o=>SCREEN_PRESETS.find(p=>p.id===o.value).group))]),['round']);
+  assert.deepEqual(await page.locator('#profile-list [data-value]').evaluateAll(options=>[...new Set(options.map(o=>SCREEN_PRESETS.find(p=>p.id===o.dataset.value).group))]),['round']);
   assert.match(await page.locator('#screen-spec').textContent(),/SPI 40 MHz/);
   // Screens with a firmware example show the board, build command and wiring.
   await choose('gc9a01-128');
