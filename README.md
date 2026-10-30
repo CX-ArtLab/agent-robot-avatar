@@ -176,7 +176,7 @@ The avatar center begins the squeeze interaction. Moving more than 4 CSS pixels 
 
 188 skins in 17 series, with light that follows the pointer. Every skin has a permanent number: the series number followed by two digits, so 305 is the fifth skin of series 3. Titles may be reworded later; numbers never change and are never reused.
 
-Every skin is still pure SVG: no images, canvas or WebGL.
+Every skin is still pure SVG: no images, canvas or WebGL. All skins together are about 70 KB over the network (about 290 KB uncompressed), and most of it loads only when a page uses a skin.
 
 <img src="./assets/readme/skin-gallery.jpg" alt="Skin Gallery: featured skins, filters and search" width="100%">
 

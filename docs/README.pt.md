@@ -176,7 +176,7 @@ Manter o centro pressionado inicia a compressão. Ao mover mais de 4 pixels CSS,
 
 188 skins em 17 séries, com uma luz que segue o ponteiro. Cada skin tem um número permanente: o número da série seguido de dois dígitos, então 305 é o quinto skin da série 3. Os nomes podem mudar; os números nunca mudam nem são reutilizados.
 
-Todas as skins continuam sendo SVG puro: sem imagens, canvas nem WebGL.
+Todas as skins continuam sendo SVG puro: sem imagens, canvas nem WebGL. Todas as skins juntas somam cerca de 70 KB pela rede (cerca de 290 KB sem compressão), e a maior parte só é carregada quando uma página usa uma skin.
 
 <img src="../assets/readme/skin-gallery.jpg" alt="Galeria de skins: destaques, filtros e busca" width="100%">
 
