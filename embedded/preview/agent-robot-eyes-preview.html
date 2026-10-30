@@ -339,7 +339,7 @@ html,body{height:auto}
 .profile-select[aria-expanded=true]::after{transform:rotate(-135deg);margin-top:-1px}
 .profile-select #profile-name,.picker-list .name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .res{flex:0 0 auto;font-weight:400;font-size:11px;color:#9a9ea4;font-variant-numeric:tabular-nums}
-.picker-list{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:30;max-height:340px;overflow:auto;padding:5px;border:1px solid #e4e5e5;border-radius:12px;background:#fff;box-shadow:0 12px 34px rgba(0,0,0,.1);scrollbar-width:thin;scrollbar-color:#d8dade transparent}
+.picker-list{position:fixed;z-index:60;overflow:auto;padding:5px;border:1px solid #e4e5e5;border-radius:12px;background:#fff;box-shadow:0 12px 34px rgba(0,0,0,.1);scrollbar-width:thin;scrollbar-color:#d8dade transparent}
 .picker-list button{width:100%;display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:8px;background:transparent;color:#4a4f56;font-size:12px;text-align:left}
 .picker-list button:hover,.picker-list button:focus-visible{background:#f4f5f6;outline:none}
 .picker-list button[aria-selected=true]{background:#f1f2f3;color:#202327;font-weight:600}
@@ -403,9 +403,6 @@ html,body{height:auto}
 #size-error{font-size:11px;color:#a36f78}
 .side-footer{display:flex;align-items:center;gap:10px;padding:12px 12px 0 0;border-top:1px solid #f0f1f2}
 .side-footer .status{flex:1;min-width:0;font-size:10px;line-height:1.6;color:#999da4}
-/* The download, as the skin page's button. */
-#download{flex-shrink:0;padding:10px 14px;border-radius:10px;background:#f1f2f3;color:#30343a;font-size:13px;font-weight:600;white-space:nowrap}
-#download:hover{background:#e7e8ea;color:#15171a}
 .about{font-size:10px;color:#999da4;line-height:1.8}
 .about summary{cursor:pointer}
 .about pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:10px;line-height:1.6}
@@ -1289,7 +1286,6 @@ SUCH DAMAGE.
   </div>
   <div class="side-footer">
     <div class="status"><span id="status" role="status">正在初始化…</span><br><span id="fingerprint"></span></div>
-    <button id="download" disabled>下载离线版 ↓</button>
   </div>
 </aside>
 </div>
@@ -1606,7 +1602,6 @@ class PanelRenderer {
 // Panel character (pixel grid, backlight, glass) is applied on display only.
 (() => {
   'use strict';
-  const INITIAL_DOCUMENT = document.documentElement.outerHTML;
   const ACTIONS = [
     ['idle','正常'],['bored','发呆'],['waiting-spin','等待 · 旋转'],['waiting-wrap','等待 · 滚动'],
     ['input','输入'],['affirm','肯定'],['success','成功'],['failure','失败'],
@@ -1916,7 +1911,10 @@ class PanelRenderer {
     glass.style.width=dw/g.w*100+'%';glass.style.height=dh/g.h*100+'%';
     glass.classList.toggle('show-area',$('show-area').checked);
     $('glare').hidden=!$('glass-glare').checked||!g.m||!housing;
-    const cw=dw*ppm, ch=dh*ppm, dpr=Math.min(window.devicePixelRatio||1,MAX_CANVAS_PX/cw,MAX_CANVAS_PX/ch);
+    const cw=dw*ppm, ch=dh*ppm;
+    // Rounded panels round the glass too, so the reflection keeps their shape.
+    glass.style.borderRadius=preset.frame==='round'?'':base.corner?base.corner/preset.width*cw+'px':'';
+    const dpr=Math.min(window.devicePixelRatio||1,MAX_CANVAS_PX/cw,MAX_CANVAS_PX/ch);
     $('panel').width=Math.max(1,Math.round(cw*dpr));$('panel').height=Math.max(1,Math.round(ch*dpr));
     // A circular sensing zone around the module, whatever its aspect ratio.
     const ring=k.ring*ppm+GAZE.radius*2, zone=$('sense-zone');
@@ -2155,10 +2153,18 @@ class PanelRenderer {
       // The screen list opens under its button and closes on a choice,
       // Escape or a click elsewhere; arrow keys move through it.
       const list=$('profile-list');
+      // The list lies over the panel at full length instead of scrolling inside it.
       const openList=open=>{
+        if(open){
+          const r=$('profile').getBoundingClientRect();
+          Object.assign(list.style,{left:r.left+'px',top:r.bottom+6+'px',width:r.width+'px',maxHeight:innerHeight-r.bottom-18+'px'});
+        }
         list.hidden=!open;$('profile').setAttribute('aria-expanded',String(open));
-        if(open)(list.querySelector('[aria-selected=true]')||list.firstElementChild)?.focus({preventScroll:false});
+        if(open)(list.querySelector('[aria-selected=true]')||list.firstElementChild)?.focus({preventScroll:true});
       };
+      for(const target of [window,document.querySelector('.side-body')])
+        target.addEventListener('scroll',()=>{if(!list.hidden)openList(false);},{passive:true});
+      window.addEventListener('resize',()=>{if(!list.hidden)openList(false);});
       $('profile').onclick=()=>openList(list.hidden);
       list.onclick=event=>{
         const option=event.target.closest('[data-value]');if(!option)return;
@@ -2218,11 +2224,6 @@ class PanelRenderer {
       $('mono-chips').onclick=event=>{const b=event.target.closest('[data-mono]');if(b){mono=b.dataset.mono;store.set('mono',mono);syncControls();renderPanel();}};
       for(const id of ['show-area','glass-glare'])$(id).onchange=()=>{resizeDisplay();saveSettings();};
       $('pixel-grid').onchange=()=>{renderPanel();saveSettings();};
-      $('download').onclick=()=>{
-        const url=URL.createObjectURL(new Blob(['<!doctype html>\n'+INITIAL_DOCUMENT],{type:'text/html;charset=utf-8'}));
-        const link=document.createElement('a');link.href=url;link.download='agent-robot-eyes-preview.html';
-        document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);
-      };
       const updatePointer=event=>{
         if(event.pointerType==='touch'&&event.buttons===0)return;
         if(!motionAnchor||Math.hypot(event.clientX-motionAnchor.x,event.clientY-motionAnchor.y)>=GAZE.motionPx){

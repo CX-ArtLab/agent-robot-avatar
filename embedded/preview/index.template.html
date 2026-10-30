@@ -109,7 +109,7 @@ html,body{height:auto}
 .profile-select[aria-expanded=true]::after{transform:rotate(-135deg);margin-top:-1px}
 .profile-select #profile-name,.picker-list .name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .res{flex:0 0 auto;font-weight:400;font-size:11px;color:#9a9ea4;font-variant-numeric:tabular-nums}
-.picker-list{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:30;max-height:340px;overflow:auto;padding:5px;border:1px solid #e4e5e5;border-radius:12px;background:#fff;box-shadow:0 12px 34px rgba(0,0,0,.1);scrollbar-width:thin;scrollbar-color:#d8dade transparent}
+.picker-list{position:fixed;z-index:60;overflow:auto;padding:5px;border:1px solid #e4e5e5;border-radius:12px;background:#fff;box-shadow:0 12px 34px rgba(0,0,0,.1);scrollbar-width:thin;scrollbar-color:#d8dade transparent}
 .picker-list button{width:100%;display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:8px;background:transparent;color:#4a4f56;font-size:12px;text-align:left}
 .picker-list button:hover,.picker-list button:focus-visible{background:#f4f5f6;outline:none}
 .picker-list button[aria-selected=true]{background:#f1f2f3;color:#202327;font-weight:600}
@@ -173,9 +173,6 @@ html,body{height:auto}
 #size-error{font-size:11px;color:#a36f78}
 .side-footer{display:flex;align-items:center;gap:10px;padding:12px 12px 0 0;border-top:1px solid #f0f1f2}
 .side-footer .status{flex:1;min-width:0;font-size:10px;line-height:1.6;color:#999da4}
-/* The download, as the skin page's button. */
-#download{flex-shrink:0;padding:10px 14px;border-radius:10px;background:#f1f2f3;color:#30343a;font-size:13px;font-weight:600;white-space:nowrap}
-#download:hover{background:#e7e8ea;color:#15171a}
 .about{font-size:10px;color:#999da4;line-height:1.8}
 .about summary{cursor:pointer}
 .about pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:10px;line-height:1.6}
@@ -315,7 +312,6 @@ html,body{height:auto}
   </div>
   <div class="side-footer">
     <div class="status"><span id="status" role="status">正在初始化…</span><br><span id="fingerprint"></span></div>
-    <button id="download" disabled>下载离线版 ↓</button>
   </div>
 </aside>
 </div>

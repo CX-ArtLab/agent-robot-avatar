@@ -3,7 +3,6 @@
 // Panel character (pixel grid, backlight, glass) is applied on display only.
 (() => {
   'use strict';
-  const INITIAL_DOCUMENT = document.documentElement.outerHTML;
   const ACTIONS = [
     ['idle','正常'],['bored','发呆'],['waiting-spin','等待 · 旋转'],['waiting-wrap','等待 · 滚动'],
     ['input','输入'],['affirm','肯定'],['success','成功'],['failure','失败'],
@@ -313,7 +312,10 @@
     glass.style.width=dw/g.w*100+'%';glass.style.height=dh/g.h*100+'%';
     glass.classList.toggle('show-area',$('show-area').checked);
     $('glare').hidden=!$('glass-glare').checked||!g.m||!housing;
-    const cw=dw*ppm, ch=dh*ppm, dpr=Math.min(window.devicePixelRatio||1,MAX_CANVAS_PX/cw,MAX_CANVAS_PX/ch);
+    const cw=dw*ppm, ch=dh*ppm;
+    // Rounded panels round the glass too, so the reflection keeps their shape.
+    glass.style.borderRadius=preset.frame==='round'?'':base.corner?base.corner/preset.width*cw+'px':'';
+    const dpr=Math.min(window.devicePixelRatio||1,MAX_CANVAS_PX/cw,MAX_CANVAS_PX/ch);
     $('panel').width=Math.max(1,Math.round(cw*dpr));$('panel').height=Math.max(1,Math.round(ch*dpr));
     // A circular sensing zone around the module, whatever its aspect ratio.
     const ring=k.ring*ppm+GAZE.radius*2, zone=$('sense-zone');
@@ -552,10 +554,18 @@
       // The screen list opens under its button and closes on a choice,
       // Escape or a click elsewhere; arrow keys move through it.
       const list=$('profile-list');
+      // The list lies over the panel at full length instead of scrolling inside it.
       const openList=open=>{
+        if(open){
+          const r=$('profile').getBoundingClientRect();
+          Object.assign(list.style,{left:r.left+'px',top:r.bottom+6+'px',width:r.width+'px',maxHeight:innerHeight-r.bottom-18+'px'});
+        }
         list.hidden=!open;$('profile').setAttribute('aria-expanded',String(open));
-        if(open)(list.querySelector('[aria-selected=true]')||list.firstElementChild)?.focus({preventScroll:false});
+        if(open)(list.querySelector('[aria-selected=true]')||list.firstElementChild)?.focus({preventScroll:true});
       };
+      for(const target of [window,document.querySelector('.side-body')])
+        target.addEventListener('scroll',()=>{if(!list.hidden)openList(false);},{passive:true});
+      window.addEventListener('resize',()=>{if(!list.hidden)openList(false);});
       $('profile').onclick=()=>openList(list.hidden);
       list.onclick=event=>{
         const option=event.target.closest('[data-value]');if(!option)return;
@@ -615,11 +625,6 @@
       $('mono-chips').onclick=event=>{const b=event.target.closest('[data-mono]');if(b){mono=b.dataset.mono;store.set('mono',mono);syncControls();renderPanel();}};
       for(const id of ['show-area','glass-glare'])$(id).onchange=()=>{resizeDisplay();saveSettings();};
       $('pixel-grid').onchange=()=>{renderPanel();saveSettings();};
-      $('download').onclick=()=>{
-        const url=URL.createObjectURL(new Blob(['<!doctype html>\n'+INITIAL_DOCUMENT],{type:'text/html;charset=utf-8'}));
-        const link=document.createElement('a');link.href=url;link.download='agent-robot-eyes-preview.html';
-        document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);
-      };
       const updatePointer=event=>{
         if(event.pointerType==='touch'&&event.buttons===0)return;
         if(!motionAnchor||Math.hypot(event.clientX-motionAnchor.x,event.clientY-motionAnchor.y)>=GAZE.motionPx){
