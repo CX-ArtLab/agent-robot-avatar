@@ -78,7 +78,7 @@ pio run -d embedded -e pico-st7789
 pio run -d embedded -e esp32-ssd1306
 ```
 
-To use settings from the preview, press **导出设置 (Export settings)** there, save the text as `eyes_settings.h` in `embedded/examples/arduino/` next to `main.cpp`, and build the environment named in its first lines. It sets the frame-rate cap, blinking, transitions, layout (fit, zoom, offsets) and, on colour panels, the eye and background colours. Without the file the firmware uses its defaults; the file is ignored by git.
+To use settings from the preview, press **导出设置 (Export settings)** there, save the text as `eyes_settings.h` in `embedded/examples/arduino/` next to `main.cpp`, and build the environment named in its first lines. It sets the frame-rate cap, blinking, transitions, layout (fit, zoom, offsets), a 90° turn of the whole module, whether the 240×240 reference module uses the whole panel instead of its 240×160 strip, and, on colour panels, the eye and background colours. Without the file the firmware uses its defaults; the file is ignored by git.
 
 Upload **only the environment matching your board and wiring**:
 

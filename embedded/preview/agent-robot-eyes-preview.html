@@ -2154,8 +2154,8 @@ class PanelRenderer {
     ];
     if(oled)lines.push('// 单色 OLED 的颜色由屏幕本身决定，这里不用设置。');
     else lines.push('#define EYES_INK_RGB '+hex(colors.eye)+'         // 眼睛','#define EYES_BACKGROUND_RGB '+hex(colors.bg)+'  // 底色');
-    if(base.viewport&&fit!=='preset')lines.push('','// 示例固件在这块屏上只画中间 '+base.viewport[2]+' × '+base.viewport[3]+' 的区域，布局按这个区域计算。');
-    if(rotated)lines.push('','// 屏幕旋转 90° 需要在 boards.h 里改这块板子的 setRotation()。');
+    if(base.viewport&&fit!=='preset')lines.push('','#define EYES_FULL_PANEL 1  // 用整块屏，不只画中间 '+base.viewport[2]+' × '+base.viewport[3]);
+    if(rotated)lines.push('','#define EYES_TURN 3  // 整块屏转 90°；如果眼睛上下颠倒，改成 1');
     return lines.join('\n')+'\n';
   }
   function openExport(open) {

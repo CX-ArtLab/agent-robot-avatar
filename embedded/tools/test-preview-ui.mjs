@@ -83,6 +83,13 @@ try {
   // A square module turns too; its eyes keep the same layout.
   await page.locator('#rotate').click();
   assert.equal(await page.locator('#device').getAttribute('data-rotation'),'90');
+  // The export carries the turn, and the whole panel once the layout leaves the preset.
+  await page.locator('[data-fit="contain"]').click();
+  await page.locator('#export').click();
+  assert.match(await page.locator('#export-code').textContent(),/#define EYES_FULL_PANEL 1/);
+  assert.match(await page.locator('#export-code').textContent(),/#define EYES_TURN 3/);
+  await page.locator('#export-close').click();
+  await page.locator('[data-fit="preset"]').click();
   await page.locator('#rotate').click();
   const padding = await page.locator('#screen').evaluate(canvas => {
     const ctx=canvas.getContext('2d');
