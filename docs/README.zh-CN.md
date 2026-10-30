@@ -12,7 +12,7 @@
 
 一个轻量、富表现力的机器人头像 Web Component，适用于 AI Agent 与交互式应用。
 
-适合作为 AI 助手和智能体的形象与状态反馈：类似 ChatGPT、Claude、Gemini、Grok、DeepSeek 的对话助手，类似 Codex、Claude Code、Cursor、Gemini CLI、OpenCode 的编程智能体，以及类似 OpenClaw、Hermes Agent、Manus 的个人智能体。
+适合作为 AI 助手和智能体的形象与状态反馈：类似 ChatGPT、Claude、Gemini、Grok、DeepSeek 的对话助手，类似 Codex、Claude Code、Cursor、Gemini CLI、OpenCode 的编程智能体，以及类似 Grok Bot、ChatGPT dots、Meta Muse、OpenClaw、Hermes Agent 的常驻智能体。
 
 也可用于桌面伙伴、虚拟宠物、数字吉祥物、聊天机器人头像等交互角色，或作为 AG-UI 风格 Agent 界面的视觉反馈层。
 
