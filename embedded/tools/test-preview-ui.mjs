@@ -145,7 +145,7 @@ try {
     await page.locator(`[data-action="${action}"]`).click();
     assert((await page.locator('#current').textContent()).startsWith(action+' '));
   }
-  await choose('eyes');
+  await choose('custom');
   await page.locator('[data-zoom="1"]').click();
   // Actual size: 240 px at the default 0.15 mm pitch, 96 CSS px per inch.
   const glassWidth=await page.locator('#glass').evaluate(el=>el.getBoundingClientRect().width);
@@ -207,7 +207,7 @@ try {
     await choose(item);
     assert((await frame()).lit>0,'eyes visible on '+item);
   }
-  await choose('eyes');
+  await choose('custom');
   await page.setViewportSize({width:390,height:844});
   const overflowing=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth);
   assert.equal(overflowing,false,'mobile layout must not overflow');
@@ -222,7 +222,7 @@ try {
   assert((await page.locator('#wiring-body tr').count())>=6,'external modules list their wiring');
   await choose('esp32s3-round-128');
   assert.match(await page.locator('#wiring-body').textContent(),/无需接线/);
-  await choose('eyes');
+  await choose('custom');
   assert.equal(await page.locator('#wiring-body').evaluate(el=>el.hidden),true);
   assert.match(await page.locator('#screen-support').textContent(),/仅效果预览/);
   await choose('ssd1306-091');
@@ -239,6 +239,12 @@ try {
   await page.locator('#custom-shape [data-value="1"]').click();
   assert((await page.locator('#size-error').textContent()).length>0);
   assert.equal((await frame()).width,172,'invalid custom size leaves valid framebuffer intact');
+  // A custom screen can be a colour panel or a monochrome OLED.
+  await page.locator('#custom-shape [data-value="0"]').click();
+  assert.equal(await page.locator('#spec-color').textContent(),'彩色');
+  await page.locator('#custom-panel [data-value="oled"]').click();
+  assert.equal(await page.locator('#spec-color').textContent(),'单色');
+  assert.equal(await page.locator('#palettes').isHidden(),true);
   if(process.env.PREVIEW_SCREENSHOT) await page.screenshot({path:process.env.PREVIEW_SCREENSHOT,fullPage:true});
   assert.deepEqual(errors,[]); assert.deepEqual(external,[]);
   console.log(`Offline ${engine} UI passed: all controls, pause/step, native animation, cycling/manual interruption, sleep/wake, OLED/TFT, gaze, reset, cycling state, housing in place, zoom without scrolling, timing without restart, actual size, display-only panel effects, per-screen layout, rotation, screen types, wiring examples, custom size, every preset, responsive layout; no network requests.`);

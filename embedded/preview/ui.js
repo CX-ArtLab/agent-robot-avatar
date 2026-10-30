@@ -312,8 +312,8 @@
     device.dataset.module=g.m?base.id:'';
     device.dataset.rotation=String(g.rot?90:0);
     device.classList.toggle('bare',!housing||!g.m);
-    device.classList.toggle('generic-frame',!g.m&&preset.frame!=='eyes');
-    if(!g.m&&preset.frame!=='eyes')device.classList.toggle('bare',!housing);
+    device.classList.toggle('generic-frame',!g.m);
+    if(!g.m)device.classList.toggle('bare',!housing);
     glass.style.left=x/g.w*100+'%';glass.style.top=y/g.h*100+'%';
     glass.style.width=dw/g.w*100+'%';glass.style.height=dh/g.h*100+'%';
     glass.classList.toggle('show-area',$('show-area').checked);
@@ -372,9 +372,9 @@
     $('spec-res').textContent=preset.width+' × '+preset.height;
     $('stage-title').textContent=base.name;
     $('stage-res').textContent=preset.width+' × '+preset.height;
-    $('spec-color').textContent=base.panel==='oled'?'单色':base.panel?'彩色':'1-bit 画布';
+    $('spec-color').textContent=base.panel==='oled'?'单色':'彩色';
     $('spec-fps').textContent=bus?'最高约 '+screenLimit()+' FPS':'帧率不限';
-    $('screen-spec').textContent=[base.id==='custom'?'自定义尺寸':base.id==='eyes'?'原始眼睛画布':base.controller,
+    $('screen-spec').textContent=[base.id==='custom'?'自定义尺寸':base.controller,
       PANEL_NAMES[base.panel],bus&&bus[0]].filter(Boolean).join(' · ');
     $('screen-support').textContent=base.verified==='community'?'有接线示例 · 社区已实机验证'
       :base.example?'有接线示例（编译通过，未实机验证）':'仅效果预览 · 需自行接入屏幕驱动';
@@ -431,7 +431,7 @@
     screenGroup=base.id==='custom'?'other':base.group||'other';
     renderProfiles();
     if(base.id!=='custom')store.set('profile',base.id);
-    if(base.id==='custom'||base.id==='eyes'){$('custom-width').value=preset.width;$('custom-height').value=preset.height;}
+    if(base.id==='custom'){$('custom-width').value=preset.width;$('custom-height').value=preset.height;}
     syncScreenInfo();syncControls();loadLayout();resizeDisplay();applyLayout();setPaused(paused);
   }
   function applyGazeConfig() {
@@ -467,13 +467,13 @@
     if(next)configure(next,false);
   }
   function applyCustomSize() {
-    const width=Number($('custom-width').value),height=Number($('custom-height').value),round=segValue('custom-shape')==='1';
+    const width=Number($('custom-width').value),height=Number($('custom-height').value),round=segValue('custom-shape')==='1',panel=segValue('custom-panel');
     if(!Number.isInteger(width)||!Number.isInteger(height)||width<16||height<16||width>512||height>512||(round&&width!==height)){
       $('size-error').textContent='宽高须为 16–512 的整数；圆形须宽高相等。';return;
     }
     $('size-error').textContent='';
-    if(base.id==='custom'&&preset.width===width&&preset.height===height&&(preset.frame==='round')===round)return;
-    configure({id:'custom',name:'自定义屏幕',controller:'CUSTOM',width,height,frame:round?'round':'tft',example:false,group:'other'},false);
+    if(base.id==='custom'&&preset.width===width&&preset.height===height&&(preset.frame==='round')===round&&base.panel===panel)return;
+    configure({id:'custom',name:'自定义屏幕',controller:'CUSTOM',width,height,frame:round?'round':'tft',panel,example:false,group:'other'},false);
   }
   // The picker lists one screen type at a time; the type tabs switch it.
   // The 自定义 tab edits a size directly instead of listing presets.
@@ -516,7 +516,7 @@
     const hex=color=>'0x'+color.slice(1).toUpperCase();
     const num=value=>Number(value).toFixed(2)+'f';
     const lines=[
-      '// Agent Robot Eyes 设置，由嵌入式设备版预览导出。',
+      '// Agent Robot Eyes 设置，由嵌入式设备模拟器导出。',
       '// 屏幕：'+base.name+'，'+preset.width+' × '+preset.height,
       fw?'// 编译：pio run -e '+fw.env:'// 这块屏幕还没有示例固件，需要自己接入屏幕驱动。',
       '#pragma once','',
@@ -574,7 +574,7 @@
       }
       for(const [group,label] of GROUPS) {
         const items=groupPresets(group);
-        if(!items.length)continue;
+        if(!items.length&&group!=='other')continue;
         const tab=document.createElement('button');tab.type='button';tab.className='chip';tab.dataset.group=group;
         tab.textContent=label;$('screen-groups').append(tab);
       }
@@ -635,13 +635,16 @@
       $('next-profile').onclick=()=>stepProfile(1);
       $('screen-groups').onclick=event=>{
         const b=event.target.closest('[data-group]');
-        if(b&&b.dataset.group!==screenGroup)selectProfile(groupPresets(b.dataset.group)[0].id);
+        if(!b||b.dataset.group===screenGroup)return;
+        // The custom tab has no presets: it sets up a screen of your own.
+        if(b.dataset.group==='other')applyCustomSize();else selectProfile(groupPresets(b.dataset.group)[0].id);
       };
       for(const id of ['custom-width','custom-height']) {
         $(id).onchange=applyCustomSize;
         $(id).onkeydown=event=>{if(event.key==='Enter')applyCustomSize();};
       }
       bindSeg('custom-shape',applyCustomSize);
+      bindSeg('custom-panel',applyCustomSize);
       $('fps').addEventListener('click',event=>{
         const b=event.target.closest('[data-value]');
         if(!b||b.dataset.value===fpsChoice)return;

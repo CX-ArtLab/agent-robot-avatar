@@ -406,17 +406,6 @@
     }
   },
   {
-    "id": "eyes",
-    "name": "原始眼睛画布",
-    "width": 240,
-    "height": 160,
-    "frame": "eyes",
-    "controller": "GENERIC",
-    "type": "通用单色位图",
-    "example": false,
-    "group": "other"
-  },
-  {
     "id": "gc9a01-128",
     "name": "通用 GC9A01 1.28″ 圆屏模块",
     "width": 240,

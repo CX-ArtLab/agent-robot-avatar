@@ -25,12 +25,12 @@
 **新支持：[嵌入式设备版](#新支持嵌入式设备版)**\
 用于 ESP32、STM32、树莓派 Pico 等开发板的屏幕，也可以编译进其他 C++ 程序。\
 在桌面小型机器人或各种嵌入式设备上，显示与网页版相同的眼睛表情。\
-提供现成固件，以及一个支持多种流行开发板和屏幕的模拟预览，调好后可直接导出设置用于编译。
+提供现成固件，以及一个支持多种流行开发板和屏幕的在线模拟器，调好后可直接导出设置用于编译。
 
 ## 在线 Demo
 
 [打开交互 Demo](https://cx-artlab.github.io/agent-robot-avatar/?lang=zh-CN) · [逛逛皮肤美术馆](https://cx-artlab.github.io/agent-robot-avatar/skins.html?lang=zh-CN)\
-[嵌入式设备版](https://cx-artlab.github.io/agent-robot-avatar/hardware/)（可预览 33 种常用嵌入式设备屏幕）
+[打开嵌入式设备模拟器](https://cx-artlab.github.io/agent-robot-avatar/hardware/)（可预览 32 种常用嵌入式设备屏幕）
 
 ## 特点
 
@@ -49,7 +49,7 @@
 - 188 款编号皮肤，分 17 个系列，光线跟随鼠标
 - 不含皮肤的精简版，适合对大小特别在意的页面
 - 内置 TypeScript 类型声明
-- 嵌入式设备版：同样的表情跑在 28 种 ESP32、STM32 和树莓派 Pico 开发板与屏幕组合上，在浏览器预览里调好后直接导出到固件
+- 嵌入式设备版：同样的表情跑在 28 种 ESP32、STM32 和树莓派 Pico 开发板与屏幕组合上，在线模拟器里调好后直接导出到固件
 
 ## 安装
 
@@ -244,11 +244,11 @@ avatar.setSkin(null); // 回到纯色
 | ESP32、STM32、树莓派 Pico 等开发板 | 嵌入式设备版，有现成固件 |
 | 其他单片机或 C++ 程序 | 嵌入式设备版的 C++ 库，自己接屏幕驱动 |
 
-<img src="../assets/readme/hardware-preview.jpg" alt="嵌入式设备版预览：圆形 TFT 模组显示眼睛，旁边是布局、颜色和导出设置" width="100%">
+<img src="../assets/readme/hardware-preview.jpg" alt="嵌入式设备模拟器：圆形 TFT 模组显示眼睛，旁边是布局、颜色和导出设置" width="100%">
 
-**没有板子也能先预览效果。** [在线预览](https://cx-artlab.github.io/agent-robot-avatar/hardware/)在浏览器里就能运行同一套 C++ 引擎，模拟 33 种屏幕，你可以大致看到它在真实模组上的样子，选购屏幕时也能拿来参考。
+**没有板子也能先预览效果。** [在线模拟器](https://cx-artlab.github.io/agent-robot-avatar/hardware/)在浏览器里就能运行同一套 C++ 引擎，模拟 32 种屏幕，你可以大致看到它在真实模组上的样子，选购屏幕时也能拿来参考。
 
-**调好，就能直接用。** 选好你的屏幕，调整布局、颜色和帧率，点「导出设置」。把导出的 `eyes_settings.h` 放进示例固件再编译，板子上显示的就是预览里的样子。详见[操作步骤](../embedded/README.zh-CN.md#在预览里调好直接用到板子上)。
+**调好，就能直接用。** 选好你的屏幕，调整布局、颜色和帧率，点「导出设置」。把导出的 `eyes_settings.h` 放进示例固件再编译，板子上显示的就是模拟器里的样子。详见[操作步骤](../embedded/README.zh-CN.md#在模拟器里调好直接用到板子上)。
 
 **安装。** 在 Arduino IDE 的库管理器或 PlatformIO 里搜索 `AgentRobotEyes`；也可以从[发布页](https://github.com/CX-ArtLab/agent-robot-avatar/releases)下载 `AgentRobotEyes-x.y.z.zip`，在 Arduino IDE 里选「项目 → 导入库 → 添加 .ZIP 库」安装。
 
