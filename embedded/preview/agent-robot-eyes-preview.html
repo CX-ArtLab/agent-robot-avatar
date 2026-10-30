@@ -1729,13 +1729,21 @@ class PanelRenderer {
   // ---------- zoom ----------
   // Scale is relative to actual size and never exceeds what fits the stage,
   // so the module is always fully visible without scrollbars.
+  // The screen, not the board, sits at the centre of the stage and of the
+  // sensing ring: how far the module reaches from the screen's centre.
+  function reach(g) {
+    const [x,y,dw,dh]=g.display, cx=x+dw/2, cy=y+dh/2;
+    const rx=Math.max(cx,g.w-cx), ry=Math.max(cy,g.h-cy);
+    // The ring is centred on the screen and still takes in the whole board.
+    return {cx,cy,x:rx,y:ry,ring:2*Math.max(rx,ry)};
+  }
   function zoomRange(g) {
-    const r=$('stage').getBoundingClientRect();
+    const r=$('stage').getBoundingClientRect(), k=reach(g);
     // Room for the name above and the state below; with tracking on, the
     // whole sensing ring stays on the stage too.
     const w=r.width-40, h=r.height-96;
-    let max=Math.min(w/g.w,h/g.h);
-    if($('follow').checked)max=Math.min(max,(Math.min(r.width-32,r.height-64)-GAZE.radius*2)/Math.max(g.w,g.h));
+    let max=Math.min(w/(2*k.x),h/(2*k.y));
+    if($('follow').checked)max=Math.min(max,(Math.min(r.width-32,r.height-64)-GAZE.radius*2)/k.ring);
     max=Math.max(.05,max/CSS_PX_PER_MM);
     return [Math.min(max*.2,1),max];
   }
@@ -1801,9 +1809,10 @@ class PanelRenderer {
   }
   function sensorInput() {
     if(!$('follow').checked){$('target-dot').hidden=true;return;}
-    const rect=$('device').getBoundingClientRect();
+    // Directions are measured from the screen's centre, scaled by the module.
+    const rect=$('device').getBoundingClientRect(), glass=$('glass').getBoundingClientRect();
     const zone=$('sense-zone').getBoundingClientRect();
-    const dx=pointer.x-(rect.left+rect.width/2), dy=pointer.y-(rect.top+rect.height/2);
+    const dx=pointer.x-(glass.left+glass.width/2), dy=pointer.y-(glass.top+glass.height/2);
     const distance=Math.hypot(dx/(zone.width/2),dy/(zone.height/2));
     const proximity=Math.max(0,Math.min(1,1-distance/2));
     api.eyes_motion_target(dx/Math.max(1,rect.width/2),dy/Math.max(1,rect.height/2),
@@ -1871,7 +1880,9 @@ class PanelRenderer {
     frameKey=key;
     const scale=currentScale(g), ppm=scale*CSS_PX_PER_MM, [x,y,dw,dh]=g.display;
     syncZoom(g,scale);
+    const k=reach(g);
     $('sensor-wrap').style.width=g.w*ppm+'px';$('sensor-wrap').style.height=g.h*ppm+'px';
+    $('sensor-wrap').style.transform='translate('+(g.w/2-k.cx)*ppm+'px,'+(g.h/2-k.cy)*ppm+'px)';
     device.dataset.profile=preset.frame;
     device.dataset.module=g.m?base.id:'';
     device.dataset.rotation=String(g.rot?90:0);
@@ -1885,11 +1896,12 @@ class PanelRenderer {
     const cw=dw*ppm, ch=dh*ppm, dpr=Math.min(window.devicePixelRatio||1,MAX_CANVAS_PX/cw,MAX_CANVAS_PX/ch);
     $('panel').width=Math.max(1,Math.round(cw*dpr));$('panel').height=Math.max(1,Math.round(ch*dpr));
     // A circular sensing zone around the module, whatever its aspect ratio.
-    const ring=Math.max(g.w,g.h)*ppm+GAZE.radius*2;
-    $('sense-zone').hidden=!$('follow').checked;
-    $('sense-zone').style.width=$('sense-zone').style.height=ring+'px';
+    const ring=k.ring*ppm+GAZE.radius*2, zone=$('sense-zone');
+    zone.hidden=!$('follow').checked;
+    zone.style.width=zone.style.height=ring+'px';
+    zone.style.left=k.cx/g.w*100+'%';zone.style.top=k.cy/g.h*100+'%';
     // Label just above the module, inside the ring, so the stage never clips it.
-    $('sense-zone').style.setProperty('--label-top',Math.max(4,(ring-g.h*ppm)/2-26)+'px');
+    zone.style.setProperty('--label-top',Math.max(4,ring/2-k.cy*ppm-26)+'px');
     const reference=g.m?g.m.name+(g.m.revision?' · '+g.m.revision:''):preset.name;
     $('stage-caption').textContent=reference+(g.rot!==((base.rotation||0)===90)?' · 旋转 90°':'')+' · '+Math.round(25.4/pitchMm())+' PPI'+
       (g.m?(!housing?' · 外框已隐藏':g.m.generic?' · 外框为通用示意':' · PCB '+g.w+' × '+g.h+' mm'):'');
