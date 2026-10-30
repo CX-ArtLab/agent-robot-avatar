@@ -26,7 +26,7 @@ test('the demo lists the newest actions last, each flagged with a red dot', asyn
   await expect(buttons.last()).toHaveAttribute('data-action', 'random');
 
   const actions = await buttons.evaluateAll(list => list.map(button => button.dataset.action));
-  expect(actions.slice(-3)).toEqual(['wake', 'love', 'random']);
+  expect(actions.slice(-3)).toEqual(['sleep', 'love', 'random']);
 
   const flags = await buttons.evaluateAll(list => list.map(button => ({
     action: button.dataset.action,

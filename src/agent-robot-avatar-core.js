@@ -42,9 +42,10 @@ const AgentRobotAvatar = (() => {
       topAL: 0, topAR: 0, bottomAL: 0, bottomAR: 0,
       scale: 1,
     },
+    // Same eye as sleepy; the lids meet in a thin slit instead of squashing it.
     sleep: {
-      w: 62, h: 10, rx: 2,
-      topY: -20, bottomY: 20,
+      w: 58, h: 56, rx: 28,
+      topY: 7, bottomY: 14,
       topAL: 0, topAR: 0, bottomAL: 0, bottomAR: 0,
       scale: 1,
     },
