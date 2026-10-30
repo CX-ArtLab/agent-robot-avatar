@@ -41,7 +41,7 @@ const glassBox = () => page.locator('#glass').evaluate(el => { const r = el.getB
 try {
   await page.clock.install();
   await page.goto(file);
-  await page.waitForFunction(() => document.getElementById('status').textContent.includes('本机绘制'));
+  await page.waitForFunction(() => document.documentElement.dataset.ready === 'true');
   // The eyes follow a simulated object; the switch names the sensor it needs.
   assert.match(await page.locator('#follow').locator('..').getAttribute('title'),/摄像头/);
   // The Web demo's 17 buttons: one of them sleeps and wakes.
@@ -80,6 +80,10 @@ try {
   assert.deepEqual([(await frame()).width,(await frame()).height],[128,64]);
   await choose('tft');
   const tft=await frame(); assert.deepEqual([tft.width,tft.height],[240,240]);
+  // A square module turns too; its eyes keep the same layout.
+  await page.locator('#rotate').click();
+  assert.equal(await page.locator('#device').getAttribute('data-rotation'),'90');
+  await page.locator('#rotate').click();
   const padding = await page.locator('#screen').evaluate(canvas => {
     const ctx=canvas.getContext('2d');
     return [...ctx.getImageData(0,0,240,40).data, ...ctx.getImageData(0,200,240,40).data]

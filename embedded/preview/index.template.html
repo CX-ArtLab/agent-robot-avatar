@@ -88,7 +88,7 @@ html,body{height:auto}
 .zoom-slider output{min-width:34px;font-size:11px;color:#6b7078;font-variant-numeric:tabular-nums;text-align:right}
 
 /* Right: the options panel, built like the skin library */
-.side{position:sticky;top:12px;height:var(--column-height);display:flex;flex-direction:column;min-width:0;padding:20px 8px 16px 20px;border:1px solid #e4e5e5;border-radius:16px;background:rgba(255,255,255,.88);box-shadow:0 7px 30px rgba(0,0,0,.035)}
+.side{position:sticky;top:12px;height:var(--column-height);display:flex;flex-direction:column;min-width:0;padding:20px 8px 4px 20px;border:1px solid #e4e5e5;border-radius:16px;background:rgba(255,255,255,.88);box-shadow:0 7px 30px rgba(0,0,0,.035)}
 .side-body{flex:1;min-height:0;overflow:auto;padding-right:12px;scrollbar-width:thin;scrollbar-color:#d8dade transparent}
 .section{display:grid;gap:8px;padding:0 0 18px}
 .section + .section{padding-top:16px;border-top:1px solid #f0f1f2}
@@ -174,8 +174,6 @@ html,body{height:auto}
 .icon-button{display:grid;place-items:center;width:36px;padding:0!important}
 .icon-button svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 #size-error{font-size:11px;color:#a36f78}
-.side-footer{display:flex;align-items:center;gap:10px;padding:12px 12px 0 0;border-top:1px solid #f0f1f2}
-.side-footer .status{flex:1;min-width:0;font-size:10px;line-height:1.6;color:#999da4}
 .group{display:grid;gap:6px}
 
 @media(max-width:1180px){.workspace{grid-template-columns:minmax(0,1fr) 380px;gap:16px;padding-inline:16px}}
@@ -188,8 +186,7 @@ html,body{height:auto}
   .stage{height:clamp(260px,46vh,420px)}
   .side{position:static;height:auto;max-height:none;min-height:0;margin-top:14px;padding:16px}
   .side-body{overflow:visible;padding-right:0}
-  .side-footer{padding-right:0}
-}
+  }
 @media(max-width:420px){.pair{grid-template-columns:minmax(0,1fr)}.zoom-slider input{width:90px}}
 </style>
 </head>
@@ -312,9 +309,6 @@ __THIRD_PARTY__
     </div>
   </section>
 
-  </div>
-  <div class="side-footer">
-    <div class="status"><span id="status" role="status">正在初始化…</span><br><span id="fingerprint"></span></div>
   </div>
 </aside>
 </div>

@@ -318,7 +318,7 @@ html,body{height:auto}
 .zoom-slider output{min-width:34px;font-size:11px;color:#6b7078;font-variant-numeric:tabular-nums;text-align:right}
 
 /* Right: the options panel, built like the skin library */
-.side{position:sticky;top:12px;height:var(--column-height);display:flex;flex-direction:column;min-width:0;padding:20px 8px 16px 20px;border:1px solid #e4e5e5;border-radius:16px;background:rgba(255,255,255,.88);box-shadow:0 7px 30px rgba(0,0,0,.035)}
+.side{position:sticky;top:12px;height:var(--column-height);display:flex;flex-direction:column;min-width:0;padding:20px 8px 4px 20px;border:1px solid #e4e5e5;border-radius:16px;background:rgba(255,255,255,.88);box-shadow:0 7px 30px rgba(0,0,0,.035)}
 .side-body{flex:1;min-height:0;overflow:auto;padding-right:12px;scrollbar-width:thin;scrollbar-color:#d8dade transparent}
 .section{display:grid;gap:8px;padding:0 0 18px}
 .section + .section{padding-top:16px;border-top:1px solid #f0f1f2}
@@ -404,8 +404,6 @@ html,body{height:auto}
 .icon-button{display:grid;place-items:center;width:36px;padding:0!important}
 .icon-button svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 #size-error{font-size:11px;color:#a36f78}
-.side-footer{display:flex;align-items:center;gap:10px;padding:12px 12px 0 0;border-top:1px solid #f0f1f2}
-.side-footer .status{flex:1;min-width:0;font-size:10px;line-height:1.6;color:#999da4}
 .group{display:grid;gap:6px}
 
 @media(max-width:1180px){.workspace{grid-template-columns:minmax(0,1fr) 380px;gap:16px;padding-inline:16px}}
@@ -418,8 +416,7 @@ html,body{height:auto}
   .stage{height:clamp(260px,46vh,420px)}
   .side{position:static;height:auto;max-height:none;min-height:0;margin-top:14px;padding:16px}
   .side-body{overflow:visible;padding-right:0}
-  .side-footer{padding-right:0}
-}
+  }
 @media(max-width:420px){.pair{grid-template-columns:minmax(0,1fr)}.zoom-slider input{width:90px}}
 </style>
 </head>
@@ -1287,9 +1284,6 @@ SUCH DAMAGE.
   </section>
 
   </div>
-  <div class="side-footer">
-    <div class="status"><span id="status" role="status">正在初始化…</span><br><span id="fingerprint"></span></div>
-  </div>
 </aside>
 </div>
 <div class="target-dot" id="target-dot" aria-hidden="true" hidden></div>
@@ -1671,7 +1665,7 @@ class PanelRenderer {
     console.error(error);
     $('error').hidden=false;
     $('error').textContent='预览无法运行，请用较新的浏览器打开完整 HTML 文件。详情：'+error.message;
-    $('status').textContent='未运行';
+    delete document.documentElement.dataset.ready;
     document.querySelectorAll('button,select,input').forEach(el=>{el.disabled=true;});
     api=null;
   }
@@ -1731,7 +1725,8 @@ class PanelRenderer {
     return null;
   }
   function rotation() { return ((base.rotation||0)+(rotated?90:0))%180; }
-  function logical() { return rotated?{...base,width:base.height,height:base.width,viewport:null}:base; }
+  // A turned module turns its framebuffer; a square one keeps its layout.
+  function logical() { return rotated?{...base,width:base.height,height:base.width,viewport:base.width===base.height?base.viewport:null}:base; }
   function pitchMm() {
     const m=model();
     if(m)return (rotation()===90?m.display[3]:m.display[2])/preset.width;
@@ -2010,9 +2005,9 @@ class PanelRenderer {
     });
     document.querySelectorAll('[data-mono]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mono===mono)));
     $('eye-color').value=colors.eye;$('bg-color').value=colors.bg;
-    // Square and round screens look the same turned, so there is nothing to rotate.
-    $('rotate').disabled=preset.frame==='round'||base.width===base.height;
-    $('rotate').title=$('rotate').disabled?'方形和圆形屏幕不需要旋转':'把屏幕模组整体转 90°';
+    // Any module can be mounted turned; a bare square or round screen looks the same.
+    $('rotate').disabled=!model()&&(preset.frame==='round'||base.width===base.height);
+    $('rotate').title=$('rotate').disabled?'没有外框的方形和圆形屏幕转了也一样':'把屏幕模组整体转 90°';
     $('rotate').setAttribute('aria-pressed',String(rotated));
     syncColors();
   }
@@ -2146,8 +2141,7 @@ class PanelRenderer {
       const saved=SCREEN_PRESETS.find(item=>item.id===store.get('profile',''));
       if(saved)base=saved;
       configure(base,false);setPaused(false);balanceActions();
-      $('status').textContent='本机绘制 · C++ 核心 · 无外部请求'+(panel?'':' · 面板效果不可用');
-      $('fingerprint').textContent='核心源码 SHA-256：'+CORE_SHA256.slice(0,16);
+      document.documentElement.dataset.ready='true';
       $('pause').onclick=()=>setPaused(!paused);
       $('step').onclick=()=>{if(paused)advance(Math.ceil(1000/fpsValue()));};
       $('demo').onclick=()=>{setCycling(!cycling);if(cycling){cycleIndex=0;nextCycle=time+4000;play(0);}};

@@ -69,7 +69,7 @@
     console.error(error);
     $('error').hidden=false;
     $('error').textContent='预览无法运行，请用较新的浏览器打开完整 HTML 文件。详情：'+error.message;
-    $('status').textContent='未运行';
+    delete document.documentElement.dataset.ready;
     document.querySelectorAll('button,select,input').forEach(el=>{el.disabled=true;});
     api=null;
   }
@@ -129,7 +129,8 @@
     return null;
   }
   function rotation() { return ((base.rotation||0)+(rotated?90:0))%180; }
-  function logical() { return rotated?{...base,width:base.height,height:base.width,viewport:null}:base; }
+  // A turned module turns its framebuffer; a square one keeps its layout.
+  function logical() { return rotated?{...base,width:base.height,height:base.width,viewport:base.width===base.height?base.viewport:null}:base; }
   function pitchMm() {
     const m=model();
     if(m)return (rotation()===90?m.display[3]:m.display[2])/preset.width;
@@ -408,9 +409,9 @@
     });
     document.querySelectorAll('[data-mono]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mono===mono)));
     $('eye-color').value=colors.eye;$('bg-color').value=colors.bg;
-    // Square and round screens look the same turned, so there is nothing to rotate.
-    $('rotate').disabled=preset.frame==='round'||base.width===base.height;
-    $('rotate').title=$('rotate').disabled?'方形和圆形屏幕不需要旋转':'把屏幕模组整体转 90°';
+    // Any module can be mounted turned; a bare square or round screen looks the same.
+    $('rotate').disabled=!model()&&(preset.frame==='round'||base.width===base.height);
+    $('rotate').title=$('rotate').disabled?'没有外框的方形和圆形屏幕转了也一样':'把屏幕模组整体转 90°';
     $('rotate').setAttribute('aria-pressed',String(rotated));
     syncColors();
   }
@@ -544,8 +545,7 @@
       const saved=SCREEN_PRESETS.find(item=>item.id===store.get('profile',''));
       if(saved)base=saved;
       configure(base,false);setPaused(false);balanceActions();
-      $('status').textContent='本机绘制 · C++ 核心 · 无外部请求'+(panel?'':' · 面板效果不可用');
-      $('fingerprint').textContent='核心源码 SHA-256：'+CORE_SHA256.slice(0,16);
+      document.documentElement.dataset.ready='true';
       $('pause').onclick=()=>setPaused(!paused);
       $('step').onclick=()=>{if(paused)advance(Math.ceil(1000/fpsValue()));};
       $('demo').onclick=()=>{setCycling(!cycling);if(cycling){cycleIndex=0;nextCycle=time+4000;play(0);}};
