@@ -96,3 +96,32 @@ jobs:
           NPM_TAG: ${{ steps.release.outputs.npm-tag }}
         # Checks passed above; do not run the browser suite a second time.
         run: npm publish --ignore-scripts --tag "$NPM_TAG"
+
+  # The source archives GitHub adds hold the whole repository. Attach one with
+  # only what npm installs, for pages that load the component without npm.
+  release-zip:
+    needs: publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    env:
+      RELEASE_TAG: ${{ inputs.tag || github.event.release.tag_name }}
+    steps:
+      - name: Checkout release tag
+        uses: actions/checkout@v5
+        with:
+          ref: refs/tags/${{ inputs.tag || github.event.release.tag_name }}
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Attach the component download
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: bash scripts/release-zip.sh "$RELEASE_TAG"

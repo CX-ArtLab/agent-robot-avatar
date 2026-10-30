@@ -56,10 +56,10 @@ npm install agent-robot-avatar
 import 'agent-robot-avatar';
 ```
 
-也可以直接加载仓库源码：
+也可以从[最新发布](https://github.com/CX-ArtLab/agent-robot-avatar/releases/latest)下载 `agent-robot-avatar-x.y.z.zip`，里面只有组件本身（含皮肤），解压到网页旁边即可：
 
 ```html
-<script type="module" src="./agent-robot-avatar.js"></script>
+<script type="module" src="./agent-robot-avatar/agent-robot-avatar.js"></script>
 ```
 
 然后添加组件：

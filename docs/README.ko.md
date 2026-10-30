@@ -56,10 +56,10 @@ npm install agent-robot-avatar
 import 'agent-robot-avatar';
 ```
 
-저장소 소스를 직접 불러올 수도 있습니다.
+또는 [최신 릴리스](https://github.com/CX-ArtLab/agent-robot-avatar/releases/latest)에서 `agent-robot-avatar-x.y.z.zip`을 내려받으세요. 컴포넌트만 들어 있으며 스킨도 포함됩니다. 페이지 옆에 압축을 풀어 주세요.
 
 ```html
-<script type="module" src="./agent-robot-avatar.js"></script>
+<script type="module" src="./agent-robot-avatar/agent-robot-avatar.js"></script>
 ```
 
 그다음 컴포넌트를 추가합니다.

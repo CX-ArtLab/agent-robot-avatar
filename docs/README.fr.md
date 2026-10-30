@@ -56,10 +56,10 @@ npm install agent-robot-avatar
 import 'agent-robot-avatar';
 ```
 
-Vous pouvez aussi charger directement le code source du dépôt :
+Ou téléchargez `agent-robot-avatar-x.y.z.zip` depuis la [dernière version](https://github.com/CX-ArtLab/agent-robot-avatar/releases/latest). Il ne contient que le composant, skins comprises. Décompressez-le à côté de votre page :
 
 ```html
-<script type="module" src="./agent-robot-avatar.js"></script>
+<script type="module" src="./agent-robot-avatar/agent-robot-avatar.js"></script>
 ```
 
 Puis ajouter le composant :
