@@ -176,12 +176,7 @@ html,body{height:auto}
 #size-error{font-size:11px;color:#a36f78}
 .side-footer{display:flex;align-items:center;gap:10px;padding:12px 12px 0 0;border-top:1px solid #f0f1f2}
 .side-footer .status{flex:1;min-width:0;font-size:10px;line-height:1.6;color:#999da4}
-.about{font-size:10px;color:#999da4;line-height:1.8}
-.about summary{cursor:pointer}
-.about pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:10px;line-height:1.6}
 .group{display:grid;gap:6px}
-.preset-list{display:grid;gap:4px}
-.preset-item{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;padding:4px 0;border-bottom:1px solid #eeeff0}
 
 @media(max-width:1180px){.workspace{grid-template-columns:minmax(0,1fr) 380px;gap:16px;padding-inline:16px}}
 @media(max-width:860px){
@@ -199,6 +194,13 @@ html,body{height:auto}
 </style>
 </head>
 <body>
+<!-- Licences for this file: the project's MIT licence, then the notices of the
+     Zig runtime and WASI libc compiled into the WebAssembly core.
+
+__LICENSE__
+
+__THIRD_PARTY__
+-->
 <div class="canvas preview" id="demo-canvas">
 <header class="page-header">
   <div class="title"><span>Agent Robot Avatar</span><span>C++ + WebAssembly</span><span>硬件表情版</span></div>
@@ -259,8 +261,10 @@ html,body{height:auto}
       <span id="size-error" role="status"></span>
     </div>
     <div class="spec-badges"><span id="spec-res" title="分辨率"></span><span id="spec-color" title="色彩"></span><span id="spec-fps" title="按连接总线带宽估算的整屏刷新上限"></span></div>
-    <div class="meta"><span id="screen-spec"></span> · <span id="screen-support"></span><br><span id="stage-caption">正在载入屏幕模组…</span><a class="frame-source" id="frame-source" target="_blank" rel="noopener noreferrer" hidden>模组资料 ↗</a></div>
-    <details class="wiring" id="wiring" hidden><summary>接线与固件</summary><div id="wiring-body"></div></details>
+    <details class="wiring" id="wiring"><summary>型号与接线</summary><div>
+      <div class="meta"><span id="screen-spec"></span><br><span id="screen-support"></span><br><span id="stage-caption">正在载入屏幕模组…</span><a class="frame-source" id="frame-source" target="_blank" rel="noopener noreferrer" hidden>模组资料 ↗</a></div>
+      <div id="wiring-body" class="group"></div>
+    </div></details>
   </section>
 
   <section class="section">
@@ -308,10 +312,6 @@ html,body{height:auto}
     </div>
   </section>
 
-  <section class="section about">
-    <details><summary>屏幕预设库</summary><div id="preset-list" class="preset-list"></div><p>所有屏幕都按对应像素绘制。"有接线示例"表示仓库里有对应的固件配置并已通过编译，尚未实机验证；其余屏幕需要自行接入屏幕驱动。标"通用"的型号外框按常见模块尺寸绘制，是示意。帧率上限按连接总线带宽估算，不含绘制时间。</p></details>
-    <details><summary>说明与开源许可</summary><p>换屏幕或改尺寸会从"正常"重新开始；帧率、眨眼、过渡、布局、外框和显示效果的更改保留当前动画。跟随物体只模拟目标输入，不访问摄像头。输入、等待、睡眠持续到新命令，其余动作结束后回到正常。切到后台冻结时间。设置保存在本浏览器中。</p><pre>__LICENSE__</pre><pre>__THIRD_PARTY__</pre></details>
-  </section>
   </div>
   <div class="side-footer">
     <div class="status"><span id="status" role="status">正在初始化…</span><br><span id="fingerprint"></span></div>

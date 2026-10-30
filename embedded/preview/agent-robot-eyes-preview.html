@@ -406,12 +406,7 @@ html,body{height:auto}
 #size-error{font-size:11px;color:#a36f78}
 .side-footer{display:flex;align-items:center;gap:10px;padding:12px 12px 0 0;border-top:1px solid #f0f1f2}
 .side-footer .status{flex:1;min-width:0;font-size:10px;line-height:1.6;color:#999da4}
-.about{font-size:10px;color:#999da4;line-height:1.8}
-.about summary{cursor:pointer}
-.about pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:10px;line-height:1.6}
 .group{display:grid;gap:6px}
-.preset-list{display:grid;gap:4px}
-.preset-item{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;padding:4px 0;border-bottom:1px solid #eeeff0}
 
 @media(max-width:1180px){.workspace{grid-template-columns:minmax(0,1fr) 380px;gap:16px;padding-inline:16px}}
 @media(max-width:860px){
@@ -429,118 +424,10 @@ html,body{height:auto}
 </style>
 </head>
 <body>
-<div class="canvas preview" id="demo-canvas">
-<header class="page-header">
-  <div class="title"><span>Agent Robot Avatar</span><span>C++ + WebAssembly</span><span>硬件表情版</span></div>
-  <div class="build-badge">硬件 0.1.0 · 实验版</div>
-</header>
-<div class="workspace">
-<main class="left">
-  <div class="stage card" id="stage">
-    <div class="stage-name"><span id="stage-title"></span><span class="tag" id="stage-res"></span></div>
-    <div class="sensor-wrap" id="sensor-wrap">
-      <div class="sense-zone" id="sense-zone" aria-hidden="true"></div>
-      <div class="device" id="device" data-profile="tft">
-        <div class="frame-art" id="frame-art" aria-hidden="true"></div>
-        <div class="glass" id="glass"><canvas id="panel" role="img" aria-label="硬件表情动画预览"></canvas><div class="glare" id="glare"></div></div>
-      </div>
-    </div>
-    <div class="status-pill" id="current" role="status">idle · 正常</div>
-  </div>
-  <noscript>此预览需要启用 JavaScript。</noscript><div id="error" role="alert" hidden></div>
-  <div class="hint-row"><span id="tracking-note" role="status"></span><span>空格键暂停／继续</span></div>
-  <div class="action-card card"><div class="controls" id="actions" role="group" aria-label="选择表情"></div></div>
-  <div class="bar card" aria-label="播放">
-    <button id="pause" title="也可以按空格键" disabled>暂停</button><button id="step" title="暂停后可逐帧查看" disabled>下一帧</button><button id="demo" aria-pressed="false" disabled>自动轮播</button><button id="reset" title="从“正常”重新开始，保留所有设置" disabled>重置</button>
-    <span class="divider" aria-hidden="true"></span>
-    <div class="seg" id="speed" data-value="1" role="group" aria-label="播放速度"><button class="chip" type="button" data-value="0.25">0.25×</button><button class="chip" type="button" data-value="0.5">0.5×</button><button class="chip" type="button" data-value="1">1×</button><button class="chip" type="button" data-value="2">2×</button></div>
-    <span class="clock" id="clock" title="模拟时间：暂停时停止，慢放时变慢">时间 0.0 s</span>
-  </div>
-  <div class="bar card view-bar" aria-label="显示">
-    <div class="bar-row">
-      <button class="chip" type="button" id="rotate">屏幕旋转 90°</button>
-      <span class="divider" aria-hidden="true"></span>
-      <button class="chip" type="button" id="zoom-fit" data-zoom="fit">适合窗口</button>
-      <button class="chip" type="button" id="zoom-real" data-zoom="1">实物大小</button>
-      <label class="opt zoom-slider" title="缩放（相对实物大小），最大到放满窗口；在常用比例附近会轻轻吸附"><input id="zoom" type="range" min="0" max="1000" value="1000" aria-label="缩放"><output id="zoom-value">1.0×</output></label>
-    </div>
-    <div class="bar-row">
-      <label class="opt demo-toggle"><span>外框</span><input id="housing" type="checkbox" checked disabled><span class="demo-switch" aria-hidden="true"></span></label>
-      <label class="opt demo-toggle"><span>像素区虚线</span><input id="show-area" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
-      <label class="opt demo-toggle" title="开发板要外接摄像头，或距离／人体感应传感器，才知道物体在哪；这里用鼠标模拟靠近的物体"><span>注视跟随</span><input id="follow" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span><small class="opt-note"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5"/><path d="M8 7.2v4M8 4.9v.1"/></svg>需外接摄像头或传感器</small></label>
-    </div>
-  </div>
-  <canvas id="screen" width="240" height="240" aria-hidden="true"></canvas>
-</main>
+<!-- Licences for this file: the project's MIT licence, then the notices of the
+     Zig runtime and WASI libc compiled into the WebAssembly core.
 
-<aside class="side" aria-label="功能选项">
-  <div class="side-body">
-  <section class="section">
-    <div class="section-head">
-      <h2>屏幕</h2>
-      <div class="stepper" id="stepper"><button type="button" id="prev-profile" title="上一个型号" aria-label="上一个型号" disabled>‹</button><span id="profile-index"></span><button type="button" id="next-profile" title="下一个型号" aria-label="下一个型号" disabled>›</button></div>
-    </div>
-    <div class="filters" id="screen-groups" role="group" aria-label="屏幕类型"></div>
-    <div class="picker"><button type="button" id="profile" class="profile-select" aria-haspopup="listbox" aria-expanded="false" aria-label="屏幕型号" disabled><span id="profile-name"></span><span class="res" id="profile-res"></span></button>
-      <div class="picker-list" id="profile-list" role="listbox" aria-label="屏幕型号" hidden></div></div>
-    <div id="custom-size" class="group" hidden>
-      <div class="field"><span>尺寸</span><input id="custom-width" type="number" min="16" max="512" value="240" aria-label="宽"><span>×</span><input id="custom-height" type="number" min="16" max="512" value="160" aria-label="高">
-        <div class="seg push" id="custom-shape" data-value="0" role="group" aria-label="形状"><button class="chip" type="button" data-value="0">矩形</button><button class="chip" type="button" data-value="1">圆形</button></div></div>
-      <span id="size-error" role="status"></span>
-    </div>
-    <div class="spec-badges"><span id="spec-res" title="分辨率"></span><span id="spec-color" title="色彩"></span><span id="spec-fps" title="按连接总线带宽估算的整屏刷新上限"></span></div>
-    <div class="meta"><span id="screen-spec"></span> · <span id="screen-support"></span><br><span id="stage-caption">正在载入屏幕模组…</span><a class="frame-source" id="frame-source" target="_blank" rel="noopener noreferrer" hidden>模组资料 ↗</a></div>
-    <details class="wiring" id="wiring" hidden><summary>接线与固件</summary><div id="wiring-body"></div></details>
-  </section>
-
-  <section class="section">
-    <div class="section-head"><h2>眼睛布局<small>当前屏幕</small></h2></div>
-    <div class="seg" id="fit" role="group" aria-label="布局方式">
-      <button class="chip" type="button" data-fit="preset">预设布局</button>
-      <button class="chip" type="button" data-fit="contain">完整显示</button>
-      <button class="chip" type="button" data-fit="cover">填满屏幕</button>
-    </div>
-    <div class="meta" id="profile-note"></div>
-    <label class="field"><span>表情大小</span><input id="face-scale" type="range" min=".25" max="3" step=".05" value="1"><output id="scale-value">1.00</output></label>
-    <div class="pair">
-      <label class="field"><span>水平</span><input id="offset-x" type="range" min="-1" max="1" step=".05" value="0"><output id="offset-x-value">0.00</output></label>
-      <label class="field"><span>垂直</span><input id="offset-y" type="range" min="-1" max="1" step=".05" value="0"><output id="offset-y-value">0.00</output></label>
-    </div>
-    <div class="row-end"><span class="note">每块屏单独保存</span><button type="button" id="layout-reset">恢复默认布局</button></div>
-  </section>
-
-  <section class="section">
-    <div class="section-head"><h2>动画</h2></div>
-    <div class="field"><span>帧率上限</span><div class="seg push" id="fps" role="group" aria-label="帧率上限"></div></div>
-    <div class="pair">
-      <label class="field toggle demo-toggle"><span>眨眼</span><input id="blink" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
-      <label class="field toggle demo-toggle"><span>打断过渡</span><input id="transitions" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="section-head"><h2>颜色</h2></div>
-    <div class="colors-row" id="color-options">
-      <label class="field"><span>眼睛</span><input class="push" id="eye-color" type="color" value="#ffffff"></label>
-      <label class="field"><span>底色</span><input class="push" id="bg-color" type="color" value="#000000"></label>
-      <button type="button" class="small-button icon-button" id="color-swap" title="互换眼睛和底色" aria-label="互换眼睛和底色"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h15l-4-4M20 16H5l4 4"/></svg></button>
-      <button type="button" class="small-button" id="color-reset" title="恢复白眼睛、黑底色">恢复</button>
-    </div>
-    <div class="swatches" id="palettes" role="group" aria-label="配色"></div>
-    <div class="field" id="mono-options"><span>OLED 发光</span><div class="seg push" id="mono-chips" role="group" aria-label="OLED 发光颜色"></div></div>
-  </section>
-
-  <section class="section">
-    <div class="section-head"><h2>屏幕效果</h2></div>
-    <div class="pair">
-      <label class="field toggle demo-toggle" title="放大后显示像素格和红绿蓝子像素"><span>像素颗粒</span><input id="pixel-grid" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
-      <label class="field toggle demo-toggle" title="外框玻璃的反光"><span>玻璃反光</span><input id="glass-glare" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
-    </div>
-  </section>
-
-  <section class="section about">
-    <details><summary>屏幕预设库</summary><div id="preset-list" class="preset-list"></div><p>所有屏幕都按对应像素绘制。"有接线示例"表示仓库里有对应的固件配置并已通过编译，尚未实机验证；其余屏幕需要自行接入屏幕驱动。标"通用"的型号外框按常见模块尺寸绘制，是示意。帧率上限按连接总线带宽估算，不含绘制时间。</p></details>
-    <details><summary>说明与开源许可</summary><p>换屏幕或改尺寸会从"正常"重新开始；帧率、眨眼、过渡、布局、外框和显示效果的更改保留当前动画。跟随物体只模拟目标输入，不访问摄像头。输入、等待、睡眠持续到新命令，其余动作结束后回到正常。切到后台冻结时间。设置保存在本浏览器中。</p><pre>MIT License
+MIT License
 
 Copyright (c) 2026 CX ART Lab
 
@@ -562,7 +449,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-</pre><pre>Third-party build/runtime notices for the offline WebAssembly preview.
+
+
+Third-party build/runtime notices for the offline WebAssembly preview.
 The original project core and UI are licensed under the project's MIT license.
 The following upstream notices are reproduced from Zig 0.13.0's distribution.
 
@@ -1284,8 +1173,119 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 
 
-</pre></details>
+
+-->
+<div class="canvas preview" id="demo-canvas">
+<header class="page-header">
+  <div class="title"><span>Agent Robot Avatar</span><span>C++ + WebAssembly</span><span>硬件表情版</span></div>
+  <div class="build-badge">硬件 0.1.0 · 实验版</div>
+</header>
+<div class="workspace">
+<main class="left">
+  <div class="stage card" id="stage">
+    <div class="stage-name"><span id="stage-title"></span><span class="tag" id="stage-res"></span></div>
+    <div class="sensor-wrap" id="sensor-wrap">
+      <div class="sense-zone" id="sense-zone" aria-hidden="true"></div>
+      <div class="device" id="device" data-profile="tft">
+        <div class="frame-art" id="frame-art" aria-hidden="true"></div>
+        <div class="glass" id="glass"><canvas id="panel" role="img" aria-label="硬件表情动画预览"></canvas><div class="glare" id="glare"></div></div>
+      </div>
+    </div>
+    <div class="status-pill" id="current" role="status">idle · 正常</div>
+  </div>
+  <noscript>此预览需要启用 JavaScript。</noscript><div id="error" role="alert" hidden></div>
+  <div class="hint-row"><span id="tracking-note" role="status"></span><span>空格键暂停／继续</span></div>
+  <div class="action-card card"><div class="controls" id="actions" role="group" aria-label="选择表情"></div></div>
+  <div class="bar card" aria-label="播放">
+    <button id="pause" title="也可以按空格键" disabled>暂停</button><button id="step" title="暂停后可逐帧查看" disabled>下一帧</button><button id="demo" aria-pressed="false" disabled>自动轮播</button><button id="reset" title="从“正常”重新开始，保留所有设置" disabled>重置</button>
+    <span class="divider" aria-hidden="true"></span>
+    <div class="seg" id="speed" data-value="1" role="group" aria-label="播放速度"><button class="chip" type="button" data-value="0.25">0.25×</button><button class="chip" type="button" data-value="0.5">0.5×</button><button class="chip" type="button" data-value="1">1×</button><button class="chip" type="button" data-value="2">2×</button></div>
+    <span class="clock" id="clock" title="模拟时间：暂停时停止，慢放时变慢">时间 0.0 s</span>
+  </div>
+  <div class="bar card view-bar" aria-label="显示">
+    <div class="bar-row">
+      <button class="chip" type="button" id="rotate">屏幕旋转 90°</button>
+      <span class="divider" aria-hidden="true"></span>
+      <button class="chip" type="button" id="zoom-fit" data-zoom="fit">适合窗口</button>
+      <button class="chip" type="button" id="zoom-real" data-zoom="1">实物大小</button>
+      <label class="opt zoom-slider" title="缩放（相对实物大小），最大到放满窗口；在常用比例附近会轻轻吸附"><input id="zoom" type="range" min="0" max="1000" value="1000" aria-label="缩放"><output id="zoom-value">1.0×</output></label>
+    </div>
+    <div class="bar-row">
+      <label class="opt demo-toggle"><span>外框</span><input id="housing" type="checkbox" checked disabled><span class="demo-switch" aria-hidden="true"></span></label>
+      <label class="opt demo-toggle"><span>像素区虚线</span><input id="show-area" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
+      <label class="opt demo-toggle" title="开发板要外接摄像头，或距离／人体感应传感器，才知道物体在哪；这里用鼠标模拟靠近的物体"><span>注视跟随</span><input id="follow" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span><small class="opt-note"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5"/><path d="M8 7.2v4M8 4.9v.1"/></svg>需外接摄像头或传感器</small></label>
+    </div>
+  </div>
+  <canvas id="screen" width="240" height="240" aria-hidden="true"></canvas>
+</main>
+
+<aside class="side" aria-label="功能选项">
+  <div class="side-body">
+  <section class="section">
+    <div class="section-head">
+      <h2>屏幕</h2>
+      <div class="stepper" id="stepper"><button type="button" id="prev-profile" title="上一个型号" aria-label="上一个型号" disabled>‹</button><span id="profile-index"></span><button type="button" id="next-profile" title="下一个型号" aria-label="下一个型号" disabled>›</button></div>
+    </div>
+    <div class="filters" id="screen-groups" role="group" aria-label="屏幕类型"></div>
+    <div class="picker"><button type="button" id="profile" class="profile-select" aria-haspopup="listbox" aria-expanded="false" aria-label="屏幕型号" disabled><span id="profile-name"></span><span class="res" id="profile-res"></span></button>
+      <div class="picker-list" id="profile-list" role="listbox" aria-label="屏幕型号" hidden></div></div>
+    <div id="custom-size" class="group" hidden>
+      <div class="field"><span>尺寸</span><input id="custom-width" type="number" min="16" max="512" value="240" aria-label="宽"><span>×</span><input id="custom-height" type="number" min="16" max="512" value="160" aria-label="高">
+        <div class="seg push" id="custom-shape" data-value="0" role="group" aria-label="形状"><button class="chip" type="button" data-value="0">矩形</button><button class="chip" type="button" data-value="1">圆形</button></div></div>
+      <span id="size-error" role="status"></span>
+    </div>
+    <div class="spec-badges"><span id="spec-res" title="分辨率"></span><span id="spec-color" title="色彩"></span><span id="spec-fps" title="按连接总线带宽估算的整屏刷新上限"></span></div>
+    <details class="wiring" id="wiring"><summary>型号与接线</summary><div>
+      <div class="meta"><span id="screen-spec"></span><br><span id="screen-support"></span><br><span id="stage-caption">正在载入屏幕模组…</span><a class="frame-source" id="frame-source" target="_blank" rel="noopener noreferrer" hidden>模组资料 ↗</a></div>
+      <div id="wiring-body" class="group"></div>
+    </div></details>
   </section>
+
+  <section class="section">
+    <div class="section-head"><h2>眼睛布局<small>当前屏幕</small></h2></div>
+    <div class="seg" id="fit" role="group" aria-label="布局方式">
+      <button class="chip" type="button" data-fit="preset">预设布局</button>
+      <button class="chip" type="button" data-fit="contain">完整显示</button>
+      <button class="chip" type="button" data-fit="cover">填满屏幕</button>
+    </div>
+    <div class="meta" id="profile-note"></div>
+    <label class="field"><span>表情大小</span><input id="face-scale" type="range" min=".25" max="3" step=".05" value="1"><output id="scale-value">1.00</output></label>
+    <div class="pair">
+      <label class="field"><span>水平</span><input id="offset-x" type="range" min="-1" max="1" step=".05" value="0"><output id="offset-x-value">0.00</output></label>
+      <label class="field"><span>垂直</span><input id="offset-y" type="range" min="-1" max="1" step=".05" value="0"><output id="offset-y-value">0.00</output></label>
+    </div>
+    <div class="row-end"><span class="note">每块屏单独保存</span><button type="button" id="layout-reset">恢复默认布局</button></div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h2>动画</h2></div>
+    <div class="field"><span>帧率上限</span><div class="seg push" id="fps" role="group" aria-label="帧率上限"></div></div>
+    <div class="pair">
+      <label class="field toggle demo-toggle"><span>眨眼</span><input id="blink" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
+      <label class="field toggle demo-toggle"><span>打断过渡</span><input id="transitions" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h2>颜色</h2></div>
+    <div class="colors-row" id="color-options">
+      <label class="field"><span>眼睛</span><input class="push" id="eye-color" type="color" value="#ffffff"></label>
+      <label class="field"><span>底色</span><input class="push" id="bg-color" type="color" value="#000000"></label>
+      <button type="button" class="small-button icon-button" id="color-swap" title="互换眼睛和底色" aria-label="互换眼睛和底色"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h15l-4-4M20 16H5l4 4"/></svg></button>
+      <button type="button" class="small-button" id="color-reset" title="恢复白眼睛、黑底色">恢复</button>
+    </div>
+    <div class="swatches" id="palettes" role="group" aria-label="配色"></div>
+    <div class="field" id="mono-options"><span>OLED 发光</span><div class="seg push" id="mono-chips" role="group" aria-label="OLED 发光颜色"></div></div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h2>屏幕效果</h2></div>
+    <div class="pair">
+      <label class="field toggle demo-toggle" title="放大后显示像素格和红绿蓝子像素"><span>像素颗粒</span><input id="pixel-grid" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
+      <label class="field toggle demo-toggle" title="外框玻璃的反光"><span>玻璃反光</span><input id="glass-glare" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
+    </div>
+  </section>
+
   </div>
   <div class="side-footer">
     <div class="status"><span id="status" role="status">正在初始化…</span><br><span id="fingerprint"></span></div>
@@ -1984,7 +1984,7 @@ class PanelRenderer {
   // Which firmware build drives this screen and how to wire it.
   function renderWiring() {
     const fw=base.firmware;
-    $('wiring').hidden=!fw;
+    $('wiring-body').hidden=!fw;
     if(!fw)return;
     const text=(tag,content)=>{const el=document.createElement(tag);el.textContent=content;return el;};
     const build=document.createElement('div');build.append('编译：',text('code','pio run -e '+fw.env));
@@ -2137,12 +2137,6 @@ class PanelRenderer {
         if(!items.length)continue;
         const tab=document.createElement('button');tab.type='button';tab.className='chip';tab.dataset.group=group;
         tab.textContent=label;$('screen-groups').append(tab);
-        items.forEach(item=>{
-          const row=document.createElement('div');row.className='preset-item';
-          const name=document.createElement('span');name.textContent=item.name+' · '+item.width+'×'+item.height;
-          const state=document.createElement('span');state.textContent=item.example?'有接线示例':'仅效果预览';
-          row.append(name,state);$('preset-list').append(row);
-        });
       }
       $('mono-chips').append(...Object.entries(MONO_TINTS).map(([value,tint])=>{
         const b=document.createElement('button');b.type='button';b.className='chip';b.dataset.mono=value;b.textContent=tint.name;return b;

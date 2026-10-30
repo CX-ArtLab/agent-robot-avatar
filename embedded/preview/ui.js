@@ -382,7 +382,7 @@
   // Which firmware build drives this screen and how to wire it.
   function renderWiring() {
     const fw=base.firmware;
-    $('wiring').hidden=!fw;
+    $('wiring-body').hidden=!fw;
     if(!fw)return;
     const text=(tag,content)=>{const el=document.createElement(tag);el.textContent=content;return el;};
     const build=document.createElement('div');build.append('编译：',text('code','pio run -e '+fw.env));
@@ -535,12 +535,6 @@
         if(!items.length)continue;
         const tab=document.createElement('button');tab.type='button';tab.className='chip';tab.dataset.group=group;
         tab.textContent=label;$('screen-groups').append(tab);
-        items.forEach(item=>{
-          const row=document.createElement('div');row.className='preset-item';
-          const name=document.createElement('span');name.textContent=item.name+' · '+item.width+'×'+item.height;
-          const state=document.createElement('span');state.textContent=item.example?'有接线示例':'仅效果预览';
-          row.append(name,state);$('preset-list').append(row);
-        });
       }
       $('mono-chips').append(...Object.entries(MONO_TINTS).map(([value,tint])=>{
         const b=document.createElement('button');b.type='button';b.className='chip';b.dataset.mono=value;b.textContent=tint.name;return b;

@@ -198,13 +198,13 @@ try {
   assert.match(await page.locator('#screen-spec').textContent(),/SPI 40 MHz/);
   // Screens with a firmware example show the board, build command and wiring.
   await choose('gc9a01-128');
-  assert.equal(await page.locator('#wiring').isHidden(),false);
+  assert.equal(await page.locator('#wiring-body').evaluate(el=>el.hidden),false);
   assert.match(await page.locator('#wiring-body').textContent(),/pio run -e esp32-s3-gc9a01/);
   assert((await page.locator('#wiring-body tr').count())>=6,'external modules list their wiring');
   await choose('esp32s3-round-128');
   assert.match(await page.locator('#wiring-body').textContent(),/无需接线/);
   await choose('eyes');
-  assert.equal(await page.locator('#wiring').isHidden(),true);
+  assert.equal(await page.locator('#wiring-body').evaluate(el=>el.hidden),true);
   assert.match(await page.locator('#screen-support').textContent(),/仅效果预览/);
   await choose('ssd1306-091');
   assert.match(await page.locator('#screen-spec').textContent(),/I²C/);
