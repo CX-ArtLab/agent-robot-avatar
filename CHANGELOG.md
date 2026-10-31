@@ -4,6 +4,13 @@ All notable user-facing changes to Agent Robot Avatar are documented here.
 
 The project follows Semantic Versioning for public releases. Internal development build numbers are not part of the public version history.
 
+## [Unreleased]
+
+### Fixed
+
+- Pulling the antenna far to one side no longer pushes the eyes out past the edge of the head.
+- A diagonal look keeps both eyes inside the head's rounded corners.
+
 ## [0.7.1] - 2026-10-30
 
 ### Changed

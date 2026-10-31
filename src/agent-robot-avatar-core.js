@@ -939,8 +939,15 @@ const AgentRobotAvatar = (() => {
       const pointerMix = (!gazeLocked && !this._boredRoutine && pointerFresh && this._pointer.active && !this._sleeping && this._state!=='input')
         ? Math.pow(this._pointer.influence || 0, 1.6)
         : 0;
-      const targetX = antennaGaze ? this._gestureFx.gazeX : (gazeLocked ? 0 : lerp(this._wanderTarget.x, this._pointer.x, pointerMix));
-      const targetY = antennaGaze ? this._gestureFx.gazeY : (gazeLocked ? 0 : lerp(this._wanderTarget.y, this._pointer.y, pointerMix));
+      let targetX = antennaGaze ? this._gestureFx.gazeX : (gazeLocked ? 0 : lerp(this._wanderTarget.x, this._pointer.x, pointerMix));
+      let targetY = antennaGaze ? this._gestureFx.gazeY : (gazeLocked ? 0 : lerp(this._wanderTarget.y, this._pointer.y, pointerMix));
+      // The eyes reach 48 sideways and 34 up or down, but not both at once: a
+      // diagonal look would push them past the head's rounded corners.
+      const reach = Math.hypot(targetX / 48, targetY / 34);
+      if (reach > 1) {
+        targetX /= reach;
+        targetY /= reach;
+      }
       const lookSpeed = antennaGaze ? 0.42 : (gazeLocked ? 0.40 : (draggingJelly ? 0.42 : (this._boredRoutine && this._boredLookSpeed != null ? this._boredLookSpeed : (pointerMix > 0.05 ? 0.28 : 0.16))));
       const kL = 1 - Math.pow(1 - clamp(lookSpeed,0.02,.9), dt/16.67);
       this._look.x = lerp(this._look.x, targetX, kL);
