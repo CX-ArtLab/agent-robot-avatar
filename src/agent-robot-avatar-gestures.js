@@ -4,10 +4,14 @@ const proto=AgentRobotAvatar.prototype;
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const disabled=(face,key)=>face.getAttribute(key)==='false';
 const emit=(face,state)=>face.dispatchEvent(new CustomEvent('face-state',{detail:{state}}));
-const gazeTarget=(box,event)=>({
-  x:clamp((event.clientX-box.left-box.width/2)*.42,-48,48),
-  y:clamp((event.clientY-box.top-box.height/2)*.38,-34,34),
-});
+// While the antenna is pulled the head stretches and narrows, so the eyes
+// only glance toward the pull, within 60% of their usual reach.
+const ANTENNA_GAZE_REACH=.6;
+const gazeTarget=(box,event)=>{
+  const x=(event.clientX-box.left-box.width/2)*.42,y=(event.clientY-box.top-box.height/2)*.38;
+  const k=Math.min(1,ANTENNA_GAZE_REACH/(Math.hypot(x/48,y/34)||1));
+  return{x:x*k,y:y*k};
+};
 const SQUEEZE_HOLD_SECONDS=.14;
 
 function restore(face) {
