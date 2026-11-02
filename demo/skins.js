@@ -38,11 +38,19 @@ skinOptions.className = 'demo-options-group skin-options';
 skinOptions.innerHTML = `
   <button type="button" id="compare" aria-pressed="false"></button>
   <label class="demo-option demo-toggle"><span data-label="light"></span><input type="checkbox" id="follow-light" checked><span class="demo-switch" aria-hidden="true"></span></label>
-  <label class="demo-option demo-toggle"><span data-label="shadow"></span><input type="checkbox" id="ground-shadow" checked><span class="demo-switch" aria-hidden="true"></span></label>`;
+  <label class="demo-option demo-toggle"><span data-label="shadow"></span><input type="checkbox" id="ground-shadow" checked><span class="demo-switch" aria-hidden="true"></span></label>
+  <label class="demo-option color-option"><span data-label="background"></span><input id="stage-color" type="color"></label>`;
 document.querySelector('.demo-options').append(skinOptions);
 const compare = document.getElementById('compare');
 const light = document.getElementById('follow-light');
 const shadow = document.getElementById('ground-shadow');
+// The stage background: each skin's own by default, or a color the viewer
+// picks, which then stays across skins and visits.
+const STAGE_STORAGE_KEY = 'agentRobotAvatarDemoStage';
+const stageInput = document.getElementById('stage-color');
+let stageColor = null;
+try { stageColor = localStorage.getItem(STAGE_STORAGE_KEY); } catch { /* the choice just is not kept */ }
+if (!/^#[0-9a-f]{6}$/i.test(stageColor ?? '')) stageColor = null;
 const params = new URLSearchParams(location.search);
 // A link or the last visit picks the skin; otherwise the first featured one.
 let selected = [params.get('skin'), storedSkin(), featured[0]].find(id => id !== 'classic' && skinById.has(id)) || publicSkins[0].id;
@@ -59,7 +67,27 @@ const randomLabel = document.createElement('span');
 randomSkin.append(randomLabel);
 document.getElementById('demoColorsGroup').replaceChildren(randomSkin);
 document.getElementById('demoColorPanel').remove();
-document.getElementById('demoStageReset').remove();
+// The stage's own reset button brings the skin's background back. Cloning it
+// drops the demo's listener, as with the dice above.
+const stageReset = document.getElementById('demoStageReset').cloneNode(true);
+document.getElementById('demoStageReset').replaceWith(stageReset);
+const stageHex = stage => '#' + (stage?.match(/rgb\((\d+), (\d+), (\d+)\)/)?.slice(1) ?? [255, 255, 255]).map(part => Number(part).toString(16).padStart(2, '0')).join('');
+function paintStage() {
+  const own = skinById.get(selected)?.stage;
+  document.getElementById('demoStage').style.background = stageColor || own || '';
+  stageInput.value = stageColor || stageHex(own);
+  stageReset.hidden = !stageColor;
+}
+function pickStage(color) {
+  stageColor = color;
+  try {
+    if (stageColor) localStorage.setItem(STAGE_STORAGE_KEY, stageColor);
+    else localStorage.removeItem(STAGE_STORAGE_KEY);
+  } catch { /* the choice just is not kept */ }
+  paintStage();
+}
+stageInput.addEventListener('input', () => pickStage(stageInput.value));
+stageReset.addEventListener('click', () => pickStage(null));
 restoreAppearance();
 randomSkin.addEventListener('click', () => {
   const choices = publicSkins.filter(skin => skin.id !== selected);
@@ -186,7 +214,7 @@ function selectSkin(id, updateUrl = true) {
   compare.textContent = t('compare');
   compare.disabled = id === 'classic';
   material = applySkin(face, id);
-  document.getElementById('demoStage').style.background = skin.stage || '';
+  paintStage();
   syncShadow();
   name.textContent = skinTitle(skin);
   showNumber(id);
@@ -240,6 +268,9 @@ new MutationObserver(syncShadow).observe(overlay, { attributes: true, attributeF
 function relabel() {
   skinOptions.setAttribute('aria-label', t('settings'));
   for (const node of skinOptions.querySelectorAll('[data-label]')) node.textContent = t(node.dataset.label);
+  stageInput.setAttribute('aria-label', t('background'));
+  stageReset.title = t('stageSkin');
+  stageReset.setAttribute('aria-label', t('stageSkin'));
   const original = compare.getAttribute('aria-pressed') === 'true';
   compare.textContent = original ? t('back') : t('compare');
   name.textContent = original ? t('original') : skinTitle(skinById.get(selected));

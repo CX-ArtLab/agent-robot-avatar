@@ -52,8 +52,8 @@ function texture(defs, id, kind) {
       svgElement('circle', { cx, cy, r: 4.6, fill: '#f6db7b' }, pattern);
     }
   } else if (kind === 'denim') {
-    svgElement('path',{d:'M-4 8L8-4M0 12L12 0',stroke:'#b9d2df','stroke-width':1,opacity:.34},pattern);
-    svgElement('path',{d:'M0 1H8M0 5H8',stroke:'#0a2a49','stroke-width':.6,opacity:.23},pattern);
+    svgElement('path',{d:'M-4 8L8-4M0 12L12 0',stroke:'#94daff','stroke-width':2.6,opacity:.35},pattern);
+    svgElement('path',{d:'M0 1H8M0 5H8',stroke:'#0a2a49','stroke-width':.2,opacity:.45},pattern);
   } else if (kind === 'carbon') {
     gradient(defs,'linearGradient',`${id}-warp`,{x1:'0',y1:'0',x2:'1',y2:'0'},
       [[0,'#142024'],[.22,'#37464a'],[.48,'#526064'],[.72,'#354347'],[1,'#18252a']]);
@@ -104,7 +104,7 @@ function texture(defs, id, kind) {
       svgElement('path',{d:`M${x} ${y}l${s} ${s*.4} ${-s*.3} ${s} ${-s*.9} ${-s*.3}Z`,fill:colors[i%colors.length],opacity:.75},pattern);
     }
   } else if (kind === 'seeds') {
-    for(const [cx,cy,angle] of [[13,13,-20],[39,39,25]]) svgElement('ellipse',{cx,cy,rx:1.5,ry:3.2,fill:'#824248',opacity:.75,transform:`rotate(${angle} ${cx} ${cy})`},pattern);
+    for(const [cx,cy,angle] of [[13,13,-20],[39,39,25]]) svgElement('ellipse',{cx,cy,rx:3.3,ry:4.6,fill:'#75000c',opacity:.75,transform:`rotate(${angle} ${cx} ${cy})`},pattern);
   } else if (kind === 'blueprint') {
     for(let p=0;p<=80;p+=10) svgElement('path',{d:`M${p} 0v80M0 ${p}h80`,stroke:'#d0eeff','stroke-width':p%40===0?.7:.35,opacity:p%40===0?.37:.18},pattern);
     svgElement('circle',{cx:40,cy:40,r:21,fill:'none',stroke:'#dbf3ff','stroke-width':.6,opacity:.36},pattern);
@@ -183,7 +183,10 @@ export function applyMaterial(avatar, name) {
   svgElement('use', { ...shape, fill: fill('edge') }, layers);
   svgElement('use', { ...shape, fill: 'none', stroke: fill('rim'), 'stroke-width': 1.25, opacity: skin.rimOpacity ?? (skin.matte ? .3 : 1) }, layers);
   }
-  if(skin.stitched) svgElement('use',{href:'#headShape',transform:'translate(18 18) scale(.85)',fill:'none',stroke:'#ead09d','stroke-width':3,'stroke-dasharray':'6 6','stroke-linecap':'round',opacity:.9},layers);
+  if(skin.stitched) {
+    const stitch = { color: '#ead09d', width: 3, dash: '6 6', inset: .85, opacity: .9, ...skin.stitch };
+    svgElement('use',{href:'#headShape',transform:`translate(${120 * (1 - stitch.inset)} ${120 * (1 - stitch.inset)}) scale(${stitch.inset})`,fill:'none',stroke:stitch.color,'stroke-width':stitch.width,'stroke-dasharray':stitch.dash,'stroke-linecap':'round',opacity:stitch.opacity},layers);
+  }
   if(skin.edgeColor) svgElement('use',{...shape,fill:'none',stroke:skin.edgeColor,'stroke-width':7,opacity:.9},layers);
 
   // Love intentionally overlaps the two animated eyes into one heart. Paint
