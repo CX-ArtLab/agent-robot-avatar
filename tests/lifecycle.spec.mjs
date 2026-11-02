@@ -8,7 +8,7 @@ test.beforeEach(async ({ page }) => {
   page.on('pageerror', error => errors.push(error.message));
   await page.clock.install();
   await page.goto('/examples/basic.html');
-  await page.clock.pauseAt(await page.evaluate(() => Date.now()) + 1000);
+  await page.clock.pauseAt(await page.evaluate(() => Date.now()) + 5000);
   await page.evaluate(() => {
     window.lifecycleAvatar = document.querySelector('#avatar');
     window.detachedStates = [];

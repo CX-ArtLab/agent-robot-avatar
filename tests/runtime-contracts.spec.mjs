@@ -16,7 +16,7 @@ async function loadWithClock(page, { reducedMotion = 'no-preference', motion = '
   await page.emulateMedia({ reducedMotion });
   await page.clock.install();
   await page.goto('/examples/basic.html');
-  await page.clock.pauseAt(await page.evaluate(() => Date.now()) + 1000);
+  await page.clock.pauseAt(await page.evaluate(() => Date.now()) + 5000);
   const avatar = page.locator('#avatar');
   if (motion) await avatar.evaluate((element, value) => element.setAttribute('motion', value), motion);
   return avatar;
@@ -389,7 +389,7 @@ test('inspect preload config preserves valid values and normalizes invalid value
   });
   await page.clock.install();
   await page.goto('/examples/basic.html');
-  await page.clock.pauseAt(await page.evaluate(() => Date.now()) + 1000);
+  await page.clock.pauseAt(await page.evaluate(() => Date.now()) + 5000);
   const avatar = page.locator('#avatar');
   expect(await page.evaluate(() => ({ ...window.AgentRobotAvatarInspectConfig }))).toMatchObject({
     aperture: 24,
@@ -612,4 +612,23 @@ test('normal repeated ESM imports remain safe without hiding extension conflicts
     };
   });
   expect(result).toEqual({ sameConstructor: true, registered: true });
+});
+
+test('mouse moves do not wake the drawing loop of a sleeping avatar', async ({ page }) => {
+  await page.goto('/examples/basic.html');
+  const frames = await page.locator('#avatar').evaluate(async element => {
+    element.setAttribute('auto-sleep', '0');
+    element.play('sleep');
+    await new Promise(resolve => setTimeout(resolve, 4500));
+    const asked = { count: 0 };
+    const original = window.requestAnimationFrame;
+    window.requestAnimationFrame = callback => { asked.count += 1; return original.call(window, callback); };
+    for (let i = 0; i < 20; i += 1) {
+      window.dispatchEvent(new PointerEvent('pointermove', { clientX: 200 + i, clientY: 200 }));
+      await new Promise(resolve => setTimeout(resolve, 16));
+    }
+    window.requestAnimationFrame = original;
+    return { paused: element._framePaused, asked: asked.count };
+  });
+  expect(frames).toEqual({ paused: true, asked: 0 });
 });

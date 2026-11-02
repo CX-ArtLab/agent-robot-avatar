@@ -14,8 +14,9 @@ await cp(path.join(root, 'src'), path.join(output, 'src'), {recursive:true});
 for (const file of publicDemoFiles) {
   const destination = path.resolve(output, file);
   if (!destination.startsWith(`${output}${path.sep}`)) throw new Error(`Invalid public path: ${file}`);
-  // Pictures are copied as they are; only text files need their paths moved.
-  if (/\.(?:webp|png|gif|svg)$/.test(file)) {
+  // Only code and pages need their paths moved; everything else, pictures and
+  // fonts above all, is copied byte for byte.
+  if (!/\.(?:js|mjs|css|html)$/.test(file)) {
     await mkdir(path.dirname(destination), {recursive:true});
     await cp(path.join(demo, file), destination);
     continue;

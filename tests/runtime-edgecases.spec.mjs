@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 async function loadWithClock(page) {
   await page.clock.install();
   await page.goto('/examples/basic.html');
-  await page.clock.pauseAt(await page.evaluate(() => Date.now()) + 1000);
+  await page.clock.pauseAt(await page.evaluate(() => Date.now()) + 5000);
   const avatar = page.locator('#avatar');
   await avatar.evaluate(element => {
     element.setAttribute('motion', 'full');

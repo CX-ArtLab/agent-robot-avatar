@@ -213,6 +213,7 @@ function updateLight(instance) {
 // throws instead.
 proto._applySkinAttribute = function() {
   const value = this.getAttribute('skin');
+  this._skinAttributeApplied = value;
   if (normalizeSkin(value) === undefined) {
     console.warn(`agent-robot-avatar: unknown skin "${value}". Use a skin number such as ${SKIN_NAMES[0]}, or none.`);
     this.setSkin(null);

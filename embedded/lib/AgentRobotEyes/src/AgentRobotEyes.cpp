@@ -148,7 +148,6 @@ void Eyes::lookAt(float x, float y) {
   if (lx == lookX_ && ly == lookY_) return;
   lookX_ = lx;
   lookY_ = ly;
-  force_ = true;
 }
 
 bool Eyes::setGazeRange(GazeRange range) {
@@ -265,7 +264,9 @@ bool Eyes::update(uint32_t now) {
   const uint32_t interval = (1000u + config_.maxFps - 1) / config_.maxFps;
   if (!force_ && now - lastFrame_ < interval) return false;
   if (duration(action_) && elapsed >= duration(action_)) {
-    from_ = poseAt(now);
+    // Idle starts here with nothing to fade from; the time this action ran must
+    // not count toward the idle blink.
+    crossfade_ = false;
     action_ = Action::Idle;
     started_ = now;
   }

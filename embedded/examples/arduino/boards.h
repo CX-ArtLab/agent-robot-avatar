@@ -219,12 +219,17 @@ bool displayBegin() {
 // ---------------------------------------------------------------------------
 #elif defined(EYES_BOARD_S3_BOX_3)
 // Espressif ESP32-S3-BOX-3: ILI9342C 320 x 240 (pins from esp-bsp).
-constexpr int BOX_BL = 47;
+constexpr int BOX_BL = 47, BOX_RST = 48;
 Arduino_DataBus* bus = new Arduino_ESP32SPI(4 /* DC */, 5 /* CS */, 7 /* SCK */, 6 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
-Arduino_GFX* display = new Arduino_ILI9342(bus, 48 /* RST */, 0 /* rotation */);
+Arduino_GFX* display = new Arduino_ILI9342(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */);
 constexpr uint16_t WIDTH = 320, HEIGHT = 240, OFFSET_Y = 0;
 constexpr bool ROUND = false;
 bool displayBegin() {
+  // Reset is active high on this board (esp-bsp), so Arduino_GFX, which leaves
+  // the pin high, would hold the panel in reset.
+  pinMode(BOX_RST, OUTPUT);
+  digitalWrite(BOX_RST, HIGH); delay(10);
+  digitalWrite(BOX_RST, LOW); delay(120);
   pinMode(BOX_BL, OUTPUT); digitalWrite(BOX_BL, HIGH);
   if (!display->begin()) return false;
   display->fillScreen(BACKGROUND);
@@ -234,9 +239,10 @@ bool displayBegin() {
 // ---------------------------------------------------------------------------
 #elif defined(EYES_BOARD_AMOLED_175)
 // Waveshare ESP32-S3-Touch-AMOLED-1.75: CO5300 466 x 466 on quad SPI. Pins
-// from the ESPHome device page; the panel may need a small column offset.
+// from the ESPHome device page, column offset from Waveshare's examples.
 Arduino_DataBus* bus = new Arduino_ESP32QSPI(12 /* CS */, 38 /* SCK */, 4 /* D0 */, 5 /* D1 */, 6 /* D2 */, 7 /* D3 */);
-Arduino_GFX* display = new Arduino_CO5300(bus, 39 /* RST */, 0 /* rotation */, false /* IPS */, 466, 466);
+Arduino_GFX* display = new Arduino_CO5300(bus, 39 /* RST */, 0 /* rotation */, false /* IPS */, 466, 466,
+    6 /* column offset */, 0, 0, 0);
 constexpr uint16_t WIDTH = 466, HEIGHT = 466, OFFSET_Y = 0;
 constexpr bool ROUND = true;
 bool displayBegin() {
@@ -360,15 +366,24 @@ void displayPresent(const agent_robot::Eyes& eyes) {
 #endif
 
 #if defined(EYES_ARDUINO_GFX)
-// Stream one RGB565 row at a time through Arduino_GFX.
-uint16_t rowPixels[WIDTH];
+// Stream RGB565 rows through Arduino_GFX, one at a time. The CO5300 only takes
+// windows that start on an even row and span an even number of them.
+#if defined(EYES_BOARD_AMOLED_175)
+constexpr uint16_t ROW_STEP = 2;
+#else
+constexpr uint16_t ROW_STEP = 1;
+#endif
+uint16_t rowPixels[WIDTH * ROW_STEP];
 void displayPresent(const agent_robot::Eyes& eyes) {
-  for (uint16_t y = 0; y < HEIGHT; ++y) {
-    const uint8_t* source = eyes.data() + y * eyes.stride();
-    for (uint16_t x = 0; x < WIDTH; ++x) {
-      rowPixels[x] = source[x >> 3] & (0x80u >> (x & 7)) ? INK : BACKGROUND;
+  for (uint16_t y = 0; y < HEIGHT; y += ROW_STEP) {
+    for (uint16_t row = 0; row < ROW_STEP; ++row) {
+      const uint8_t* source = eyes.data() + (y + row) * eyes.stride();
+      uint16_t* target = rowPixels + row * WIDTH;
+      for (uint16_t x = 0; x < WIDTH; ++x) {
+        target[x] = source[x >> 3] & (0x80u >> (x & 7)) ? INK : BACKGROUND;
+      }
     }
-    display->draw16bitRGBBitmap(0, y, rowPixels, WIDTH, 1);
+    display->draw16bitRGBBitmap(0, y, rowPixels, WIDTH, ROW_STEP);
   }
 }
 #endif

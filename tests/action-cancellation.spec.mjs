@@ -15,8 +15,9 @@ test.afterEach(async ({ page }) => {
 async function loadAvatarWithClock(page) {
   await page.clock.install();
   await page.goto('/examples/basic.html');
+  // The clock keeps running until it is paused, so leave room for a busy machine.
   const browserNow = await page.evaluate(() => Date.now());
-  await page.clock.pauseAt(browserNow + 1000);
+  await page.clock.pauseAt(browserNow + 5000);
   return page.locator('agent-robot-avatar');
 }
 

@@ -117,6 +117,26 @@ test('a skin set from script survives moving the avatar in the page', async ({ p
   expect(await snapshot(avatar)).toMatchObject({ skin: '706', head: 'url(#skin-base)' });
 });
 
+test('setSkin wins over the skin attribute when the avatar moves in the page', async ({ page }) => {
+  const avatar = await addAvatar(page, { skin: '301' });
+  await expect.poll(() => avatar.evaluate(element => element.getSkin())).toBe('301');
+  const moved = await avatar.evaluate(async element => {
+    const box = document.createElement('div');
+    document.body.append(box);
+    element.setSkin(null);
+    box.append(element);
+    await new Promise(resolve => setTimeout(resolve, 100));
+    const removed = element.getSkin();
+    element.setSkin('706');
+    document.body.append(element);
+    await new Promise(resolve => setTimeout(resolve, 100));
+    return [removed, element.getSkin()];
+  });
+  expect(moved).toEqual([null, '706']);
+  await avatar.evaluate(element => element.setAttribute('skin', '102'));
+  await expect.poll(() => avatar.evaluate(element => element.getSkin())).toBe('102');
+});
+
 test('without preloading, a skin shows once its painter has loaded', async ({ page }) => {
   await page.goto('/examples/basic.html');
   const avatar = page.locator('#avatar');

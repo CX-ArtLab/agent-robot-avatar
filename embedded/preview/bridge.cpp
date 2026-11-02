@@ -68,7 +68,8 @@ int eyes_play(int action, uint32_t now) {
   if (action < 0 || action >= static_cast<int>(agent_robot::Action::Count)) return 0;
   return eyes.play(static_cast<agent_robot::Action>(action), now);
 }
-void eyes_gaze(float x, float y) { eyes.lookAt(x, y); }
+// The page moves the gaze while paused too, when the clock stands still.
+void eyes_gaze(float x, float y) { eyes.lookAt(x, y); eyes.redraw(); }
 int eyes_timing(int fps, int blink, int transition) {
   if (fps < 1 || fps > 60 || transition < 0 || transition > 2000) return 0;
   if (!eyes.setTiming(static_cast<uint8_t>(fps), blink != 0, static_cast<uint16_t>(transition))) return 0;

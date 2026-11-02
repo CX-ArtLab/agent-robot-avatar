@@ -10,6 +10,8 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 - Pulling the antenna far to one side no longer pushes the eyes out past the edge of the head.
 - A diagonal look keeps both eyes inside the head's rounded corners.
+- A skin set with `setSkin()` is no longer replaced by the `skin` attribute when the avatar moves in the page.
+- A sleeping avatar no longer wakes its drawing loop on every mouse move.
 
 ## [0.7.1] - 2026-10-30
 
