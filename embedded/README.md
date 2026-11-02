@@ -146,7 +146,7 @@ The names match the Web avatar and describe what the eyes do. `waiting` also sta
 - Repeating the current waiting, input or sleep action does not restart it.
 - `stopWaiting(nowMs)` only stops waiting; it leaves other actions alone.
 - Settled sleep stops drawing. `wake(nowMs)` only acts when sleeping.
-- `lookAt(x,y)` clamps finite coordinates, normalizes non-finite input to zero, and does not wake sleeping eyes. Gaze applies only to idle, preserving the original eye motion of active expressions.
+- `lookAt(x,y)` clamps finite coordinates, normalizes non-finite input to zero, and does not wake sleeping eyes. A new gaze shows on the next frame within `maxFps`, so a sensor can call it on every loop; `redraw()` makes the next `update()` draw at once. Gaze applies only to idle, preserving the original eye motion of active expressions.
 - `setTiming(maxFps, autoBlink, transitionMs)` changes frame rate, blinking and transition time without restarting the current action; it accepts the same ranges as `begin()`.
 - `EyesConfig::gazeRange` (or `setGazeRange()` at runtime) sets how far `lookAt(±1, ±1)` moves the eyes in the 160 × 100 face area: `Small` 8 × 6 (the original reach), `Medium` 20 × 18 (default; reaches the edge of the face area) and `Large` 30 × 21 (slightly past it). Near the edge the eyes narrow and shift inward with the Web avatar's formula, so a sideways look reads as turning. A centred gaze draws exactly the same pose at every range.
 - Dragging, head deformation, antenna controls and Web DOM events are not part of this API.

@@ -409,6 +409,10 @@ static void gazeKeepsFrameLimit() {
   eyes.lookAt(1,0);
   assert(!eyes.update(1001));
   assert(eyes.update(1060) && hash(eyes) != centred);
+  const uint32_t right = hash(eyes);
+  eyes.lookAt(0,0); eyes.redraw();
+  assert(eyes.update(1060) && hash(eyes) == centred); // a paused host keeps one timestamp
+  assert(right != centred);
   eyes.sleep(2000);
   uint32_t t = 2000;
   while (t < 8000) { eyes.update(t); t += 50; }

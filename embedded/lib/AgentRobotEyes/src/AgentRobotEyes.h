@@ -51,7 +51,8 @@ class Eyes {
   void sleep(uint32_t now);
   void wake(uint32_t now);
   // Explicit host-controlled gaze. This never installs pointer/touch listeners.
-  void lookAt(float x, float y); // normalized [-1, 1]
+  void lookAt(float x, float y); // normalized [-1, 1]; shows on the next frame
+  void redraw() { force_ = true; } // the next update() draws, even within the frame limit
   // Changes how far lookAt() moves the eyes; keeps the current animation.
   bool setGazeRange(GazeRange range);
   // Changes frame rate, blinking and transition time without restarting the
