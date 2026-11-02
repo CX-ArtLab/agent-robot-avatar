@@ -4,7 +4,12 @@ All notable user-facing changes to Agent Robot Avatar are documented here.
 
 The project follows Semantic Versioning for public releases. Internal development build numbers are not part of the public version history.
 
-## [Unreleased]
+## [0.7.2] - 2026-11-02
+
+### Changed
+
+- Skins 705 (Candy), 1401 (Denim) and 1503 (Watermelon) have new colors and textures. Their numbers stay the same.
+- The Skin Gallery has a background color picker next to the floor shadow switch.
 
 ### Fixed
 
@@ -221,6 +226,7 @@ First public release.
 - npm-compatible package metadata for later package publication
 - Contribution guide, issue templates, pull request template, MIT License, and Ko-fi funding metadata
 
+[0.7.2]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.7.2
 [0.7.1]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.7.1
 [0.7.0]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.7.0
 [0.6.0]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.6.0
