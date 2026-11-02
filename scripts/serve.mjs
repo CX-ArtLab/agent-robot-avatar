@@ -3,6 +3,7 @@ import { stat } from 'node:fs/promises';
 import { createServer } from 'node:http';
 import path from 'node:path';
 import process from 'node:process';
+import { pipeline } from 'node:stream/promises';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -12,27 +13,36 @@ const mimeTypes = {
   '.css': 'text/css; charset=utf-8',
   '.html': 'text/html; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
+  '.mjs': 'text/javascript; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
   '.png': 'image/png',
   '.gif': 'image/gif',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.ico': 'image/x-icon',
+  '.woff2': 'font/woff2',
   '.webp': 'image/webp',
   '.svg': 'image/svg+xml',
 };
 
 createServer(async (request, response) => {
+  let started = false;
   try {
     const requestPath = decodeURIComponent(new URL(request.url, 'http://localhost').pathname);
     let filePath = path.resolve(root, `.${requestPath}`);
     if (filePath !== root && !filePath.startsWith(`${root}${path.sep}`)) throw new Error('Invalid path');
     if ((await stat(filePath)).isDirectory()) filePath = path.join(filePath, 'index.html');
     const fileStat = await stat(filePath);
+    started = true;
     response.writeHead(200, {
       'Content-Type': mimeTypes[path.extname(filePath)] || 'application/octet-stream',
       'Content-Length': fileStat.size,
       'Cache-Control': 'no-store',
     });
-    createReadStream(filePath).pipe(response);
+    await pipeline(createReadStream(filePath), response);
   } catch {
+    // Once the file has started, all that can be done is to end the response.
+    if (started) { response.destroy(); return; }
     response.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
     response.end('Not found');
   }

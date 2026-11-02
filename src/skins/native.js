@@ -16,9 +16,7 @@ const SHEENS = Object.freeze({
 });
 
 
-// Live tuning for the faithful acrylic, read each time the skin is painted. A
-// tuner page can set window.AgentRobotAvatarAcrylicConfig and repaint.
-// Defaults are the look tuned by hand in demo/acrylic-tuner.html.
+// Settings for the faithful acrylic. Each skin overrides them with its fixedTune.
 const ACRYLIC_DEFAULTS = Object.freeze({
   colors: null,          // [top, middle, edge, shadow] to override the skin's own colours
   vertical: false,       // colour runs top to bottom instead of corner to corner

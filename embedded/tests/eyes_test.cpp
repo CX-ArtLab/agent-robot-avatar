@@ -169,9 +169,9 @@ static void renderSafetyAndIdentity() {
     eyes.reset(200000); eyes.update(201000);
     assert(lit(eyes)>0);
     const uint32_t neutral=hash(eyes);
-    eyes.lookAt(1,1); eyes.update(201001);
+    eyes.lookAt(1,1); eyes.update(201100);
     assert(hash(eyes)!=neutral);
-    eyes.lookAt(INFINITY,NAN); eyes.update(201002);
+    eyes.lookAt(INFINITY,NAN); eyes.update(201200);
     assert(hash(eyes)==neutral);
   }
   assert(expressionFrames.size()>=12); // expressions must not collapse into a single generic eye
@@ -351,7 +351,7 @@ static Bounds leftEye(const Eyes& eyes) {
 
 // Idle gaze reach per range, and the Web avatar's narrowing near the edge.
 static void gazeRanges() {
-  EyesConfig config; config.width = 160; config.height = 100; config.autoBlink = false;
+  EyesConfig config; config.width = 160; config.height = 100; config.autoBlink = false; config.maxFps = 60;
   std::vector<uint8_t> pixels(Eyes::requiredBytes(config.width,config.height));
   Eyes eyes; assert(eyes.begin(config,pixels.data(),pixels.size(),0));
   assert(!eyes.setGazeRange(static_cast<agent_robot::GazeRange>(3)));
@@ -398,6 +398,42 @@ static void timingWithoutRestart() {
   assert(eyes.update(900) && fresh.update(900) && hash(eyes) == hash(fresh)); // same point in the heart
 }
 
+// A sensor can feed lookAt() on every loop: the gaze waits for the next frame
+// and leaves a sleeping face alone.
+static void gazeKeepsFrameLimit() {
+  EyesConfig config; config.width = 160; config.height = 100; config.autoBlink = false; config.maxFps = 20;
+  std::vector<uint8_t> pixels(Eyes::requiredBytes(config.width,config.height));
+  Eyes eyes; assert(eyes.begin(config,pixels.data(),pixels.size(),0));
+  assert(eyes.update(1000));
+  const uint32_t centred = hash(eyes);
+  eyes.lookAt(1,0);
+  assert(!eyes.update(1001));
+  assert(eyes.update(1060) && hash(eyes) != centred);
+  eyes.sleep(2000);
+  uint32_t t = 2000;
+  while (t < 8000) { eyes.update(t); t += 50; }
+  assert(eyes.isSleeping() && !eyes.update(t));
+  eyes.lookAt(-1,0);
+  assert(!eyes.update(t += 100));
+  assert(eyes.isSleeping());
+}
+
+// An action that took over from another one ends on open eyes, even when its
+// length falls in the idle blink's window.
+static void actionEndsWithoutBlink() {
+  EyesConfig config; config.width = 160; config.height = 100;
+  std::vector<uint8_t> restPixels(Eyes::requiredBytes(config.width,config.height));
+  std::vector<uint8_t> pixels(restPixels.size());
+  Eyes rest; assert(rest.begin(config,restPixels.data(),restPixels.size(),0));
+  assert(rest.update(1000));
+  Eyes eyes; assert(eyes.begin(config,pixels.data(),pixels.size(),0));
+  assert(eyes.play("success",0));
+  assert(eyes.play("wary",100)); // 3850 ms, inside the 3800 to 3980 ms blink
+  assert(eyes.update(100 + 3900));
+  assert(eyes.action() == Action::Idle);
+  assert(hash(eyes) == hash(rest));
+}
+
 int main() {
   bufferContract();
   namesAndCancellation();
@@ -408,6 +444,8 @@ int main() {
   restoredWaitingWave();
   layoutsAndProximity();
   gazeRanges();
+  gazeKeepsFrameLimit();
+  actionEndsWithoutBlink();
   timingWithoutRestart();
   puts("Eyes core: buffer guards, all actions, cancellation, frame limits, rollover, sleep and isolation passed.");
 }

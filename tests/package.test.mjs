@@ -124,8 +124,8 @@ test('packed package installs and can be imported without browser globals', asyn
     assert.equal(packageJson.exports['.'].types, './index.d.ts');
     assert.equal(packageJson.publishConfig.registry, 'https://registry.npmjs.org/');
     assert.equal(packageJson.publishConfig.access, 'public');
-    const expectedTag = packageJson.version.includes('-') ? 'next' : 'latest';
-    assert.match(packageJson.scripts['release:check'], new RegExp(`--tag ${expectedTag}`));
+    // Prereleases are published by the workflow and guarded by check-publish-tag.
+    if (!packageJson.version.includes('-')) assert.match(packageJson.scripts['release:check'], /--tag latest/);
     assert.match(packageJson.scripts.prepublishOnly, /check-publish-tag/);
   } finally {
     await rm(temporaryRoot, { recursive: true, force: true });

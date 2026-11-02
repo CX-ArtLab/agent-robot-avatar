@@ -454,8 +454,9 @@ function ensureRuntime(instance) {
       attributeFilter: ['size', 'motion', 'wake-on', 'auto-sleep', 'skin'],
     });
   }
-  // A skin set with setSkin() survives a reconnect; markup only applies when present.
-  if (instance.hasAttribute('skin')) instance._applySkinAttribute?.();
+  // A skin set with setSkin() survives a reconnect: markup applies only when it
+  // is new, not every time the element is moved in the page.
+  if (instance.hasAttribute('skin') && instance.getAttribute('skin') !== instance._skinAttributeApplied) instance._applySkinAttribute?.();
 
   if (typeof IntersectionObserver !== 'undefined') {
     instance._runtimeIntersectionObserver = new IntersectionObserver(entries => {
@@ -639,10 +640,14 @@ proto._updateDragJelly = function(dt) {
 proto._onPointerMove = function(event) {
   ensureRuntime(this);
   if (this._runtimeVisible === false) return;
+  if (this._pointerFollowEnabled === false) return;
   this._pendingPointerEvent = {
     clientX: event.clientX,
     clientY: event.clientY,
   };
+  // A sleeping face has stopped drawing and nothing here wakes it; the position
+  // is kept for when it does.
+  if (this._sleeping && this._framePaused) return;
   this._resumeFrames?.();
 };
 

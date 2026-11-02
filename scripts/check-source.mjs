@@ -4,7 +4,7 @@ import path from 'node:path';
 import process from 'node:process';
 
 const root = process.cwd();
-const ignored = new Set(['.git', 'node_modules']);
+const ignored = new Set(['.git', 'node_modules', 'local-only', '.pages-site', 'dist', 'test-results', 'playwright-report']);
 const sourceFiles = [];
 
 async function collect(directory) {
