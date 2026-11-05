@@ -263,7 +263,11 @@ The Web avatar’s eye expressions now run on robot and development-board displa
 
 **Tune, export, build.** Pick a display and adjust layout, colours and frame rate, then choose **Export settings**. Save `eyes_settings.h` next to the example firmware’s `main.cpp` and compile. See the [steps](embedded/README.md). The simulator and exported comments follow your selected language.
 
-**Install from ZIP.** Download `BoopFace-Embedded-0.1.0.zip` from the [embedded release](https://github.com/CX-ArtLab/boopface/releases/tag/eyes-v0.1.0), then use Arduino IDE’s **Sketch → Include Library → Add .ZIP Library**. Arduino Library Manager and PlatformIO registry installation will be added after listing; use the ZIP or source for now.
+**Install from ZIP.** Download `BoopFace-Embedded-0.1.0.zip` from the [embedded release](https://github.com/CX-ArtLab/boopface/releases/tag/eyes-v0.1.0), then use Arduino IDE’s **Sketch → Include Library → Add .ZIP Library**. Arduino Library Manager indexing is pending; use the ZIP or source until then. For [PlatformIO](https://registry.platformio.org/libraries/cxlab/BoopFace), add this dependency to your environment in `platformio.ini`:
+
+```ini
+lib_deps = cxlab/BoopFace@^0.1.0
+```
 
 **In your own program**, play expressions by name:
 

@@ -263,7 +263,11 @@ Die Augenausdrücke der Webversion laufen jetzt auf Robotern und Entwicklungspla
 
 **Anpassen, exportieren, bauen.** Wähle Bildschirm, Anordnung, Farben und Bildrate, dann **Einstellungen exportieren**. Speichere `eyes_settings.h` neben der `main.cpp` des Beispiels und kompiliere. Siehe die [Anleitung](../embedded/README.md). Oberfläche und exportierte Kommentare folgen der gewählten Sprache.
 
-**Per ZIP installieren.** Lade `BoopFace-Embedded-0.1.0.zip` vom [Embedded-Release](https://github.com/CX-ArtLab/boopface/releases/tag/eyes-v0.1.0) und verwende **Sketch → Bibliothek einbinden → .ZIP-Bibliothek hinzufügen** in der Arduino IDE. Die Installation über Arduino Library Manager und PlatformIO folgt nach der Aufnahme; nutze vorerst ZIP oder Quellcode.
+**Per ZIP installieren.** Lade `BoopFace-Embedded-0.1.0.zip` vom [Embedded-Release](https://github.com/CX-ArtLab/boopface/releases/tag/eyes-v0.1.0) und verwende **Sketch → Bibliothek einbinden → .ZIP-Bibliothek hinzufügen** in der Arduino IDE. Die Indexierung im Arduino Library Manager steht noch aus; nutze dafür vorerst ZIP oder Quellcode. Für [PlatformIO](https://registry.platformio.org/libraries/cxlab/BoopFace) füge diese Abhängigkeit zur Umgebung in `platformio.ini` hinzu:
+
+```ini
+lib_deps = cxlab/BoopFace@^0.1.0
+```
 
 **In deinem Programm** spielst du Ausdrücke nach Namen ab:
 

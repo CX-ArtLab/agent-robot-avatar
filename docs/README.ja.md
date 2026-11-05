@@ -263,7 +263,11 @@ Web版の目の表情を、ロボットや開発ボードの画面でも使え�
 
 **調整して、書き出して、ビルド。** 画面、配置、色、フレームレートを選び、**設定を書き出す**を押します。`eyes_settings.h` をサンプルの `main.cpp` と同じ場所に保存してビルドします。[手順](../embedded/README.md)をご覧ください。画面と書き出すコメントは選んだ言語に切り替わります。
 
-**ZIPからインストール。** [組み込み版リリース](https://github.com/CX-ArtLab/boopface/releases/tag/eyes-v0.1.0)から `BoopFace-Embedded-0.1.0.zip` を取得し、Arduino IDE の **スケッチ → ライブラリをインクルード → .ZIP形式のライブラリをインストール**で追加します。Arduino Library Manager と PlatformIO への登録後に検索インストールへ対応予定です。当面はZIPかソースを使ってください。
+**ZIPからインストール。** [組み込み版リリース](https://github.com/CX-ArtLab/boopface/releases/tag/eyes-v0.1.0)から `BoopFace-Embedded-0.1.0.zip` を取得し、Arduino IDE の **スケッチ → ライブラリをインクルード → .ZIP形式のライブラリをインストール**で追加します。Arduino Library Manager のインデックス更新は保留中のため、当面はZIPかソースを使ってください。[PlatformIO](https://registry.platformio.org/libraries/cxlab/BoopFace) では、`platformio.ini` の環境設定に次の依存関係を追加します。
+
+```ini
+lib_deps = cxlab/BoopFace@^0.1.0
+```
 
 **自分のプログラムから**名前で表情を再生できます：
 

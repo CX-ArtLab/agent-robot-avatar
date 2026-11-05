@@ -263,7 +263,11 @@ ES Modules, Custom Elements, SVG, Pointer Events, Web Animations API, `Intersect
 
 **조정, 내보내기, 빌드.** 화면, 배치, 색상, 프레임 속도를 조정한 후 **설정 내보내기**를 누르세요. `eyes_settings.h`를 예제의 `main.cpp` 옆에 저장하고 빌드합니다. [사용 방법](../embedded/README.md)을 참고하세요. 화면과 내보낸 주석은 선택한 언어를 따릅니다.
 
-**ZIP 설치.** [임베디드 릴리스](https://github.com/CX-ArtLab/boopface/releases/tag/eyes-v0.1.0)에서 `BoopFace-Embedded-0.1.0.zip`을 받아 Arduino IDE의 **스케치 → 라이브러리 포함하기 → .ZIP 라이브러리 추가**로 설치하세요. Arduino Library Manager와 PlatformIO 등록 후 검색 설치를 지원할 예정이며, 지금은 ZIP 또는 소스를 사용하세요.
+**ZIP 설치.** [임베디드 릴리스](https://github.com/CX-ArtLab/boopface/releases/tag/eyes-v0.1.0)에서 `BoopFace-Embedded-0.1.0.zip`을 받아 Arduino IDE의 **스케치 → 라이브러리 포함하기 → .ZIP 라이브러리 추가**로 설치하세요. Arduino Library Manager 색인 반영은 대기 중이므로 ZIP 또는 소스를 사용하세요. [PlatformIO](https://registry.platformio.org/libraries/cxlab/BoopFace)에서는 `platformio.ini`의 환경 설정에 다음 의존성을 추가하세요:
+
+```ini
+lib_deps = cxlab/BoopFace@^0.1.0
+```
 
 **직접 만든 프로그램에서** 이름으로 표정을 재생하세요:
 
