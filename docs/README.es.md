@@ -8,7 +8,7 @@
 
 ![Version](https://img.shields.io/badge/version-v0.8.0-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/boopface/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/boopface/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
-![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square)
+![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square) ![Embedded](https://img.shields.io/badge/Embedded-ESP32%20%7C%20STM32%20%7C%20Pico-E7352C?style=flat-square&logo=espressif&logoColor=white)
 
 BoopFace es un componente de avatar robot ligero y expresivo para bots de IA, agentes y apps interactivas. Pensando, esperando, terminado o con error: cada estado de un agente se puede mostrar con una expresión.
 
@@ -22,9 +22,18 @@ Está hecho con SVG y JavaScript puro, es un Web Component nativo sin dependenci
   <img src="../assets/demo/boopface-demo.gif" alt="Demostración animada interactiva de BoopFace" width="560">
 </p>
 
+<p align="center">
+  <a href="#boopface-embedded"><img src="../assets/readme/boopface-embedded.jpg" alt="Las mismas expresiones en pantallas ESP32, STM32 y Raspberry Pi Pico, o en otros programas C++. Incluye ejemplos de firmware para 28 configuraciones y un simulador con exportación de ajustes."></a>
+</p>
+
+**[Nuevo: BoopFace Embedded](#boopface-embedded)**\
+Las mismas expresiones en pantallas ESP32, STM32 y Raspberry Pi Pico, o en otros programas C++. Incluye ejemplos de firmware para 28 configuraciones y un simulador con exportación de ajustes.
+
 ## Demo en vivo
 
 [Abrir la demo interactiva](https://cx-artlab.github.io/boopface/?lang=es) · [Visita la galería de pieles](https://cx-artlab.github.io/boopface/skins.html?lang=es)
+
+[Abrir el simulador integrado](https://cx-artlab.github.io/boopface/hardware/?lang=es)
 
 ## Características
 
@@ -235,9 +244,49 @@ Diseñado para navegadores modernos con soporte para ES Modules, Custom Elements
 
 Las pruebas automatizadas cubren Chromium, Firefox y WebKit.
 
-## BoopFace Embedded (en desarrollo)
+<a id="boopface-embedded"></a>
 
-Una versión en C++ que muestra las expresiones del avatar en pantallas de robots y placas de desarrollo (solo dibuja los ojos) está en desarrollo y aún no se ha publicado. Consulta la [guía de hardware](https://github.com/CX-ArtLab/boopface/tree/main/embedded).
+## Nuevo: BoopFace Embedded
+
+Las expresiones oculares de la versión web ahora funcionan en pantallas de robots y placas. El pequeño motor C++11 conserva los movimientos y el ritmo. Los ejemplos cubren 28 configuraciones ESP32, ESP32-S3, STM32 y Raspberry Pi Pico: TFT redondas y rectangulares, pantallas alargadas, AMOLED y OLED monocromas. También admite tamaños personalizados.
+
+| Tu dispositivo | Qué usar |
+| --- | --- |
+| Web, apps, tabletas Android y robots con navegador | Componente web: avatar completo, pieles e interacción |
+| ESP32, STM32 y Raspberry Pi Pico | Motor integrado con ejemplos de firmware |
+| Otros microcontroladores o programas C++ | Biblioteca C++; conecta tu controlador de pantalla |
+
+
+<img src="../assets/readme/hardware-preview.jpg" alt="Simulador: expresiones en una TFT redonda, distribución, colores y exportación" width="100%">
+
+**Pruébalo sin placa.** El [simulador](https://cx-artlab.github.io/boopface/hardware/?lang=es) ejecuta el mismo motor C++ en el navegador con 32 pantallas simuladas. Permite anticipar el resultado y comparar módulos.
+
+**Ajusta, exporta y compila.** Elige pantalla, distribución, colores y fotogramas por segundo. Pulsa **Exportar ajustes**, guarda `eyes_settings.h` junto al `main.cpp` del ejemplo y compila. Consulta los [pasos](../embedded/README.md). La interfaz y los comentarios exportados siguen el idioma elegido.
+
+**Instalar desde ZIP.** Descarga `BoopFace-Embedded-0.1.0.zip` de la [versión integrada](https://github.com/CX-ArtLab/boopface/releases/tag/eyes-v0.1.0) y usa **Programa → Incluir librería → Añadir biblioteca .ZIP** en Arduino IDE. La instalación desde Arduino Library Manager y el registro de PlatformIO llegará tras su inclusión; por ahora usa el ZIP o el código fuente.
+
+**En tu programa**, reproduce expresiones por su nombre:
+
+```cpp
+#include <BoopFace.h>
+boopface::Eyes eyes;
+uint8_t pixels[4800]; // 240 x 160, 1 bit per pixel
+
+void setup() {
+  boopface::EyesConfig config;
+  eyes.begin(config, pixels, sizeof pixels, millis());
+}
+
+void loop() {
+  if (eyes.update(millis())) {
+    // Send eyes.data() to the display driver.
+  }
+}
+
+// When needed: eyes.play("success", millis());
+```
+
+Experimental: CI compila todas las configuraciones, pero aún no se han verificado en hardware real. Si pruebas una, envía un [informe](https://github.com/CX-ArtLab/boopface/issues/new?template=hardware_report.yml). La [guía](../embedded/README.md) incluye la API y las conexiones.
 
 ## Contribuir
 
@@ -245,7 +294,8 @@ Se aceptan Issues y Pull Requests. Consulta [`CONTRIBUTING.md`](../CONTRIBUTING.
 
 ## Estado del proyecto
 
-**Versión pública actual: v0.8.0**
+**Versión pública actual: v0.8.0**\
+BoopFace Embedded: v0.1.0 (experimental)
 
 La API pública se mantiene deliberadamente compacta mientras el proyecto evoluciona hacia un futuro compromiso de estabilidad `1.0.0`.
 

@@ -4,13 +4,17 @@ All notable user-facing changes to BoopFace (called Agent Robot Avatar before 0.
 
 The project follows Semantic Versioning for public releases. Internal development build numbers are not part of the public version history.
 
-## [0.8.0] - Unreleased
+## [0.8.0] - 2026-11-05
 
 ### Changed
 
 - Agent Robot Avatar is now **BoopFace**. The npm package is `boopface`, the tag is `<boop-face>` and the class is `BoopFace`. Nothing else changes: every expression, gesture, skin and option works the same.
 - The files are now `boopface.js` and `boopface-lite.js`; `boopface/lite` is the lite build.
 - The repository moved to `github.com/CX-ArtLab/boopface` and the demo to `cx-artlab.github.io/boopface`. Old links forward to the new ones.
+
+### Added
+
+- BoopFace Embedded 0.1.0 (experimental), with 28 firmware configurations, a 32-screen simulator at `/hardware/`, and a standalone Arduino ZIP. The simulator and exported settings support 10 languages.
 
 ### Deprecated
 

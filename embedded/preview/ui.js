@@ -4,24 +4,24 @@
 (() => {
   'use strict';
   const ACTIONS = [
-    ['idle','正常'],['bored','发呆'],['waiting-spin','等待 · 旋转'],['waiting-wrap','等待 · 滚动'],
-    ['input','输入'],['affirm','肯定'],['success','成功'],['failure','失败'],
-    ['wary','警惕'],['inspect','审视'],['angry','生气'],['refuse','拒绝'],
-    ['surprise','惊讶'],['love','喜欢'],['random','随机'],['sleep','睡着'],['wake','醒来'],
-    ['waiting-wave','等待 · 波动']
+    ['idle',previewText('正常')],['bored',previewText('发呆')],['waiting-spin',previewText('等待 · 旋转')],['waiting-wrap',previewText('等待 · 滚动')],
+    ['input',previewText('输入')],['affirm',previewText('肯定')],['success',previewText('成功')],['failure',previewText('失败')],
+    ['wary',previewText('警惕')],['inspect',previewText('审视')],['angry',previewText('生气')],['refuse',previewText('拒绝')],
+    ['surprise',previewText('惊讶')],['love',previewText('喜欢')],['random',previewText('随机')],['sleep',previewText('睡着')],['wake',previewText('醒来')],
+    ['waiting-wave',previewText('等待 · 波动')]
   ];
   // The buttons follow the Web demo's order; one button sleeps and wakes.
   const BUTTON_ORDER = ['idle','bored','waiting-spin','waiting-wrap','waiting-wave','input','affirm','success','failure',
     'wary','inspect','angry','refuse','surprise','sleep','love','random'];
   const actionIndex = name => ACTIONS.findIndex(([action])=>action===name);
   const SLEEP = actionIndex('sleep'), WAKE = actionIndex('wake');
-  const GROUPS = [['round','圆形'],['square','方形'],['bar','长条'],['kit','套件'],['mono','OLED'],['other','自定义']];
+  const GROUPS = [['round',previewText('圆形')],['square',previewText('方形')],['bar',previewText('长条')],['kit',previewText('套件')],['mono','OLED'],['other',previewText('自定义')]];
   // Whole-frame bandwidth of the usual wiring: [label, bits per second, bits per pixel].
   const BUSES = {
-    spi:['SPI 40 MHz',40e6,16], spi18:['SPI 40 MHz · 18 位色',40e6,24], qspi:['QSPI 4 线 40 MHz',160e6,16],
-    i8080:['8 位并口 20 MHz',160e6,16], rgb:['RGB 并口',256e6,16], i2c:['I²C 400 kHz',400e3*8/9,1]
+    spi:['SPI 40 MHz',40e6,16], spi18:[previewText('SPI 40 MHz · 18 位色'),40e6,24], qspi:[previewText('QSPI 4 线 40 MHz'),160e6,16],
+    i8080:[previewText('8 位并口 20 MHz'),160e6,16], rgb:[previewText('RGB 并口'),256e6,16], i2c:['I²C 400 kHz',400e3*8/9,1]
   };
-  const PANEL_NAMES = {ips:'IPS',tn:'TN',amoled:'AMOLED',oled:'单色 OLED'};
+  const PANEL_NAMES = {ips:'IPS',tn:'TN',amoled:'AMOLED',oled:previewText('单色 OLED')};
   const FPS_TIERS = [30,25,15];
   const CSS_PX_PER_MM = 96 / 25.4, MAX_CANVAS_PX = 4096;
   const ZOOM_SNAPS = [1,1.5,2,3,4,5,6,8,10,12,16];
@@ -36,10 +36,10 @@
   const PALETTES = [
     ['Claude','#faf9f5','#d97757'],['ChatGPT','#ffffff','#0fa578'],['ComfyUI','#211927','#f2ff59'],['Ubuntu','#e95420','#ffffff'],
     ['Dribbble','#ea4c89','#ffffff'],['Discord','#5865f2','#ffffff'],['Telegram','#229ed9','#ffffff'],['Snapchat','#fffc00','#000000'],
-    ['YouTube','#ffffff','#ff0000'],['Netflix','#141414','#e50914'],['Spotify','#121212','#1ed760'],['湖人','#fdb927','#552583'],
-    ['勇士','#1d428a','#ffc72c'],['凯尔特人','#007a33','#ffffff'],['巴萨','#a50044','#edbb00'],['曼城','#6cabdd','#1c2c5b'],
+    ['YouTube','#ffffff','#ff0000'],['Netflix','#141414','#e50914'],['Spotify','#121212','#1ed760'],[previewText('湖人'),'#fdb927','#552583'],
+    [previewText('勇士'),'#1d428a','#ffc72c'],[previewText('凯尔特人'),'#007a33','#ffffff'],[previewText('巴萨'),'#a50044','#edbb00'],[previewText('曼城'),'#6cabdd','#1c2c5b'],
     // Four more for the screen only.
-    ['抹茶','#f4f1e6','#5b7f4a'],['薰衣草','#ffffff','#8e7cc3'],['珊瑚','#2b1d1a','#ff7f66'],['冰川','#0e2a47','#bfe6ff']
+    [previewText('抹茶'),'#f4f1e6','#5b7f4a'],[previewText('薰衣草'),'#ffffff','#8e7cc3'],[previewText('珊瑚'),'#2b1d1a','#ff7f66'],[previewText('冰川'),'#0e2a47','#bfe6ff']
   ].map(([name,a,b])=>luminance(a)>=luminance(b)?{name,eye:a,bg:b}:{name,eye:b,bg:a});
   // Gaze settings for the simulated nearby object. The library exposes them
   // all; the preview keeps one switch and these defaults.
@@ -68,7 +68,7 @@
   function fail(error) {
     console.error(error);
     $('error').hidden=false;
-    $('error').textContent='预览无法运行，请用较新的浏览器打开完整 HTML 文件。详情：'+error.message;
+    $('error').textContent=previewText('预览无法运行，请用较新的浏览器打开完整 HTML 文件。详情：')+error.message;
     delete document.documentElement.dataset.ready;
     document.querySelectorAll('button,select,input').forEach(el=>{el.disabled=true;});
     api=null;
@@ -76,8 +76,8 @@
   function setCycling(value) {
     cycling=value;
     $('demo').setAttribute('aria-pressed',String(value));
-    $('demo').textContent=value?'轮播中':'自动轮播';
-    $('demo').title=value?'点击停止轮播':'依次播放所有表情';
+    $('demo').textContent=value?previewText('轮播中'):previewText('自动轮播');
+    $('demo').title=value?previewText('点击停止轮播'):previewText('依次播放所有表情');
   }
   function updateActive() {
     const index=api.eyes_action();
@@ -86,8 +86,8 @@
     buttons.forEach(button=>button.setAttribute('aria-pressed',String(Number(button.dataset.index)===index)));
     // While asleep the sleep button wakes the eyes.
     const sleepButton=buttons.find(button=>Number(button.dataset.index)===SLEEP);
-    sleepButton.textContent=index===SLEEP?'醒来':'睡着';
-    sleepButton.title=index===SLEEP?'醒来 · wake':'睡着 · sleep';
+    sleepButton.textContent=index===SLEEP?previewText('醒来'):previewText('睡着');
+    sleepButton.title=index===SLEEP?previewText('醒来 · wake'):previewText('睡着 · sleep');
     $('current').textContent=ACTIONS[index][0]+' · '+ACTIONS[index][1];
   }
 
@@ -184,7 +184,7 @@
     $('zoom-fit').setAttribute('aria-pressed',String(zoomMode==='fit'));
     $('zoom-real').setAttribute('aria-pressed',String(Math.abs(scale-1)<.001));
     $('zoom-real').disabled=max<1;
-    $('zoom-real').title=max<1?'窗口放不下实物大小':'按常见电脑屏幕估算，不同显示器会有偏差';
+    $('zoom-real').title=max<1?previewText('窗口放不下实物大小'):previewText('按常见电脑屏幕估算，不同显示器会有偏差');
   }
   function zoomFromSlider() {
     const g=geometry(), [min,fit,max]=zoomRange(g), position=Number($('zoom').value);
@@ -206,8 +206,8 @@
   function renderFps() {
     const limit=screenLimit();
     const top=document.createElement('button');top.type='button';top.className='chip';top.dataset.value='max';
-    top.textContent=(base.bus?'当前屏幕上限 ':'最高 ')+limit;
-    top.title=base.bus?'按'+BUSES[base.bus][0]+'带宽估算的整屏刷新上限，不含绘制时间':'没有总线数据，按 60 FPS';
+    top.textContent=(base.bus?previewText('当前屏幕上限 '):previewText('最高 '))+limit;
+    top.title=base.bus?previewText('按')+BUSES[base.bus][0]+previewText('带宽估算的整屏刷新上限，不含绘制时间'):previewText('没有总线数据，按 60 FPS');
     const tiers=FPS_TIERS.filter(value=>value<limit).map(value=>{
       const b=document.createElement('button');b.type='button';b.className='chip';b.dataset.value=String(value);b.textContent=String(value);return b;
     });
@@ -252,8 +252,8 @@
   function updateTrackingStatus() {
     const follow=$('follow').checked, locked=follow&&!!api.eyes_is_tracking();
     $('sense-zone').classList.toggle('active',locked);
-    const text=!follow?'':api.eyes_action()!==0?'当前动作暂不应用注视方向'
-      :locked?'正在注视／离开后短暂停留':'把鼠标移进虚线范围，眼睛就会看过去';
+    const text=!follow?'':api.eyes_action()!==0?previewText('当前动作暂不应用注视方向')
+      :locked?previewText('正在注视／离开后短暂停留'):previewText('把鼠标移进虚线范围，眼睛就会看过去');
     if(text!==trackingText){$('tracking-note').textContent=text;trackingText=text;}
   }
   function draw(force=false) {
@@ -271,11 +271,11 @@
       if(panel){panel.upload(screen);renderPanel();}
     }
     updateActive(); updateTrackingStatus();
-    $('clock').textContent='时间 '+(time/1000).toFixed(2)+' s';
+    $('clock').textContent=previewText('时间 ')+(time/1000).toFixed(2)+' s';
   }
   function setPaused(value) {
     paused=value;previous=null;
-    $('pause').textContent=value?'继续':'暂停';
+    $('pause').textContent=value?previewText('继续'):previewText('暂停');
     $('step').disabled=!value;
   }
   function play(index) {
@@ -330,9 +330,9 @@
     zone.style.left=k.cx/g.w*100+'%';zone.style.top=k.cy/g.h*100+'%';
     // Label just above the module, inside the ring, so the stage never clips it.
     zone.style.setProperty('--label-top',Math.max(4,ring/2-k.cy*ppm-26)+'px');
-    const reference=g.m?g.m.name+(g.m.revision?' · '+g.m.revision:''):preset.name;
-    $('stage-caption').textContent=reference+(g.rot!==((base.rotation||0)===90)?' · 旋转 90°':'')+' · '+Math.round(25.4/pitchMm())+' PPI'+
-      (g.m?(!housing?' · 外框已隐藏':g.m.generic?' · 外框为通用示意':' · PCB '+g.w+' × '+g.h+' mm'):'');
+    const reference=g.m?previewText(g.m.name)+(g.m.revision?' · '+g.m.revision:''):previewText(preset.name);
+    $('stage-caption').textContent=reference+(g.rot!==((base.rotation||0)===90)?previewText(' · 旋转 90°'):'')+' · '+Math.round(25.4/pitchMm())+' PPI'+
+      (g.m?(!housing?previewText(' · 外框已隐藏'):g.m.generic?previewText(' · 外框为通用示意'):' · PCB '+g.w+' × '+g.h+' mm'):'');
     const source=$('frame-source');source.hidden=!(g.m&&g.m.source);
     if(g.m&&g.m.source)source.href=g.m.source;else source.removeAttribute('href');
     $('target-dot').hidden=true;
@@ -355,9 +355,9 @@
     $('scale-value').value=scale.toFixed(2);
     $('offset-x-value').value=ox.toFixed(2);$('offset-y-value').value=oy.toFixed(2);
     document.querySelectorAll('[data-fit]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.fit===fit)));
-    $('profile-note').textContent=fit==='cover'?'等比放大铺满屏幕，超出部分裁切'
-      :fit==='preset'&&preset.viewport?'240 × 160 表情区域居中，与现有 TFT 例程一致'
-      :'按屏幕比例完整放下表情';
+    $('profile-note').textContent=fit==='cover'?previewText('等比放大铺满屏幕，超出部分裁切')
+      :fit==='preset'&&preset.viewport?previewText('240 × 160 表情区域居中，与现有 TFT 例程一致')
+      :previewText('按屏幕比例完整放下表情');
     if(save&&base.id!=='custom'){layouts[layoutKey()]={fit,scale,x:ox,y:oy};store.set('layouts',layouts);}
     draw(true);
   }
@@ -370,14 +370,14 @@
   function syncScreenInfo() {
     const bus=BUSES[base.bus];
     $('spec-res').textContent=preset.width+' × '+preset.height;
-    $('stage-title').textContent=base.name;
+    $('stage-title').textContent=previewText(base.name);
     $('stage-res').textContent=preset.width+' × '+preset.height;
-    $('spec-color').textContent=base.panel==='oled'?'单色':'彩色';
-    $('spec-fps').textContent=bus?'最高约 '+screenLimit()+' FPS':'帧率不限';
-    $('screen-spec').textContent=[base.id==='custom'?'自定义尺寸':base.controller,
+    $('spec-color').textContent=base.panel==='oled'?previewText('单色'):previewText('彩色');
+    $('spec-fps').textContent=bus?previewText('最高约 ')+screenLimit()+' FPS':previewText('帧率不限');
+    $('screen-spec').textContent=[base.id==='custom'?previewText('自定义尺寸'):base.controller,
       PANEL_NAMES[base.panel],bus&&bus[0]].filter(Boolean).join(' · ');
-    $('screen-support').textContent=base.verified==='community'?'有接线示例 · 社区已实机验证'
-      :base.example?'有接线示例（编译通过，未实机验证）':'仅效果预览 · 需自行接入屏幕驱动';
+    $('screen-support').textContent=base.verified==='community'?previewText('有接线示例 · 社区已实机验证')
+      :base.example?previewText('有接线示例（编译通过，未实机验证）'):previewText('仅效果预览 · 需自行接入屏幕驱动');
     renderWiring();
   }
   // Which firmware build drives this screen and how to wire it.
@@ -386,17 +386,17 @@
     $('wiring-body').hidden=!fw;
     if(!fw)return;
     const text=(tag,content)=>{const el=document.createElement(tag);el.textContent=content;return el;};
-    const build=document.createElement('div');build.append('编译：',text('code','pio run -e '+fw.env));
-    const parts=[text('div','开发板：'+fw.board),build];
+    const build=document.createElement('div');build.append(previewText('编译：'),text('code','pio run -e '+fw.env));
+    const parts=[text('div',previewText('开发板：')+previewText(fw.board)),build];
     if(fw.wiring){
       const table=document.createElement('table');
-      for(const [pin,to] of fw.wiring){const row=table.insertRow();row.insertCell().textContent='屏幕 '+pin;row.insertCell().textContent=to;}
+      for(const [pin,to] of fw.wiring){const row=table.insertRow();row.insertCell().textContent=previewText('屏幕 ')+pin;row.insertCell().textContent=previewText(to);}
       parts.push(table);
-    } else parts.push(text('div','屏幕已集成在开发板上，无需接线。'));
+    } else parts.push(text('div',previewText('屏幕已集成在开发板上，无需接线。')));
     const note=document.createElement('div');note.className='meta';
     const link=document.createElement('a');link.href='https://github.com/CX-ArtLab/boopface/issues/new?template=hardware_report.yml';
-    link.target='_blank';link.rel='noopener noreferrer';link.textContent='提交实机验证报告';
-    note.append('引脚依据厂商资料，固件已编译通过，尚未在实物上验证。在实物上试过的话，欢迎',link,'。');
+    link.target='_blank';link.rel='noopener noreferrer';link.textContent=previewText('提交实机验证报告');
+    note.append(previewText('引脚依据厂商资料，固件已编译通过，尚未在实物上验证。在实物上试过的话，欢迎'),link,PREVIEW_LANGUAGE.startsWith('zh')?'。':'.');
     parts.push(note);
     $('wiring-body').replaceChildren(...parts);
   }
@@ -411,7 +411,7 @@
     $('eye-color').value=colors.eye;$('bg-color').value=colors.bg;
     // Any module can be mounted turned; a bare square or round screen looks the same.
     $('rotate').disabled=!model()&&(preset.frame==='round'||base.width===base.height);
-    $('rotate').title=$('rotate').disabled?'没有外框的方形和圆形屏幕转了也一样':'把屏幕模组整体转 90°';
+    $('rotate').title=$('rotate').disabled?previewText('没有外框的方形和圆形屏幕转了也一样'):previewText('把屏幕模组整体转 90°');
     $('rotate').setAttribute('aria-pressed',String(rotated));
     syncColors();
   }
@@ -469,11 +469,11 @@
   function applyCustomSize() {
     const width=Number($('custom-width').value),height=Number($('custom-height').value),round=segValue('custom-shape')==='1',panel=segValue('custom-panel');
     if(!Number.isInteger(width)||!Number.isInteger(height)||width<16||height<16||width>512||height>512||(round&&width!==height)){
-      $('size-error').textContent='宽高须为 16–512 的整数；圆形须宽高相等。';return;
+      $('size-error').textContent=previewText('宽高须为 16–512 的整数；圆形须宽高相等。');return;
     }
     $('size-error').textContent='';
     if(base.id==='custom'&&preset.width===width&&preset.height===height&&(preset.frame==='round')===round&&base.panel===panel)return;
-    configure({id:'custom',name:'自定义屏幕',controller:'CUSTOM',width,height,frame:round?'round':'tft',panel,example:false,group:'other'},false);
+    configure({id:'custom',name:previewText('自定义屏幕'),controller:'CUSTOM',width,height,frame:round?'round':'tft',panel,example:false,group:'other'},false);
   }
   // The picker lists one screen type at a time; the type tabs switch it.
   // The 自定义 tab edits a size directly instead of listing presets.
@@ -483,12 +483,12 @@
     $('profile-list').replaceChildren(...items.map(item=>{
       const option=document.createElement('button');option.type='button';option.setAttribute('role','option');option.dataset.value=item.id;
       option.setAttribute('aria-selected',String(item===base));
-      const name=document.createElement('span');name.className='name';name.textContent=item.name;
+      const name=document.createElement('span');name.className='name';name.textContent=previewText(item.name);
       const size=document.createElement('span');size.className='res';size.textContent=item.width+' × '+item.height;
       option.append(name,size);return option;
     }));
     $('profile').dataset.value=base.id;
-    $('profile-name').textContent=base.name;$('profile-res').textContent=preset.width+' × '+preset.height;
+    $('profile-name').textContent=previewText(base.name);$('profile-res').textContent=preset.width+' × '+preset.height;
     picker.hidden=custom;$('custom-size').hidden=!custom;$('stepper').hidden=custom;
     document.querySelectorAll('[data-group]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.group===screenGroup)));
     const index=items.indexOf(base);
@@ -516,22 +516,22 @@
     const hex=color=>'0x'+color.slice(1).toUpperCase();
     const num=value=>Number(value).toFixed(2)+'f';
     const lines=[
-      '// BoopFace Embedded 设置，由嵌入式设备模拟器导出。',
-      '// 屏幕：'+base.name+'，'+preset.width+' × '+preset.height,
-      fw?'// 编译：pio run -e '+fw.env:'// 这块屏幕还没有示例固件，需要自己接入屏幕驱动。',
+      previewText('// BoopFace Embedded 设置，由嵌入式设备模拟器导出。'),
+      previewText('// 屏幕：')+previewText(base.name)+(PREVIEW_LANGUAGE.startsWith('zh')?'，':', ')+preset.width+' × '+preset.height,
+      fw?previewText('// 编译：pio run -e ')+fw.env:previewText('// 这块屏幕还没有示例固件，需要自己接入屏幕驱动。'),
       '#pragma once','',
       '#define EYES_MAX_FPS '+fpsValue(),
       '#define EYES_AUTO_BLINK '+($('blink').checked?1:0),
       '#define EYES_TRANSITION_MS '+($('transitions').checked?240:0),'',
-      '#define EYES_FIT_COVER '+(fit==='cover'?1:0)+'  // 0 完整显示，1 填满屏幕',
+      '#define EYES_FIT_COVER '+(fit==='cover'?1:0)+previewText('  // 0 完整显示，1 填满屏幕'),
       '#define EYES_ZOOM '+num($('face-scale').value),
       '#define EYES_OFFSET_X '+num($('offset-x').value),
       '#define EYES_OFFSET_Y '+num($('offset-y').value),''
     ];
-    if(oled)lines.push('// 单色 OLED 的颜色由屏幕本身决定，这里不用设置。');
-    else lines.push('#define EYES_INK_RGB '+hex(colors.eye)+'         // 眼睛','#define EYES_BACKGROUND_RGB '+hex(colors.bg)+'  // 底色');
-    if(base.viewport&&fit!=='preset')lines.push('','#define EYES_FULL_PANEL 1  // 用整块屏，不只画中间 '+base.viewport[2]+' × '+base.viewport[3]);
-    if(rotated)lines.push('','#define EYES_TURN 3  // 整块屏转 90°；如果眼睛上下颠倒，改成 1');
+    if(oled)lines.push(previewText('// 单色 OLED 的颜色由屏幕本身决定，这里不用设置。'));
+    else lines.push('#define EYES_INK_RGB '+hex(colors.eye)+previewText('         // 眼睛'),'#define EYES_BACKGROUND_RGB '+hex(colors.bg)+previewText('  // 底色'));
+    if(base.viewport&&fit!=='preset')lines.push('',previewText('#define EYES_FULL_PANEL 1  // 用整块屏，不只画中间 ')+base.viewport[2]+' × '+base.viewport[3]);
+    if(rotated)lines.push('',previewText('#define EYES_TURN 3  // 整块屏转 90°；如果眼睛上下颠倒，改成 1'));
     return lines.join('\n')+'\n';
   }
   function openExport(open) {
@@ -546,10 +546,10 @@
     catch(_){
       const range=document.createRange();range.selectNodeContents($('export-code'));
       const selection=getSelection();selection.removeAllRanges();selection.addRange(range);
-      if(!document.execCommand('copy')){$('export-status').textContent='请手动选中复制';return;}
+      if(!document.execCommand('copy')){$('export-status').textContent=previewText('请手动选中复制');return;}
       selection.removeAllRanges();
     }
-    $('export-status').textContent='已复制';
+    $('export-status').textContent=previewText('已复制');
   }
   async function start() {
     try {
@@ -579,7 +579,7 @@
         tab.textContent=label;$('screen-groups').append(tab);
       }
       $('mono-chips').append(...Object.entries(MONO_TINTS).map(([value,tint])=>{
-        const b=document.createElement('button');b.type='button';b.className='chip';b.dataset.mono=value;b.textContent=tint.name;return b;
+        const b=document.createElement('button');b.type='button';b.className='chip';b.dataset.mono=value;b.textContent=previewText(tint.name);return b;
       }));
       document.querySelectorAll('button,select,input').forEach(el=>{el.disabled=false;});
       restoreSettings();
@@ -595,7 +595,7 @@
         const url=URL.createObjectURL(new Blob([$('export-code').textContent],{type:'text/plain;charset=utf-8'}));
         const link=document.createElement('a');link.href=url;link.download='eyes_settings.h';
         document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);
-        $('export-status').textContent='已下载';
+        $('export-status').textContent=previewText('已下载');
       };
       document.documentElement.dataset.ready='true';
       $('pause').onclick=()=>setPaused(!paused);

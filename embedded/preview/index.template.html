@@ -14,7 +14,10 @@
 html,body{height:auto}
 .canvas.preview{height:auto;min-height:100vh;padding:0;background-color:#f8f8f6;background-image:radial-gradient(#d7d9dc 1px,transparent 1px);background-size:24px 24px}
 .preview .title span:not(:last-child)::after{content:' / '}
-.page-header{height:64px}
+.preview .page-header{height:auto;min-height:64px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 28px 10px}
+.preview .title{position:static;min-width:0;max-width:none;line-height:1.5}
+.preview .build-badge{position:static;white-space:nowrap}
+.header-tools{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex:none}
 .workspace{display:grid;grid-template-columns:minmax(0,720px) 380px;justify-content:center;max-width:1400px;margin:auto;padding:0 28px 24px;gap:28px;align-items:start;--column-height:clamp(600px,calc(100vh - 88px),960px)}
 .preview [hidden]{display:none!important}
 .preview button:disabled,.preview input:disabled,.preview select:disabled{opacity:.45;cursor:not-allowed;transform:none}
@@ -33,9 +36,9 @@ html,body{height:auto}
 /* Proximity zone: a tinted disc with a label, solid and greener while locked on. */
 .sense-zone{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border:1.5px dashed #b4bbc2;border-radius:50%;pointer-events:none;
   background:radial-gradient(circle,rgba(126,154,130,0) 45%,rgba(126,154,130,.08) 100%);transition:border-color .2s,background .2s}
-.sense-zone::after{content:'感应范围';position:absolute;left:50%;top:var(--label-top,14px);transform:translateX(-50%);padding:2px 8px;border-radius:999px;background:#ffffffcc;font-size:10px;color:#858990;white-space:nowrap}
+.sense-zone::after{content:var(--sense-label,'感应范围');position:absolute;left:50%;top:var(--label-top,14px);transform:translateX(-50%);padding:2px 8px;border-radius:999px;background:#ffffffcc;font-size:10px;color:#858990;white-space:nowrap}
 .sense-zone.active{border:1.5px solid #6f9a77;background:radial-gradient(circle,rgba(111,154,119,0) 40%,rgba(111,154,119,.16) 100%)}
-.sense-zone.active::after{content:'正在注视';color:#4f7a57}
+.sense-zone.active::after{content:var(--sense-active-label,'正在注视');color:#4f7a57}
 .device{position:relative;width:100%;height:100%;isolation:isolate}
 .frame-art{position:absolute;inset:0;pointer-events:none;filter:drop-shadow(0 2px 1px #12203733) drop-shadow(0 12px 12px #182e3c1f)}
 .frame-art svg{display:block;width:100%;height:100%}
@@ -103,6 +106,8 @@ html,body{height:auto}
 .zoom-slider input{width:120px;margin:0;accent-color:#666b72;cursor:pointer}
 .zoom-slider output{min-width:34px;font-size:11px;color:#6b7078;font-variant-numeric:tabular-nums;text-align:right}
 
+.language-picker{position:static;display:flex;align-items:center;gap:6px;font-size:11px;color:#72777e;z-index:10}
+.language-picker select{font:inherit;color:inherit;border:1px solid #e4e5e5;border-radius:6px;background:#fff;padding:3px 6px;max-width:140px}
 /* Right: the options panel, built like the skin library */
 .side{position:sticky;top:12px;height:var(--column-height);display:flex;flex-direction:column;min-width:0;padding:20px 8px 16px 20px;border:1px solid #e4e5e5;border-radius:16px;background:rgba(255,255,255,.88);box-shadow:0 7px 30px rgba(0,0,0,.035)}
 .side-body{flex:1;min-height:0;overflow:auto;padding-right:12px;scrollbar-width:thin;scrollbar-color:#d8dade transparent}
@@ -152,7 +157,7 @@ html,body{height:auto}
 .toggle .demo-switch{flex:0 0 auto}
 /* The transparent checkbox sits exactly over its switch, so it is the click target. */
 .toggle > input{position:absolute;right:10px;top:50%;width:30px;height:18px;margin:-9px 0 0;opacity:0;pointer-events:auto;cursor:pointer;z-index:1}
-.toggle > span:first-child{flex:1}
+.toggle > span:first-child{flex:1;min-width:0;white-space:normal;line-height:1.35}
 .inline-toggle{position:relative;display:flex;align-items:center;gap:8px;cursor:pointer}
 .inline-toggle > input{position:absolute;right:0;top:50%;width:30px;height:18px;margin:-9px 0 0;opacity:0;cursor:pointer;z-index:1}
 .chip{background:#f1f2f3;color:#5f646a;border-radius:9px;padding:7px 10px;font-size:12px}
@@ -194,8 +199,8 @@ html,body{height:auto}
 
 @media(max-width:1180px){.workspace{grid-template-columns:minmax(0,1fr) 380px;gap:16px;padding-inline:16px}}
 @media(max-width:860px){
-  .page-header{height:84px}
-  .preview .title{left:16px;top:14px;max-width:calc(100% - 130px);line-height:1.5}
+  .preview .page-header{padding:14px 16px;flex-wrap:wrap;align-items:flex-start}
+  .preview .title{max-width:none;line-height:1.5}
   .preview .build-badge{right:16px;top:14px}
   .workspace{display:block;padding:0 10px 20px}
   .left{height:auto;grid-template-rows:none}
@@ -203,6 +208,7 @@ html,body{height:auto}
   .side{position:static;height:auto;max-height:none;min-height:0;margin-top:14px;padding:16px}
   .side-body{overflow:visible;padding-right:0}
   }
+@media(max-width:600px){.preview .title{width:100%}.header-tools{width:100%;flex-direction:row;justify-content:space-between;align-items:center}}
 @media(max-width:420px){.pair{grid-template-columns:minmax(0,1fr)}.zoom-slider input{width:90px}}
 </style>
 </head>
@@ -217,7 +223,8 @@ __THIRD_PARTY__
 <div class="canvas preview" id="demo-canvas">
 <header class="page-header">
   <div class="title"><span>BoopFace</span><span>C++ + WebAssembly</span><span>嵌入式设备模拟器</span></div>
-  <div class="build-badge">嵌入式设备版 __VERSION__ · 实验版</div>
+  <div class="header-tools"><div class="build-badge"><span>嵌入式设备版</span> __VERSION__ · <span>实验版</span></div>
+  <label class="language-picker"><span>语言</span><select id="preview-language" aria-label="语言"></select></label></div>
 </header>
 <div class="workspace">
 <main class="left">
@@ -337,7 +344,7 @@ __THIRD_PARTY__
 <div class="sheet-backdrop" id="export-sheet" hidden>
   <div class="sheet card" role="dialog" aria-modal="true" aria-labelledby="export-title">
     <div class="sheet-head"><h2 id="export-title">导出设置</h2><button type="button" class="sheet-close" id="export-close" aria-label="关闭">×</button></div>
-    <p class="meta">保存为 <code>eyes_settings.h</code>，放在示例固件 <code>embedded/examples/arduino/</code> 里，和 <code>main.cpp</code> 同一个文件夹，再用下面注释里的命令编译。没有这个文件时，固件用默认设置。</p>
+    <p class="meta" id="export-help">保存为 <code>eyes_settings.h</code>，放在示例固件 <code>embedded/examples/arduino/</code> 里，和 <code>main.cpp</code> 同一个文件夹，再用下面注释里的命令编译。没有这个文件时，固件用默认设置。</p>
     <pre id="export-code"></pre>
     <div class="sheet-actions"><span class="note" id="export-status" role="status"></span><button type="button" id="export-download">下载文件</button><button type="button" id="export-copy" class="primary">复制</button></div>
   </div>

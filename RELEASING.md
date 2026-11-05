@@ -59,3 +59,26 @@ Prerelease versions must use the npm `next` tag. A publish-time guard rejects at
 
 With automatic publishing configured, publish the GitHub Release first, then verify the npm workflow result. For the manual fallback, verify npm before publishing the GitHub Release; the automatic workflow will reject a version that is already published. Never overwrite the existing `v0.1.0` release.
 
+
+## BoopFace Embedded releases
+
+The embedded library has its own version in `embedded/lib/BoopFace/library.properties`,
+`library.json`, and `Eyes::version()`. Keep these in agreement. Its release tags
+are `eyes-v<version>` and never invoke npm publishing.
+
+1. Run the Embedded Eyes CI checks, including all 28 firmware builds, library examples,
+   native sanitizers, Web/WASM fidelity, offline browsers and simulator languages.
+2. Record the version/date in `embedded/CHANGELOG.md` and merge the approved PR.
+3. Publish the matching `eyes-v<version>` GitHub Release as a prerelease while
+   hardware verification is pending. Do not mark it as the latest release: the
+   latest Web release remains the target of the component download links.
+4. Watch **Publish Embedded downloads**. It validates the embedded version, tests
+   the core, and attaches `BoopFace-Embedded-<version>.zip` and the offline simulator.
+   For local review: `node embedded/tools/package-release.mjs eyes-v<version> /tmp/BoopFace-Embedded.zip`.
+5. Test that the ZIP has `BoopFace/library.properties`, `src`, the Arduino examples,
+   and the MIT license. Verify both assets are downloadable without signing in.
+6. Arduino Library Manager needs a repository with `library.properties` at its root;
+   publish the same library snapshot to `CX-ArtLab/boopface-embedded`, tag the matching
+   version there, and submit its URL to `arduino/library-registry`. Keep that snapshot
+   synchronized for later embedded releases. PlatformIO submission is deferred until
+   the maintainer supplies an account. Until listings are live, document ZIP/source installation.

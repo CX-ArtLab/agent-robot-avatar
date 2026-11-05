@@ -4,6 +4,8 @@
 
 这是同一项目下的**实验性硬件实现**。只绘制眼睛，提供表情、眨眼、注视、等待和休眠唤醒；由你的程序决定什么时候播放哪个动作。拖动、挤压、头部外形、天线和鼠标监听不包含在此版本中。嵌入式目录独立于 SVG 组件及其 Demo 界面，方便分别维护。
 
+[在线模拟器](https://cx-artlab.github.io/boopface/hardware/?lang=zh-CN)支持十种语言，导出的设置注释跟随所选语言；发布页也提供可离线打开的单文件 HTML。
+
 ## 面向多平台
 
 表情核心是独立的 C++11 库，不依赖 ESP32、Arduino、浏览器或具体屏幕驱动，内部不分配堆内存。ESP32 和树莓派 Pico 是首批参考接入，其他控制器可编写自己的显示适配。
@@ -121,7 +123,7 @@ pio device monitor -b 115200
 
 ## 接入自己的设备
 
-库在 `embedded/lib/BoopFace`。Arduino 用户可将这个目录复制到自己的 `libraries` 目录（正式发布后也可以下载压缩包，用“项目 → 导入库 → 添加 .ZIP 库”安装）；其他 C++11 平台可编译库的整个 `src` 目录。
+库在 `embedded/lib/BoopFace`。Arduino 用户可将这个目录复制到自己的 `libraries` 目录；也可以从[嵌入式发布页](https://github.com/CX-ArtLab/boopface/releases/tag/eyes-v0.1.0)下载 `BoopFace-Embedded-0.1.0.zip`，用“项目 → 导入库 → 添加 .ZIP 库”安装。Arduino 库管理器和 PlatformIO 收录后再补充搜索安装方式，目前请使用 ZIP 或源码。其他 C++11 平台可编译库的整个 `src` 目录。
 
 库里带两个 Arduino IDE 示例，在“文件 → 示例 → BoopFace Embedded”下：**SerialEyes** 在串口监视器里用字符画出眼睛，不需要屏幕；**OledSSD1306** 运行在 0.96 寸 128×64 I²C OLED 上（需先安装 Adafruit SSD1306 库）。两个示例都可以在串口监视器里输入动作名来播放。CI 会为 ESP32 和 RP2040 编译它们。
 

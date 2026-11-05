@@ -8,7 +8,7 @@
 
 ![Version](https://img.shields.io/badge/version-v0.8.0-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/boopface/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/boopface/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
-![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square)
+![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square) ![Embedded](https://img.shields.io/badge/Embedded-ESP32%20%7C%20STM32%20%7C%20Pico-E7352C?style=flat-square&logo=espressif&logoColor=white)
 
 BoopFace ist eine leichte, ausdrucksstarke Roboter-Avatar-Komponente für KI-Bots, Agenten und interaktive Apps. Nachdenken, Warten, Fertig oder Fehler: Jeder Zustand eines Agenten lässt sich mit einem Gesichtsausdruck zeigen.
 
@@ -22,9 +22,18 @@ Gebaut mit SVG und reinem JavaScript, ist es eine native Web Component ohne Lauf
   <img src="../assets/demo/boopface-demo.gif" alt="Interaktive Animationsdemo von BoopFace" width="560">
 </p>
 
+<p align="center">
+  <a href="#boopface-embedded"><img src="../assets/readme/boopface-embedded.jpg" alt="Dieselben Augenausdrücke auf ESP32-, STM32- und Raspberry-Pi-Pico-Bildschirmen oder in anderen C++-Programmen. Mit Firmware-Beispielen für 28 Konfigurationen und einem Simulator samt Einstellungsexport."></a>
+</p>
+
+**[Neu: BoopFace Embedded](#boopface-embedded)**\
+Dieselben Augenausdrücke auf ESP32-, STM32- und Raspberry-Pi-Pico-Bildschirmen oder in anderen C++-Programmen. Mit Firmware-Beispielen für 28 Konfigurationen und einem Simulator samt Einstellungsexport.
+
 ## Live-Demo
 
 [Interaktive Demo öffnen](https://cx-artlab.github.io/boopface/?lang=de) · [Zur Skin-Galerie](https://cx-artlab.github.io/boopface/skins.html?lang=de)
+
+[Embedded-Simulator öffnen](https://cx-artlab.github.io/boopface/hardware/?lang=de)
 
 ## Besondere Merkmale
 
@@ -235,9 +244,49 @@ Für moderne Browser mit Unterstützung für ES Modules, Custom Elements, SVG, P
 
 Automatisierte Browsertests decken Chromium, Firefox und WebKit ab.
 
-## BoopFace Embedded (in Entwicklung)
+<a id="boopface-embedded"></a>
 
-Eine C++-Version, die die Ausdrücke des Avatars auf Roboter- und Entwicklungsboard-Displays zeigt (sie zeichnet nur die Augen), ist in Entwicklung und noch nicht veröffentlicht. Siehe die [Hardware-Anleitung](https://github.com/CX-ArtLab/boopface/tree/main/embedded).
+## Neu: BoopFace Embedded
+
+Die Augenausdrücke der Webversion laufen jetzt auf Robotern und Entwicklungsplatinen. Die kleine C++11-Engine erhält Bewegungen und Timing. Die Beispiele decken 28 Konfigurationen mit ESP32, ESP32-S3, STM32 und Raspberry Pi Pico ab: runde und rechteckige TFTs, längliche Displays, AMOLED und monochrome OLEDs. Eigene Bildschirmgrößen werden unterstützt.
+
+| Dein Gerät | Passende Version |
+| --- | --- |
+| Websites, Apps, Android-Tablets und Roboter mit Browser | Webkomponente: vollständiger Avatar, Skins und Interaktionen |
+| ESP32, STM32 und Raspberry Pi Pico | Embedded-Engine mit Firmware-Beispielen |
+| Andere Mikrocontroller oder C++-Programme | C++-Bibliothek; eigenen Bildschirmtreiber einbinden |
+
+
+<img src="../assets/readme/hardware-preview.jpg" alt="Simulator: Augenausdrücke auf rundem TFT, Anordnung, Farben und Export" width="100%">
+
+**Ohne Platine ausprobieren.** Der [Simulator](https://cx-artlab.github.io/boopface/hardware/?lang=de) führt dieselbe C++-Engine im Browser auf 32 simulierten Bildschirmen aus. So kannst du Module vergleichen und die Darstellung vorab ansehen.
+
+**Anpassen, exportieren, bauen.** Wähle Bildschirm, Anordnung, Farben und Bildrate, dann **Einstellungen exportieren**. Speichere `eyes_settings.h` neben der `main.cpp` des Beispiels und kompiliere. Siehe die [Anleitung](../embedded/README.md). Oberfläche und exportierte Kommentare folgen der gewählten Sprache.
+
+**Per ZIP installieren.** Lade `BoopFace-Embedded-0.1.0.zip` vom [Embedded-Release](https://github.com/CX-ArtLab/boopface/releases/tag/eyes-v0.1.0) und verwende **Sketch → Bibliothek einbinden → .ZIP-Bibliothek hinzufügen** in der Arduino IDE. Die Installation über Arduino Library Manager und PlatformIO folgt nach der Aufnahme; nutze vorerst ZIP oder Quellcode.
+
+**In deinem Programm** spielst du Ausdrücke nach Namen ab:
+
+```cpp
+#include <BoopFace.h>
+boopface::Eyes eyes;
+uint8_t pixels[4800]; // 240 x 160, 1 bit per pixel
+
+void setup() {
+  boopface::EyesConfig config;
+  eyes.begin(config, pixels, sizeof pixels, millis());
+}
+
+void loop() {
+  if (eyes.update(millis())) {
+    // Send eyes.data() to the display driver.
+  }
+}
+
+// When needed: eyes.play("success", millis());
+```
+
+Experimentell: CI kompiliert alle Konfigurationen, auf realer Hardware sind sie noch nicht geprüft. Sende nach einem Test einen [Hardwarebericht](https://github.com/CX-ArtLab/boopface/issues/new?template=hardware_report.yml). API und Anschlüsse stehen in der [Anleitung](../embedded/README.md).
 
 ## Mitwirken
 
@@ -245,7 +294,8 @@ Issues und Pull Requests sind willkommen. Bitte vor Änderungen [`CONTRIBUTING.m
 
 ## Projektstatus
 
-**Aktuelle öffentliche Version: v0.8.0**
+**Aktuelle öffentliche Version: v0.8.0**\
+BoopFace Embedded: v0.1.0 (experimentell)
 
 Die öffentliche API bleibt bewusst kompakt, während sich das Projekt in Richtung einer zukünftigen Stabilitätszusage mit `1.0.0` entwickelt.
 

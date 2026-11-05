@@ -107,8 +107,10 @@ jobs:
           node embedded/tools/test-preview-ui.mjs
           PREVIEW_BROWSER=firefox node embedded/tools/test-preview-ui.mjs
           PREVIEW_BROWSER=webkit node embedded/tools/test-preview-ui.mjs
+          node embedded/tools/test-preview-i18n.mjs
+      - name: Check the standalone Arduino ZIP
+        run: node embedded/tools/package-release.mjs "eyes-v$(node -p 'JSON.parse(require("fs").readFileSync("embedded/lib/BoopFace/library.json")).version')" "$RUNNER_TEMP/BoopFace-Embedded.zip"
       - uses: actions/upload-artifact@v4
         with:
           name: offline-eyes-preview
           path: embedded/preview/boopface-embedded-preview.html
-

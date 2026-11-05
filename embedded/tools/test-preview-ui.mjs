@@ -40,7 +40,7 @@ const choose = async id => {
 const glassBox = () => page.locator('#glass').evaluate(el => { const r = el.getBoundingClientRect(); return [r.left, r.top, r.width, r.height].map(Math.round); });
 try {
   await page.clock.install();
-  await page.goto(file);
+  await page.goto(file+'?lang=zh-CN');
   await page.waitForFunction(() => document.documentElement.dataset.ready === 'true');
   // The eyes follow a simulated object; the switch names the sensor it needs.
   assert.match(await page.locator('#follow').locator('..').getAttribute('title'),/摄像头/);

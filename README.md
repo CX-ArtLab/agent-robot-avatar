@@ -8,7 +8,7 @@
 
 ![Version](https://img.shields.io/badge/version-v0.8.0-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](./LICENSE) [![CI](https://github.com/CX-ArtLab/boopface/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/boopface/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
-![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square)
+![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square) ![Embedded](https://img.shields.io/badge/Embedded-ESP32%20%7C%20STM32%20%7C%20Pico-E7352C?style=flat-square&logo=espressif&logoColor=white)
 
 BoopFace is a lightweight, expressive robot avatar component for AI bots, agents and interactive apps. Thinking, waiting, done or failed: every state of an agent can be shown as an expression.
 
@@ -22,9 +22,18 @@ Built with SVG and vanilla JavaScript, it is a native Web Component with zero ru
   <img src="./assets/demo/boopface-demo.gif" alt="BoopFace interactive animation demo" width="560">
 </p>
 
+<p align="center">
+  <a href="#boopface-embedded"><img src="assets/readme/boopface-embedded.jpg" alt="The same eye expressions on ESP32, STM32 and Raspberry Pi Pico screens, or in other C++ programs. Includes firmware examples for 28 board/display configurations and an online simulator with settings export."></a>
+</p>
+
+**[New: BoopFace Embedded](#boopface-embedded)**\
+The same eye expressions on ESP32, STM32 and Raspberry Pi Pico screens, or in other C++ programs. Includes firmware examples for 28 board/display configurations and an online simulator with settings export.
+
 ## Live Demo
 
 [Open the interactive demo](https://cx-artlab.github.io/boopface/) · [Visit the Skin Gallery](https://cx-artlab.github.io/boopface/skins.html)
+
+[Open the embedded simulator](https://cx-artlab.github.io/boopface/hardware/?lang=en)
 
 ## Highlights
 
@@ -235,9 +244,49 @@ Designed for modern browsers with support for ES Modules, Custom Elements, SVG, 
 
 Automated browser tests cover Chromium, Firefox, and WebKit.
 
-## BoopFace Embedded (in development)
+<a id="boopface-embedded"></a>
 
-A C++ version that shows the avatar's expressions on robot and dev-board screens (it draws only the eyes) is in development and not released yet. See the [hardware guide](https://github.com/CX-ArtLab/boopface/tree/main/embedded).
+## New: BoopFace Embedded
+
+The Web avatar’s eye expressions now run on robot and development-board displays. The small C++11 engine preserves their motion and timing. Firmware examples cover 28 configurations: ESP32, ESP32-S3, STM32 and Raspberry Pi Pico, with round and rectangular TFT, bar displays, AMOLED and monochrome OLED. Custom screen sizes are supported.
+
+| Your device | Use |
+| --- | --- |
+| Websites, apps, Android tablets, robots with a browser | Web component: full avatar, skins and interactions |
+| ESP32, STM32, Raspberry Pi Pico | Embedded engine with firmware examples |
+| Other microcontrollers or C++ programs | Embedded C++ library; supply your own display driver |
+
+
+<img src="assets/readme/hardware-preview.jpg" alt="Embedded simulator: eye expressions on a round TFT, with layout, colours and settings export" width="100%">
+
+**Try it without a board.** The [online simulator](https://cx-artlab.github.io/boopface/hardware/?lang=en) runs the same C++ engine in your browser on 32 simulated screens. It helps you preview a module and compare screen choices.
+
+**Tune, export, build.** Pick a display and adjust layout, colours and frame rate, then choose **Export settings**. Save `eyes_settings.h` next to the example firmware’s `main.cpp` and compile. See the [steps](embedded/README.md). The simulator and exported comments follow your selected language.
+
+**Install from ZIP.** Download `BoopFace-Embedded-0.1.0.zip` from the [embedded release](https://github.com/CX-ArtLab/boopface/releases/tag/eyes-v0.1.0), then use Arduino IDE’s **Sketch → Include Library → Add .ZIP Library**. Arduino Library Manager and PlatformIO registry installation will be added after listing; use the ZIP or source for now.
+
+**In your own program**, play expressions by name:
+
+```cpp
+#include <BoopFace.h>
+boopface::Eyes eyes;
+uint8_t pixels[4800]; // 240 x 160, 1 bit per pixel
+
+void setup() {
+  boopface::EyesConfig config;
+  eyes.begin(config, pixels, sizeof pixels, millis());
+}
+
+void loop() {
+  if (eyes.update(millis())) {
+    // Send eyes.data() to the display driver.
+  }
+}
+
+// When needed: eyes.play("success", millis());
+```
+
+Experimental: CI compiles every configuration, but none has been verified on physical hardware yet. If you try one, please send a [hardware report](https://github.com/CX-ArtLab/boopface/issues/new?template=hardware_report.yml). See the [embedded guide](embedded/README.md) for the full API and wiring.
 
 ## Contributing
 
@@ -245,7 +294,8 @@ Issues and pull requests are welcome. See [`CONTRIBUTING.md`](./CONTRIBUTING.md)
 
 ## Project status
 
-**Current public version: v0.8.0**
+**Current public version: v0.8.0**\
+BoopFace Embedded: v0.1.0 (experimental)
 
 The public API is intentionally kept compact while the project evolves toward a future `1.0.0` stability commitment.
 

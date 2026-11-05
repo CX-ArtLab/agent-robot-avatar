@@ -29,4 +29,7 @@ for (const file of publicDemoFiles) {
   await mkdir(path.dirname(destination), {recursive:true});
   await writeFile(destination, source);
 }
+// The embedded simulator is one self-contained offline file.
+await mkdir(path.join(output, 'hardware'), {recursive:true});
+await cp(path.join(root, 'embedded/preview/boopface-embedded-preview.html'), path.join(output, 'hardware/index.html'));
 console.log(`Public demo built at ${output} (${publicDemoFiles.length} demo files; private editors excluded)`);

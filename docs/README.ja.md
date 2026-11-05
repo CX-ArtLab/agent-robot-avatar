@@ -8,7 +8,7 @@
 
 ![Version](https://img.shields.io/badge/version-v0.8.0-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/boopface/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/boopface/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
-![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square)
+![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square) ![Embedded](https://img.shields.io/badge/Embedded-ESP32%20%7C%20STM32%20%7C%20Pico-E7352C?style=flat-square&logo=espressif&logoColor=white)
 
 BoopFace は、AI ボット、エージェント、インタラクティブなアプリのための、軽量で表情豊かなロボットアバターコンポーネントです。考え中、待機中、完了、エラー。エージェントのあらゆる状態を表情で伝えられます。
 
@@ -22,9 +22,18 @@ SVG と素の JavaScript で作られたネイティブ Web Component で、実�
   <img src="../assets/demo/boopface-demo.gif" alt="BoopFace インタラクティブアニメーションデモ" width="560">
 </p>
 
+<p align="center">
+  <a href="#boopface-embedded"><img src="../assets/readme/boopface-embedded.jpg" alt="ESP32、STM32、Raspberry Pi Pico の画面や、その他の C++ プログラムで同じ目の表情を使えます。28種類の構成に対応するサンプルファームウェアと、設定を書き出せるシミュレーターを用意しました。"></a>
+</p>
+
+**[新対応：BoopFace Embedded](#boopface-embedded)**\
+ESP32、STM32、Raspberry Pi Pico の画面や、その他の C++ プログラムで同じ目の表情を使えます。28種類の構成に対応するサンプルファームウェアと、設定を書き出せるシミュレーターを用意しました。
+
 ## ライブデモ
 
 [インタラクティブデモを開く](https://cx-artlab.github.io/boopface/?lang=ja) · [スキンギャラリーを見る](https://cx-artlab.github.io/boopface/skins.html?lang=ja)
+
+[組み込みシミュレーターを開く](https://cx-artlab.github.io/boopface/hardware/?lang=ja)
 
 ## 特長
 
@@ -235,9 +244,49 @@ ES Modules、Custom Elements、SVG、Pointer Events、Web Animations API、`Inte
 
 自動ブラウザテストは Chromium、Firefox、WebKit を対象にしています。
 
-## BoopFace Embedded（開発中）
+<a id="boopface-embedded"></a>
 
-ロボットや開発ボードの画面にアバターの表情を表示する C++ 版（目だけを描画）を開発中です。まだリリースされていません。[ハードウェアガイド](https://github.com/CX-ArtLab/boopface/tree/main/embedded)をご覧ください。
+## 新対応：BoopFace Embedded
+
+Web版の目の表情を、ロボットや開発ボードの画面でも使えます。小さなC++11エンジンが動きとタイミングを再現します。ESP32、ESP32-S3、STM32、Raspberry Pi Pico の28構成に対応し、円形・長方形TFT、横長画面、AMOLED、単色OLEDをカバー。画面サイズも指定できます。
+
+| 使用する機器 | 選ぶバージョン |
+| --- | --- |
+| Web、アプリ、Androidタブレット、ブラウザー搭載ロボット | Webコンポーネント：全身のアバター、スキン、操作 |
+| ESP32、STM32、Raspberry Pi Pico | 組み込みエンジンとサンプルファームウェア |
+| その他のマイコン・C++プログラム | C++ライブラリ。画面ドライバーは自分で接続 |
+
+
+<img src="../assets/readme/hardware-preview.jpg" alt="シミュレーター：円形TFTの目の表情、配置、色、設定の書き出し" width="100%">
+
+**ボードなしでも試せます。** [シミュレーター](https://cx-artlab.github.io/boopface/hardware/?lang=ja)は同じC++エンジンをブラウザーで動かし、32種類の画面を再現します。表示の確認やモジュールの比較に使えます。
+
+**調整して、書き出して、ビルド。** 画面、配置、色、フレームレートを選び、**設定を書き出す**を押します。`eyes_settings.h` をサンプルの `main.cpp` と同じ場所に保存してビルドします。[手順](../embedded/README.md)をご覧ください。画面と書き出すコメントは選んだ言語に切り替わります。
+
+**ZIPからインストール。** [組み込み版リリース](https://github.com/CX-ArtLab/boopface/releases/tag/eyes-v0.1.0)から `BoopFace-Embedded-0.1.0.zip` を取得し、Arduino IDE の **スケッチ → ライブラリをインクルード → .ZIP形式のライブラリをインストール**で追加します。Arduino Library Manager と PlatformIO への登録後に検索インストールへ対応予定です。当面はZIPかソースを使ってください。
+
+**自分のプログラムから**名前で表情を再生できます：
+
+```cpp
+#include <BoopFace.h>
+boopface::Eyes eyes;
+uint8_t pixels[4800]; // 240 x 160, 1 bit per pixel
+
+void setup() {
+  boopface::EyesConfig config;
+  eyes.begin(config, pixels, sizeof pixels, millis());
+}
+
+void loop() {
+  if (eyes.update(millis())) {
+    // Send eyes.data() to the display driver.
+  }
+}
+
+// When needed: eyes.play("success", millis());
+```
+
+実験版：全構成をCIでコンパイルしていますが、実機では未確認です。試した場合は[実機レポート](https://github.com/CX-ArtLab/boopface/issues/new?template=hardware_report.yml)をお寄せください。APIと配線は[組み込み版ガイド](../embedded/README.md)に記載しています。
 
 ## コントリビューション
 
@@ -245,7 +294,8 @@ Issue と Pull Request を歓迎します。変更を送る前に [`CONTRIBUTING
 
 ## プロジェクト状況
 
-**現在の公開バージョン：v0.8.0**
+**現在の公開バージョン：v0.8.0**\
+BoopFace Embedded：v0.1.0（実験版）
 
 公開 API は、将来の `1.0.0` における安定性コミットメントに向けて、意図的にコンパクトなまま慎重に進化させています。
 

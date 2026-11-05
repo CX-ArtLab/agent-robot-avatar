@@ -22,13 +22,15 @@ Download [`preview/boopface-embedded-preview.html`](preview/boopface-embedded-pr
 
 The preview runs **this exact embedded C++ engine compiled to WebAssembly**, not the separate Web avatar renderer. It offers 18 actions (17 original expressions plus the added waiting-wave variant), cycling/manual interruption, pause/step, playback speed, explicit gaze, blink/transition switches, and 32 screen presets in five groups (round, square, bar, dev kits and OLEDs) plus custom resolutions from 16 to 512 pixels per axis. Layout controls include aspect-preserving fit, crop-to-fill, zoom, offsets and circular clipping. Named presets use SVG front views of specific reference modules; see [artwork sources](preview/frames/README.md). TFT mode centers a 240×160 mask inside a 240×240 canvas, matching the Arduino example. OLED mode renders a 128×64 mask; it does not emulate the display driver's page conversion. Changing the screen restarts the simulation; timing, layout and display changes apply without restarting, and hidden tabs freeze its clock. This validates animation, not board performance or screen electronics. See [preview/README.md](preview/README.md) for rebuilding and tests.
 
+The [online simulator](https://cx-artlab.github.io/boopface/hardware/?lang=en) supports 10 languages; exported settings comments follow the selected language. You can also download the standalone offline HTML from the embedded release.
+
 ## From the preview to your board
 
 Tune the eyes in the preview, then build the firmware with exactly those settings, without editing code:
 
-1. Open the preview and pick your screen. The **型号与接线 (Model and wiring)** panel shows the board, its wiring and the build command.
+1. Open the preview and pick your screen. The **Model and wiring** panel shows the board, its wiring and the build command.
 2. Adjust layout, colours, frame rate, blinking and transitions, and turn the module if it is mounted turned.
-3. Press **导出设置 (Export settings)**, then copy or download the text as `eyes_settings.h`.
+3. Press **Export settings**, then copy or download the text as `eyes_settings.h`.
 4. Put the file in `embedded/examples/arduino/`, next to `main.cpp`.
 5. Build and upload the environment named in the file's first lines, for example `pio run -d embedded -e esp32-s3-st7789 -t upload`.
 
@@ -129,7 +131,7 @@ reset
 
 ## Embed the engine in another product
 
-Copy `lib/BoopFace` into an Arduino `libraries` folder (or, once released, add its ZIP with *Sketch → Include Library → Add .ZIP Library*), or compile its source directory into your C++11 application. For non-Arduino projects, no Arduino library is needed.
+Download `BoopFace-Embedded-0.1.0.zip` from the [embedded release](https://github.com/CX-ArtLab/boopface/releases/tag/eyes-v0.1.0) and import it with *Sketch → Include Library → Add .ZIP Library*, copy `lib/BoopFace` into an Arduino `libraries` folder, or compile its source directory into your C++11 application. Arduino Library Manager and PlatformIO registry listings will follow; use the ZIP or source until then. For non-Arduino projects, no Arduino library is needed.
 
 The library ships two Arduino IDE examples under *File → Examples → BoopFace Embedded*: **SerialEyes** draws the eyes as text in the Serial Monitor and needs no screen, and **OledSSD1306** runs them on a 0.96″ 128×64 I²C OLED (install *Adafruit SSD1306* first). Both take action names typed in the Serial Monitor. CI compiles them for ESP32 and RP2040.
 
