@@ -25,10 +25,14 @@ try {
     const current = code.match(/^#define .+/gm).map(line => line.split('//')[0].trim());
     if (definitions) assert.deepEqual(current, definitions, 'language must not change exported settings');
     definitions = current;
+    await page.locator('#export-close').click();
+    await page.setViewportSize({width:390,height:844});
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false,
+      `${language}: mobile layout must not overflow`);
+    await page.setViewportSize({width:1180,height:1000});
     assert.deepEqual((await page.locator('#export-help code').allTextContents()).sort(),
       ['eyes_settings.h', 'embedded/examples/arduino/', 'main.cpp'].sort());
   }
-  await page.locator('#export-close').click();
   await page.locator('#eye-color').fill('#ff9900');
   await page.locator('#preview-language').selectOption('es');
   await page.waitForURL(/lang=es/);

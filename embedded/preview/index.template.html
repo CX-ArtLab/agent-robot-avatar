@@ -76,7 +76,11 @@ html,body{height:auto}
 .bar .seg{display:inline-flex;gap:2px;padding:2px;border-radius:9px;background:#f4f5f6}
 .bar .seg .chip{min-height:26px;padding:3px 8px;background:transparent;border-radius:7px}
 .bar .seg .chip[aria-pressed=true]{background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.08);color:#202327}
-.bar .opt{position:relative;cursor:pointer;user-select:none}
+.bar .opt{position:relative;cursor:pointer;user-select:none;max-width:100%;white-space:normal;flex-wrap:wrap;justify-content:center}
+.bar-row{min-width:0}
+.opt-note{white-space:normal}
+.fps-field{flex-wrap:wrap}
+.fps-field .seg{max-width:100%;min-width:0}
 .bar .opt > input[type=checkbox]{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;pointer-events:auto;cursor:pointer;z-index:1}
 /* The export: a button at the foot of the panel and a sheet with the file. */
 .side-footer{display:flex;align-items:center;gap:10px;padding:12px 12px 0 0;border-top:1px solid #f0f1f2}
@@ -208,7 +212,7 @@ html,body{height:auto}
   .side{position:static;height:auto;max-height:none;min-height:0;margin-top:14px;padding:16px}
   .side-body{overflow:visible;padding-right:0}
   }
-@media(max-width:600px){.preview .title{width:100%}.header-tools{width:100%;flex-direction:row;justify-content:space-between;align-items:center}}
+@media(max-width:600px){.preview .title{width:100%}.header-tools{width:100%;flex-direction:row;flex-wrap:wrap;justify-content:space-between;align-items:center}}
 @media(max-width:420px){.pair{grid-template-columns:minmax(0,1fr)}.zoom-slider input{width:90px}}
 </style>
 </head>
@@ -306,7 +310,7 @@ __THIRD_PARTY__
 
   <section class="section">
     <div class="section-head"><h2>动画</h2></div>
-    <div class="field"><span>帧率上限</span><div class="seg push" id="fps" role="group" aria-label="帧率上限"></div></div>
+    <div class="field fps-field"><span>帧率上限</span><div class="seg push" id="fps" role="group" aria-label="帧率上限"></div></div>
     <div class="pair">
       <label class="field toggle demo-toggle"><span>眨眼</span><input id="blink" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
       <label class="field toggle demo-toggle"><span>打断过渡</span><input id="transitions" type="checkbox" checked><span class="demo-switch" aria-hidden="true"></span></label>
