@@ -22,11 +22,12 @@ BoopFace 是一個輕量、富表現力的機器人頭像組件，適用於 AI �
   <img src="../assets/demo/boopface-demo.gif" alt="BoopFace 交互動畫演示" width="560">
 </p>
 
+## 新支持：[BoopFace Embedded 嵌入式設備版](#boopface-embedded)
+
 <p align="center">
-  <a href="#新支持boopface-embedded-嵌入式設備版"><img src="../assets/readme/boopface-embedded.jpg" alt="BoopFace Embedded 嵌入式設備版：小巧的 C++ 表情引擎，保留網頁版的全部表情、動作和節奏；現成固件支持 ESP32、ESP32-S3、STM32 和樹莓派 Pico 上的 28 種開發板與屏幕組合"></a>
+  <a href="#boopface-embedded"><img src="../assets/readme/boopface-embedded.jpg" alt="BoopFace Embedded 嵌入式設備版：小巧的 C++ 表情引擎，保留網頁版的全部表情、動作和節奏；現成固件支持 ESP32、ESP32-S3、STM32 和樹莓派 Pico 上的 28 種開發板與屏幕組合"></a>
 </p>
 
-**新支持：[BoopFace Embedded 嵌入式設備版](#新支持boopface-embedded-嵌入式設備版)**\
 用於 ESP32、STM32、樹莓派 Pico 等開發板的屏幕，也可以編譯進其他 C++ 程序。\
 在桌面小型機器人或各種嵌入式設備上，顯示與網頁版相同的眼睛表情。\
 提供固件示例，以及一個支持多種流行開發板和屏幕的在線模擬器，調好後可直接導出設置用於編譯。
@@ -245,6 +246,8 @@ avatar.setSkin(null); // 回到純色
 面向支持 ES Modules、Custom Elements、SVG、Pointer Events、Web Animations API、`IntersectionObserver`、`ResizeObserver` 和 `matchMedia` 的現代瀏覽器。
 
 自動瀏覽器測試覆蓋 Chromium、Firefox 和 WebKit。
+
+<a id="boopface-embedded"></a>
 
 ## 新支持：BoopFace Embedded 嵌入式設備版
 

@@ -22,11 +22,12 @@ BoopFace — лёгкий выразительный компонент ават
   <img src="../assets/demo/boopface-demo.gif" alt="Интерактивная анимационная демонстрация BoopFace" width="560">
 </p>
 
+## Новое: [BoopFace Embedded](#boopface-embedded)
+
 <p align="center">
   <a href="#boopface-embedded"><img src="../assets/readme/boopface-embedded.jpg" alt="Те же выражения глаз на экранах ESP32, STM32 и Raspberry Pi Pico или в других программах C++. Примеры прошивок для 28 конфигураций и симулятор с экспортом настроек."></a>
 </p>
 
-**[Новое: BoopFace Embedded](#boopface-embedded)**\
 Те же выражения глаз на экранах ESP32, STM32 и Raspberry Pi Pico или в других программах C++. Примеры прошивок для 28 конфигураций и симулятор с экспортом настроек.
 
 ## Демонстрация в реальном времени

@@ -22,11 +22,12 @@ Feito com SVG e JavaScript puro, é um Web Component nativo sem dependências em
   <img src="../assets/demo/boopface-demo.gif" alt="Demonstração animada interativa do BoopFace" width="560">
 </p>
 
+## Novo: [BoopFace Embedded](#boopface-embedded)
+
 <p align="center">
   <a href="#boopface-embedded"><img src="../assets/readme/boopface-embedded.jpg" alt="As mesmas expressões nas telas ESP32, STM32 e Raspberry Pi Pico, ou em outros programas C++. Inclui exemplos de firmware para 28 configurações e simulador com exportação de ajustes."></a>
 </p>
 
-**[Novo: BoopFace Embedded](#boopface-embedded)**\
 As mesmas expressões nas telas ESP32, STM32 e Raspberry Pi Pico, ou em outros programas C++. Inclui exemplos de firmware para 28 configurações e simulador com exportação de ajustes.
 
 ## Demo ao vivo
