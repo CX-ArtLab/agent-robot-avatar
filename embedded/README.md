@@ -22,7 +22,7 @@ Download [`preview/boopface-embedded-preview.html`](preview/boopface-embedded-pr
 
 The preview runs **this exact embedded C++ engine compiled to WebAssembly**, not the separate Web avatar renderer. It offers 18 actions (17 original expressions plus the added waiting-wave variant), cycling/manual interruption, pause/step, playback speed, explicit gaze, blink/transition switches, and 32 screen presets in five groups (round, square, bar, dev kits and OLEDs) plus custom resolutions from 16 to 512 pixels per axis. Layout controls include aspect-preserving fit, crop-to-fill, zoom, offsets and circular clipping. Named presets use SVG front views of specific reference modules; see [artwork sources](preview/frames/README.md). TFT mode centers a 240×160 mask inside a 240×240 canvas, matching the Arduino example. OLED mode renders a 128×64 mask; it does not emulate the display driver's page conversion. Changing the screen restarts the simulation; timing, layout and display changes apply without restarting, and hidden tabs freeze its clock. This validates animation, not board performance or screen electronics. See [preview/README.md](preview/README.md) for rebuilding and tests.
 
-The [online simulator](https://cx-artlab.github.io/boopface/hardware/?lang=en) supports 10 languages; exported settings comments follow the selected language. You can also download the standalone offline HTML from the embedded release.
+The [online simulator](https://cx-artlab.github.io/BoopFace/hardware/?lang=en) supports 10 languages; exported settings comments follow the selected language. You can also download the standalone offline HTML from the embedded release.
 
 ## From the preview to your board
 
