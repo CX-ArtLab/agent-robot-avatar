@@ -19,7 +19,7 @@ concurrency:
 
 jobs:
   downloads:
-    if: github.repository == 'CX-ArtLab/boopface' && startsWith(inputs.tag || github.event.release.tag_name, 'eyes-v')
+    if: github.repository == 'CX-ArtLab/BoopFace' && startsWith(inputs.tag || github.event.release.tag_name, 'eyes-v')
     runs-on: ubuntu-latest
     permissions:
       contents: write

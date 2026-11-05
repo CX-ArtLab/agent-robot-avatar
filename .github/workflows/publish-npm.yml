@@ -21,7 +21,7 @@ jobs:
   publish:
     # Only Web component releases (tags like v0.6.0) go to npm; the embedded
     # eyes library is released under eyes-v* tags and never published here.
-    if: github.repository == 'CX-ArtLab/boopface' && startsWith(inputs.tag || github.event.release.tag_name, 'v')
+    if: github.repository == 'CX-ArtLab/BoopFace' && startsWith(inputs.tag || github.event.release.tag_name, 'v')
     runs-on: ubuntu-24.04
     # Browser binaries and OS dependencies are already in the matching image.
     # Keep this version aligned with @playwright/test in package-lock.json.
