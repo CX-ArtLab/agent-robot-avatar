@@ -1,32 +1,40 @@
-# Agent Robot Avatar
+# BoopFace
 
 <p align="center">
-  <img src="../assets/readme/agent-robot-avatar-header.jpg" alt="Agent Robot Avatar">
+  <img src="../assets/readme/boopface-header.jpg" alt="BoopFace：轻量、富表现力的机器人头像组件，适用于 AI 机器人、智能体与交互式应用">
 </p>
 
-[English](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/README.md) | [简体中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-CN.md) | [Español](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.es.md) | [Русский](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ru.md) | [Français](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.fr.md) | [Português](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.pt.md) | [Deutsch](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.de.md) | [日本語](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ja.md) | [한국어](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ko.md) | [繁體中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-TW.md)
+[English](https://github.com/CX-ArtLab/boopface/blob/main/README.md) | [简体中文](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.zh-CN.md) | [Español](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.es.md) | [Русский](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.ru.md) | [Français](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.fr.md) | [Português](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.pt.md) | [Deutsch](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.de.md) | [日本語](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.ja.md) | [한국어](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.ko.md) | [繁體中文](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.zh-TW.md)
 
-![Version](https://img.shields.io/badge/version-v0.7.2-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
+![Version](https://img.shields.io/badge/version-v0.8.0-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/boopface/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/boopface/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
-![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square)
+![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square) ![Embedded](https://img.shields.io/badge/Embedded-ESP32%20%7C%20STM32%20%7C%20Pico-E7352C?style=flat-square&logo=espressif&logoColor=white)
 
-一个轻量、富表现力的机器人头像 Web Component，适用于 AI Agent 与交互式应用。
+BoopFace 是一个轻量、富表现力的机器人头像组件，适用于 AI 机器人、智能体与交互式应用。思考、等待、完成、出错，智能体的每个状态都能用一个表情说出来。
 
-可用于 AI 助手、Agent 界面、桌面伙伴、虚拟宠物、数字吉祥物、聊天机器人头像及其他交互角色体验。
+适合作为 AI 助手和智能体的形象与状态反馈：类似 ChatGPT、Claude、Gemini、Grok、DeepSeek 的对话助手，类似 Codex、Claude Code、Cursor、Gemini CLI、OpenCode 的编程智能体，以及类似 Grok Bot、ChatGPT dots、Meta Muse、OpenClaw、Hermes Agent 的常驻智能体。
 
-可用于 AI 助手、Agent 界面，包括类似 ChatGPT、Claude、Codex、Cursor、Grok Bot、Gemini CLI 和 OpenCode 的产品与体验。
+也可用于桌面伙伴、虚拟宠物、数字吉祥物、聊天机器人头像等交互角色，或作为 AG-UI 风格 Agent 界面的视觉反馈层。
 
-使用 SVG 与原生 JavaScript 构建，以原生 Custom Element 运行，运行时零依赖。
-
-Agent Robot Avatar 还可作为 AG-UI 风格 Agent 界面的视觉反馈层。
+使用 SVG 与原生 JavaScript 构建，是一个原生 Web Component，运行时零依赖，MIT 开源。另有 188 款[皮肤](#皮肤--07-新功能)可以随时换上。
 
 <p align="center">
-  <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Agent Robot Avatar 交互动画演示" width="560">
+  <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="BoopFace 交互动画演示" width="560">
 </p>
+
+<p align="center">
+  <a href="#新支持boopface-embedded-嵌入式设备版"><img src="../assets/readme/boopface-embedded.jpg" alt="BoopFace Embedded 嵌入式设备版：小巧的 C++ 表情引擎，保留网页版的全部表情、动作和节奏；现成固件支持 ESP32、ESP32-S3、STM32 和树莓派 Pico 上的 28 种开发板与屏幕组合"></a>
+</p>
+
+**新支持：[BoopFace Embedded 嵌入式设备版](#新支持boopface-embedded-嵌入式设备版)**\
+用于 ESP32、STM32、树莓派 Pico 等开发板的屏幕，也可以编译进其他 C++ 程序。\
+在桌面小型机器人或各种嵌入式设备上，显示与网页版相同的眼睛表情。\
+提供现成固件，以及一个支持多种流行开发板和屏幕的在线模拟器，调好后可直接导出设置用于编译。
 
 ## 在线 Demo
 
-[打开交互 Demo](https://cx-artlab.github.io/agent-robot-avatar/?lang=zh-CN) · [逛逛皮肤美术馆](https://cx-artlab.github.io/agent-robot-avatar/skins.html?lang=zh-CN)
+[打开交互 Demo](https://cx-artlab.github.io/boopface/?lang=zh-CN) · [逛逛皮肤美术馆](https://cx-artlab.github.io/boopface/skins.html?lang=zh-CN)\
+[打开嵌入式设备模拟器](https://cx-artlab.github.io/boopface/hardware/)（可预览 32 种常用嵌入式设备屏幕）
 
 ## 特点
 
@@ -45,40 +53,60 @@ Agent Robot Avatar 还可作为 AG-UI 风格 Agent 界面的视觉反馈层。
 - 188 款编号皮肤，分 17 个系列，光线跟随鼠标
 - 不含皮肤的精简版，适合对大小特别在意的页面
 - 内置 TypeScript 类型声明
+- BoopFace Embedded 嵌入式设备版：同样的表情跑在 28 种 ESP32、STM32 和树莓派 Pico 开发板与屏幕组合上，在线模拟器里调好后直接导出到固件
 
 ## 安装
 
 ```bash
-npm install agent-robot-avatar
+npm install boopface
 ```
 
 ```js
-import 'agent-robot-avatar';
+import 'boopface';
 ```
 
-也可以从[最新发布](https://github.com/CX-ArtLab/agent-robot-avatar/releases/latest)下载 `agent-robot-avatar-x.y.z.zip`，里面只有组件本身（含皮肤），解压到网页旁边即可：
+也可以从[最新发布](https://github.com/CX-ArtLab/boopface/releases/latest)下载 `boopface-x.y.z.zip`，里面只有组件本身（含皮肤），解压到网页旁边即可：
 
 ```html
-<script type="module" src="./agent-robot-avatar/agent-robot-avatar.js"></script>
+<script type="module" src="./boopface/boopface.js"></script>
 ```
 
 然后添加组件：
 
 ```html
-<agent-robot-avatar id="avatar"></agent-robot-avatar>
+<boop-face id="avatar"></boop-face>
 ```
 
 无需初始化代码，头像会自动进入默认待机状态。
 
+### 从 Agent Robot Avatar 升级
+
+BoopFace 原名 Agent Robot Avatar，0.8 版起改名，功能和用法都没有变。升级只需把包名换成 `boopface`：
+
+```bash
+npm uninstall agent-robot-avatar
+npm install boopface
+```
+
+旧标签 `<agent-robot-avatar>` 在 1.0 之前仍然可以使用，不用急着改页面。旧的 npm 包 `agent-robot-avatar` 不再更新，以后的新版本只发布在 `boopface`。
+
 ### 精简版
 
-如果页面完全用不到皮肤，可以改用 `agent-robot-avatar/lite`，头像和所有表情都一样，只是不含任何皮肤代码：
+如果页面完全用不到皮肤，可以改用 `boopface/lite`，头像和所有表情都一样，只是不含任何皮肤代码：
 
 ```js
-import 'agent-robot-avatar/lite';
+import 'boopface/lite';
 ```
 
 精简版会忽略 `skin` 属性，并在控制台提示：皮肤需要使用完整版。
+
+大小对比（网络传输大小，gzip 压缩后）：
+
+| 版本 | 大小 |
+| --- | --- |
+| 精简版 `boopface/lite` | 约 45 KB |
+| 完整版，页面没用皮肤 | 约 56 KB，皮肤绘制代码不会下载 |
+| 完整版，用到皮肤 | 约 113 KB，多出的部分在第一次用到皮肤时才下载 |
 
 ## 基础用法
 
@@ -141,13 +169,13 @@ try {
 ## 常用选项
 
 ```html
-<agent-robot-avatar
+<boop-face
   size="160"
   color="#08090b"
   auto-sleep="30000"
   wake-on="activity"
   motion="auto">
-</agent-robot-avatar>
+</boop-face>
 ```
 
 | 属性 | 用途 |
@@ -181,7 +209,7 @@ avatar.setAntennaDrag(true);
 <img src="../assets/readme/skin-gallery.jpg" alt="皮肤美术馆：精选皮肤、分类筛选和搜索" width="100%">
 
 ```html
-<agent-robot-avatar skin="301"></agent-robot-avatar>
+<boop-face skin="301"></boop-face>
 ```
 
 ```js
@@ -189,27 +217,16 @@ avatar.setSkin(102);  // 也可以写 '102'
 avatar.setSkin(null); // 回到纯色
 ```
 
-所有皮肤及编号见[全部皮肤页](https://cx-artlab.github.io/agent-robot-avatar/materials/?lang=zh-CN)。
+所有皮肤及编号见[全部皮肤页](https://cx-artlab.github.io/boopface/materials/?lang=zh-CN)。
 
-| 系列 | 编号 |
-| --- | --- |
-| 彩色玻璃 | 101–106 |
-| 淡彩玻璃 | 201–206 |
-| 软糖 | 301–312 |
-| 糖果玻璃 | 401–406 |
-| 亚克力 | 501–512 |
-| 果冻 | 601–612 |
-| 渐变 | 701–712 |
-| 磨砂玻璃 | 801–806 |
-| 磨砂金属 | 901–930 |
-| 宝石与陶瓷 | 1001–1012 |
-| 木 | 1101–1106 |
-| 球类 | 1201–1210 |
-| 透明与流光 | 1301–1305 |
-| 织物与皮革 | 1401–1412 |
-| 甜点与水果 | 1501–1512 |
-| 自然 | 1601–1612 |
-| 图案与科技 | 1701–1717 |
+| 系列 | 编号 | 系列 | 编号 | 系列 | 编号 |
+| --- | --- | --- | --- | --- | --- |
+| 彩色玻璃 | 101–106 | 淡彩玻璃 | 201–206 | 软糖 | 301–312 |
+| 糖果玻璃 | 401–406 | 亚克力 | 501–512 | 果冻 | 601–612 |
+| 渐变 | 701–712 | 磨砂玻璃 | 801–806 | 磨砂金属 | 901–930 |
+| 宝石与陶瓷 | 1001–1012 | 木 | 1101–1106 | 球类 | 1201–1210 |
+| 透明与流光 | 1301–1305 | 织物与皮革 | 1401–1412 | 甜点与水果 | 1501–1512 |
+| 自然 | 1601–1612 | 图案与科技 | 1701–1717 |  |  |
 
 皮肤的绘制代码在第一次用到皮肤时才下载，不用皮肤的页面完全不加载。`await loadSkins()` 可以提前加载。`SKINS` 提供每款皮肤的中英文名称和颜色，`SKIN_SERIES` 提供系列，`SKIN_NAMES` 提供全部编号。
 
@@ -229,9 +246,46 @@ avatar.setSkin(null); // 回到纯色
 
 自动浏览器测试覆盖 Chromium、Firefox 和 WebKit。
 
-## 硬件表情版（开发中）
+## 新支持：BoopFace Embedded 嵌入式设备版
 
-在机器人和开发板屏幕上显示表情的 C++ 版本（只画眼睛）正在开发中，尚未发布。详见[硬件接入说明](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/embedded/README.zh-CN.md)。
+与网页版相同的表情，现在也可以用在机器人和开发板的屏幕上。一个小巧的 C++ 库移植了网页版的全部表情，动作和节奏都与网页版一致。现成的固件支持 28 种开发板和屏幕组合，覆盖 ESP32、ESP32-S3、STM32 和树莓派 Pico：圆形和方形 TFT、长条屏、AMOLED 和单色 OLED，也可以自定义屏幕尺寸。
+
+| 你的设备 | 用哪个 |
+| --- | --- |
+| 网页、App、安卓平板、带浏览器的机器人 | 网页版（本组件）：完整头像、皮肤和互动 |
+| ESP32、STM32、树莓派 Pico 等开发板 | 嵌入式设备版，有现成固件 |
+| 其他单片机或 C++ 程序 | 嵌入式设备版的 C++ 库，自己接屏幕驱动 |
+
+<img src="../assets/readme/hardware-preview.jpg" alt="嵌入式设备模拟器：圆形 TFT 模组显示眼睛，旁边是布局、颜色和导出设置" width="100%">
+
+**没有板子也能先预览效果。** [在线模拟器](https://cx-artlab.github.io/boopface/hardware/)在浏览器里就能运行同一套 C++ 引擎，模拟 32 种屏幕，你可以大致看到它在真实模组上的样子，选购屏幕时也能拿来参考。
+
+**调好，就能直接用。** 选好你的屏幕，调整布局、颜色和帧率，点「导出设置」。把导出的 `eyes_settings.h` 放进示例固件再编译，板子上显示的就是模拟器里的样子。详见[操作步骤](../embedded/README.zh-CN.md#在模拟器里调好直接用到板子上)。
+
+**安装。** 在 Arduino IDE 的库管理器或 PlatformIO 里搜索 `BoopFace Embedded`；也可以从[发布页](https://github.com/CX-ArtLab/boopface/releases)下载 `BoopFace-Embedded-x.y.z.zip`，在 Arduino IDE 里选「项目 → 导入库 → 添加 .ZIP 库」安装。
+
+**在你自己的程序里**，按名字播放表情：
+
+```cpp
+#include <BoopFace.h>
+boopface::Eyes eyes;
+uint8_t pixels[4800]; // 240 x 160，每个像素 1 位
+
+void setup() {
+  boopface::EyesConfig config;
+  eyes.begin(config, pixels, sizeof pixels, millis());
+}
+
+void loop() {
+  if (eyes.update(millis())) {
+    // 把 eyes.data() 发送到屏幕。
+  }
+}
+
+// 需要时：eyes.play("success", millis());
+```
+
+实验版：所有配置都在 CI 中编译通过，但还没有在真实硬件上验证。如果你在实物上运行过，欢迎提交[实机验证报告](https://github.com/CX-ArtLab/boopface/issues/new?template=hardware_report.yml)。完整说明见[嵌入式设备版说明](../embedded/README.zh-CN.md)。
 
 ## 参与贡献
 
@@ -239,17 +293,18 @@ avatar.setSkin(null); // 回到纯色
 
 ## 项目状态
 
-**当前公开版本：v0.7.2**
+**当前公开版本：v0.8.0**（网页版）\
+BoopFace Embedded 嵌入式设备版：v0.1.0
 
 公开 API 会在未来 `1.0.0` 稳定性承诺前继续保持精简并谨慎演进。
 
-Agent Robot Avatar 为独立开发的开源项目，不隶属于、代表或获得任何 AI 平台或品牌的官方背书。
+BoopFace 为独立开发的开源项目，不隶属于、代表或获得任何 AI 平台或品牌的官方背书。
 
 ## 角色设计与视觉标识
 
-Agent Robot Avatar 角色，包括机器人外观与视觉标识，均为 CX ArtLab 的原创设计。
+BoopFace 角色，包括机器人外观与视觉标识，均为 CX ArtLab 的原创设计。
 
-MIT License 适用于软件和源代码，允许在应用中使用、修改和分发该头像，但不会转移 Agent Robot Avatar 名称、角色身份或视觉标识的所有权，也不授予将其作为其他方原创角色或独立品牌进行展示的权利。
+MIT License 适用于软件和源代码，允许在应用中使用、修改和分发该头像，但不会转移 BoopFace 名称、角色身份或视觉标识的所有权，也不授予将其作为其他方原创角色或独立品牌进行展示的权利。
 
 本项目提及的第三方产品名称仅用于说明可能的使用场景，不代表任何关联或官方认可。
 
