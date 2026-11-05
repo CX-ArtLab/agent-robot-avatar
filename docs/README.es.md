@@ -263,7 +263,11 @@ Las expresiones oculares de la versión web ahora funcionan en pantallas de robo
 
 **Ajusta, exporta y compila.** Elige pantalla, distribución, colores y fotogramas por segundo. Pulsa **Exportar ajustes**, guarda `eyes_settings.h` junto al `main.cpp` del ejemplo y compila. Consulta los [pasos](../embedded/README.md). La interfaz y los comentarios exportados siguen el idioma elegido.
 
-**Instalar desde ZIP.** Descarga `BoopFace-Embedded-0.1.0.zip` de la [versión integrada](https://github.com/CX-ArtLab/boopface/releases/tag/eyes-v0.1.0) y usa **Programa → Incluir librería → Añadir biblioteca .ZIP** en Arduino IDE. La instalación desde Arduino Library Manager y el registro de PlatformIO llegará tras su inclusión; por ahora usa el ZIP o el código fuente.
+**Instalar desde ZIP.** Descarga `BoopFace-Embedded-0.1.0.zip` de la [versión integrada](https://github.com/CX-ArtLab/boopface/releases/tag/eyes-v0.1.0) y usa **Programa → Incluir librería → Añadir biblioteca .ZIP** en Arduino IDE. La indexación en Arduino Library Manager sigue pendiente; mientras tanto, usa el ZIP o el código fuente. Para [PlatformIO](https://registry.platformio.org/libraries/cxlab/BoopFace), añade esta dependencia al entorno de `platformio.ini`:
+
+```ini
+lib_deps = cxlab/BoopFace@^0.1.0
+```
 
 **En tu programa**, reproduce expresiones por su nombre:
 

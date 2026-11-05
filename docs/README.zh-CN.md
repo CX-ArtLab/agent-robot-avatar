@@ -262,7 +262,11 @@ avatar.setSkin(null); // 回到纯色
 
 **调好，就能直接用。** 选好你的屏幕，调整布局、颜色和帧率，点「导出设置」。把导出的 `eyes_settings.h` 放进示例固件再编译，板子上显示的就是模拟器里的样子。详见[操作步骤](../embedded/README.zh-CN.md#在模拟器里调好直接用到板子上)。
 
-**安装。** 从[嵌入式发布页](https://github.com/CX-ArtLab/boopface/releases/tag/eyes-v0.1.0)下载 `BoopFace-Embedded-0.1.0.zip`，在 Arduino IDE 里选「项目 → 导入库 → 添加 .ZIP 库」安装。Arduino 库管理器和 PlatformIO 收录后再补充搜索安装方式，目前请使用 ZIP 或源码。
+**安装。** 从[嵌入式发布页](https://github.com/CX-ArtLab/boopface/releases/tag/eyes-v0.1.0)下载 `BoopFace-Embedded-0.1.0.zip`，在 Arduino IDE 里选「项目 → 导入库 → 添加 .ZIP 库」安装。Arduino 库管理器索引仍在更新，目前请使用 ZIP 或源码。[PlatformIO](https://registry.platformio.org/libraries/cxlab/BoopFace) 用户可在 `platformio.ini` 的环境配置中添加：
+
+```ini
+lib_deps = cxlab/BoopFace@^0.1.0
+```
 
 **在你自己的程序里**，按名字播放表情：
 

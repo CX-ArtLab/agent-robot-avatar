@@ -263,7 +263,11 @@ avatar.setSkin(null); // вернуться к сплошному цвету
 
 **Настройте, экспортируйте, соберите.** Выберите экран, расположение, цвета и частоту кадров, затем **Экспорт настроек**. Сохраните `eyes_settings.h` рядом с `main.cpp` примера и соберите прошивку. См. [инструкцию](../embedded/README.md). Интерфейс и экспортированные комментарии следуют выбранному языку.
 
-**Установка из ZIP.** Скачайте `BoopFace-Embedded-0.1.0.zip` из [встраиваемого релиза](https://github.com/CX-ArtLab/boopface/releases/tag/eyes-v0.1.0) и добавьте через **Скетч → Подключить библиотеку → Добавить .ZIP-библиотеку** в Arduino IDE. Установка из Arduino Library Manager и реестра PlatformIO появится после регистрации; пока используйте ZIP или исходники.
+**Установка из ZIP.** Скачайте `BoopFace-Embedded-0.1.0.zip` из [встраиваемого релиза](https://github.com/CX-ArtLab/boopface/releases/tag/eyes-v0.1.0) и добавьте через **Скетч → Подключить библиотеку → Добавить .ZIP-библиотеку** в Arduino IDE. Индексация в Arduino Library Manager ещё ожидается; пока используйте ZIP или исходники. Для [PlatformIO](https://registry.platformio.org/libraries/cxlab/BoopFace) добавьте эту зависимость в окружение в `platformio.ini`:
+
+```ini
+lib_deps = cxlab/BoopFace@^0.1.0
+```
 
 **В своей программе** запускайте выражения по имени:
 

@@ -31,7 +31,7 @@ try {
 
 Experimental C++11 robot eyes. Import this ZIP with Arduino IDE's
 Sketch → Include Library → Add .ZIP Library. Examples appear under
-File → Examples → BoopFace Embedded. SerialEyes needs no screen;
+File → Examples → BoopFace. SerialEyes needs no screen;
 OledSSD1306 needs the Adafruit SSD1306 library and a 128×64 I²C OLED.
 
 All board configurations compile in CI; physical verification is pending.
@@ -43,8 +43,9 @@ All board configurations compile in CI; physical verification is pending.
 Use #include <BoopFace.h> and boopface::Eyes. The caller supplies the
 framebuffer, clock and display driver. No Arduino dependency in the core.
 
-Arduino Library Manager and PlatformIO listings will follow; install from ZIP
-or source until they are available. License: MIT (see LICENSE).
+PlatformIO: add cxlab/BoopFace@^${version} to lib_deps in platformio.ini.
+Arduino Library Manager indexing is pending; install from ZIP or source
+until it is available. License: MIT (see LICENSE).
 `);
   execFileSync('python3', ['-c', `
 from pathlib import Path

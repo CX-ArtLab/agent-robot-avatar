@@ -131,9 +131,15 @@ reset
 
 ## Embed the engine in another product
 
-Download `BoopFace-Embedded-0.1.0.zip` from the [embedded release](https://github.com/CX-ArtLab/boopface/releases/tag/eyes-v0.1.0) and import it with *Sketch → Include Library → Add .ZIP Library*, copy `lib/BoopFace` into an Arduino `libraries` folder, or compile its source directory into your C++11 application. Arduino Library Manager and PlatformIO registry listings will follow; use the ZIP or source until then. For non-Arduino projects, no Arduino library is needed.
+Install [BoopFace from PlatformIO](https://registry.platformio.org/libraries/cxlab/BoopFace) by adding this dependency to your environment in `platformio.ini`:
 
-The library ships two Arduino IDE examples under *File → Examples → BoopFace Embedded*: **SerialEyes** draws the eyes as text in the Serial Monitor and needs no screen, and **OledSSD1306** runs them on a 0.96″ 128×64 I²C OLED (install *Adafruit SSD1306* first). Both take action names typed in the Serial Monitor. CI compiles them for ESP32 and RP2040.
+```ini
+lib_deps = cxlab/BoopFace@^0.1.0
+```
+
+For Arduino IDE, download `BoopFace-Embedded-0.1.0.zip` from the [embedded release](https://github.com/CX-ArtLab/boopface/releases/tag/eyes-v0.1.0) and import it with *Sketch → Include Library → Add .ZIP Library*, or copy `lib/BoopFace` into an Arduino `libraries` folder. Arduino Library Manager indexing is pending; use the ZIP or source until then. For non-Arduino projects, compile the source directory into your C++11 application; no Arduino library is needed.
+
+The library ships two Arduino IDE examples under *File → Examples → BoopFace*: **SerialEyes** draws the eyes as text in the Serial Monitor and needs no screen, and **OledSSD1306** runs them on a 0.96″ 128×64 I²C OLED (install *Adafruit SSD1306* first). Both take action names typed in the Serial Monitor. CI compiles them for ESP32 and RP2040.
 
 ```cpp
 #include <BoopFace.h>
@@ -206,4 +212,3 @@ g++ -std=c++11 -I embedded/lib/BoopFace/src \
 - [Adafruit GFX canvas and bitmap formats](https://learn.adafruit.com/adafruit-gfx-graphics-library/minimizing-redraw-flicker)
 
 The library is an original adaptation of this project's own expressions. Third-party display drivers remain under their own licenses; they are not copied into this library. Project support: [Ko-fi](https://ko-fi.com/P0E625WIOI).
-
