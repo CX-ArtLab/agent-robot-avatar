@@ -72,7 +72,8 @@ jobs:
             -O "platform=${{ matrix.platform }}" ${{ matrix.deps && format('-O "lib_deps={0}"', matrix.deps) || '' }}
 
   offline-preview:
-    runs-on: ubuntu-latest
+    # Stable OS/dependency set for the browser and pinned WASM toolchain.
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v5

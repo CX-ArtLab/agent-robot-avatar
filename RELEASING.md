@@ -29,6 +29,10 @@ After the workflow is merged into `main`, open the `boopface` package settings o
 
 See [npm trusted publishing documentation](https://docs.npmjs.com/trusted-publishers/). The workflow uses Node.js 24 and disables package-manager caching for release builds.
 
+Web validation and npm publishing use the official Playwright Docker image, with
+browsers and OS dependencies preinstalled. Keep the image version in both workflows
+aligned with `@playwright/test` in `package-lock.json` when upgrading Playwright.
+
 ### New release
 
 1. Update the package, lockfile, runtime version, demo references, and changelog. Merge the release PR.
