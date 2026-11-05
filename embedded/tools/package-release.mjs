@@ -43,8 +43,9 @@ All board configurations compile in CI; physical verification is pending.
 Use #include <BoopFace.h> and boopface::Eyes. The caller supplies the
 framebuffer, clock and display driver. No Arduino dependency in the core.
 
-Arduino Library Manager and PlatformIO listings will follow; install from ZIP
-or source until they are available. License: MIT (see LICENSE).
+PlatformIO: add cxlab/BoopFace@^${version} to lib_deps in platformio.ini.
+Arduino Library Manager indexing is pending; install from ZIP or source
+until it is available. License: MIT (see LICENSE).
 `);
   execFileSync('python3', ['-c', `
 from pathlib import Path
