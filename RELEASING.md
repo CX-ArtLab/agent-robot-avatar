@@ -84,5 +84,11 @@ are `eyes-v<version>` and never invoke npm publishing.
 6. Arduino Library Manager needs a repository with `library.properties` at its root;
    publish the same library snapshot to `CX-ArtLab/boopface-embedded`, tag the matching
    version there, and submit its URL to `arduino/library-registry`. Keep that snapshot
-   synchronized for later embedded releases. PlatformIO submission is deferred until
-   the maintainer supplies an account. Until listings are live, document ZIP/source installation.
+   synchronized for later embedded releases. Until listings are live, document ZIP/source installation.
+7. Both library manifests must use `BoopFace` as the library name. For PlatformIO,
+   sign in as `cxlab`, pack the complete library ZIP (including its license) with
+   `pio pkg pack BoopFace-Embedded-<version>.zip --output BoopFace-<version>.tar.gz`,
+   review the archive, then publish it with
+   `pio pkg publish BoopFace-<version>.tar.gz --owner cxlab --type library`.
+   Verify `pio pkg show cxlab/BoopFace@<version>` and install that version in a
+   clean project. Published name/version pairs cannot be overwritten.

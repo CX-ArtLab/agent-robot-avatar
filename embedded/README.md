@@ -133,7 +133,7 @@ reset
 
 Download `BoopFace-Embedded-0.1.0.zip` from the [embedded release](https://github.com/CX-ArtLab/boopface/releases/tag/eyes-v0.1.0) and import it with *Sketch → Include Library → Add .ZIP Library*, copy `lib/BoopFace` into an Arduino `libraries` folder, or compile its source directory into your C++11 application. Arduino Library Manager and PlatformIO registry listings will follow; use the ZIP or source until then. For non-Arduino projects, no Arduino library is needed.
 
-The library ships two Arduino IDE examples under *File → Examples → BoopFace Embedded*: **SerialEyes** draws the eyes as text in the Serial Monitor and needs no screen, and **OledSSD1306** runs them on a 0.96″ 128×64 I²C OLED (install *Adafruit SSD1306* first). Both take action names typed in the Serial Monitor. CI compiles them for ESP32 and RP2040.
+The library ships two Arduino IDE examples under *File → Examples → BoopFace*: **SerialEyes** draws the eyes as text in the Serial Monitor and needs no screen, and **OledSSD1306** runs them on a 0.96″ 128×64 I²C OLED (install *Adafruit SSD1306* first). Both take action names typed in the Serial Monitor. CI compiles them for ESP32 and RP2040.
 
 ```cpp
 #include <BoopFace.h>

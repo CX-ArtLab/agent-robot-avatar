@@ -31,7 +31,7 @@ try {
 
 Experimental C++11 robot eyes. Import this ZIP with Arduino IDE's
 Sketch → Include Library → Add .ZIP Library. Examples appear under
-File → Examples → BoopFace Embedded. SerialEyes needs no screen;
+File → Examples → BoopFace. SerialEyes needs no screen;
 OledSSD1306 needs the Adafruit SSD1306 library and a 128×64 I²C OLED.
 
 All board configurations compile in CI; physical verification is pending.
