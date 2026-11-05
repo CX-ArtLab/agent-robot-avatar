@@ -11,7 +11,7 @@ jobs:
     # Keep this version aligned with @playwright/test in package-lock.json.
     container:
       image: mcr.microsoft.com/playwright:v1.62.1-noble
-      options: --ipc=host
+      options: --ipc=host --user 1001
     steps:
       - name: Checkout
         uses: actions/checkout@v5
