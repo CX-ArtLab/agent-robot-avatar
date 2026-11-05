@@ -4,9 +4,10 @@ on:
   push:
     branches: [main]
     paths:
-      - agent-robot-avatar.js
+      - boopface.js
       - src/**
       - demo/**
+      - embedded/preview/boopface-embedded-preview.html
       - scripts/build-pages.mjs
       - scripts/public-pages-files.mjs
       - tests/pages-public.test.mjs

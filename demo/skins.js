@@ -1,5 +1,5 @@
-import './agent-robot-avatar-demo.js';
-import { restoreAppearance, saveAppearance } from './agent-robot-avatar-demo-appearance.js';
+import './boopface-demo.js';
+import { restoreAppearance, saveAppearance } from './boopface-demo-appearance.js';
 import { publicSkins, skinById, featured, filters, applySkin, skinThumbnail, storedSkin, SKIN_STORAGE_KEY } from './skin-catalog.js';
 import { t, skinTitle, copySkinNumber, markDotSeen, settleNewDots } from './skins-i18n.js';
 
@@ -46,7 +46,7 @@ const light = document.getElementById('follow-light');
 const shadow = document.getElementById('ground-shadow');
 // The stage background: each skin's own by default, or a color the viewer
 // picks, which then stays across skins and visits.
-const STAGE_STORAGE_KEY = 'agentRobotAvatarDemoStage';
+const STAGE_STORAGE_KEY = 'boopFaceDemoStage';
 const stageInput = document.getElementById('stage-color');
 let stageColor = null;
 try { stageColor = localStorage.getItem(STAGE_STORAGE_KEY); } catch { /* the choice just is not kept */ }
@@ -288,14 +288,14 @@ function relabel() {
   const nav = document.querySelectorAll('.demo-nav a');
   nav[0].textContent = t('demo');
   nav[1].textContent = t('skins');
-  document.title = `${t('skins')} · Agent Robot Avatar`;
+  document.title = `${t('skins')} · BoopFace`;
   renderCards();
 }
 new MutationObserver(() => { relabel(); updateLinks(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
 document.getElementById('demo-link').addEventListener('click', saveAppearance);
 selectSkin(selected);
 relabel();
-const { balanceControls } = await import('./agent-robot-avatar-demo-layout.js');
+const { balanceControls } = await import('./boopface-demo-layout.js');
 balanceControls();
 settleNewDots();
 document.documentElement.classList.remove('skin-initializing');

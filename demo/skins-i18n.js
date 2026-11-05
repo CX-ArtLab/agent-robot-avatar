@@ -107,7 +107,7 @@ export async function copySkinNumber(id, button, lang = skinLanguage()) {
 
 // Red dots mark what is new. Each one goes away for good once it is clicked;
 // the browser remembers which ones were seen.
-const SEEN_KEY = 'agentRobotAvatarDemoSeen';
+const SEEN_KEY = 'boopFaceDemoSeen';
 function seenDots() {
   try { return new Set(JSON.parse(localStorage.getItem(SEEN_KEY) || '[]')); } catch { return new Set(); }
 }

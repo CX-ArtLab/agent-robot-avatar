@@ -17,7 +17,7 @@ function files(dir, prefix = '') {
 }
 test('public artifact contains only approved demo files and component runtime', () => {
   const actual = files(output);
-  const expected = [...publicDemoFiles, 'agent-robot-avatar.js', ...files(path.join(root, 'src'), 'src/')];
+  const expected = [...publicDemoFiles, 'boopface.js', 'hardware/index.html', ...files(path.join(root, 'src'), 'src/')];
   assert.deepEqual(actual.sort(), expected.sort());
   for (const forbidden of ['materials/materials.js','materials/material-tuner.js','materials/other-material-tuner.js',
     'materials/material-controls.js','materials/material-presets.js','materials/tuner-history.js','materials/layered-materials.js',

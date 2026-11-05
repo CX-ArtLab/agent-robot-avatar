@@ -86,7 +86,7 @@ test('disconnect returns runtime resources to the connected baseline and reattac
     const baseline = { ...window.__runtimeResources };
     const late = [];
     for (let i = 0; i < 20; i += 1) {
-      const face = document.createElement('agent-robot-avatar');
+      const face = document.createElement('boop-face');
       face.setAttribute('motion', 'auto');
       face.addEventListener('action-state', event => late.push(`${event.detail.action}:${event.detail.phase}`));
       document.body.append(face);
@@ -97,7 +97,7 @@ test('disconnect returns runtime resources to the connected baseline and reattac
     await new Promise(resolve => setTimeout(resolve, 120));
     const afterRemove = { ...window.__runtimeResources };
 
-    const reusable = document.createElement('agent-robot-avatar');
+    const reusable = document.createElement('boop-face');
     reusable.setAttribute('motion', 'reduce');
     reusable.setAttribute('wake-on', 'manual');
     document.body.append(reusable);
@@ -220,7 +220,7 @@ test('full and reduced motion settle on the same closed-eye sleep SVG', async ({
   await page.evaluate(() => {
     const reduced = document.querySelector('#avatar');
     reduced.setAttribute('motion', 'reduce');
-    const full = document.createElement('agent-robot-avatar');
+    const full = document.createElement('boop-face');
     full.id = 'full-avatar';
     full.setAttribute('motion', 'full');
     document.body.append(full);
@@ -375,7 +375,7 @@ test('interaction wake policy is target-specific across multiple instances', asy
   const avatar = await load(page);
   const second = page.locator('#second-avatar');
   await page.evaluate(() => {
-    const face = document.createElement('agent-robot-avatar');
+    const face = document.createElement('boop-face');
     face.id = 'second-avatar';
     face.setAttribute('wake-on', 'manual');
     document.body.append(face);
@@ -419,7 +419,7 @@ test('prototype-like and unknown action names fail before disturbing waiting lif
       try { element.play(action); } catch (error) { return error.message; }
       return '';
     }, name);
-    expect(message).toContain('Unknown Agent Robot Avatar action');
+    expect(message).toContain('Unknown BoopFace action');
     expect(await avatar.evaluate(element => ({
       waiting: Boolean(element._waitingFx),
       requested: element._waitingRequested,

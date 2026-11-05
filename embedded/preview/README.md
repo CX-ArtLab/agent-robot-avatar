@@ -1,8 +1,8 @@
 # Offline eyes preview / 离线表情预览器
 
-Download **`agent-robot-eyes-preview.html`** and open it in a browser. The file contains its UI and compiled engine. No install or server is required to run it. On a phone, a file manager's preview may not execute HTML/WebAssembly: use a desktop browser if it only shows source or a static preview.
+Download **`boopface-embedded-preview.html`** and open it in a browser. The file contains its UI and compiled engine. No install or server is required to run it. On a phone, a file manager's preview may not execute HTML/WebAssembly: use a desktop browser if it only shows source or a static preview.
 
-下载 **`agent-robot-eyes-preview.html`**，在电脑上用浏览器打开即可，不用安装、不用联网。手机文件管理器的快速预览可能不执行脚本；遇到只能看源码或无法运行时，请在电脑浏览器中打开。
+下载 **`boopface-embedded-preview.html`**，在电脑上用浏览器打开即可，不用安装、不用联网。手机文件管理器的快速预览可能不执行脚本；遇到只能看源码或无法运行时，请在电脑浏览器中打开。
 
 ## Controls / 使用
 
@@ -25,9 +25,9 @@ Desktop uses a two-column workspace: the module preview, expression buttons and 
 | ST7789 TFT | 240×160 | Centered in 240×240, 40 black rows above/below / 上下各留黑40像素 |
 | SSD1306 OLED | 128×64 | Direct mask, not driver page format / 显示位图，不模拟驱动分页转换 |
 
-The draft additionally includes SSD1306 128×32, ST7735S 128×160, ST7789VW 320×240 and 240×320, GC9A01 circular 240×240, and ST7789 240×135 presets. Custom sizes support integer dimensions from 16 to 512; circles require equal width and height. Each preset now names a specific reference module and uses a project-authored SVG front view with its PCB envelope, glass, mounting holes, pads and flex cable. The portrait/landscape 2-inch choices rotate the same module. `frames/README.md` records the official product photographs, dimension drawings and approximation limits. These are appearance/resolution previews, not added driver support; custom resolutions retain a generic housing. The project-owned `project-demo.css` is copied from the existing `demo/index.html`; no third-party studio UI, manufacturer logos or product photographs are bundled.
+The 32 presets come in five groups: round, square, bar, dev kits and OLEDs. Custom sizes support integer dimensions from 16 to 512; circles require equal width and height. Each preset now names a specific reference module and uses a project-authored SVG front view with its PCB envelope, glass, mounting holes, pads and flex cable. The portrait/landscape 2-inch choices rotate the same module. `frames/README.md` records the official product photographs, dimension drawings and approximation limits. These are appearance/resolution previews, not added driver support; custom resolutions retain a generic housing. The project-owned `project-demo.css` is copied from the existing `demo/index.html`; no third-party studio UI, manufacturer logos or product photographs are bundled.
 
-草稿另外提供窄条 OLED、小型 TFT、横/竖屏、圆屏和宽幅屏；自定义宽高为16–512整数。预设是像素与形状预览，接入例程与实机验证状态独立标明。界面沿用本项目原 Demo 样式；外框按选定模组的官方尺寸图和正面照片自绘为 SVG，保留 PCB、玻璃、孔位与排线的结构差异，来源及近似范围见 `frames/README.md`。自定义分辨率使用通用外框。
+32 种预设分为圆屏、方屏、长条屏、开发套件和 OLED 五组；自定义宽高为16–512整数。预设是像素与形状预览，接入例程与实机验证状态独立标明。界面沿用本项目原 Demo 样式；外框按选定模组的官方尺寸图和正面照片自绘为 SVG，保留 PCB、玻璃、孔位与排线的结构差异，来源及近似范围见 `frames/README.md`。自定义分辨率使用通用外框。
 
 Layout offers preset/contain/cover, face scale and X/Y offsets. Layout and frame changes preserve animation; changing resolution restarts it. Circle clipping is performed by the C++ rasterizer, not just a CSS border. The original TFT preset retains a centered 240×160 eye viewport; contain uses the whole screen. / 布局支持预设、完整适配、铺满裁切、表情大小与位置；圆屏的可视区域直接在C++位图中裁切。
 
@@ -42,7 +42,7 @@ This is a **renderer preview**, not a CPU/display emulator. Actual board speed, 
 
 ## One source of truth / 同源代码
 
-`bridge.cpp` exposes a small C ABI. The build compiles the checked-out `../lib/AgentRobotEyes/src/AgentRobotEyes.cpp`, its header and `AgentRobotGaze.h` with Zig 0.13.0 to WebAssembly. `ui.js` maps its MSB-first 1-bit mask to canvas and supplies simulated target observations; it has no expression geometry or smoothing implementation. `board.js` and `panel.js` only draw housings and panel appearance around that bitmap; the build inlines all three scripts. The footer SHA-256 covers the engine source/header, gaze header, generated Web motion header and bridge.
+`bridge.cpp` exposes a small C ABI. The build compiles the checked-out `../lib/BoopFace/src/BoopFace.cpp`, its header and `BoopFaceGaze.h` with Zig 0.13.0 to WebAssembly. `ui.js` maps its MSB-first 1-bit mask to canvas and supplies simulated target observations; it has no expression geometry or smoothing implementation. `board.js` and `panel.js` only draw housings and panel appearance around that bitmap; the build inlines all three scripts. The footer SHA-256 covers the engine source/header, gaze header, generated Web motion header and bridge.
 
 `bridge.cpp` 仅暴露接口；表情和时间逻辑来自开发板使用的原始 C++ 源文件，没有复制成 JavaScript。页面底部的源码指纹涵盖核心头文件、实现文件及桥接代码。
 
@@ -74,7 +74,7 @@ node embedded/tools/test-preview.mjs
 
 Set the `ZIG` environment variable to the Zig executable if it is not on PATH. An optional output path may follow the build command. Both Zig and its bundled libc are build-time only; the compiled HTML remains MIT-licensed project code plus bundled permissively licensed compiler runtime/libc routines (see third-party notice below).
 
-`test-preview.mjs` checks source freshness and compares native/WASM frames across all actions, all nine presets, non-byte-aligned rows, layout modes, circular clipping, moving-only proximity, interruption, gaze, sleep and 32-bit timer rollover. It requires a C++11 compiler (`g++`, or set `CXX`). A tolerance of eight boundary pixels accounts for compiler/libm rounding, not expression differences. The local test reports its actual frame count and differences.
+`test-preview.mjs` checks source freshness and compares native/WASM frames across all actions, all 32 presets, non-byte-aligned rows, layout modes, circular clipping, moving-only proximity, interruption, gaze, sleep and 32-bit timer rollover. It requires a C++11 compiler (`g++`, or set `CXX`). A tolerance of eight boundary pixels accounts for compiler/libm rounding, not expression differences. The local test reports its actual frame count and differences.
 
 To test the actual local-file UI (after installing the project's npm dev dependencies and Playwright browsers):
 

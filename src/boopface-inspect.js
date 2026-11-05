@@ -1,0 +1,242 @@
+import BoopFace, { registerAvatarExtension } from './boopface-extension-host.js';
+
+const proto = BoopFace.prototype;
+
+const clamp01 = value => Math.max(0, Math.min(1, value));
+const lerp = (a, b, t) => a + (b - a) * t;
+const smooth = t => {
+  t = clamp01(t);
+  return t * t * (3 - 2 * t);
+};
+
+// Finalized from the R59 tuner values supplied by the user.
+const INSPECT_DEFAULTS = Object.freeze({
+  aperture: 16,
+  scanOffset: 16,
+  prepPause: 120,
+  close: 220,
+  holdClosed: 880,
+  down1: 400,
+  holdDown1: 560,
+  up1: 160,
+  holdUp1: 580,
+  center1: 140,
+  holdCenter: 760,
+  down2: 140,
+  holdDown2: 620,
+  up2: 180,
+  holdUp2: 620,
+  center2: 100,
+  holdAfter: 940,
+  open: 260,
+});
+
+const INSPECT_BOUNDS = Object.freeze({
+  aperture: [6, 40],
+  scanOffset: [0, 24],
+  prepPause: [0, 2400],
+  close: [40, 2400],
+  holdClosed: [0, 2400],
+  down1: [40, 2400],
+  holdDown1: [0, 2400],
+  up1: [40, 2400],
+  holdUp1: [0, 2400],
+  center1: [40, 2400],
+  holdCenter: [0, 2400],
+  down2: [40, 2400],
+  holdDown2: [0, 2400],
+  up2: [40, 2400],
+  holdUp2: [0, 2400],
+  center2: [40, 2400],
+  holdAfter: [0, 2400],
+  open: [40, 2400],
+});
+
+const runtimeWindow = typeof window !== 'undefined' ? window : null;
+const inspectConfig = (runtimeWindow?.BoopFaceInspectConfig && typeof runtimeWindow.BoopFaceInspectConfig === 'object')
+  ? runtimeWindow.BoopFaceInspectConfig
+  : {};
+
+function normalizeConfigValue(key, value) {
+  const fallback = INSPECT_DEFAULTS[key];
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return fallback;
+  const [min, max] = INSPECT_BOUNDS[key];
+  return Math.max(min, Math.min(max, numeric));
+}
+
+for (const key of Object.keys(INSPECT_DEFAULTS)) {
+  inspectConfig[key] = normalizeConfigValue(key, inspectConfig[key]);
+}
+if (runtimeWindow) {
+  runtimeWindow.BoopFaceInspectConfig = inspectConfig;
+  runtimeWindow.BoopFaceInspectDefaults = INSPECT_DEFAULTS;
+}
+
+function currentInspectConfig() {
+  const config = {};
+  for (const key of Object.keys(INSPECT_DEFAULTS)) {
+    config[key] = normalizeConfigValue(key, inspectConfig[key]);
+  }
+  return config;
+}
+
+function dispatchInspectState(instance, state) {
+  instance.dispatchEvent(new CustomEvent('face-state', {
+    detail: { state }
+  }));
+}
+
+function makeTimeline(config) {
+  let cursor = 0;
+  const phases = {};
+  const add = key => {
+    phases[`${key}Start`] = cursor;
+    cursor += config[key];
+    phases[`${key}End`] = cursor;
+  };
+  for (const key of [
+    'close','holdClosed','down1','holdDown1','up1','holdUp1','center1','holdCenter',
+    'down2','holdDown2','up2','holdUp2','center2','holdAfter','open'
+  ]) add(key);
+  phases.duration = cursor;
+  return phases;
+}
+
+function move(elapsed, start, end, from, to) {
+  if (elapsed <= start) return from;
+  if (elapsed >= end) return to;
+  const span = Math.max(1, end - start);
+  return lerp(from, to, smooth((elapsed - start) / span));
+}
+
+function verticalShift(elapsed, phases, offset) {
+  if (elapsed < phases.down1Start) return 0;
+  if (elapsed < phases.down1End) return move(elapsed, phases.down1Start, phases.down1End, 0, offset);
+  if (elapsed < phases.holdDown1End) return offset;
+  if (elapsed < phases.up1End) return move(elapsed, phases.up1Start, phases.up1End, offset, -offset);
+  if (elapsed < phases.holdUp1End) return -offset;
+  if (elapsed < phases.center1End) return move(elapsed, phases.center1Start, phases.center1End, -offset, 0);
+  if (elapsed < phases.holdCenterEnd) return 0;
+
+  // Second pass: down to the lowest point, hold, then return directly to center.
+  // Do not overshoot upward again.
+  if (elapsed < phases.down2End) return move(elapsed, phases.down2Start, phases.down2End, 0, offset);
+  if (elapsed < phases.holdDown2End) return offset;
+  if (elapsed < phases.up2End) return move(elapsed, phases.up2Start, phases.up2End, offset, 0);
+  return 0;
+}
+
+// Keep the R60 head motion unchanged: down, up past center, then back to center.
+function animateInspectHead(instance, phases) {
+  if (!instance._headMotion?.animate) return;
+  const token = instance._transitionToken;
+  const start = phases.down1Start;
+  const end = phases.center1End;
+  const duration = Math.max(1, end - start);
+  const offset = time => Math.max(0, Math.min(1, (time - start) / duration));
+
+  instance._headMotion.style.transformBox = 'view-box';
+  instance._headMotion.style.transformOrigin = '120px 120px';
+  const anim = instance._headMotion.animate([
+    { transform: 'translateY(0px)', offset: 0, easing: 'cubic-bezier(.38,0,.25,1)' },
+    { transform: 'translateY(5px)', offset: offset(phases.down1End) },
+    { transform: 'translateY(5px)', offset: offset(phases.holdDown1End), easing: 'cubic-bezier(.35,0,.22,1)' },
+    { transform: 'translateY(-4px)', offset: offset(phases.up1End) },
+    { transform: 'translateY(-4px)', offset: offset(phases.holdUp1End), easing: 'cubic-bezier(.35,0,.22,1)' },
+    { transform: 'translateY(0px)', offset: 1 },
+  ], {
+    duration,
+    delay: start,
+    easing: 'linear',
+    fill: 'forwards',
+  });
+  anim.onfinish = () => {
+    if (token === instance._transitionToken) instance._headMotion.style.transform = 'translateY(0px)';
+  };
+}
+
+proto.inspect = async function() {
+  this.noteActivity();
+  this._inputWanted = false;
+
+  const config = currentInspectConfig();
+  this.reset();
+  if (!(await this._prepareExpression({ normalizePose: true, duration: 160, pause: config.prepPause }))) return;
+
+  const token = this._transitionToken;
+  this._expressionLock = true;
+  this._look.x = 0;
+  this._look.y = 0;
+
+  const phases = makeTimeline(config);
+  this._inspectFx = { start: performance.now(), duration: phases.duration, config, phases };
+  dispatchInspectState(this, 'inspect');
+  animateInspectHead(this, phases);
+
+  await this._wait(phases.duration + 30);
+  if (token !== this._transitionToken) return;
+
+  this._inspectFx = null;
+  this._look.x = 0;
+  this._look.y = 0;
+  this._releaseExpressionLock();
+  dispatchInspectState(this, 'idle');
+};
+
+function drawInspect(now) {
+  const fx = this._inspectFx;
+  if (!fx) return;
+
+  const config = fx.config || currentInspectConfig();
+  const phases = fx.phases || makeTimeline(config);
+  const elapsed = Math.max(0, Math.min(phases.duration, now - fx.start));
+
+  let lidBlend = 1;
+  if (elapsed < phases.closeEnd) {
+    lidBlend = smooth(elapsed / Math.max(1, config.close));
+  } else if (elapsed >= phases.openStart) {
+    lidBlend = 1 - smooth((elapsed - phases.openStart) / Math.max(1, config.open));
+  }
+
+  const yShift = verticalShift(elapsed, phases, config.scanOffset);
+
+  // Keep the original eye geometry. The squint is made only by the top/bottom masks.
+  this._leftEye.setAttribute('transform', `translate(86 ${(126 + yShift).toFixed(2)}) scale(1 1)`);
+  this._rightEye.setAttribute('transform', `translate(154 ${(126 + yShift).toFixed(2)}) scale(1 1)`);
+
+  const apertureHalf = config.aperture / 2;
+  const topEdge = lerp(-36, -apertureHalf, lidBlend);
+  const bottomEdge = lerp(36, apertureHalf, lidBlend);
+
+  for (const top of [this._leftTop, this._rightTop]) {
+    top.setAttribute('y', (topEdge - 90).toFixed(2));
+    top.setAttribute('height', '90');
+    top.setAttribute('transform', `rotate(0 0 ${topEdge.toFixed(2)})`);
+  }
+  for (const bottom of [this._leftBottom, this._rightBottom]) {
+    bottom.setAttribute('y', bottomEdge.toFixed(2));
+    bottom.setAttribute('height', '90');
+    bottom.setAttribute('transform', `rotate(0 0 ${bottomEdge.toFixed(2)})`);
+  }
+}
+
+registerAvatarExtension({
+  name: 'inspect',
+  actions: {
+    inspect() { return this.inspect(); },
+    verify() { return this.inspect(); },
+    review() { return this.inspect(); },
+  },
+  beforePlay(action) {
+    if (action === 'inspect' || action === 'verify' || action === 'review') return;
+    this._inspectFx = null;
+  },
+  reset() {
+    this._inspectFx = null;
+  },
+  draw: drawInspect,
+});
+
+export { BoopFace, INSPECT_DEFAULTS };
+export default BoopFace;

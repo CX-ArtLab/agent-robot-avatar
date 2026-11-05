@@ -1,8 +1,25 @@
 # Changelog
 
-All notable user-facing changes to Agent Robot Avatar are documented here.
+All notable user-facing changes to BoopFace (called Agent Robot Avatar before 0.8) are documented here.
 
 The project follows Semantic Versioning for public releases. Internal development build numbers are not part of the public version history.
+
+## [0.8.0] - 2026-11-05
+
+### Changed
+
+- Agent Robot Avatar is now **BoopFace**. The npm package is `boopface`, the tag is `<boop-face>` and the class is `BoopFace`. Nothing else changes: every expression, gesture, skin and option works the same.
+- The files are now `boopface.js` and `boopface-lite.js`; `boopface/lite` is the lite build.
+- The repository moved to `github.com/CX-ArtLab/boopface` and the demo to `cx-artlab.github.io/boopface`. Old links forward to the new ones.
+
+### Added
+
+- BoopFace Embedded 0.1.0 (experimental), with 28 firmware configurations, a 32-screen simulator at `/hardware/`, and a standalone Arduino ZIP. The simulator and exported settings support 10 languages.
+
+### Deprecated
+
+- `<agent-robot-avatar>`, the `AgentRobotAvatar` export and the `AgentRobotAvatar*` TypeScript types still work and stop working in 1.0. The old tag logs a one-time rename notice.
+- The `agent-robot-avatar` npm package gets no more releases. To upgrade, replace it with `boopface`.
 
 ## [0.7.2] - 2026-11-02
 
@@ -226,18 +243,19 @@ First public release.
 - npm-compatible package metadata for later package publication
 - Contribution guide, issue templates, pull request template, MIT License, and Ko-fi funding metadata
 
-[0.7.2]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.7.2
-[0.7.1]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.7.1
-[0.7.0]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.7.0
-[0.6.0]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.6.0
-[0.5.2]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.5.2
-[0.4.3]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.4.3
-[0.4.2]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.4.2
-[0.3.2]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.3.2
-[0.3.1]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.3.1
-[0.3.0]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.3.0
-[0.2.1]: https://github.com/CX-ArtLab/agent-robot-avatar/releases/tag/v0.2.1
-[0.2.0]: https://github.com/CX-ARTLab/agent-robot-avatar/releases/tag/v0.2.0
-[0.1.0]: https://github.com/CX-ARTLab/agent-robot-avatar/releases/tag/v0.1.0
+[0.8.0]: https://github.com/CX-ArtLab/boopface/releases/tag/v0.8.0
+[0.7.2]: https://github.com/CX-ArtLab/boopface/releases/tag/v0.7.2
+[0.7.1]: https://github.com/CX-ArtLab/boopface/releases/tag/v0.7.1
+[0.7.0]: https://github.com/CX-ArtLab/boopface/releases/tag/v0.7.0
+[0.6.0]: https://github.com/CX-ArtLab/boopface/releases/tag/v0.6.0
+[0.5.2]: https://github.com/CX-ArtLab/boopface/releases/tag/v0.5.2
+[0.4.3]: https://github.com/CX-ArtLab/boopface/releases/tag/v0.4.3
+[0.4.2]: https://github.com/CX-ArtLab/boopface/releases/tag/v0.4.2
+[0.3.2]: https://github.com/CX-ArtLab/boopface/releases/tag/v0.3.2
+[0.3.1]: https://github.com/CX-ArtLab/boopface/releases/tag/v0.3.1
+[0.3.0]: https://github.com/CX-ArtLab/boopface/releases/tag/v0.3.0
+[0.2.1]: https://github.com/CX-ArtLab/boopface/releases/tag/v0.2.1
+[0.2.0]: https://github.com/CX-ArtLab/boopface/releases/tag/v0.2.0
+[0.1.0]: https://github.com/CX-ArtLab/boopface/releases/tag/v0.1.0
 
 

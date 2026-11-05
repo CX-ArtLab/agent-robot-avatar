@@ -1,14 +1,14 @@
-# Agent Robot Eyes — embedded preview
+# BoopFace Embedded
 
 [简体中文](README.zh-CN.md) · [Main project](../README.md)
 
-An **experimental**, portable C++11 implementation of the Agent Robot Avatar eye expressions. It renders eyes only, with no head, antenna, dragging, squeezing, pointer listeners, network client or AI model. The embedded package is independent of the SVG component and its Demo UI.
+An **experimental**, portable C++11 implementation of the BoopFace eye expressions. It renders eyes only, with no head, antenna, dragging, squeezing, pointer listeners, network client or AI model. The embedded package is independent of the SVG component and its Demo UI.
 
 The expression engine is independent of ESP32, Arduino and the display driver. ESP32 and Raspberry Pi Pico are reference integrations, not a promise of compatibility with every board or display. **Compilation and host tests do not certify physical hardware performance, wiring or visual fidelity.** No physical-board testing has been performed for this preview.
 
 ## Architecture and scope
 
-- `lib/AgentRobotEyes/`: standalone MIT C++11 library; no third-party runtime dependencies or heap allocations in the core.
+- `lib/BoopFace/`: standalone MIT C++11 library; no third-party runtime dependencies or heap allocations in the core.
 - `examples/arduino/`: display transport and serial command example using Adafruit drivers.
 - `platformio.ini`: pinned reference build configurations.
 - `tests/`: native engine tests, including framebuffer guards and 32-bit clock rollover.
@@ -18,9 +18,31 @@ The Web and embedded implementations share expression names and visual design. T
 
 ## Offline animation preview (no hardware)
 
-Download [`preview/agent-robot-eyes-preview.html`](preview/agent-robot-eyes-preview.html) as a raw file and open it in a current browser, or double-click it in a local checkout. No server, compiler, Python, Node.js, CDN or network is needed to run the built file. Saving GitHub's file-view page is not the same as downloading the raw HTML.
+Download [`preview/boopface-embedded-preview.html`](preview/boopface-embedded-preview.html) as a raw file and open it in a current browser, or double-click it in a local checkout. No server, compiler, Python, Node.js, CDN or network is needed to run the built file. Saving GitHub's file-view page is not the same as downloading the raw HTML.
 
-The preview runs **this exact embedded C++ engine compiled to WebAssembly**, not the separate Web avatar renderer. It offers 18 actions (17 original expressions plus the added waiting-wave variant), cycling/manual interruption, pause/step, playback speed, explicit gaze, blink/transition switches, and nine screen presets plus custom resolutions from 16 to 512 pixels per axis. Layout controls include aspect-preserving fit, crop-to-fill, zoom, offsets and circular clipping. Named presets use SVG front views of specific reference modules; see [artwork sources](preview/frames/README.md). TFT mode centers a 240×160 mask inside a 240×240 canvas, matching the Arduino example. OLED mode renders a 128×64 mask; it does not emulate the display driver's page conversion. Configuration changes restart the simulation, and hidden tabs freeze its clock. This validates animation, not board performance or screen electronics. See [preview/README.md](preview/README.md) for rebuilding and tests.
+The preview runs **this exact embedded C++ engine compiled to WebAssembly**, not the separate Web avatar renderer. It offers 18 actions (17 original expressions plus the added waiting-wave variant), cycling/manual interruption, pause/step, playback speed, explicit gaze, blink/transition switches, and 32 screen presets in five groups (round, square, bar, dev kits and OLEDs) plus custom resolutions from 16 to 512 pixels per axis. Layout controls include aspect-preserving fit, crop-to-fill, zoom, offsets and circular clipping. Named presets use SVG front views of specific reference modules; see [artwork sources](preview/frames/README.md). TFT mode centers a 240×160 mask inside a 240×240 canvas, matching the Arduino example. OLED mode renders a 128×64 mask; it does not emulate the display driver's page conversion. Changing the screen restarts the simulation; timing, layout and display changes apply without restarting, and hidden tabs freeze its clock. This validates animation, not board performance or screen electronics. See [preview/README.md](preview/README.md) for rebuilding and tests.
+
+The [online simulator](https://cx-artlab.github.io/boopface/hardware/?lang=en) supports 10 languages; exported settings comments follow the selected language. You can also download the standalone offline HTML from the embedded release.
+
+## From the preview to your board
+
+Tune the eyes in the preview, then build the firmware with exactly those settings, without editing code:
+
+1. Open the preview and pick your screen. The **Model and wiring** panel shows the board, its wiring and the build command.
+2. Adjust layout, colours, frame rate, blinking and transitions, and turn the module if it is mounted turned.
+3. Press **Export settings**, then copy or download the text as `eyes_settings.h`.
+4. Put the file in `embedded/examples/arduino/`, next to `main.cpp`.
+5. Build and upload the environment named in the file's first lines, for example `pio run -d embedded -e esp32-s3-st7789 -t upload`.
+
+| Setting in `eyes_settings.h` | Preview control |
+| --- | --- |
+| `EYES_MAX_FPS`, `EYES_AUTO_BLINK`, `EYES_TRANSITION_MS` | Frame-rate cap, blinking, transitions |
+| `EYES_FIT_COVER`, `EYES_ZOOM`, `EYES_OFFSET_X`, `EYES_OFFSET_Y` | Layout: fit or fill, size, position |
+| `EYES_INK_RGB`, `EYES_BACKGROUND_RGB` | Eye and background colours, or a palette (colour panels only) |
+| `EYES_TURN` | Screen rotation 90°; if the eyes appear upside down, change `3` to `1` |
+| `EYES_FULL_PANEL` | On the 240×240 reference module, use the whole panel instead of the 240×160 strip |
+
+Without the file the firmware uses its defaults, and git ignores it. Gaze following needs a camera or distance sensor on the board, so it is not part of the export: the library's `GazeTracker` (`lib/BoopFace/src/BoopFaceGaze.h`) takes the target position your sensor reports.
 
 ## Reference configurations
 
@@ -47,6 +69,8 @@ The preview runs **this exact embedded C++ engine compiled to WebAssembly**, not
 | `waveshare-amoled-175` | Waveshare ESP32-S3-Touch-AMOLED-1.75 | CO5300 466×466 on quad SPI (pins from the ESPHome device page) | Build target; physical verification pending |
 | `t-rgb-21` | LilyGO T-RGB 2.1″ | ST7701S 480×480 RGB panel via XL9535, octal PSRAM | Build target; physical verification pending |
 | `guition-4848s040` | Guition ESP32-4848S040 (86 box) | ST7701S 480×480 RGB panel, octal PSRAM | Build target; physical verification pending |
+| `nucleo-f411re-st7789` | ST NUCLEO-F411RE (STM32F411) | ST7789, 240×240 SPI TFT on the Arduino header | Build target; physical verification pending |
+| `blackpill-f411-ssd1306` | WeAct Black Pill STM32F411CE | SSD1306, 128×64 I²C OLED, address `0x3C` | Build target; physical verification pending |
 
 `examples/arduino/boards.h` holds one small display adapter per configuration; the main program is shared. Pin numbers follow the vendors' documentation (Waveshare wiki, LilyGO `pin_config.h`, the CYD community pin list). The Dial and StickC Plus2 build on the StampS3 and M5Stick-C board definitions of the pinned PlatformIO platform; M5Unified identifies the actual board at runtime. Round panels enable the core's circular layout. T-RGB, the Guition panel and the BOX-3 follow the device configurations bundled with Arduino_GFX 1.4.9; the AMOLED pins come from the ESPHome device page rather than a vendor file. Known things to check on real hardware: ST7735 boards come in several variants (try `INITR_GREENTAB` if the picture is offset or garbled); the CO5300 may need a small column offset; T-RGB revisions differ in their ST7701 init sequence. The eyes are white on black, so a swapped red/blue order does not show. If you run one of these on real hardware, please open a *Hardware report* issue so the preview can mark it as community-verified.
 
@@ -56,17 +80,17 @@ The TFT example reserves a centered 240×160 eye viewport. Its mask is 4,800 byt
 
 Use the **GPIO names**, not the physical header pin numbers. This example assumes a 3.3 V-compatible screen module with exposed CS, DC and reset. Built-in screens and other module revisions need their own pin configuration and initialization.
 
-| ST7789 connection | ESP32-S3 GPIO | Pico GPIO |
-| --- | --- | --- |
-| SCK / SCL | 12 | GP18 |
-| MOSI / SDA | 11 | GP19 |
-| CS | 10 | GP17 |
-| DC | 9 | GP20 |
-| RST / RES | 8 | GP21 |
-| GND | GND | GND |
-| VCC | 3.3 V | 3.3 V |
+| ST7789 connection | ESP32-S3 GPIO | Pico GPIO | NUCLEO-F411RE |
+| --- | --- | --- | --- |
+| SCK / SCL | 12 | GP18 | D13 (PA5) |
+| MOSI / SDA | 11 | GP19 | D11 (PA7) |
+| CS | 10 | GP17 | D10 (PB6) |
+| DC | 9 | GP20 | D9 (PC7) |
+| RST / RES | 8 | GP21 | D8 (PA9) |
+| GND | GND | GND | GND |
+| VCC | 3.3 V | 3.3 V | 3V3 |
 
-MISO is unused. Backlight wiring depends on the screen module; follow its specification. The example does not drive a backlight pin. For the ESP32 OLED reference, connect SDA to GPIO21, SCL to GPIO22, GND to GND and the compatible module's VCC to 3.3 V. Change `0x3C` if the OLED uses another address.
+MISO is unused. Backlight wiring depends on the screen module; follow its specification. The example does not drive a backlight pin. For the ESP32 OLED reference, connect SDA to GPIO21, SCL to GPIO22, GND to GND and the compatible module's VCC to 3.3 V. Change `0x3C` if the OLED uses another address. On the Black Pill, connect the OLED's SDA to PB7 and SCL to PB6; upload over USB in DFU mode (hold BOOT0 and tap NRST), and the serial commands arrive over the same USB cable. The NUCLEO uploads and talks serial through its ST-LINK USB port.
 
 ### Build and run
 
@@ -77,6 +101,10 @@ pio run -d embedded -e esp32-s3-st7789
 pio run -d embedded -e pico-st7789
 pio run -d embedded -e esp32-ssd1306
 ```
+
+To build with settings tuned in the preview, see [From the preview to your board](#from-the-preview-to-your-board).
+
+Every board shares the same eyes library; only its screen code differs. If you want a tidy copy for your project, keep your board's `[env:...]` section in `platformio.ini` and its block in `examples/arduino/boards.h`, and delete the others.
 
 Upload **only the environment matching your board and wiring**:
 
@@ -103,15 +131,17 @@ reset
 
 ## Embed the engine in another product
 
-Copy `lib/AgentRobotEyes` into an Arduino `libraries` folder, or compile its source directory into your C++11 application. For non-Arduino projects, no Arduino library is needed.
+Download `BoopFace-Embedded-0.1.0.zip` from the [embedded release](https://github.com/CX-ArtLab/boopface/releases/tag/eyes-v0.1.0) and import it with *Sketch → Include Library → Add .ZIP Library*, copy `lib/BoopFace` into an Arduino `libraries` folder, or compile its source directory into your C++11 application. Arduino Library Manager and PlatformIO registry listings will follow; use the ZIP or source until then. For non-Arduino projects, no Arduino library is needed.
+
+The library ships two Arduino IDE examples under *File → Examples → BoopFace Embedded*: **SerialEyes** draws the eyes as text in the Serial Monitor and needs no screen, and **OledSSD1306** runs them on a 0.96″ 128×64 I²C OLED (install *Adafruit SSD1306* first). Both take action names typed in the Serial Monitor. CI compiles them for ESP32 and RP2040.
 
 ```cpp
-#include <AgentRobotEyes.h>
-agent_robot::Eyes eyes;
+#include <BoopFace.h>
+boopface::Eyes eyes;
 uint8_t pixels[4800]; // 240 x 160, 1 bit per pixel
 
 bool initEyes(uint32_t nowMs) {
-  agent_robot::EyesConfig config;
+  boopface::EyesConfig config;
   if (!eyes.begin(config, pixels, sizeof pixels, nowMs)) return false;
   eyes.startWaiting(nowMs);
   return true;
@@ -162,8 +192,8 @@ The host test uses GCC/Clang address and undefined-behavior sanitizers. CI separ
 For a host-rendered frame:
 
 ```sh
-g++ -std=c++11 -I embedded/lib/AgentRobotEyes/src \
-  embedded/lib/AgentRobotEyes/src/AgentRobotEyes.cpp \
+g++ -std=c++11 -I embedded/lib/BoopFace/src \
+  embedded/lib/BoopFace/src/BoopFace.cpp \
   embedded/tools/render-frame.cpp -o /tmp/render-eyes
 /tmp/render-eyes love 900 > /tmp/love.pbm
 ```

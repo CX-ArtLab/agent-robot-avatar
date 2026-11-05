@@ -1,7 +1,7 @@
-import AgentRobotAvatar, { VERSION, SKIN_NAMES, type AgentRobotAvatarAction } from 'agent-robot-avatar/lite';
+import BoopFace, { VERSION, SKIN_NAMES, type BoopFaceAction } from 'boopface/lite';
 
-const avatar = new AgentRobotAvatar();
-const action: AgentRobotAvatarAction = 'love';
+const avatar = new BoopFace();
+const action: BoopFaceAction = 'love';
 avatar.play(action);
 const version: string = VERSION;
 void version;

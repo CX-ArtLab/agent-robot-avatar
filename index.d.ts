@@ -1,4 +1,4 @@
-export type AgentRobotAvatarAction =
+export type BoopFaceAction =
   | 'idle'
   | 'bored'
   | 'waiting'
@@ -18,13 +18,13 @@ export type AgentRobotAvatarAction =
   | 'random'
   | 'sleep'
   | 'wake'
-  | AgentRobotAvatarDeprecatedAction;
+  | BoopFaceDeprecatedAction;
 
 /**
  * Older names that still play the same action but log a one-time deprecation
  * notice. They are removed in 1.0.
  */
-export type AgentRobotAvatarDeprecatedAction =
+export type BoopFaceDeprecatedAction =
   | 'wait'
   | 'send'
   | 'failed'
@@ -44,7 +44,7 @@ export type AgentRobotAvatarDeprecatedAction =
  * followed by two digits, so `305` is the fifth skin of series 3. A number is
  * permanent; titles may be reworded, numbers never change and are never reused.
  */
-export type AgentRobotAvatarSkin =
+export type BoopFaceSkin =
   | '101' | '102' | '103' | '104' | '105' | '106' | '201' | '202' | '203' | '204' | '205' | '206'
   | '301' | '302' | '303' | '304' | '305' | '306' | '307' | '308' | '309' | '310' | '311' | '312'
   | '401' | '402' | '403' | '404' | '405' | '406' | '501' | '502' | '503' | '504' | '505' | '506'
@@ -63,7 +63,7 @@ export type AgentRobotAvatarSkin =
   | '1710' | '1711' | '1712' | '1713' | '1714' | '1715' | '1716' | '1717';
 
 /** Display information for one skin. */
-export interface AgentRobotAvatarSkinInfo {
+export interface BoopFaceSkinInfo {
   /** The series id, such as `'glaze'` or `'metal'`. */
   readonly series: string;
   /** Chinese title. */
@@ -75,28 +75,28 @@ export interface AgentRobotAvatarSkinInfo {
 }
 
 /** A group of related skins, in gallery order. */
-export interface AgentRobotAvatarSkinSeries {
+export interface BoopFaceSkinSeries {
   readonly id: string;
   /** The first digits of every skin number in the series. */
   readonly number: number;
   readonly title: string;
   readonly titleEn: string;
-  readonly skins: readonly AgentRobotAvatarSkin[];
+  readonly skins: readonly BoopFaceSkin[];
 }
 
 /** Every skin number, in gallery order. */
-export declare const SKIN_NAMES: readonly AgentRobotAvatarSkin[];
+export declare const SKIN_NAMES: readonly BoopFaceSkin[];
 /** Titles and colors for every skin, by number. */
-export declare const SKINS: Readonly<Record<AgentRobotAvatarSkin, AgentRobotAvatarSkinInfo>>;
+export declare const SKINS: Readonly<Record<BoopFaceSkin, BoopFaceSkinInfo>>;
 /** The skin series, in gallery order. */
-export declare const SKIN_SERIES: readonly AgentRobotAvatarSkinSeries[];
+export declare const SKIN_SERIES: readonly BoopFaceSkinSeries[];
 /**
  * Skin painters download the first time a skin is used, so the first skin shows
  * a moment after it is set. Await this to load them in advance.
  */
 export declare function loadSkins(): Promise<void>;
 
-export type AgentRobotAvatarState =
+export type BoopFaceState =
   | 'idle'
   | 'happy'
   | 'sad'
@@ -115,7 +115,7 @@ export type AgentRobotAvatarState =
   | 'squeeze'
   | 'antenna-drag';
 
-export type AgentRobotAvatarCanonicalAction =
+export type BoopFaceCanonicalAction =
   | 'idle'
   | 'bored'
   | 'waiting'
@@ -136,33 +136,33 @@ export type AgentRobotAvatarCanonicalAction =
   | 'squeeze'
   | 'antenna-drag';
 
-export type AgentRobotAvatarActionPhase = 'start' | 'end' | 'cancel';
-export type AgentRobotAvatarActionSource = 'api' | 'interaction' | 'automatic';
-export type AgentRobotAvatarWakeOn = 'activity' | 'interaction' | 'manual';
-export type AgentRobotAvatarMotion = 'auto' | 'reduce' | 'full';
-export interface AgentRobotAvatarWaitingOptions {
+export type BoopFaceActionPhase = 'start' | 'end' | 'cancel';
+export type BoopFaceActionSource = 'api' | 'interaction' | 'automatic';
+export type BoopFaceWakeOn = 'activity' | 'interaction' | 'manual';
+export type BoopFaceMotion = 'auto' | 'reduce' | 'full';
+export interface BoopFaceWaitingOptions {
   variant?: 'default' | 'spin' | 'wrap' | 'wave';
 }
 
-export interface AgentRobotAvatarActionStateDetail {
-  action: AgentRobotAvatarCanonicalAction;
-  phase: AgentRobotAvatarActionPhase;
-  source: AgentRobotAvatarActionSource;
+export interface BoopFaceActionStateDetail {
+  action: BoopFaceCanonicalAction;
+  phase: BoopFaceActionPhase;
+  source: BoopFaceActionSource;
 }
 
-export interface AgentRobotAvatarEventMap extends HTMLElementEventMap {
-  'face-state': CustomEvent<{ state: AgentRobotAvatarState }>;
-  'action-state': CustomEvent<AgentRobotAvatarActionStateDetail>;
+export interface BoopFaceEventMap extends HTMLElementEventMap {
+  'face-state': CustomEvent<{ state: BoopFaceState }>;
+  'action-state': CustomEvent<BoopFaceActionStateDetail>;
   'head-roundness-change': CustomEvent<{ value: number; version: string }>;
 }
 
-export declare class AgentRobotAvatar extends HTMLElement {
-  play(action: AgentRobotAvatarAction): this | Promise<void>;
+export declare class BoopFace extends HTMLElement {
+  play(action: BoopFaceAction): this | Promise<void>;
   reset(): this;
   sleep(): this | Promise<void>;
   wake(): this | Promise<void>;
   input(active?: boolean): this | Promise<void>;
-  startWaiting(options?: AgentRobotAvatarWaitingOptions): Promise<this>;
+  startWaiting(options?: BoopFaceWaitingOptions): Promise<this>;
   stopWaiting(): this;
   setPointerFollow(enabled?: boolean): this;
   /** @deprecated Removed in 0.6; does nothing and logs a one-time notice. Deleted in 1.0. */
@@ -176,30 +176,63 @@ export declare class AgentRobotAvatar extends HTMLElement {
    * Same as the `skin` attribute; `null` or `'none'` returns to the flat color.
    * Throws for an unknown number.
    */
-  setSkin(skin?: AgentRobotAvatarSkin | number | 'none' | null): this;
-  getSkin(): AgentRobotAvatarSkin | null;
+  setSkin(skin?: BoopFaceSkin | number | 'none' | null): this;
+  getSkin(): BoopFaceSkin | null;
   noteActivity(wake?: boolean): void;
 
-  addEventListener<K extends keyof AgentRobotAvatarEventMap>(
+  addEventListener<K extends keyof BoopFaceEventMap>(
     type: K,
-    listener: (this: AgentRobotAvatar, event: AgentRobotAvatarEventMap[K]) => unknown,
+    listener: (this: BoopFace, event: BoopFaceEventMap[K]) => unknown,
     options?: boolean | AddEventListenerOptions,
   ): void;
 
-  removeEventListener<K extends keyof AgentRobotAvatarEventMap>(
+  removeEventListener<K extends keyof BoopFaceEventMap>(
     type: K,
-    listener: (this: AgentRobotAvatar, event: AgentRobotAvatarEventMap[K]) => unknown,
+    listener: (this: BoopFace, event: BoopFaceEventMap[K]) => unknown,
     options?: boolean | EventListenerOptions,
   ): void;
 }
 
 export declare const VERSION: string;
 
-export default AgentRobotAvatar;
+export default BoopFace;
+
+/** @deprecated Renamed to BoopFace in 0.8; the old names go away in 1.0. */
+export { BoopFace as AgentRobotAvatar };
+/** @deprecated Use BoopFaceAction. */
+export type AgentRobotAvatarAction = BoopFaceAction;
+/** @deprecated Use BoopFaceActionPhase. */
+export type AgentRobotAvatarActionPhase = BoopFaceActionPhase;
+/** @deprecated Use BoopFaceActionSource. */
+export type AgentRobotAvatarActionSource = BoopFaceActionSource;
+/** @deprecated Use BoopFaceActionStateDetail. */
+export type AgentRobotAvatarActionStateDetail = BoopFaceActionStateDetail;
+/** @deprecated Use BoopFaceCanonicalAction. */
+export type AgentRobotAvatarCanonicalAction = BoopFaceCanonicalAction;
+/** @deprecated Use BoopFaceDeprecatedAction. */
+export type AgentRobotAvatarDeprecatedAction = BoopFaceDeprecatedAction;
+/** @deprecated Use BoopFaceEventMap. */
+export type AgentRobotAvatarEventMap = BoopFaceEventMap;
+/** @deprecated Use BoopFaceMotion. */
+export type AgentRobotAvatarMotion = BoopFaceMotion;
+/** @deprecated Use BoopFaceSkin. */
+export type AgentRobotAvatarSkin = BoopFaceSkin;
+/** @deprecated Use BoopFaceSkinInfo. */
+export type AgentRobotAvatarSkinInfo = BoopFaceSkinInfo;
+/** @deprecated Use BoopFaceSkinSeries. */
+export type AgentRobotAvatarSkinSeries = BoopFaceSkinSeries;
+/** @deprecated Use BoopFaceState. */
+export type AgentRobotAvatarState = BoopFaceState;
+/** @deprecated Use BoopFaceWaitingOptions. */
+export type AgentRobotAvatarWaitingOptions = BoopFaceWaitingOptions;
+/** @deprecated Use BoopFaceWakeOn. */
+export type AgentRobotAvatarWakeOn = BoopFaceWakeOn;
 
 declare global {
   interface HTMLElementTagNameMap {
-    'agent-robot-avatar': AgentRobotAvatar;
+    'boop-face': BoopFace;
+    /** @deprecated Use <boop-face>. */
+    'agent-robot-avatar': BoopFace;
   }
 }
 

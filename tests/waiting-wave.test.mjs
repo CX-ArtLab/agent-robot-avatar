@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import AgentRobotAvatar from '../src/agent-robot-avatar-actions.js';
-import { WAVE_WAITING_CYCLE } from '../src/agent-robot-avatar-waiting.js';
+import BoopFace from '../src/boopface-actions.js';
+import { WAVE_WAITING_CYCLE } from '../src/boopface-waiting.js';
 
 let clock = 0;
 Object.defineProperty(globalThis, 'performance', { value: { now: () => clock }, configurable: true });
@@ -13,7 +13,7 @@ class SvgNode {
 }
 function instance() {
   clock = 0;
-  const face = Object.create(AgentRobotAvatar.prototype), waits = [], events = [];
+  const face = Object.create(BoopFace.prototype), waits = [], events = [];
   const pose = {w:54,h:58,rx:27,topY:-36,bottomY:36,topAL:0,topAR:0,bottomAL:0,bottomAR:0,scale:1};
   Object.assign(face, {
     _state:'idle', _pose:{...pose}, _fromPose:{...pose}, _toPose:{...pose},

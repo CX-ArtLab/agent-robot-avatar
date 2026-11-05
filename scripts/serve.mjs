@@ -47,5 +47,5 @@ createServer(async (request, response) => {
     response.end('Not found');
   }
 }).listen(port, '127.0.0.1', () => {
-  console.log(`Agent Robot Avatar demo: http://127.0.0.1:${port}/demo/`);
+  console.log(`BoopFace demo: http://127.0.0.1:${port}/demo/`);
 });

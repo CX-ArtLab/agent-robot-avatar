@@ -66,7 +66,7 @@ jobs:
           if (release.draft || !release.published_at || release.prerelease !== prerelease) {
             throw new Error('Release must be published and its prerelease flag must match the package version');
           }
-          if (pkg.name !== 'agent-robot-avatar') throw new Error('Unexpected package name');
+          if (pkg.name !== 'boopface') throw new Error('Unexpected package name');
           appendFileSync(process.env.GITHUB_OUTPUT, `npm-tag=${prerelease ? 'next' : 'latest'}\n`);
           NODE
 

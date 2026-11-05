@@ -11,7 +11,7 @@ for (const [name, viewport, language] of [
     const requests = new Set();
     let release;
     const gate = new Promise(resolve => { release = resolve; });
-    await page.route('**/agent-robot-avatar-demo-*.js', async route => {
+    await page.route('**/boopface-demo-*.js', async route => {
       requests.add(new URL(route.request().url()).pathname.split('/').at(-1));
       await gate;
       await route.continue();
@@ -20,8 +20,8 @@ for (const [name, viewport, language] of [
     try {
       await page.goto(`/demo/?lang=${language}`, { waitUntil: 'commit' });
       // Even the last module must be requested while the first is still held.
-      await expect.poll(() => requests.has('agent-robot-avatar-demo-controls.js')
-        && requests.has('agent-robot-avatar-demo-reply-loop.js')).toBe(true);
+      await expect.poll(() => requests.has('boopface-demo-controls.js')
+        && requests.has('boopface-demo-reply-loop.js')).toBe(true);
       await expect(page.locator('.controls button[data-action]')).toHaveCount(17);
       await expect(page.locator('#demoSettingsPanelToggle')).toBeAttached();
       await expect(page.locator('#demoHeadRoundness')).toBeAttached();
@@ -74,7 +74,7 @@ for (const [name, viewport, language] of [
 }
 
 test('a failed startup module gives a visible error instead of a broken partial demo', async ({ page }) => {
-  await page.route('**/agent-robot-avatar-demo-controls.js', route => route.abort());
+  await page.route('**/boopface-demo-controls.js', route => route.abort());
   await page.goto('/demo/');
   await expect(page.locator('#demoLoadStatus')).toHaveText('The demo could not load. Please reload to try again.');
   await expect(page.locator('#demoLoadStatus')).toBeVisible();

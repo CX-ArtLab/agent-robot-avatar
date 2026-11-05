@@ -5,21 +5,21 @@ test('loads the component and exposes its public controls', async ({ page }) => 
   page.on('pageerror', error => pageErrors.push(error.message));
 
   await page.goto('/examples/basic.html');
-  const avatar = page.locator('agent-robot-avatar');
+  const avatar = page.locator('boop-face');
 
   await expect(avatar).toBeVisible();
   await expect(avatar).toHaveCSS('width', '140px');
   await expect.poll(() => avatar.evaluate(element => Boolean(element.shadowRoot?.querySelector('svg')))).toBe(true);
 
   const api = await avatar.evaluate(element => ({
-    registered: customElements.get('agent-robot-avatar') === element.constructor,
+    registered: customElements.get('boop-face') === element.constructor,
     play: typeof element.play,
     reset: typeof element.reset,
     pointerFollow: typeof element.setPointerFollow,
     roundness: typeof element.setHeadRoundness,
     waiting: typeof element.startWaiting,
     antennaFlash: typeof element.setAntennaFlash,
-    demoGlobal: typeof window.AgentRobotAvatarDemoBuild,
+    demoGlobal: typeof window.BoopFaceDemoBuild,
   }));
 
   expect(api).toEqual({
@@ -35,14 +35,56 @@ test('loads the component and exposes its public controls', async ({ page }) => 
   expect(pageErrors).toEqual([]);
 });
 
+test('keeps the old <agent-robot-avatar> tag and export working until 1.0', async ({ page }) => {
+  const pageErrors = [];
+  const warnings = [];
+  page.on('pageerror', error => pageErrors.push(error.message));
+  page.on('console', message => { if (message.type() === 'warning') warnings.push(message.text()); });
+
+  await page.goto('/examples/basic.html');
+  const result = await page.evaluate(async () => {
+    const module = await import('/boopface.js');
+    const lite = await import('/boopface-lite.js');
+    const first = document.createElement('agent-robot-avatar');
+    const second = document.createElement('agent-robot-avatar');
+    document.body.append(first, second);
+    const states = [];
+    first.addEventListener('face-state', event => states.push(event.detail.state));
+    await first.play('input');
+    return {
+      oldExport: module.AgentRobotAvatar === module.BoopFace,
+      liteOldExport: lite.AgentRobotAvatar === lite.BoopFace,
+      isBoopFace: first instanceof module.BoopFace && second instanceof module.BoopFace,
+      hasSvg: Boolean(first.shadowRoot?.querySelector('svg')),
+      states,
+      windowAlias: window.AgentRobotAvatar === window.BoopFace,
+      versionAlias: window.AgentRobotAvatarVersion === window.BoopFaceVersion,
+    };
+  });
+
+  expect(result).toEqual({
+    oldExport: true,
+    liteOldExport: true,
+    isBoopFace: true,
+    hasSvg: true,
+    states: ['input'],
+    windowAlias: true,
+    versionAlias: true,
+  });
+  expect(warnings.filter(text => text.includes('<agent-robot-avatar>'))).toEqual([
+    'boopface: <agent-robot-avatar> is now <boop-face>. The old tag stops working in 1.0.',
+  ]);
+  expect(pageErrors).toEqual([]);
+});
+
 test('constructs usable dynamic and direct instances', async ({ page }) => {
   const pageErrors = [];
   page.on('pageerror', error => pageErrors.push(error.message));
 
   await page.goto('/examples/basic.html');
   const result = await page.evaluate(async () => {
-    const { AgentRobotAvatar: Avatar } = await import('/agent-robot-avatar.js');
-    const dynamic = document.createElement('agent-robot-avatar');
+    const { BoopFace: Avatar } = await import('/boopface.js');
+    const dynamic = document.createElement('boop-face');
     const direct = new Avatar();
     dynamic.id = 'dynamic-avatar';
     direct.id = 'direct-avatar';
@@ -54,7 +96,7 @@ test('constructs usable dynamic and direct instances', async ({ page }) => {
     await dynamic.play('input');
 
     return {
-      exportMatchesRegistry: Avatar === customElements.get('agent-robot-avatar'),
+      exportMatchesRegistry: Avatar === customElements.get('boop-face'),
       instances: [dynamic, direct].map(element => ({
         registered: element instanceof Avatar,
         play: typeof element.play,
@@ -75,7 +117,7 @@ test('constructs usable dynamic and direct instances', async ({ page }) => {
 
 test('changes state and returns to idle', async ({ page }) => {
   await page.goto('/examples/basic.html');
-  const avatar = page.locator('agent-robot-avatar');
+  const avatar = page.locator('boop-face');
 
   const states = await avatar.evaluate(async element => {
     const seen = [];
@@ -94,14 +136,14 @@ test('interactive demo loads without runtime errors', async ({ page }) => {
   page.on('pageerror', error => pageErrors.push(error.message));
 
   await page.goto('/demo/');
-  await expect(page.locator('agent-robot-avatar')).toBeVisible();
+  await expect(page.locator('boop-face')).toBeVisible();
   await expect(page.locator('[data-action="waiting-spin"]')).toBeVisible();
-  await expect(page.locator('#agent-demo-build')).toHaveText('Demo 0.7.2');
+  await expect(page.locator('#agent-demo-build')).toHaveText('Demo 0.8.0');
   const versions = await page.evaluate(() => ({
-    runtime: window.AgentRobotAvatarVersion,
-    demo: window.AgentRobotAvatarDemoBuild,
+    runtime: window.BoopFaceVersion,
+    demo: window.BoopFaceDemoBuild,
   }));
-  expect(versions).toEqual({ runtime: '0.7.2', demo: '0.7.2' });
+  expect(versions).toEqual({ runtime: '0.8.0', demo: '0.8.0' });
   expect(pageErrors).toEqual([]);
 });
 
@@ -113,7 +155,7 @@ test('demo follows the linked language and remembers a manual choice', async ({ 
   await page.locator('[data-lang="zh-TW"]').evaluate(button => button.click());
   await expect(page.locator('html')).toHaveAttribute('lang', 'zh-TW');
   await expect(page).toHaveURL(/lang=zh-TW/);
-  await expect.poll(() => page.evaluate(() => localStorage.getItem('agentRobotAvatarDemoLanguage'))).toBe('zh-TW');
+  await expect.poll(() => page.evaluate(() => localStorage.getItem('boopFaceDemoLanguage'))).toBe('zh-TW');
 
   await page.goto('/demo/');
   await expect(page.locator('html')).toHaveAttribute('lang', 'zh-TW');
@@ -129,6 +171,9 @@ test('demo falls back to the browser language', async ({ browser, baseURL }) => 
 
 test('looping waiting starts once and continues smoothly', async ({ page }) => {
   await page.goto('/demo/');
+  // The input exists before the asynchronously loaded controls attach their
+  // listeners. Programmatic events bypass the page's inert loading state.
+  await expect(page.locator('html')).toHaveAttribute('data-demo-ready', 'true');
   await page.locator('#demoLoop').evaluate(input => {
     input.checked = true;
     input.dispatchEvent(new Event('change', { bubbles: true }));
@@ -161,7 +206,7 @@ test('extension registry routes actions and aliases', async ({ page }) => {
   page.on('pageerror', error => pageErrors.push(error.message));
 
   await page.goto('/examples/basic.html');
-  const avatar = page.locator('agent-robot-avatar');
+  const avatar = page.locator('boop-face');
 
   await avatar.evaluate(element => { void element.play('review'); });
   await expect.poll(() => avatar.evaluate(element => Boolean(element._inspectFx))).toBe(true);
@@ -176,7 +221,7 @@ test('extension registry routes actions and aliases', async ({ page }) => {
 
 test('built-in action registry maps every core action', async ({ page }) => {
   await page.goto('/examples/basic.html');
-  const avatar = page.locator('agent-robot-avatar');
+  const avatar = page.locator('boop-face');
 
   const called = await avatar.evaluate(element => {
     const calls = [];
@@ -252,13 +297,13 @@ test('multiple avatars share one set of global listeners', async ({ page }) => {
 
   await page.goto('/examples/basic.html');
   const created = await page.evaluate(() => {
-    const first = document.createElement('agent-robot-avatar');
-    const second = document.createElement('agent-robot-avatar');
+    const first = document.createElement('boop-face');
+    const second = document.createElement('boop-face');
     first.id = 'dynamic-first';
     second.id = 'dynamic-second';
     document.body.append(first, second);
     return [first, second].map(element => ({
-      registered: element instanceof customElements.get('agent-robot-avatar'),
+      registered: element instanceof customElements.get('boop-face'),
       play: typeof element.play,
       hasSvg: Boolean(element.shadowRoot?.querySelector('svg')),
     }));
@@ -289,7 +334,7 @@ test('multiple avatars share one set of global listeners', async ({ page }) => {
   expect(remainingStates).toEqual(['input']);
 
   await page.evaluate(() => {
-    document.querySelectorAll('agent-robot-avatar').forEach(element => element.remove());
+    document.querySelectorAll('boop-face').forEach(element => element.remove());
   });
   const removals = await page.evaluate(() => window.__avatarListenerRemovals);
   expect(removals).toEqual({
@@ -305,7 +350,7 @@ test('multiple avatars share one set of global listeners', async ({ page }) => {
 
 test('shared pointer handlers preserve jelly dragging', async ({ page }) => {
   await page.goto('/examples/basic.html');
-  const avatar = page.locator('agent-robot-avatar');
+  const avatar = page.locator('boop-face');
   const box = await avatar.boundingBox();
 
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
@@ -318,7 +363,7 @@ test('shared pointer handlers preserve jelly dragging', async ({ page }) => {
 
 test('frame rendering pauses in settled sleep and resumes on reset', async ({ page }) => {
   await page.goto('/examples/basic.html');
-  const avatar = page.locator('agent-robot-avatar');
+  const avatar = page.locator('boop-face');
 
   await avatar.evaluate(element => {
     element._headMotion.getAnimations().forEach(animation => animation.cancel());

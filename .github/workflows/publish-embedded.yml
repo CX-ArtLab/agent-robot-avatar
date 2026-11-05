@@ -1,0 +1,47 @@
+name: Publish Embedded downloads
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Published embedded Release tag (eyes-v0.1.0)'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-embedded
+  cancel-in-progress: false
+
+jobs:
+  downloads:
+    if: github.repository == 'CX-ArtLab/boopface' && startsWith(inputs.tag || github.event.release.tag_name, 'eyes-v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      RELEASE_TAG: ${{ inputs.tag || github.event.release.tag_name }}
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: refs/tags/${{ inputs.tag || github.event.release.tag_name }}
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Confirm the published release exists
+        run: |
+          gh release view "$RELEASE_TAG" --json isDraft --jq '.isDraft == false' | grep -qx true
+      - name: Check the portable core
+        run: bash embedded/tools/test-native.sh
+      - name: Package the Arduino library and offline simulator
+        run: |
+          node embedded/tools/package-release.mjs "$RELEASE_TAG"
+          gh release upload "$RELEASE_TAG" BoopFace-Embedded-*.zip embedded/preview/boopface-embedded-preview.html --clobber

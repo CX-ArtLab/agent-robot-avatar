@@ -1,6 +1,6 @@
-# Agent Robot Avatar Showcase
+# BoopFace Showcase
 
-Examples of how Agent Robot Avatar can be used in interactive applications.
+Examples of how BoopFace can be used in interactive applications.
 
 ## AI Assistant Interfaces
 
@@ -20,7 +20,7 @@ Typical feedback states:
 
 ## Agent UI Feedback
 
-Agent Robot Avatar can provide visual feedback for AI workflows without replacing the host application's own status system.
+BoopFace can provide visual feedback for AI workflows without replacing the host application's own status system.
 
 Examples:
 
@@ -47,7 +47,7 @@ Built as a native Web Component, it can be embedded into different frontend envi
 - Vue applications
 - Custom web interfaces
 
-## Why Agent Robot Avatar?
+## Why BoopFace?
 
 - Zero runtime dependencies
 - Native Web Component architecture

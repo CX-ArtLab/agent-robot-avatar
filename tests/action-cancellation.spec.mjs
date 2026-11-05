@@ -18,7 +18,7 @@ async function loadAvatarWithClock(page) {
   // The clock keeps running until it is paused, so leave room for a busy machine.
   const browserNow = await page.evaluate(() => Date.now());
   await page.clock.pauseAt(browserNow + 5000);
-  return page.locator('agent-robot-avatar');
+  return page.locator('boop-face');
 }
 
 async function advance(page, milliseconds) {

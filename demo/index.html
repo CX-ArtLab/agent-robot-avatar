@@ -4,25 +4,25 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="google" content="notranslate" />
-<title>Agent Robot Avatar — Interactive Demo</title>
+<title>BoopFace — Interactive Demo</title>
 <script>document.documentElement.classList.add("demo-initializing");</script>
-<link rel="modulepreload" href="../agent-robot-avatar.js">
-<link rel="modulepreload" href="./agent-robot-avatar-demo-controls.js">
-<link rel="modulepreload" href="./agent-robot-avatar-demo-extras.js">
-<link rel="modulepreload" href="./agent-robot-avatar-demo-roundness.js">
-<link rel="modulepreload" href="./agent-robot-avatar-demo-layout.js">
-<link rel="modulepreload" href="./agent-robot-avatar-demo-dialog-i18n.js">
-<link rel="modulepreload" href="./agent-robot-avatar-demo-chat-avatar-mode.js">
-<link rel="modulepreload" href="./agent-robot-avatar-demo-reply-loop.js">
-<link rel="stylesheet" href="./agent-robot-avatar-demo.css">
+<link rel="modulepreload" href="../boopface.js">
+<link rel="modulepreload" href="./boopface-demo-controls.js">
+<link rel="modulepreload" href="./boopface-demo-extras.js">
+<link rel="modulepreload" href="./boopface-demo-roundness.js">
+<link rel="modulepreload" href="./boopface-demo-layout.js">
+<link rel="modulepreload" href="./boopface-demo-dialog-i18n.js">
+<link rel="modulepreload" href="./boopface-demo-chat-avatar-mode.js">
+<link rel="modulepreload" href="./boopface-demo-reply-loop.js">
+<link rel="stylesheet" href="./boopface-demo.css">
 <link rel="stylesheet" href="./demo-shell.css">
 </head>
 <body>
 <p class="demo-load-status" id="demoLoadStatus" role="status">Loading demo…</p>
 <noscript>This interactive demo requires JavaScript.</noscript>
 <div class="canvas" id="canvas" aria-busy="true" inert>
-  <div class="title demo-title"><span>Agent Robot Avatar</span><span>SVG + Vanilla JS</span><span>Web Component</span></div>
-  <div class="build-badge" id="agent-demo-build">Demo 0.7.2</div>
+  <div class="title demo-title"><span>BoopFace</span><span>SVG + Vanilla JS</span><span>Web Component</span></div>
+  <div class="build-badge" id="agent-demo-build">Demo 0.8.0</div>
   <label class="follow-control demo-original-follow" title="控制眼睛和头部是否跟随鼠标">
     <span>鼠标跟随</span>
     <input id="pointerFollow" type="checkbox" checked />
@@ -32,7 +32,7 @@
 <div class="demo-control-stack">
   <div class="demo-stage" id="demoStage">
     <div class="avatar-home" id="home">
-      <agent-robot-avatar id="face" size="118" auto-sleep="18000"></agent-robot-avatar>
+      <boop-face id="face" size="118" auto-sleep="18000"></boop-face>
     </div>
     <div class="status-pill demo-status" id="status">idle · 默认待机</div>
     <button class="demo-stage-reset" id="demoStageReset" type="button" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4h4"/></svg></button>
@@ -147,7 +147,7 @@
   </section>
 </div>
 
-<script type="module" src="./agent-robot-avatar-demo.js"></script>
+<script type="module" src="./boopface-demo.js"></script>
 </body>
 </html>
 

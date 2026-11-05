@@ -55,7 +55,7 @@ test('the new demo buttons play their real actions and stay labelled in every la
     .toEqual(expect.arrayContaining(['love:start', 'love:end', 'random:start', 'random:end']));
 
   // The clicks above retired two dots; start each language as a first visit.
-  await page.evaluate(() => localStorage.removeItem('agentRobotAvatarDemoSeen'));
+  await page.evaluate(() => localStorage.removeItem('boopFaceDemoSeen'));
   for (const lang of ['zh-CN', 'zh-TW', 'ja', 'ko', 'es', 'pt', 'de', 'fr']) {
     await openDemo(page, `?lang=${lang}`);
     await expect(page.locator('.controls button.is-new')).toHaveCount(3);

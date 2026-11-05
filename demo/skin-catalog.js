@@ -1,4 +1,4 @@
-import { SKINS, SKIN_NAMES, SKIN_SERIES, loadSkins } from '../agent-robot-avatar.js';
+import { SKINS, SKIN_NAMES, SKIN_SERIES, loadSkins } from '../boopface.js';
 import { featured, demoSkins } from './skin-catalog-data.js';
 
 // The showcase switches skins constantly, so every painter loads in the
@@ -24,7 +24,7 @@ export const catalog = [
 ];
 export const publicSkins = catalog.filter(skin => skin.id !== 'classic');
 export const skinById = new Map(catalog.map(skin => [skin.id, skin]));
-export const SKIN_STORAGE_KEY = 'agentRobotAvatarDemoSkin';
+export const SKIN_STORAGE_KEY = 'boopFaceDemoSkin';
 
 export function storedSkin() {
   try { return localStorage.getItem(SKIN_STORAGE_KEY); } catch { return null; }
@@ -63,7 +63,7 @@ const thumbnails = new Map();
 export async function skinThumbnail(id) {
   await skinsReady;
   if (thumbnails.has(id)) return thumbnails.get(id);
-  const avatar = document.createElement('agent-robot-avatar');
+  const avatar = document.createElement('boop-face');
   avatar.setAttribute('motion', 'reduce');
   // The antenna and flattened geometry are initialized by the component's
   // draw extensions. Draw once while detached; no RAF or global listeners.

@@ -3,40 +3,55 @@
 // Panel character (pixel grid, backlight, glass) is applied on display only.
 (() => {
   'use strict';
-  const INITIAL_DOCUMENT = document.documentElement.outerHTML;
   const ACTIONS = [
-    ['idle','正常'],['bored','发呆'],['waiting-spin','等待 · 旋转'],['waiting-wrap','等待 · 滚动'],
-    ['input','输入'],['affirm','肯定'],['success','成功'],['failure','失败'],
-    ['wary','警惕'],['inspect','审视'],['angry','生气'],['refuse','拒绝'],
-    ['surprise','惊讶'],['love','喜欢'],['random','随机'],['sleep','睡着'],['wake','醒来'],
-    ['waiting-wave','等待 · 波动']
+    ['idle',previewText('正常')],['bored',previewText('发呆')],['waiting-spin',previewText('等待 · 旋转')],['waiting-wrap',previewText('等待 · 滚动')],
+    ['input',previewText('输入')],['affirm',previewText('肯定')],['success',previewText('成功')],['failure',previewText('失败')],
+    ['wary',previewText('警惕')],['inspect',previewText('审视')],['angry',previewText('生气')],['refuse',previewText('拒绝')],
+    ['surprise',previewText('惊讶')],['love',previewText('喜欢')],['random',previewText('随机')],['sleep',previewText('睡着')],['wake',previewText('醒来')],
+    ['waiting-wave',previewText('等待 · 波动')]
   ];
-  const GROUPS = [['round','圆形'],['square','方形'],['bar','长条'],['kit','套件'],['mono','OLED'],['other','自定义']];
+  // The buttons follow the Web demo's order; one button sleeps and wakes.
+  const BUTTON_ORDER = ['idle','bored','waiting-spin','waiting-wrap','waiting-wave','input','affirm','success','failure',
+    'wary','inspect','angry','refuse','surprise','sleep','love','random'];
+  const actionIndex = name => ACTIONS.findIndex(([action])=>action===name);
+  const SLEEP = actionIndex('sleep'), WAKE = actionIndex('wake');
+  const GROUPS = [['round',previewText('圆形')],['square',previewText('方形')],['bar',previewText('长条')],['kit',previewText('套件')],['mono','OLED'],['other',previewText('自定义')]];
   // Whole-frame bandwidth of the usual wiring: [label, bits per second, bits per pixel].
   const BUSES = {
-    spi:['SPI 40 MHz',40e6,16], spi18:['SPI 40 MHz · 18 位色',40e6,24], qspi:['QSPI 4 线 40 MHz',160e6,16],
-    i8080:['8 位并口 20 MHz',160e6,16], rgb:['RGB 并口',256e6,16], i2c:['I²C 400 kHz',400e3*8/9,1]
+    spi:['SPI 40 MHz',40e6,16], spi18:[previewText('SPI 40 MHz · 18 位色'),40e6,24], qspi:[previewText('QSPI 4 线 40 MHz'),160e6,16],
+    i8080:[previewText('8 位并口 20 MHz'),160e6,16], rgb:[previewText('RGB 并口'),256e6,16], i2c:['I²C 400 kHz',400e3*8/9,1]
   };
-  const PANEL_NAMES = {ips:'IPS',tn:'TN',amoled:'AMOLED',oled:'单色 OLED'};
+  const PANEL_NAMES = {ips:'IPS',tn:'TN',amoled:'AMOLED',oled:previewText('单色 OLED')};
   const FPS_TIERS = [30,25,15];
   const CSS_PX_PER_MM = 96 / 25.4, MAX_CANVAS_PX = 4096;
   const ZOOM_SNAPS = [1,1.5,2,3,4,5,6,8,10,12,16];
   const BARE_PITCH_MM = .15; // presets without physical data (raw canvas, custom sizes)
   const DEFAULT_COLORS = {eye:'#ffffff',bg:'#000000'};
-  // What each gaze source needs on a real board.
-  const GAZE_HINTS = {
-    track:'开发板需要外接摄像头，或距离／人体感应传感器来提供目标位置；这里用鼠标模拟靠近的物体。',
-    manual:'由你的程序指定看的方向（C++ 的 lookAt()），不需要额外硬件。',
-    off:'眼睛保持正视前方。'
-  };
+  function luminance(hex) {
+    const [r,g,b]=[1,3,5].map(i=>{const c=parseInt(hex.slice(i,i+2),16)/255;return c<=.04045?c/12.92:((c+.055)/1.055)**2.4;});
+    return .2126*r+.7152*g+.0722*b;
+  }
+  // The Web demo's palettes. On a screen the lighter colour lights the eyes
+  // and the darker one fills the panel.
+  const PALETTES = [
+    ['Claude','#faf9f5','#d97757'],['ChatGPT','#ffffff','#0fa578'],['ComfyUI','#211927','#f2ff59'],['Ubuntu','#e95420','#ffffff'],
+    ['Dribbble','#ea4c89','#ffffff'],['Discord','#5865f2','#ffffff'],['Telegram','#229ed9','#ffffff'],['Snapchat','#fffc00','#000000'],
+    ['YouTube','#ffffff','#ff0000'],['Netflix','#141414','#e50914'],['Spotify','#121212','#1ed760'],[previewText('湖人'),'#fdb927','#552583'],
+    [previewText('勇士'),'#1d428a','#ffc72c'],[previewText('凯尔特人'),'#007a33','#ffffff'],[previewText('巴萨'),'#a50044','#edbb00'],[previewText('曼城'),'#6cabdd','#1c2c5b'],
+    // Four more for the screen only.
+    [previewText('抹茶'),'#f4f1e6','#5b7f4a'],[previewText('薰衣草'),'#ffffff','#8e7cc3'],[previewText('珊瑚'),'#2b1d1a','#ff7f66'],[previewText('冰川'),'#0e2a47','#bfe6ff']
+  ].map(([name,a,b])=>luminance(a)>=luminance(b)?{name,eye:a,bg:b}:{name,eye:b,bg:a});
+  // Gaze settings for the simulated nearby object. The library exposes them
+  // all; the preview keeps one switch and these defaults.
+  const GAZE = {radius:72,range:1,holdMs:600,responseMs:140,motionPx:3};
   const $ = id => document.getElementById(id);
   const store = {
     get(key,fallback){try{const v=localStorage.getItem('robotEyesPreview.'+key);return v?JSON.parse(v):fallback;}catch(_){return fallback;}},
     set(key,value){try{localStorage.setItem('robotEyesPreview.'+key,JSON.stringify(value));}catch(_){}}
   };
   // Every option is remembered in this browser, except screen-specific frame rate.
-  const CHECKBOXES = ['housing','show-area','raw-pixels','pixel-grid','glass-glare','blink','transitions','moving-only'];
-  const SEGMENTS = ['gaze-mode','gaze-range','motion-sensitivity','response','hold','speed'];
+  const CHECKBOXES = ['housing','show-area','pixel-grid','glass-glare','blink','transitions','follow'];
+  const SEGMENTS = ['speed'];
   const screen = $('screen'), ctx = screen.getContext('2d',{alpha:false});
   let panel = null;
   let api, image, base = SCREEN_PRESETS[0], preset = base, rotated = false, time = 0, paused = false;
@@ -53,23 +68,27 @@
   function fail(error) {
     console.error(error);
     $('error').hidden=false;
-    $('error').textContent='预览无法运行，请用较新的浏览器打开完整 HTML 文件。详情：'+error.message;
-    $('status').textContent='未运行';
+    $('error').textContent=previewText('预览无法运行，请用较新的浏览器打开完整 HTML 文件。详情：')+error.message;
+    delete document.documentElement.dataset.ready;
     document.querySelectorAll('button,select,input').forEach(el=>{el.disabled=true;});
     api=null;
   }
   function setCycling(value) {
     cycling=value;
     $('demo').setAttribute('aria-pressed',String(value));
-    $('demo').textContent=value?'轮播中':'自动轮播';
-    $('demo').title=value?'点击停止轮播':'依次播放所有表情';
+    $('demo').textContent=value?previewText('轮播中'):previewText('自动轮播');
+    $('demo').title=value?previewText('点击停止轮播'):previewText('依次播放所有表情');
   }
   function updateActive() {
     const index=api.eyes_action();
     if(index===active)return;
     active=index;
-    buttons.forEach((button,i)=>button.setAttribute('aria-pressed',String(i===index)));
-    $('current').textContent=ACTIONS[index][1]+' · '+ACTIONS[index][0];
+    buttons.forEach(button=>button.setAttribute('aria-pressed',String(Number(button.dataset.index)===index)));
+    // While asleep the sleep button wakes the eyes.
+    const sleepButton=buttons.find(button=>Number(button.dataset.index)===SLEEP);
+    sleepButton.textContent=index===SLEEP?previewText('醒来'):previewText('睡着');
+    sleepButton.title=index===SLEEP?previewText('醒来 · wake'):previewText('睡着 · sleep');
+    $('current').textContent=ACTIONS[index][0]+' · '+ACTIONS[index][1];
   }
 
   // ---------- settings ----------
@@ -88,7 +107,7 @@
     });
   }
   function saveSettings() {
-    const saved={zoomMode,zoomScale,senseRadius:Number($('sense-radius').value)};
+    const saved={zoomMode,zoomScale};
     for(const id of CHECKBOXES)saved[id]=$(id).checked;
     for(const id of SEGMENTS)saved[id]=segValue(id);
     store.set('settings',saved);
@@ -97,8 +116,6 @@
     const saved=store.get('settings',{});
     for(const id of CHECKBOXES)if(typeof saved[id]==='boolean')$(id).checked=saved[id];
     for(const id of SEGMENTS)if(saved[id]!=null&&$(id).querySelector(`[data-value="${saved[id]}"]`))setSeg(id,saved[id]);
-    if(saved['gaze-range']==null)setSeg('gaze-range',store.get('gazeRange',1));
-    if(saved.senseRadius)$('sense-radius').value=String(saved.senseRadius);
     if(['fit','real','scale'].includes(saved.zoomMode))zoomMode=saved.zoomMode;
     if(saved.zoomScale>0)zoomScale=saved.zoomScale;
   }
@@ -112,7 +129,8 @@
     return null;
   }
   function rotation() { return ((base.rotation||0)+(rotated?90:0))%180; }
-  function logical() { return rotated?{...base,width:base.height,height:base.width,viewport:null}:base; }
+  // A turned module turns its framebuffer; a square one keeps its layout.
+  function logical() { return rotated?{...base,width:base.height,height:base.width,viewport:base.width===base.height?base.viewport:null}:base; }
   function pitchMm() {
     const m=model();
     if(m)return (rotation()===90?m.display[3]:m.display[2])/preset.width;
@@ -133,31 +151,46 @@
   // ---------- zoom ----------
   // Scale is relative to actual size and never exceeds what fits the stage,
   // so the module is always fully visible without scrollbars.
+  // The screen, not the board, sits at the centre of the stage and of the
+  // sensing ring: how far the module reaches from the screen's centre.
+  function reach(g) {
+    const [x,y,dw,dh]=g.display, cx=x+dw/2, cy=y+dh/2;
+    const rx=Math.max(cx,g.w-cx), ry=Math.max(cy,g.h-cy);
+    // The ring is centred on the screen and still takes in the whole board.
+    return {cx,cy,x:rx,y:ry,ring:2*Math.max(rx,ry)};
+  }
+  // Fit shows the whole module (and the sensing ring); beyond it the slider
+  // keeps zooming until the screen fills 80% of the stage, the housing
+  // running off the edges.
   function zoomRange(g) {
-    const r=$('stage').getBoundingClientRect();
-    const max=Math.max(.05,Math.min((r.width-40)/g.w,(r.height-40)/g.h)/CSS_PX_PER_MM);
-    return [Math.min(max*.2,1),max];
+    const r=$('stage').getBoundingClientRect(), k=reach(g), [,,dw,dh]=g.display;
+    // Room for the name above and the state below.
+    let fit=Math.min((r.width-40)/(2*k.x),(r.height-96)/(2*k.y));
+    if($('follow').checked)fit=Math.min(fit,(Math.min(r.width-32,r.height-64)-GAZE.radius*2)/k.ring);
+    fit=Math.max(.05,fit/CSS_PX_PER_MM);
+    const max=Math.max(fit,.8*Math.min(r.width/dw,r.height/dh)/CSS_PX_PER_MM);
+    return [Math.min(fit*.2,1),fit,max];
   }
   function currentScale(g) {
-    const [min,max]=zoomRange(g);
-    if(zoomMode==='fit')return max;
+    const [min,fit,max]=zoomRange(g);
+    if(zoomMode==='fit')return fit;
     if(zoomMode==='real')return Math.min(1,max);
     return Math.min(Math.max(zoomScale,min),max);
   }
   function syncZoom(g,scale) {
-    const [min,max]=zoomRange(g), span=Math.log(max/min);
+    const [min,,max]=zoomRange(g), span=Math.log(max/min);
     $('zoom').value=String(span>0?Math.round(Math.log(scale/min)/span*1000):1000);
     $('zoom-value').value=scale.toFixed(scale<10?1:0)+'×';
     $('zoom-fit').setAttribute('aria-pressed',String(zoomMode==='fit'));
     $('zoom-real').setAttribute('aria-pressed',String(Math.abs(scale-1)<.001));
     $('zoom-real').disabled=max<1;
-    $('zoom-real').title=max<1?'窗口放不下实物大小':'按常见电脑屏幕估算，不同显示器会有偏差';
+    $('zoom-real').title=max<1?previewText('窗口放不下实物大小'):previewText('按常见电脑屏幕估算，不同显示器会有偏差');
   }
   function zoomFromSlider() {
-    const g=geometry(), [min,max]=zoomRange(g), position=Number($('zoom').value);
-    if(position>=995){zoomMode='fit';resizeDisplay();saveSettings();return;}
+    const g=geometry(), [min,fit,max]=zoomRange(g), position=Number($('zoom').value);
     let scale=min*Math.exp(position/1000*Math.log(max/min));
-    // Weak snapping to common ratios.
+    // Weak snapping to the fitted size and to common ratios.
+    if(Math.abs(Math.log(scale/fit))<.045){zoomMode='fit';resizeDisplay();saveSettings();return;}
     for(const snap of ZOOM_SNAPS)if(snap>=min&&snap<=max&&Math.abs(Math.log(scale/snap))<.045)scale=snap;
     zoomMode='scale';zoomScale=scale;resizeDisplay();saveSettings();
   }
@@ -173,8 +206,8 @@
   function renderFps() {
     const limit=screenLimit();
     const top=document.createElement('button');top.type='button';top.className='chip';top.dataset.value='max';
-    top.textContent=(base.bus?'当前屏幕上限 ':'最高 ')+limit;
-    top.title=base.bus?'按'+BUSES[base.bus][0]+'带宽估算的整屏刷新上限，不含绘制时间':'没有总线数据，按 60 FPS';
+    top.textContent=(base.bus?previewText('当前屏幕上限 '):previewText('最高 '))+limit;
+    top.title=base.bus?previewText('按')+BUSES[base.bus][0]+previewText('带宽估算的整屏刷新上限，不含绘制时间'):previewText('没有总线数据，按 60 FPS');
     const tiers=FPS_TIERS.filter(value=>value<limit).map(value=>{
       const b=document.createElement('button');b.type='button';b.className='chip';b.dataset.value=String(value);b.textContent=String(value);return b;
     });
@@ -195,14 +228,15 @@
   }
   function renderPanel() {
     if(!panel)return;
-    panel.render({panel:base.panel||'ips',plain:$('raw-pixels').checked,grid:$('pixel-grid').checked,
+    panel.render({panel:base.panel||'ips',plain:false,grid:$('pixel-grid').checked,
       glow:true,round:preset.frame==='round',corner:base.corner||0,mono});
   }
   function sensorInput() {
-    if(segValue('gaze-mode')!=='track')return;
-    const rect=$('device').getBoundingClientRect();
+    if(!$('follow').checked){$('target-dot').hidden=true;return;}
+    // Directions are measured from the screen's centre, scaled by the module.
+    const rect=$('device').getBoundingClientRect(), glass=$('glass').getBoundingClientRect();
     const zone=$('sense-zone').getBoundingClientRect();
-    const dx=pointer.x-(rect.left+rect.width/2), dy=pointer.y-(rect.top+rect.height/2);
+    const dx=pointer.x-(glass.left+glass.width/2), dy=pointer.y-(glass.top+glass.height/2);
     const distance=Math.hypot(dx/(zone.width/2),dy/(zone.height/2));
     const proximity=Math.max(0,Math.min(1,1-distance/2));
     api.eyes_motion_target(dx/Math.max(1,rect.width/2),dy/Math.max(1,rect.height/2),
@@ -216,11 +250,10 @@
   }
   // Gaze feedback sits right under the screen, where the eyes are watched.
   function updateTrackingStatus() {
-    const mode=segValue('gaze-mode'), locked=mode==='track'&&!!api.eyes_is_tracking();
+    const follow=$('follow').checked, locked=follow&&!!api.eyes_is_tracking();
     $('sense-zone').classList.toggle('active',locked);
-    const ignored=api.eyes_action()!==0;
-    const text=mode==='off'?'':mode==='manual'?'手动注视':ignored?'当前动作暂不应用注视方向'
-      :'跟随物体 · '+(locked?'正在注视／离开后短暂停留':$('moving-only').checked?'等待范围内的移动目标':'鼠标进入虚线范围即注视');
+    const text=!follow?'':api.eyes_action()!==0?previewText('当前动作暂不应用注视方向')
+      :locked?previewText('正在注视／离开后短暂停留'):previewText('把鼠标移进虚线范围，眼睛就会看过去');
     if(text!==trackingText){$('tracking-note').textContent=text;trackingText=text;}
   }
   function draw(force=false) {
@@ -238,11 +271,11 @@
       if(panel){panel.upload(screen);renderPanel();}
     }
     updateActive(); updateTrackingStatus();
-    $('clock').textContent='时间 '+(time/1000).toFixed(2)+' s';
+    $('clock').textContent=previewText('时间 ')+(time/1000).toFixed(2)+' s';
   }
   function setPaused(value) {
     paused=value;previous=null;
-    $('pause').textContent=value?'继续':'暂停';
+    $('pause').textContent=value?previewText('继续'):previewText('暂停');
     $('step').disabled=!value;
   }
   function play(index) {
@@ -271,29 +304,35 @@
     frameKey=key;
     const scale=currentScale(g), ppm=scale*CSS_PX_PER_MM, [x,y,dw,dh]=g.display;
     syncZoom(g,scale);
+    const k=reach(g);
     $('sensor-wrap').style.width=g.w*ppm+'px';$('sensor-wrap').style.height=g.h*ppm+'px';
+    // Centred on the stage even when zoomed past its edges.
+    $('sensor-wrap').style.transform='translate(-50%,-50%) translate('+(g.w/2-k.cx)*ppm+'px,'+(g.h/2-k.cy)*ppm+'px)';
     device.dataset.profile=preset.frame;
     device.dataset.module=g.m?base.id:'';
     device.dataset.rotation=String(g.rot?90:0);
     device.classList.toggle('bare',!housing||!g.m);
-    device.classList.toggle('generic-frame',!g.m&&preset.frame!=='eyes');
-    if(!g.m&&preset.frame!=='eyes')device.classList.toggle('bare',!housing);
+    device.classList.toggle('generic-frame',!g.m);
+    if(!g.m)device.classList.toggle('bare',!housing);
     glass.style.left=x/g.w*100+'%';glass.style.top=y/g.h*100+'%';
     glass.style.width=dw/g.w*100+'%';glass.style.height=dh/g.h*100+'%';
     glass.classList.toggle('show-area',$('show-area').checked);
     $('glare').hidden=!$('glass-glare').checked||!g.m||!housing;
-    const cw=dw*ppm, ch=dh*ppm, dpr=Math.min(window.devicePixelRatio||1,MAX_CANVAS_PX/cw,MAX_CANVAS_PX/ch);
+    const cw=dw*ppm, ch=dh*ppm;
+    // Rounded panels round the glass too, so the reflection keeps their shape.
+    glass.style.borderRadius=preset.frame==='round'?'':base.corner?base.corner/preset.width*cw+'px':'';
+    const dpr=Math.min(window.devicePixelRatio||1,MAX_CANVAS_PX/cw,MAX_CANVAS_PX/ch);
     $('panel').width=Math.max(1,Math.round(cw*dpr));$('panel').height=Math.max(1,Math.round(ch*dpr));
     // A circular sensing zone around the module, whatever its aspect ratio.
-    const radius=Number($('sense-radius').value), ring=Math.max(g.w,g.h)*ppm+radius*2;
-    $('sense-zone').hidden=segValue('gaze-mode')!=='track';
-    $('sense-zone').style.width=$('sense-zone').style.height=ring+'px';
+    const ring=k.ring*ppm+GAZE.radius*2, zone=$('sense-zone');
+    zone.hidden=!$('follow').checked;
+    zone.style.width=zone.style.height=ring+'px';
+    zone.style.left=k.cx/g.w*100+'%';zone.style.top=k.cy/g.h*100+'%';
     // Label just above the module, inside the ring, so the stage never clips it.
-    $('sense-zone').style.setProperty('--label-top',Math.max(4,(ring-g.h*ppm)/2-26)+'px');
-    $('sense-value').value=radius+' px';
-    const reference=g.m?g.m.name+(g.m.revision?' · '+g.m.revision:''):preset.name;
-    $('stage-caption').textContent=reference+(g.rot!==((base.rotation||0)===90)?' · 旋转 90°':'')+' · '+Math.round(25.4/pitchMm())+' PPI'+
-      (g.m?(!housing?' · 外框已隐藏':g.m.generic?' · 外框为通用示意':' · PCB '+g.w+' × '+g.h+' mm'):'');
+    zone.style.setProperty('--label-top',Math.max(4,ring/2-k.cy*ppm-26)+'px');
+    const reference=g.m?previewText(g.m.name)+(g.m.revision?' · '+g.m.revision:''):previewText(preset.name);
+    $('stage-caption').textContent=reference+(g.rot!==((base.rotation||0)===90)?previewText(' · 旋转 90°'):'')+' · '+Math.round(25.4/pitchMm())+' PPI'+
+      (g.m?(!housing?previewText(' · 外框已隐藏'):g.m.generic?previewText(' · 外框为通用示意'):' · PCB '+g.w+' × '+g.h+' mm'):'');
     const source=$('frame-source');source.hidden=!(g.m&&g.m.source);
     if(g.m&&g.m.source)source.href=g.m.source;else source.removeAttribute('href');
     $('target-dot').hidden=true;
@@ -316,9 +355,9 @@
     $('scale-value').value=scale.toFixed(2);
     $('offset-x-value').value=ox.toFixed(2);$('offset-y-value').value=oy.toFixed(2);
     document.querySelectorAll('[data-fit]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.fit===fit)));
-    $('profile-note').textContent=fit==='cover'?'等比放大铺满屏幕，超出部分裁切'
-      :fit==='preset'&&preset.viewport?'240 × 160 表情区域居中，与现有 TFT 例程一致'
-      :'按屏幕比例完整放下表情';
+    $('profile-note').textContent=fit==='cover'?previewText('等比放大铺满屏幕，超出部分裁切')
+      :fit==='preset'&&preset.viewport?previewText('240 × 160 表情区域居中，与现有 TFT 例程一致')
+      :previewText('按屏幕比例完整放下表情');
     if(save&&base.id!=='custom'){layouts[layoutKey()]={fit,scale,x:ox,y:oy};store.set('layouts',layouts);}
     draw(true);
   }
@@ -331,40 +370,48 @@
   function syncScreenInfo() {
     const bus=BUSES[base.bus];
     $('spec-res').textContent=preset.width+' × '+preset.height;
-    $('spec-color').textContent=base.panel==='oled'?'单色':base.panel?'彩色':'1-bit 画布';
-    $('spec-fps').textContent=bus?'最高约 '+screenLimit()+' FPS':'帧率不限';
-    $('screen-spec').textContent=[base.id==='custom'?'自定义尺寸':base.id==='eyes'?'原始眼睛画布':base.controller,
+    $('stage-title').textContent=previewText(base.name);
+    $('stage-res').textContent=preset.width+' × '+preset.height;
+    $('spec-color').textContent=base.panel==='oled'?previewText('单色'):previewText('彩色');
+    $('spec-fps').textContent=bus?previewText('最高约 ')+screenLimit()+' FPS':previewText('帧率不限');
+    $('screen-spec').textContent=[base.id==='custom'?previewText('自定义尺寸'):base.controller,
       PANEL_NAMES[base.panel],bus&&bus[0]].filter(Boolean).join(' · ');
-    $('screen-support').textContent=base.verified==='community'?'有接线示例 · 社区已实机验证'
-      :base.example?'有接线示例（编译通过，未实机验证）':'仅效果预览 · 需自行接入屏幕驱动';
+    $('screen-support').textContent=base.verified==='community'?previewText('有接线示例 · 社区已实机验证')
+      :base.example?previewText('有接线示例（编译通过，未实机验证）'):previewText('仅效果预览 · 需自行接入屏幕驱动');
     renderWiring();
   }
   // Which firmware build drives this screen and how to wire it.
   function renderWiring() {
     const fw=base.firmware;
-    $('wiring').hidden=!fw;
+    $('wiring-body').hidden=!fw;
     if(!fw)return;
     const text=(tag,content)=>{const el=document.createElement(tag);el.textContent=content;return el;};
-    const build=document.createElement('div');build.append('编译：',text('code','pio run -e '+fw.env));
-    const parts=[text('div','开发板：'+fw.board),build];
+    const build=document.createElement('div');build.append(previewText('编译：'),text('code','pio run -e '+fw.env));
+    const parts=[text('div',previewText('开发板：')+previewText(fw.board)),build];
     if(fw.wiring){
       const table=document.createElement('table');
-      for(const [pin,to] of fw.wiring){const row=table.insertRow();row.insertCell().textContent='屏幕 '+pin;row.insertCell().textContent=to;}
+      for(const [pin,to] of fw.wiring){const row=table.insertRow();row.insertCell().textContent=previewText('屏幕 ')+pin;row.insertCell().textContent=previewText(to);}
       parts.push(table);
-    } else parts.push(text('div','屏幕已集成在开发板上，无需接线。'));
+    } else parts.push(text('div',previewText('屏幕已集成在开发板上，无需接线。')));
     const note=document.createElement('div');note.className='meta';
-    const link=document.createElement('a');link.href='https://github.com/CX-ArtLab/agent-robot-avatar/issues/new?template=hardware_report.yml';
-    link.target='_blank';link.rel='noopener noreferrer';link.textContent='提交实机验证报告';
-    note.append('引脚依据厂商资料，固件已编译通过，尚未在实物上验证。在实物上试过的话，欢迎',link,'。');
+    const link=document.createElement('a');link.href='https://github.com/CX-ArtLab/boopface/issues/new?template=hardware_report.yml';
+    link.target='_blank';link.rel='noopener noreferrer';link.textContent=previewText('提交实机验证报告');
+    note.append(previewText('引脚依据厂商资料，固件已编译通过，尚未在实物上验证。在实物上试过的话，欢迎'),link,PREVIEW_LANGUAGE.startsWith('zh')?'。':'.');
     parts.push(note);
     $('wiring-body').replaceChildren(...parts);
   }
   function syncControls() {
     const oled=base.panel==='oled';
-    $('color-options').hidden=oled;$('mono-options').hidden=!oled;
+    $('color-options').hidden=oled;$('palettes').hidden=oled;$('mono-options').hidden=!oled;
+    document.querySelectorAll('[data-palette]').forEach(b=>{
+      const p=PALETTES[Number(b.dataset.palette)];
+      b.setAttribute('aria-pressed',String(p.eye===colors.eye&&p.bg===colors.bg));
+    });
     document.querySelectorAll('[data-mono]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mono===mono)));
     $('eye-color').value=colors.eye;$('bg-color').value=colors.bg;
-    $('rotate').hidden=preset.frame==='round'||base.width===base.height;
+    // Any module can be mounted turned; a bare square or round screen looks the same.
+    $('rotate').disabled=!model()&&(preset.frame==='round'||base.width===base.height);
+    $('rotate').title=$('rotate').disabled?previewText('没有外框的方形和圆形屏幕转了也一样'):previewText('把屏幕模组整体转 90°');
     $('rotate').setAttribute('aria-pressed',String(rotated));
     syncColors();
   }
@@ -379,36 +426,24 @@
     renderFps();
     if(!api.eyes_init(preset.width,preset.height,fpsValue(),
       $('blink').checked?1:0,$('transitions').checked?240:0,0))throw new Error('Core initialization failed');
-    api.eyes_gaze_range(Number(segValue('gaze-range')));
+    api.eyes_gaze_range(GAZE.range);
     applyGazeMode(false);
     screenGroup=base.id==='custom'?'other':base.group||'other';
     renderProfiles();
     if(base.id!=='custom')store.set('profile',base.id);
-    if(base.id==='custom'||base.id==='eyes'){$('custom-width').value=preset.width;$('custom-height').value=preset.height;}
+    if(base.id==='custom'){$('custom-width').value=preset.width;$('custom-height').value=preset.height;}
     syncScreenInfo();syncControls();loadLayout();resizeDisplay();applyLayout();setPaused(paused);
   }
   function applyGazeConfig() {
-    if(!api.eyes_gaze_config(.5,.4,Number(segValue('hold')),Number(segValue('response')),$('moving-only').checked?1:0))
+    if(!api.eyes_gaze_config(.5,.4,GAZE.holdMs,GAZE.responseMs,0))
       throw new Error('Invalid gaze configuration');
   }
-  // One gaze source at a time: a simulated nearby object, the manual
-  // sliders, or none.
+  // With the switch on, the eyes follow a simulated nearby object.
   function applyGazeMode(redraw=true) {
-    const mode=segValue('gaze-mode');
     pointer.detected=false;lastMotion=-Infinity;motionAnchor=null;
-    api.eyes_tracking(mode==='track'?1:0,now());
+    api.eyes_tracking($('follow').checked?1:0,now());
     applyGazeConfig();
-    if(mode==='manual')api.eyes_gaze(Number($('gx').value),Number($('gy').value));
-    $('gaze-hint').textContent=GAZE_HINTS[mode];
-    $('track-options').hidden=mode!=='track';
-    $('manual-options').hidden=mode!=='manual';
-    $('motion-sensitivity').setAttribute('aria-disabled',String(!$('moving-only').checked));
     if(redraw){resizeDisplay();draw();}
-  }
-  function gaze() {
-    const x=Number($('gx').value),y=Number($('gy').value);
-    $('gx-value').value=x.toFixed(2);$('gy-value').value=y.toFixed(2);
-    api.eyes_gaze(x,y);draw();
   }
   function advance(delta) {
     time+=delta;
@@ -432,24 +467,29 @@
     if(next)configure(next,false);
   }
   function applyCustomSize() {
-    const width=Number($('custom-width').value),height=Number($('custom-height').value),round=segValue('custom-shape')==='1';
+    const width=Number($('custom-width').value),height=Number($('custom-height').value),round=segValue('custom-shape')==='1',panel=segValue('custom-panel');
     if(!Number.isInteger(width)||!Number.isInteger(height)||width<16||height<16||width>512||height>512||(round&&width!==height)){
-      $('size-error').textContent='宽高须为 16–512 的整数；圆形须宽高相等。';return;
+      $('size-error').textContent=previewText('宽高须为 16–512 的整数；圆形须宽高相等。');return;
     }
     $('size-error').textContent='';
-    if(base.id==='custom'&&preset.width===width&&preset.height===height&&(preset.frame==='round')===round)return;
-    configure({id:'custom',name:'自定义屏幕',controller:'CUSTOM',width,height,frame:round?'round':'tft',example:false,group:'other'},false);
+    if(base.id==='custom'&&preset.width===width&&preset.height===height&&(preset.frame==='round')===round&&base.panel===panel)return;
+    configure({id:'custom',name:previewText('自定义屏幕'),controller:'CUSTOM',width,height,frame:round?'round':'tft',panel,example:false,group:'other'},false);
   }
   // The picker lists one screen type at a time; the type tabs switch it.
   // The 自定义 tab edits a size directly instead of listing presets.
   function groupPresets(group) { return SCREEN_PRESETS.filter(item=>(item.group||'other')===group); }
   function renderProfiles() {
-    const items=groupPresets(screenGroup), select=$('profile'), custom=screenGroup==='other';
-    select.replaceChildren(...items.map(item=>{
-      const option=document.createElement('option');option.value=item.id;option.textContent=item.name;return option;
+    const items=groupPresets(screenGroup), picker=$('profile').parentElement, custom=screenGroup==='other';
+    $('profile-list').replaceChildren(...items.map(item=>{
+      const option=document.createElement('button');option.type='button';option.setAttribute('role','option');option.dataset.value=item.id;
+      option.setAttribute('aria-selected',String(item===base));
+      const name=document.createElement('span');name.className='name';name.textContent=previewText(item.name);
+      const size=document.createElement('span');size.className='res';size.textContent=item.width+' × '+item.height;
+      option.append(name,size);return option;
     }));
-    select.value=base.id;
-    select.hidden=custom;$('custom-size').hidden=!custom;$('stepper').hidden=custom;
+    $('profile').dataset.value=base.id;
+    $('profile-name').textContent=previewText(base.name);$('profile-res').textContent=preset.width+' × '+preset.height;
+    picker.hidden=custom;$('custom-size').hidden=!custom;$('stepper').hidden=custom;
     document.querySelectorAll('[data-group]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.group===screenGroup)));
     const index=items.indexOf(base);
     $('profile-index').textContent=index<0?'':(index+1)+' / '+items.length;
@@ -459,16 +499,57 @@
     const index=items.indexOf(base);
     selectProfile(items[(index+delta+items.length)%items.length].id);
   }
-  // Narrows the action bar to the smallest width that keeps its row count,
+  // Narrows the action row to the smallest width that keeps its row count,
   // so the buttons split evenly between rows.
   function balanceActions() {
     const bar=$('actions'), rows=()=>new Set([...bar.children].map(b=>b.offsetTop)).size;
     bar.style.width='';
-    let hi=Math.min(bar.parentElement.clientWidth,860);bar.style.width=hi+'px';
+    let hi=bar.parentElement.clientWidth-16;bar.style.width=hi+'px';
     const target=rows();
     let lo=Math.max(...[...bar.children].map(b=>b.offsetWidth));
     while(hi-lo>1){const mid=Math.floor((lo+hi)/2);bar.style.width=mid+'px';if(rows()<=target)hi=mid;else lo=mid;}
     bar.style.width=hi+'px';
+  }
+  // The current settings as eyes_settings.h for the example firmware.
+  function settingsFile() {
+    const fw=base.firmware, oled=base.panel==='oled';
+    const hex=color=>'0x'+color.slice(1).toUpperCase();
+    const num=value=>Number(value).toFixed(2)+'f';
+    const lines=[
+      previewText('// BoopFace Embedded 设置，由嵌入式设备模拟器导出。'),
+      previewText('// 屏幕：')+previewText(base.name)+(PREVIEW_LANGUAGE.startsWith('zh')?'，':', ')+preset.width+' × '+preset.height,
+      fw?previewText('// 编译：pio run -e ')+fw.env:previewText('// 这块屏幕还没有示例固件，需要自己接入屏幕驱动。'),
+      '#pragma once','',
+      '#define EYES_MAX_FPS '+fpsValue(),
+      '#define EYES_AUTO_BLINK '+($('blink').checked?1:0),
+      '#define EYES_TRANSITION_MS '+($('transitions').checked?240:0),'',
+      '#define EYES_FIT_COVER '+(fit==='cover'?1:0)+previewText('  // 0 完整显示，1 填满屏幕'),
+      '#define EYES_ZOOM '+num($('face-scale').value),
+      '#define EYES_OFFSET_X '+num($('offset-x').value),
+      '#define EYES_OFFSET_Y '+num($('offset-y').value),''
+    ];
+    if(oled)lines.push(previewText('// 单色 OLED 的颜色由屏幕本身决定，这里不用设置。'));
+    else lines.push('#define EYES_INK_RGB '+hex(colors.eye)+previewText('         // 眼睛'),'#define EYES_BACKGROUND_RGB '+hex(colors.bg)+previewText('  // 底色'));
+    if(base.viewport&&fit!=='preset')lines.push('',previewText('#define EYES_FULL_PANEL 1  // 用整块屏，不只画中间 ')+base.viewport[2]+' × '+base.viewport[3]);
+    if(rotated)lines.push('',previewText('#define EYES_TURN 3  // 整块屏转 90°；如果眼睛上下颠倒，改成 1'));
+    return lines.join('\n')+'\n';
+  }
+  function openExport(open) {
+    $('export-sheet').hidden=!open;
+    if(!open){$('export').focus();return;}
+    $('export-code').textContent=settingsFile();$('export-status').textContent='';
+    $('export-copy').focus();
+  }
+  async function copyExport() {
+    const text=$('export-code').textContent;
+    try{await navigator.clipboard.writeText(text);}
+    catch(_){
+      const range=document.createRange();range.selectNodeContents($('export-code'));
+      const selection=getSelection();selection.removeAllRanges();selection.addRange(range);
+      if(!document.execCommand('copy')){$('export-status').textContent=previewText('请手动选中复制');return;}
+      selection.removeAllRanges();
+    }
+    $('export-status').textContent=previewText('已复制');
   }
   async function start() {
     try {
@@ -483,51 +564,87 @@
         }}
       });
       api=instance.exports;api._initialize();
-      ACTIONS.forEach(([name,label],index)=>{
+      for(const name of BUTTON_ORDER){
+        const index=actionIndex(name), label=ACTIONS[index][1];
         const button=document.createElement('button');
-        button.className='action';button.dataset.action=name;button.title=label+' · '+name;
+        button.className='action';button.dataset.action=name;button.dataset.index=String(index);button.title=label+' · '+name;
         button.textContent=label;button.setAttribute('aria-pressed','false');
-        button.onclick=()=>{setCycling(false);play(index);};
+        button.onclick=()=>{setCycling(false);play(index===SLEEP&&active===SLEEP?WAKE:index);};
         $('actions').append(button);buttons.push(button);
-      });
+      }
       for(const [group,label] of GROUPS) {
         const items=groupPresets(group);
-        if(!items.length)continue;
+        if(!items.length&&group!=='other')continue;
         const tab=document.createElement('button');tab.type='button';tab.className='chip';tab.dataset.group=group;
         tab.textContent=label;$('screen-groups').append(tab);
-        items.forEach(item=>{
-          const row=document.createElement('div');row.className='preset-item';
-          const name=document.createElement('span');name.textContent=item.name+' · '+item.width+'×'+item.height;
-          const state=document.createElement('span');state.textContent=item.example?'有接线示例':'仅效果预览';
-          row.append(name,state);$('preset-list').append(row);
-        });
       }
       $('mono-chips').append(...Object.entries(MONO_TINTS).map(([value,tint])=>{
-        const b=document.createElement('button');b.type='button';b.className='chip';b.dataset.mono=value;b.textContent=tint.name;return b;
+        const b=document.createElement('button');b.type='button';b.className='chip';b.dataset.mono=value;b.textContent=previewText(tint.name);return b;
       }));
       document.querySelectorAll('button,select,input').forEach(el=>{el.disabled=false;});
       restoreSettings();
       const saved=SCREEN_PRESETS.find(item=>item.id===store.get('profile',''));
       if(saved)base=saved;
       configure(base,false);setPaused(false);balanceActions();
-      $('status').textContent='本机绘制 · C++ 核心 · 无外部请求'+(panel?'':' · 面板效果不可用');
-      $('fingerprint').textContent='核心源码 SHA-256：'+CORE_SHA256.slice(0,16);
+      $('export').onclick=()=>openExport(true);
+      $('export-close').onclick=()=>openExport(false);
+      $('export-sheet').onclick=event=>{if(event.target===$('export-sheet'))openExport(false);};
+      $('export-sheet').onkeydown=event=>{if(event.key==='Escape')openExport(false);};
+      $('export-copy').onclick=copyExport;
+      $('export-download').onclick=()=>{
+        const url=URL.createObjectURL(new Blob([$('export-code').textContent],{type:'text/plain;charset=utf-8'}));
+        const link=document.createElement('a');link.href=url;link.download='eyes_settings.h';
+        document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);
+        $('export-status').textContent=previewText('已下载');
+      };
+      document.documentElement.dataset.ready='true';
       $('pause').onclick=()=>setPaused(!paused);
       $('step').onclick=()=>{if(paused)advance(Math.ceil(1000/fpsValue()));};
       $('demo').onclick=()=>{setCycling(!cycling);if(cycling){cycleIndex=0;nextCycle=time+4000;play(0);}};
       $('reset').onclick=()=>configure();
-      $('profile').onchange=()=>selectProfile($('profile').value);
+      // The screen list opens under its button and closes on a choice,
+      // Escape or a click elsewhere; arrow keys move through it.
+      const list=$('profile-list');
+      // The list lies over the panel at full length instead of scrolling inside it.
+      const openList=open=>{
+        if(open){
+          const r=$('profile').getBoundingClientRect();
+          Object.assign(list.style,{left:r.left+'px',top:r.bottom+6+'px',width:r.width+'px',maxHeight:innerHeight-r.bottom-18+'px'});
+        }
+        list.hidden=!open;$('profile').setAttribute('aria-expanded',String(open));
+        if(open)(list.querySelector('[aria-selected=true]')||list.firstElementChild)?.focus({preventScroll:true});
+      };
+      for(const target of [window,document.querySelector('.side-body')])
+        target.addEventListener('scroll',()=>{if(!list.hidden)openList(false);},{passive:true});
+      window.addEventListener('resize',()=>{if(!list.hidden)openList(false);});
+      $('profile').onclick=()=>openList(list.hidden);
+      list.onclick=event=>{
+        const option=event.target.closest('[data-value]');if(!option)return;
+        openList(false);$('profile').focus();
+        if(option.dataset.value!==base.id)selectProfile(option.dataset.value);
+      };
+      list.onkeydown=event=>{
+        const options=[...list.children], index=options.indexOf(document.activeElement);
+        if(event.key==='ArrowDown'||event.key==='ArrowUp'){event.preventDefault();options[(index+(event.key==='ArrowDown'?1:-1)+options.length)%options.length].focus();}
+        else if(event.key==='Escape'){openList(false);$('profile').focus();}
+        else if(event.key==='Tab')openList(false);
+      };
+      $('profile').onkeydown=event=>{if(event.key==='ArrowDown'&&list.hidden){event.preventDefault();openList(true);}};
+      document.addEventListener('pointerdown',event=>{if(!list.hidden&&!$('profile').parentElement.contains(event.target))openList(false);});
       $('prev-profile').onclick=()=>stepProfile(-1);
       $('next-profile').onclick=()=>stepProfile(1);
       $('screen-groups').onclick=event=>{
         const b=event.target.closest('[data-group]');
-        if(b&&b.dataset.group!==screenGroup)selectProfile(groupPresets(b.dataset.group)[0].id);
+        if(!b||b.dataset.group===screenGroup)return;
+        // The custom tab has no presets: it sets up a screen of your own.
+        if(b.dataset.group==='other')applyCustomSize();else selectProfile(groupPresets(b.dataset.group)[0].id);
       };
       for(const id of ['custom-width','custom-height']) {
         $(id).onchange=applyCustomSize;
         $(id).onkeydown=event=>{if(event.key==='Enter')applyCustomSize();};
       }
       bindSeg('custom-shape',applyCustomSize);
+      bindSeg('custom-panel',applyCustomSize);
       $('fps').addEventListener('click',event=>{
         const b=event.target.closest('[data-value]');
         if(!b||b.dataset.value===fpsChoice)return;
@@ -535,18 +652,11 @@
       });
       for(const id of ['blink','transitions'])$(id).onchange=()=>{applyTiming();saveSettings();};
       $('housing').onchange=()=>{resizeDisplay();saveSettings();};
-      $('sense-radius').oninput=()=>{resizeDisplay();saveSettings();};
-      bindSeg('gaze-mode',()=>applyGazeMode());
-      for(const id of ['hold','response'])bindSeg(id,()=>{applyGazeConfig();updateTrackingStatus();});
-      $('moving-only').onchange=()=>{applyGazeMode(false);updateTrackingStatus();saveSettings();};
-      bindSeg('gaze-range',()=>{api.eyes_gaze_range(Number(segValue('gaze-range')));draw();});
-      bindSeg('motion-sensitivity',()=>{motionAnchor=null;lastMotion=-Infinity;});
+      $('follow').onchange=()=>{applyGazeMode();saveSettings();};
       bindSeg('speed',()=>{previous=null;});
       $('fit').onclick=event=>{const b=event.target.closest('[data-fit]');if(b){fit=b.dataset.fit;applyLayout(true);}};
       for(const id of ['face-scale','offset-x','offset-y'])$(id).oninput=()=>applyLayout(true);
       $('layout-reset').onclick=resetLayout;
-      $('gx').oninput=$('gy').oninput=gaze;
-      $('center').onclick=()=>{$('gx').value=$('gy').value='0';gaze();};
       $('zoom-fit').onclick=()=>{zoomMode='fit';resizeDisplay();saveSettings();};
       $('zoom-real').onclick=()=>{zoomMode='real';resizeDisplay();saveSettings();};
       $('zoom').oninput=zoomFromSlider;
@@ -555,17 +665,23 @@
       $('eye-color').oninput=()=>{colors.eye=$('eye-color').value;saveColors();};
       $('bg-color').oninput=()=>{colors.bg=$('bg-color').value;saveColors();};
       $('color-reset').onclick=()=>{colors={...DEFAULT_COLORS};saveColors();};
+      $('palettes').append(...PALETTES.map((p,i)=>{
+        const b=document.createElement('button');b.type='button';b.className='swatch';b.dataset.palette=String(i);
+        b.title=p.name;b.style.setProperty('--face',p.bg);b.style.setProperty('--eye',p.eye);
+        b.setAttribute('aria-label',p.name);b.setAttribute('aria-pressed','false');return b;
+      }));
+      $('palettes').onclick=event=>{
+        const b=event.target.closest('[data-palette]');if(!b)return;
+        const p=PALETTES[Number(b.dataset.palette)];colors={eye:p.eye,bg:p.bg};saveColors();
+      };
+      syncControls();
+      $('color-swap').onclick=()=>{colors={eye:colors.bg,bg:colors.eye};saveColors();};
       $('mono-chips').onclick=event=>{const b=event.target.closest('[data-mono]');if(b){mono=b.dataset.mono;store.set('mono',mono);syncControls();renderPanel();}};
       for(const id of ['show-area','glass-glare'])$(id).onchange=()=>{resizeDisplay();saveSettings();};
-      for(const id of ['pixel-grid','raw-pixels'])$(id).onchange=()=>{renderPanel();saveSettings();};
-      $('download').onclick=()=>{
-        const url=URL.createObjectURL(new Blob(['<!doctype html>\n'+INITIAL_DOCUMENT],{type:'text/html;charset=utf-8'}));
-        const link=document.createElement('a');link.href=url;link.download='agent-robot-eyes-preview.html';
-        document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);
-      };
+      $('pixel-grid').onchange=()=>{renderPanel();saveSettings();};
       const updatePointer=event=>{
         if(event.pointerType==='touch'&&event.buttons===0)return;
-        if(!motionAnchor||Math.hypot(event.clientX-motionAnchor.x,event.clientY-motionAnchor.y)>=Number(segValue('motion-sensitivity'))){
+        if(!motionAnchor||Math.hypot(event.clientX-motionAnchor.x,event.clientY-motionAnchor.y)>=GAZE.motionPx){
           if(motionAnchor)lastMotion=time;
           motionAnchor={x:event.clientX,y:event.clientY};
         }

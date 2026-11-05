@@ -9,7 +9,7 @@ import { execFileSync } from 'node:child_process';
 import { createHash, randomFillSync } from 'node:crypto';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const html = await readFile(join(root, 'preview/agent-robot-eyes-preview.html'), 'utf8');
+const html = await readFile(join(root, 'preview/boopface-embedded-preview.html'), 'utf8');
 const encoded = html.match(/const WASM_BASE64 = '([^']+)'/)[1];
 const module = await WebAssembly.compile(Buffer.from(encoded, 'base64'));
 assert.deepEqual(WebAssembly.Module.imports(module), [
@@ -21,7 +21,7 @@ const instance = await WebAssembly.instantiate(module, { wasi_snapshot_preview1:
 } });
 api = instance.exports;
 api._initialize();
-const sourcePaths = ['lib/AgentRobotEyes/src/AgentRobotEyes.h','lib/AgentRobotEyes/src/AgentRobotEyes.cpp','lib/AgentRobotEyes/src/AgentRobotGaze.h','lib/AgentRobotEyes/src/AgentRobotWebMotion.h','preview/bridge.cpp'];
+const sourcePaths = ['lib/BoopFace/src/BoopFace.h','lib/BoopFace/src/BoopFace.cpp','lib/BoopFace/src/BoopFaceGaze.h','lib/BoopFace/src/BoopFaceWebMotion.h','preview/bridge.cpp'];
 const hash = createHash('sha256');
 for (const path of sourcePaths) hash.update(await readFile(join(root, path)));
 const sourceHash = hash.digest('hex');
@@ -29,9 +29,13 @@ assert(html.includes(sourceHash), 'rebuild preview after modifying core/bridge')
 const ui = await loadPreviewScript(join(root, 'preview'));
 const template = await readFile(join(root, 'preview/index.template.html'), 'utf8');
 const escape = text => text.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
-const license = await readFile(join(root, 'lib/AgentRobotEyes/LICENSE'), 'utf8').catch(() => readFile(join(root, '../LICENSE'), 'utf8'));
+const license = await readFile(join(root, 'lib/BoopFace/LICENSE'), 'utf8').catch(() => readFile(join(root, '../LICENSE'), 'utf8'));
 const notices = await readFile(join(root, 'preview/third-party-notices.txt'), 'utf8');
-const packageVersion = JSON.parse(await readFile(join(root, '../package.json'), 'utf8')).version;
+const libraryVersion = (await readFile(join(root, 'lib/BoopFace/library.properties'), 'utf8')).match(/^version=(.+)$/m)[1].trim();
+assert.equal(JSON.parse(await readFile(join(root, 'lib/BoopFace/library.json'), 'utf8')).version, libraryVersion,
+  'library.json and library.properties must carry the same version');
+assert.equal((await readFile(join(root, 'lib/BoopFace/src/BoopFace.h'), 'utf8')).match(/version\(\) \{ return "([^"]+)"/)[1], libraryVersion,
+  'Eyes::version() must match library.properties');
 const demoCSS = await readFile(join(root,'preview/project-demo.css'),'utf8');
 const displayFrames = await loadPreviewFrames(join(root,'preview'));
 const presets = JSON.parse(await readFile(join(root,'preview/presets.json'),'utf8'));
@@ -39,7 +43,7 @@ assert.equal(html, template.replace('/*__WASM__*/', `const WASM_BASE64 = '${enco
   .replace('/*__PRESETS__*/',`const SCREEN_PRESETS = ${JSON.stringify(presets)};`)
   .replace('/*__FRAMES__*/',`const DISPLAY_FRAMES = ${JSON.stringify(displayFrames)};`)
   .replace('/*__PROJECT_CSS__*/',demoCSS)
-  .replace('/*__UI__*/',ui).replace('__VERSION__',packageVersion).replace('__LICENSE__',escape(license)).replace('__THIRD_PARTY__',escape(notices)),
+  .replace('/*__UI__*/',ui).replace('__VERSION__',libraryVersion).replace('__LICENSE__',escape(license)).replace('__THIRD_PARTY__',escape(notices)),
   'rebuild preview after modifying HTML/UI/notices');
 
 const commands = [], expected = [];
@@ -128,7 +132,7 @@ const temp = await mkdtemp(join(tmpdir(),'eyes-preview-test-'));
 try {
   const binary = join(temp,'oracle');
   execFileSync(process.env.CXX || 'g++', ['-std=c++11','-O2','-Wall','-Wextra','-Werror','-pedantic',
-    '-I',join(root,'lib/AgentRobotEyes/src'), join(root,'lib/AgentRobotEyes/src/AgentRobotEyes.cpp'),
+    '-I',join(root,'lib/BoopFace/src'), join(root,'lib/BoopFace/src/BoopFace.cpp'),
     join(root,'preview/bridge.cpp'),join(root,'tests/preview-oracle.cpp'),'-o',binary], { stdio:'inherit' });
   const lines = execFileSync(binary, { input:commands.join('\n')+'\n', encoding:'utf8', maxBuffer:32*1024*1024 }).trim().split('\n');
   assert.equal(lines.length, expected.length);

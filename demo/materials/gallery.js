@@ -1,4 +1,4 @@
-import { VERSION } from '../../agent-robot-avatar.js';
+import { VERSION } from '../../boopface.js';
 import { publicSkins, skinById, skinThumbnail, catalogCategories as materialCategories } from '../skin-catalog.js';
 import { t, skinLanguage, skinTitle, seriesTitle, copySkinNumber } from '../skins-i18n.js';
 
@@ -7,7 +7,7 @@ document.getElementById('catalog-build').textContent = `Demo ${VERSION}`;
 const language = params.get('lang') || 'zh-CN';
 const lang = skinLanguage(language);
 document.documentElement.lang = lang;
-document.title = `${t('allSkins', 0, lang)} · Agent Robot Avatar`;
+document.title = `${t('allSkins', 0, lang)} · BoopFace`;
 for (const [selector, key] of [['#nav-demo', 'demo'], ['#nav-skins', 'skins'], ['#back-to-skins', 'backHome'], ['.library-header h1', 'allSkins'], ['.search-label .sr-only', 'search'], ['#empty-state p', 'none'], ['#clear-search', 'showAll']]) {
   document.querySelector(selector).textContent = t(key, 0, lang);
 }
@@ -40,7 +40,7 @@ const NEAR = 260, FAR = 340;
 const live = new Map();
 function wake(slot) {
   if (live.has(slot)) { live.get(slot).seen = performance.now(); return; }
-  const avatar = document.createElement('agent-robot-avatar');
+  const avatar = document.createElement('boop-face');
   avatar.setAttribute('size', '96');
   avatar.setAttribute('auto-sleep', '0');
   avatar.setAttribute('skin', slot.dataset.skin);

@@ -13,15 +13,15 @@ const root=fileURLToPath(new URL('../',import.meta.url));
 const reference=JSON.parse(await readFile(join(root,'tests/web-visual-reference.json'),'utf8'));
 const hash=createHash('sha256');
 for(const name of ['core','extension-host','actions','waiting','wrap','failure','inspect','love','random'])
-  hash.update(await readFile(join(root,`../src/agent-robot-avatar-${name}.js`)));
+  hash.update(await readFile(join(root,`../src/boopface-${name}.js`)));
 assert.equal(hash.digest('hex'),reference.sourceHash,'regenerate visual reference after changing the Web expressions');
 // Web implementation names, below the public alias table, in C++ Action order.
 const names=['idle','bored','waiting','waiting-wrap','input','send','success','failure','warning','inspect','blocked','error','surprise','love','random','sleep','wake'];
 const temp=await mkdtemp(join(tmpdir(),'web-eye-fidelity-'));
 try {
   const binary=join(temp,'oracle');
-  execFileSync(process.env.CXX||'g++',['-std=c++11','-O2','-I',join(root,'lib/AgentRobotEyes/src'),
-    join(root,'lib/AgentRobotEyes/src/AgentRobotEyes.cpp'),join(root,'preview/bridge.cpp'),
+  execFileSync(process.env.CXX||'g++',['-std=c++11','-O2','-I',join(root,'lib/BoopFace/src'),
+    join(root,'lib/BoopFace/src/BoopFace.cpp'),join(root,'preview/bridge.cpp'),
     join(root,'tests/preview-oracle.cpp'),'-o',binary],{stdio:'inherit'});
   let worst=0;const stats=[],comparisons=[];
   const selected={waiting:900,'waiting-wrap':900,inspect:2200,warning:1500,love:1200,random:1500};

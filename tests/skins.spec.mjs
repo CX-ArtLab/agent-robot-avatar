@@ -7,9 +7,9 @@ const SAMPLES = { 1001: 'url(#skin-base)', 301: 'url(#skin-base)', 102: 'url(#ma
 async function addAvatar(page, attributes) {
   await page.goto('/examples/basic.html');
   // Load the painters first so each skin shows on the frame it is set.
-  await page.evaluate(async () => (await import('/agent-robot-avatar.js')).loadSkins());
+  await page.evaluate(async () => (await import('/boopface.js')).loadSkins());
   await page.evaluate(attrs => {
-    const avatar = document.createElement('agent-robot-avatar');
+    const avatar = document.createElement('boop-face');
     avatar.id = 'skinned';
     for (const [name, value] of Object.entries(attrs)) avatar.setAttribute(name, value);
     document.body.append(avatar);
@@ -87,7 +87,7 @@ test('unknown skins warn in markup and throw from setSkin', async ({ page }) => 
   const message = await avatar.evaluate(element => {
     try { element.setSkin('obsidian'); return ''; } catch (error) { return error.message; }
   });
-  expect(message).toContain('Unknown Agent Robot Avatar skin: obsidian');
+  expect(message).toContain('Unknown BoopFace skin: obsidian');
 });
 
 test('the light follows the pointer and rests when following is off', async ({ page }) => {
@@ -149,9 +149,9 @@ test('without preloading, a skin shows once its painter has loaded', async ({ pa
 
 test('a skin set before the avatar is in the page shows once it is added', async ({ page }) => {
   await page.goto('/examples/basic.html');
-  await page.evaluate(async () => (await import('/agent-robot-avatar.js')).loadSkins());
+  await page.evaluate(async () => (await import('/boopface.js')).loadSkins());
   const head = await page.evaluate(async () => {
-    const element = document.createElement('agent-robot-avatar');
+    const element = document.createElement('boop-face');
     element.setSkin('102');
     document.body.append(element);
     await new Promise(resolve => setTimeout(resolve, 200));
@@ -163,7 +163,7 @@ test('a skin set before the avatar is in the page shows once it is added', async
 test('every skin has a permanent series number and belongs to one series', async ({ page }) => {
   await page.goto('/examples/basic.html');
   const catalog = await page.evaluate(async () => {
-    const { SKIN_NAMES, SKINS, SKIN_SERIES } = await import('/agent-robot-avatar.js');
+    const { SKIN_NAMES, SKINS, SKIN_SERIES } = await import('/boopface.js');
     const { RETIRED_SKINS } = await import('/src/skins/catalog.js');
     return { names: SKIN_NAMES, titled: SKIN_NAMES.every(id => SKINS[id].title && SKINS[id].titleEn), grouped: SKIN_SERIES.flatMap(series => series.skins), series: SKIN_SERIES, retired: RETIRED_SKINS };
   });
@@ -183,7 +183,7 @@ test('every skin renders through all expressions without errors', async ({ page 
   page.on('console', message => { if (message.type() === 'warning' || message.type() === 'error') errors.push(message.text()); });
   await page.goto('/examples/basic.html');
   const results = await page.evaluate(async () => {
-    const { SKIN_NAMES, loadSkins } = await import('/agent-robot-avatar.js');
+    const { SKIN_NAMES, loadSkins } = await import('/boopface.js');
     await loadSkins();
     const avatar = document.querySelector('#avatar');
     const out = [];
@@ -207,7 +207,7 @@ test('every skin renders through all expressions without errors', async ({ page 
 
 test('love paints overlapping eyes once, then returns to two eyes', async ({ page }) => {
   await page.goto('/examples/basic.html');
-  await page.evaluate(async () => (await import('/agent-robot-avatar.js')).loadSkins());
+  await page.evaluate(async () => (await import('/boopface.js')).loadSkins());
   // The page's own avatar is on screen, so its frames keep running.
   const avatar = page.locator('#avatar');
   await avatar.evaluate(element => element.setSkin('305'));
