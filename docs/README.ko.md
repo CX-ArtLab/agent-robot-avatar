@@ -22,11 +22,12 @@ SVG와 순수 JavaScript로 만든 네이티브 Web Component로, 런타임 의�
   <img src="../assets/demo/boopface-demo.gif" alt="BoopFace 인터랙티브 애니메이션 데모" width="560">
 </p>
 
+## 새 지원: [BoopFace Embedded](#boopface-embedded)
+
 <p align="center">
   <a href="#boopface-embedded"><img src="../assets/readme/boopface-embedded.jpg" alt="ESP32, STM32, Raspberry Pi Pico 화면과 다른 C++ 프로그램에서 같은 눈 표정을 사용합니다. 28가지 구성의 예제 펌웨어와 설정을 내보내는 시뮬레이터를 제공합니다."></a>
 </p>
 
-**[새 지원: BoopFace Embedded](#boopface-embedded)**\
 ESP32, STM32, Raspberry Pi Pico 화면과 다른 C++ 프로그램에서 같은 눈 표정을 사용합니다. 28가지 구성의 예제 펌웨어와 설정을 내보내는 시뮬레이터를 제공합니다.
 
 ## 라이브 데모
