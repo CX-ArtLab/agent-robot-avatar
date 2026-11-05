@@ -34,8 +34,8 @@ BoopFace 是一个轻量、富表现力的机器人头像组件，适用于 AI �
 
 ## 在线 Demo
 
-[打开交互 Demo](https://cx-artlab.github.io/boopface/?lang=zh-CN) · [逛逛皮肤美术馆](https://cx-artlab.github.io/boopface/skins.html?lang=zh-CN)\
-[打开嵌入式设备模拟器](https://cx-artlab.github.io/boopface/hardware/?lang=zh-CN)（可预览 32 种常用嵌入式设备屏幕）
+[打开交互 Demo](https://cx-artlab.github.io/BoopFace/?lang=zh-CN) · [逛逛皮肤美术馆](https://cx-artlab.github.io/BoopFace/skins.html?lang=zh-CN)\
+[打开嵌入式设备模拟器](https://cx-artlab.github.io/BoopFace/hardware/?lang=zh-CN)（可预览 32 种常用嵌入式设备屏幕）
 
 ## 特点
 
@@ -218,7 +218,7 @@ avatar.setSkin(102);  // 也可以写 '102'
 avatar.setSkin(null); // 回到纯色
 ```
 
-所有皮肤及编号见[全部皮肤页](https://cx-artlab.github.io/boopface/materials/?lang=zh-CN)。
+所有皮肤及编号见[全部皮肤页](https://cx-artlab.github.io/BoopFace/materials/?lang=zh-CN)。
 
 | 系列 | 编号 | 系列 | 编号 | 系列 | 编号 |
 | --- | --- | --- | --- | --- | --- |
@@ -261,7 +261,7 @@ avatar.setSkin(null); // 回到纯色
 
 <img src="../assets/readme/hardware-preview.jpg" alt="嵌入式设备模拟器：圆形 TFT 模组显示眼睛，旁边是布局、颜色和导出设置" width="100%">
 
-**没有板子也能先预览效果。** [在线模拟器](https://cx-artlab.github.io/boopface/hardware/?lang=zh-CN)在浏览器里就能运行同一套 C++ 引擎，模拟 32 种屏幕，你可以大致看到它在真实模组上的样子，选购屏幕时也能拿来参考。
+**没有板子也能先预览效果。** [在线模拟器](https://cx-artlab.github.io/BoopFace/hardware/?lang=zh-CN)在浏览器里就能运行同一套 C++ 引擎，模拟 32 种屏幕，你可以大致看到它在真实模组上的样子，选购屏幕时也能拿来参考。
 
 **调好，就能直接用。** 选好你的屏幕，调整布局、颜色和帧率，点「导出设置」。把导出的 `eyes_settings.h` 放进示例固件再编译，板子上显示的就是模拟器里的样子。详见[操作步骤](../embedded/README.zh-CN.md#在模拟器里调好直接用到板子上)。
 

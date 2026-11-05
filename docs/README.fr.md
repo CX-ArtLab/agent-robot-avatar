@@ -32,9 +32,9 @@ Les mêmes expressions sur les écrans ESP32, STM32 et Raspberry Pi Pico, ou dan
 
 ## Démo en ligne
 
-[Ouvrir la démo interactive](https://cx-artlab.github.io/boopface/?lang=fr) · [Voir la galerie de skins](https://cx-artlab.github.io/boopface/skins.html?lang=fr)
+[Ouvrir la démo interactive](https://cx-artlab.github.io/BoopFace/?lang=fr) · [Voir la galerie de skins](https://cx-artlab.github.io/BoopFace/skins.html?lang=fr)
 
-[Ouvrir le simulateur embarqué](https://cx-artlab.github.io/boopface/hardware/?lang=fr)
+[Ouvrir le simulateur embarqué](https://cx-artlab.github.io/BoopFace/hardware/?lang=fr)
 
 ## Points forts
 
@@ -216,7 +216,7 @@ avatar.setSkin(102);  // ou '102'
 avatar.setSkin(null); // retour à la couleur unie
 ```
 
-Retrouvez tous les skins et leur numéro dans la [page de tous les skins](https://cx-artlab.github.io/boopface/materials/?lang=fr).
+Retrouvez tous les skins et leur numéro dans la [page de tous les skins](https://cx-artlab.github.io/BoopFace/materials/?lang=fr).
 
 | Série | Numéros | Série | Numéros | Série | Numéros |
 | --- | --- | --- | --- | --- | --- |
@@ -260,7 +260,7 @@ Les expressions des yeux de la version web fonctionnent désormais sur les écra
 
 <img src="../assets/readme/hardware-preview.jpg" alt="Simulateur : expressions sur un TFT rond, disposition, couleurs et export" width="100%">
 
-**Essayez sans carte.** Le [simulateur](https://cx-artlab.github.io/boopface/hardware/?lang=fr) exécute le même moteur C++ dans le navigateur sur 32 écrans simulés. Il permet de prévisualiser le résultat et de comparer les modules.
+**Essayez sans carte.** Le [simulateur](https://cx-artlab.github.io/BoopFace/hardware/?lang=fr) exécute le même moteur C++ dans le navigateur sur 32 écrans simulés. Il permet de prévisualiser le résultat et de comparer les modules.
 
 **Réglez, exportez, compilez.** Choisissez l’écran, la disposition, les couleurs et la cadence, puis **Exporter les réglages**. Placez `eyes_settings.h` à côté du `main.cpp` de l’exemple et compilez. Voir les [étapes](../embedded/README.md). L’interface et les commentaires exportés suivent la langue choisie.
 

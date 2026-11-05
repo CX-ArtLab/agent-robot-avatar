@@ -32,9 +32,9 @@ As mesmas expressões nas telas ESP32, STM32 e Raspberry Pi Pico, ou em outros p
 
 ## Demo ao vivo
 
-[Abrir a demo interativa](https://cx-artlab.github.io/boopface/?lang=pt) · [Visite a galeria de skins](https://cx-artlab.github.io/boopface/skins.html?lang=pt)
+[Abrir a demo interativa](https://cx-artlab.github.io/BoopFace/?lang=pt) · [Visite a galeria de skins](https://cx-artlab.github.io/BoopFace/skins.html?lang=pt)
 
-[Abrir o simulador embarcado](https://cx-artlab.github.io/boopface/hardware/?lang=pt)
+[Abrir o simulador embarcado](https://cx-artlab.github.io/BoopFace/hardware/?lang=pt)
 
 ## Destaques
 
@@ -216,7 +216,7 @@ avatar.setSkin(102);  // ou '102'
 avatar.setSkin(null); // volta à cor lisa
 ```
 
-Veja todos os skins com seus números na [página com todos os skins](https://cx-artlab.github.io/boopface/materials/?lang=pt).
+Veja todos os skins com seus números na [página com todos os skins](https://cx-artlab.github.io/BoopFace/materials/?lang=pt).
 
 | Série | Números | Série | Números | Série | Números |
 | --- | --- | --- | --- | --- | --- |
@@ -260,7 +260,7 @@ As expressões dos olhos da versão web agora funcionam em telas de robôs e pla
 
 <img src="../assets/readme/hardware-preview.jpg" alt="Simulador: expressões numa TFT redonda, disposição, cores e exportação" width="100%">
 
-**Experimente sem placa.** O [simulador](https://cx-artlab.github.io/boopface/hardware/?lang=pt) executa o mesmo motor C++ no navegador com 32 telas simuladas. Ajuda a prever o resultado e comparar módulos.
+**Experimente sem placa.** O [simulador](https://cx-artlab.github.io/BoopFace/hardware/?lang=pt) executa o mesmo motor C++ no navegador com 32 telas simuladas. Ajuda a prever o resultado e comparar módulos.
 
 **Ajuste, exporte e compile.** Escolha a tela, disposição, cores e taxa de quadros. Clique em **Exportar ajustes**, salve `eyes_settings.h` ao lado do `main.cpp` do exemplo e compile. Veja os [passos](../embedded/README.md). A interface e os comentários exportados seguem o idioma escolhido.
 

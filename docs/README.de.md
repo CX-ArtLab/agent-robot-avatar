@@ -32,9 +32,9 @@ Dieselben Augenausdrücke auf ESP32-, STM32- und Raspberry-Pi-Pico-Bildschirmen 
 
 ## Live-Demo
 
-[Interaktive Demo öffnen](https://cx-artlab.github.io/boopface/?lang=de) · [Zur Skin-Galerie](https://cx-artlab.github.io/boopface/skins.html?lang=de)
+[Interaktive Demo öffnen](https://cx-artlab.github.io/BoopFace/?lang=de) · [Zur Skin-Galerie](https://cx-artlab.github.io/BoopFace/skins.html?lang=de)
 
-[Embedded-Simulator öffnen](https://cx-artlab.github.io/boopface/hardware/?lang=de)
+[Embedded-Simulator öffnen](https://cx-artlab.github.io/BoopFace/hardware/?lang=de)
 
 ## Besondere Merkmale
 
@@ -216,7 +216,7 @@ avatar.setSkin(102);  // oder '102'
 avatar.setSkin(null); // zurück zur flachen Farbe
 ```
 
-Alle Skins mit Nummer zeigt die [Seite mit allen Skins](https://cx-artlab.github.io/boopface/materials/?lang=de).
+Alle Skins mit Nummer zeigt die [Seite mit allen Skins](https://cx-artlab.github.io/BoopFace/materials/?lang=de).
 
 | Serie | Nummern | Serie | Nummern | Serie | Nummern |
 | --- | --- | --- | --- | --- | --- |
@@ -260,7 +260,7 @@ Die Augenausdrücke der Webversion laufen jetzt auf Robotern und Entwicklungspla
 
 <img src="../assets/readme/hardware-preview.jpg" alt="Simulator: Augenausdrücke auf rundem TFT, Anordnung, Farben und Export" width="100%">
 
-**Ohne Platine ausprobieren.** Der [Simulator](https://cx-artlab.github.io/boopface/hardware/?lang=de) führt dieselbe C++-Engine im Browser auf 32 simulierten Bildschirmen aus. So kannst du Module vergleichen und die Darstellung vorab ansehen.
+**Ohne Platine ausprobieren.** Der [Simulator](https://cx-artlab.github.io/BoopFace/hardware/?lang=de) führt dieselbe C++-Engine im Browser auf 32 simulierten Bildschirmen aus. So kannst du Module vergleichen und die Darstellung vorab ansehen.
 
 **Anpassen, exportieren, bauen.** Wähle Bildschirm, Anordnung, Farben und Bildrate, dann **Einstellungen exportieren**. Speichere `eyes_settings.h` neben der `main.cpp` des Beispiels und kompiliere. Siehe die [Anleitung](../embedded/README.md). Oberfläche und exportierte Kommentare folgen der gewählten Sprache.
 

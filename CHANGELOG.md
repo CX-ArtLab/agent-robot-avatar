@@ -10,7 +10,7 @@ The project follows Semantic Versioning for public releases. Internal developmen
 
 - Agent Robot Avatar is now **BoopFace**. The npm package is `boopface`, the tag is `<boop-face>` and the class is `BoopFace`. Nothing else changes: every expression, gesture, skin and option works the same.
 - The files are now `boopface.js` and `boopface-lite.js`; `boopface/lite` is the lite build.
-- The repository moved to `github.com/CX-ArtLab/boopface` and the demo to `cx-artlab.github.io/boopface`. Old links forward to the new ones.
+- The repository moved to `github.com/CX-ArtLab/boopface` and the demo to `cx-artlab.github.io/BoopFace`. Old links forward to the new ones.
 
 ### Added
 

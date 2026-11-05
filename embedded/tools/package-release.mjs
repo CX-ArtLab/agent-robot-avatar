@@ -37,7 +37,7 @@ OledSSD1306 needs the Adafruit SSD1306 library and a 128×64 I²C OLED.
 All board configurations compile in CI; physical verification is pending.
 
 - Guide and firmware examples: https://github.com/CX-ArtLab/boopface/tree/main/embedded
-- Simulator: https://cx-artlab.github.io/boopface/hardware/
+- Simulator: https://cx-artlab.github.io/BoopFace/hardware/
 - Issues: https://github.com/CX-ArtLab/boopface/issues
 
 Use #include <BoopFace.h> and boopface::Eyes. The caller supplies the

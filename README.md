@@ -32,9 +32,9 @@ The same eye expressions on ESP32, STM32 and Raspberry Pi Pico screens, or in ot
 
 ## Live Demo
 
-[Open the interactive demo](https://cx-artlab.github.io/boopface/) · [Visit the Skin Gallery](https://cx-artlab.github.io/boopface/skins.html)
+[Open the interactive demo](https://cx-artlab.github.io/BoopFace/) · [Visit the Skin Gallery](https://cx-artlab.github.io/BoopFace/skins.html)
 
-[Open the embedded simulator](https://cx-artlab.github.io/boopface/hardware/?lang=en)
+[Open the embedded simulator](https://cx-artlab.github.io/BoopFace/hardware/?lang=en)
 
 ## Highlights
 
@@ -216,7 +216,7 @@ avatar.setSkin(102);  // or '102'
 avatar.setSkin(null); // back to the flat color
 ```
 
-See every skin with its number on the [all skins page](https://cx-artlab.github.io/boopface/materials/).
+See every skin with its number on the [all skins page](https://cx-artlab.github.io/BoopFace/materials/).
 
 | Series | Numbers | Series | Numbers | Series | Numbers |
 | --- | --- | --- | --- | --- | --- |
@@ -260,7 +260,7 @@ The Web avatar’s eye expressions now run on robot and development-board displa
 
 <img src="assets/readme/hardware-preview.jpg" alt="Embedded simulator: eye expressions on a round TFT, with layout, colours and settings export" width="100%">
 
-**Try it without a board.** The [online simulator](https://cx-artlab.github.io/boopface/hardware/?lang=en) runs the same C++ engine in your browser on 32 simulated screens. It helps you preview a module and compare screen choices.
+**Try it without a board.** The [online simulator](https://cx-artlab.github.io/BoopFace/hardware/?lang=en) runs the same C++ engine in your browser on 32 simulated screens. It helps you preview a module and compare screen choices.
 
 **Tune, export, build.** Pick a display and adjust layout, colours and frame rate, then choose **Export settings**. Save `eyes_settings.h` next to the example firmware’s `main.cpp` and compile. See the [steps](embedded/README.md). The simulator and exported comments follow your selected language.
 

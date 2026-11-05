@@ -32,9 +32,9 @@ ESP32、STM32、Raspberry Pi Pico の画面や、その他の C++ プログラ�
 
 ## ライブデモ
 
-[インタラクティブデモを開く](https://cx-artlab.github.io/boopface/?lang=ja) · [スキンギャラリーを見る](https://cx-artlab.github.io/boopface/skins.html?lang=ja)
+[インタラクティブデモを開く](https://cx-artlab.github.io/BoopFace/?lang=ja) · [スキンギャラリーを見る](https://cx-artlab.github.io/BoopFace/skins.html?lang=ja)
 
-[組み込みシミュレーターを開く](https://cx-artlab.github.io/boopface/hardware/?lang=ja)
+[組み込みシミュレーターを開く](https://cx-artlab.github.io/BoopFace/hardware/?lang=ja)
 
 ## 特長
 
@@ -216,7 +216,7 @@ avatar.setSkin(102);  // '102' でも可
 avatar.setSkin(null); // 単色に戻す
 ```
 
-すべてのスキンと番号は[スキン一覧ページ](https://cx-artlab.github.io/boopface/materials/?lang=ja)で確認できます。
+すべてのスキンと番号は[スキン一覧ページ](https://cx-artlab.github.io/BoopFace/materials/?lang=ja)で確認できます。
 
 | シリーズ | 番号 | シリーズ | 番号 | シリーズ | 番号 |
 | --- | --- | --- | --- | --- | --- |
@@ -260,7 +260,7 @@ Web版の目の表情を、ロボットや開発ボードの画面でも使え�
 
 <img src="../assets/readme/hardware-preview.jpg" alt="シミュレーター：円形TFTの目の表情、配置、色、設定の書き出し" width="100%">
 
-**ボードなしでも試せます。** [シミュレーター](https://cx-artlab.github.io/boopface/hardware/?lang=ja)は同じC++エンジンをブラウザーで動かし、32種類の画面を再現します。表示の確認やモジュールの比較に使えます。
+**ボードなしでも試せます。** [シミュレーター](https://cx-artlab.github.io/BoopFace/hardware/?lang=ja)は同じC++エンジンをブラウザーで動かし、32種類の画面を再現します。表示の確認やモジュールの比較に使えます。
 
 **調整して、書き出して、ビルド。** 画面、配置、色、フレームレートを選び、**設定を書き出す**を押します。`eyes_settings.h` をサンプルの `main.cpp` と同じ場所に保存してビルドします。[手順](../embedded/README.md)をご覧ください。画面と書き出すコメントは選んだ言語に切り替わります。
 
