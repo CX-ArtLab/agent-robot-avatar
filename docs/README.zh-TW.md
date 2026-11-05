@@ -1,27 +1,25 @@
-# Agent Robot Avatar
+# BoopFace
 
 <p align="center">
-  <img src="../assets/readme/agent-robot-avatar-header.jpg" alt="Agent Robot Avatar">
+  <img src="../assets/readme/boopface-header.jpg" alt="BoopFace：輕量、富有表現力的機器人頭像元件，適用於 AI 機器人、AI Agent 與互動式應用">
 </p>
 
 [English](https://github.com/CX-ArtLab/boopface/blob/main/README.md) | [简体中文](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.zh-CN.md) | [Español](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.es.md) | [Русский](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.ru.md) | [Français](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.fr.md) | [Português](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.pt.md) | [Deutsch](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.de.md) | [日本語](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.ja.md) | [한국어](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.ko.md) | [繁體中文](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.zh-TW.md)
 
-![Version](https://img.shields.io/badge/version-v0.7.2-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/boopface/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/boopface/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
+![Version](https://img.shields.io/badge/version-v0.8.0-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/boopface/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/boopface/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
 ![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square)
 
-一個輕量、富有表現力的機器人頭像 Web Component，適用於 AI Agent 與互動式應用。
+BoopFace 是一個輕量、富有表現力的機器人頭像元件，適用於 AI 機器人、AI Agent 與互動式應用。思考、等待、完成、出錯，Agent 的每個狀態都能用一個表情說出來。
 
-可用於 AI 助理、Agent 介面、桌面夥伴、虛擬寵物、數位吉祥物、聊天機器人頭像，以及其他互動角色體驗。
+適合作為 AI 助理和 Agent 的形象與狀態回饋：類似 ChatGPT、Claude、Gemini、Grok、DeepSeek 的對話助理，類似 Codex、Claude Code、Cursor、Gemini CLI、OpenCode 的程式設計 Agent，以及類似 Grok Bot、ChatGPT dots、Meta Muse、OpenClaw、Hermes Agent 的常駐 Agent。
 
-適用於 AI 助理與 Agent 介面，包括類似 ChatGPT、Claude、Codex、Cursor、Grok Bot、Gemini CLI 與 OpenCode 的產品與體驗。
+也可用於桌面夥伴、虛擬寵物、數位吉祥物、聊天機器人頭像等互動角色，或作為 AG-UI 風格 Agent 介面的視覺回饋層。
 
-使用 SVG 與原生 JavaScript 建構，以原生 Custom Element 運作，執行階段零依賴。
-
-Agent Robot Avatar 也可作為 AG-UI 風格 Agent 介面的視覺回饋層。
+使用 SVG 與原生 JavaScript 建構，是一個原生 Web Component，執行階段零依賴，MIT 開源。另有 188 款[皮膚](#皮膚--07-新功能)可以隨時換上。
 
 <p align="center">
-  <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Agent Robot Avatar 互動動畫示範" width="560">
+  <img src="../assets/demo/boopface-demo.gif" alt="BoopFace 互動動畫示範" width="560">
 </p>
 
 ## 線上 Demo
@@ -49,36 +47,55 @@ Agent Robot Avatar 也可作為 AG-UI 風格 Agent 介面的視覺回饋層。
 ## 安裝
 
 ```bash
-npm install agent-robot-avatar
+npm install boopface
 ```
 
 ```js
-import 'agent-robot-avatar';
+import 'boopface';
 ```
 
-也可以從[最新發布](https://github.com/CX-ArtLab/boopface/releases/latest)下載 `agent-robot-avatar-x.y.z.zip`，裡面只有元件本身（含皮膚），解壓縮到網頁旁邊即可：
+也可以從[最新發布](https://github.com/CX-ArtLab/boopface/releases/latest)下載 `boopface-x.y.z.zip`，裡面只有元件本身（含皮膚），解壓縮到網頁旁邊即可：
 
 ```html
-<script type="module" src="./agent-robot-avatar/agent-robot-avatar.js"></script>
+<script type="module" src="./boopface/boopface.js"></script>
 ```
 
 接著加入元件：
 
 ```html
-<agent-robot-avatar id="avatar"></agent-robot-avatar>
+<boop-face id="avatar"></boop-face>
 ```
 
 不需要初始化程式碼，頭像會自動進入預設待機狀態。
 
+### 從 Agent Robot Avatar 升級
+
+BoopFace 原名 Agent Robot Avatar，0.8 版起改名，功能和用法都沒有變。升級只需把套件名稱換成 `boopface`：
+
+```bash
+npm uninstall agent-robot-avatar
+npm install boopface
+```
+
+舊標籤 `<agent-robot-avatar>` 在 1.0 之前仍然可以使用，不用急著改頁面。舊的 npm 套件 `agent-robot-avatar` 不再更新，以後的新版本只發布在 `boopface`。
+
 ### 精簡版
 
-如果頁面完全用不到皮膚，可以改用 `agent-robot-avatar/lite`，頭像和所有表情都一樣，只是不含任何皮膚程式：
+如果頁面完全用不到皮膚，可以改用 `boopface/lite`，頭像和所有表情都一樣，只是不含任何皮膚程式：
 
 ```js
-import 'agent-robot-avatar/lite';
+import 'boopface/lite';
 ```
 
 精簡版會忽略 `skin` 屬性，並在主控台提示：皮膚需要使用完整版。
+
+大小對比（網路傳輸大小，gzip 壓縮後）：
+
+| 版本 | 大小 |
+| --- | --- |
+| 精簡版 `boopface/lite` | 約 45 KB |
+| 完整版，頁面沒用皮膚 | 約 56 KB，皮膚繪製程式碼不會下載 |
+| 完整版，用到皮膚 | 約 113 KB，多出的部分在第一次用到皮膚時才下載 |
 
 ## 基本用法
 
@@ -141,13 +158,13 @@ try {
 ## 常用選項
 
 ```html
-<agent-robot-avatar
+<boop-face
   size="160"
   color="#08090b"
   auto-sleep="30000"
   wake-on="activity"
   motion="auto">
-</agent-robot-avatar>
+</boop-face>
 ```
 
 | 屬性 | 用途 |
@@ -181,7 +198,7 @@ avatar.setAntennaDrag(true);
 <img src="../assets/readme/skin-gallery.jpg" alt="皮膚美術館：精選皮膚、分類篩選與搜尋" width="100%">
 
 ```html
-<agent-robot-avatar skin="301"></agent-robot-avatar>
+<boop-face skin="301"></boop-face>
 ```
 
 ```js
@@ -191,25 +208,14 @@ avatar.setSkin(null); // 回到純色
 
 所有皮膚及編號請見[全部皮膚頁](https://cx-artlab.github.io/boopface/materials/?lang=zh-TW)。
 
-| 系列 | 編號 |
-| --- | --- |
-| 彩色玻璃 | 101–106 |
-| 淡彩玻璃 | 201–206 |
-| 軟糖 | 301–312 |
-| 糖果玻璃 | 401–406 |
-| 壓克力 | 501–512 |
-| 果凍 | 601–612 |
-| 漸層 | 701–712 |
-| 磨砂玻璃 | 801–806 |
-| 磨砂金屬 | 901–930 |
-| 寶石與陶瓷 | 1001–1012 |
-| 木 | 1101–1106 |
-| 球類 | 1201–1210 |
-| 透明與流光 | 1301–1305 |
-| 織物與皮革 | 1401–1412 |
-| 甜點與水果 | 1501–1512 |
-| 自然 | 1601–1612 |
-| 圖案與科技 | 1701–1717 |
+| 系列 | 編號 | 系列 | 編號 | 系列 | 編號 |
+| --- | --- | --- | --- | --- | --- |
+| 彩色玻璃 | 101–106 | 淡彩玻璃 | 201–206 | 軟糖 | 301–312 |
+| 糖果玻璃 | 401–406 | 壓克力 | 501–512 | 果凍 | 601–612 |
+| 漸層 | 701–712 | 磨砂玻璃 | 801–806 | 磨砂金屬 | 901–930 |
+| 寶石與陶瓷 | 1001–1012 | 木 | 1101–1106 | 球類 | 1201–1210 |
+| 透明與流光 | 1301–1305 | 織物與皮革 | 1401–1412 | 甜點與水果 | 1501–1512 |
+| 自然 | 1601–1612 | 圖案與科技 | 1701–1717 |  |  |
 
 皮膚的繪製程式在第一次用到皮膚時才下載，不用皮膚的頁面完全不載入。`await loadSkins()` 可以提前載入。`SKINS` 提供每款皮膚的中英文名稱與顏色，`SKIN_SERIES` 提供系列，`SKIN_NAMES` 提供全部編號。
 
@@ -229,7 +235,7 @@ avatar.setSkin(null); // 回到純色
 
 自動瀏覽器測試涵蓋 Chromium、Firefox 和 WebKit。
 
-## 硬體表情版（開發中）
+## BoopFace Embedded 嵌入式裝置版（開發中）
 
 在機器人和開發板螢幕上顯示表情的 C++ 版本（只畫眼睛）正在開發中，尚未發布。詳見[硬體接入說明](https://github.com/CX-ArtLab/boopface/tree/main/embedded)。
 
@@ -239,17 +245,17 @@ avatar.setSkin(null); // 回到純色
 
 ## 專案狀態
 
-**目前公開版本：v0.7.2**
+**目前公開版本：v0.8.0**
 
 公開 API 會在未來 `1.0.0` 穩定性承諾前繼續保持精簡並謹慎演進。
 
-Agent Robot Avatar 為獨立開發的開源專案，不隸屬、代表或獲得任何 AI 平台或品牌的官方背書。
+BoopFace 為獨立開發的開源專案，不隸屬、代表或獲得任何 AI 平台或品牌的官方背書。
 
 ## 角色設計與視覺識別
 
-Agent Robot Avatar 角色，包括機器人外觀與視覺識別，均為 CX ArtLab 的原創設計。
+BoopFace 角色，包括機器人外觀與視覺識別，均為 CX ArtLab 的原創設計。
 
-MIT License 適用於軟體和原始碼，允許在應用中使用、修改和散布該頭像，但不會轉移 Agent Robot Avatar 名稱、角色身分或視覺識別的所有權，也不授予將其作為其他方原創角色或獨立品牌展示的權利。
+MIT License 適用於軟體和原始碼，允許在應用中使用、修改和散布該頭像，但不會轉移 BoopFace 名稱、角色身分或視覺識別的所有權，也不授予將其作為其他方原創角色或獨立品牌展示的權利。
 
 本專案提及的第三方產品名稱僅用於說明可能的使用情境，不代表任何關聯或官方認可。
 

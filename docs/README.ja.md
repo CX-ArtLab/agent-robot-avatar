@@ -1,27 +1,25 @@
-# Agent Robot Avatar
+# BoopFace
 
 <p align="center">
-  <img src="../assets/readme/agent-robot-avatar-header.jpg" alt="Agent Robot Avatar">
+  <img src="../assets/readme/boopface-header.jpg" alt="BoopFace：AI ボット、エージェント、インタラクティブなアプリのための、軽量で表情豊かなロボットアバターコンポーネント">
 </p>
 
 [English](https://github.com/CX-ArtLab/boopface/blob/main/README.md) | [简体中文](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.zh-CN.md) | [Español](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.es.md) | [Русский](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.ru.md) | [Français](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.fr.md) | [Português](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.pt.md) | [Deutsch](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.de.md) | [日本語](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.ja.md) | [한국어](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.ko.md) | [繁體中文](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.zh-TW.md)
 
-![Version](https://img.shields.io/badge/version-v0.7.2-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/boopface/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/boopface/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
+![Version](https://img.shields.io/badge/version-v0.8.0-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/boopface/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/boopface/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
 ![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square)
 
-AI Agent やインタラクティブなアプリケーション向けの、軽量で表情豊かなロボットアバター Web Component です。
+BoopFace は、AI ボット、エージェント、インタラクティブなアプリのための、軽量で表情豊かなロボットアバターコンポーネントです。考え中、待機中、完了、エラー。エージェントのあらゆる状態を表情で伝えられます。
 
-AI アシスタント、Agent インターフェース、デスクトップコンパニオン、バーチャルペット、デジタルマスコット、チャットボットのアバターなど、さまざまなインタラクティブキャラクター体験に利用できます。
+AI アシスタントやエージェントの顔と状態表示に使えます。ChatGPT、Claude、Gemini、Grok、DeepSeek のようなチャットアシスタント、Codex、Claude Code、Cursor、Gemini CLI、OpenCode のようなコーディングエージェント、Grok Bot、ChatGPT dots、Meta Muse、OpenClaw、Hermes Agent のような常駐型エージェントに向いています。
 
-ChatGPT、Claude、Codex、Cursor、Grok Bot、Gemini CLI、OpenCode に似た製品や体験を含む、AI アシスタントおよび Agent インターフェースに適しています。
+デスクトップコンパニオン、バーチャルペット、デジタルマスコット、チャットボットのアバターなどのインタラクティブなキャラクターや、AG-UI スタイルのエージェント UI の視覚フィードバック層としても使えます。
 
-SVG と Vanilla JavaScript で構築され、ネイティブ Custom Element として動作し、ランタイム依存はありません。
-
-Agent Robot Avatar は、AG-UI スタイルの Agent インターフェースにおける視覚的なフィードバック層としても利用できます。
+SVG と素の JavaScript で作られたネイティブ Web Component で、実行時の依存関係はゼロ、MIT ライセンスです。188 種類の[スキン](#スキン--07-の新機能)にいつでも着せ替えられます。
 
 <p align="center">
-  <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Agent Robot Avatar インタラクティブアニメーションデモ" width="560">
+  <img src="../assets/demo/boopface-demo.gif" alt="BoopFace インタラクティブアニメーションデモ" width="560">
 </p>
 
 ## ライブデモ
@@ -49,36 +47,55 @@ Agent Robot Avatar は、AG-UI スタイルの Agent インターフェースに
 ## インストール
 
 ```bash
-npm install agent-robot-avatar
+npm install boopface
 ```
 
 ```js
-import 'agent-robot-avatar';
+import 'boopface';
 ```
 
-または[最新リリース](https://github.com/CX-ArtLab/boopface/releases/latest)から `agent-robot-avatar-x.y.z.zip` をダウンロードします。中身はコンポーネントだけ（スキンを含む）です。ページと同じ場所に展開してください。
+または[最新リリース](https://github.com/CX-ArtLab/boopface/releases/latest)から `boopface-x.y.z.zip` をダウンロードします。中身はコンポーネントだけ（スキンを含む）です。ページと同じ場所に展開してください。
 
 ```html
-<script type="module" src="./agent-robot-avatar/agent-robot-avatar.js"></script>
+<script type="module" src="./boopface/boopface.js"></script>
 ```
 
 続いてコンポーネントを追加します。
 
 ```html
-<agent-robot-avatar id="avatar"></agent-robot-avatar>
+<boop-face id="avatar"></boop-face>
 ```
 
 初期化コードは不要です。アバターは自動的にデフォルトの idle 状態になります。
 
+### Agent Robot Avatar からのアップグレード
+
+BoopFace は 0.8 より前は Agent Robot Avatar という名前でした。機能も使い方も変わりません。パッケージ名を `boopface` に変えるだけでアップグレードできます：
+
+```bash
+npm uninstall agent-robot-avatar
+npm install boopface
+```
+
+古いタグ `<agent-robot-avatar>` は 1.0 まで引き続き使えるので、ページを急いで書き換える必要はありません。古い npm パッケージ `agent-robot-avatar` は今後更新されず、新しいバージョンは `boopface` としてのみ公開されます。
+
 ### 軽量版
 
-スキンを使わないページでは `agent-robot-avatar/lite` を使えます。アバターとすべての表情は同じで、スキンのコードだけを含みません：
+スキンを使わないページでは `boopface/lite` を使えます。アバターとすべての表情は同じで、スキンのコードだけを含みません：
 
 ```js
-import 'agent-robot-avatar/lite';
+import 'boopface/lite';
 ```
 
 軽量版では `skin` 属性は無視され、スキンにはフル版が必要だとコンソールに表示されます。
+
+サイズ比較（ネットワーク転送量、gzip 圧縮後）：
+
+| 版 | サイズ |
+| --- | --- |
+| 軽量版 `boopface/lite` | 約 45 KB |
+| フル版、ページでスキンを使わない | 約 56 KB。スキンの描画コードはダウンロードされません |
+| フル版、スキンを使う | 約 113 KB。増えた分は最初にスキンを使ったときにダウンロードされます |
 
 ## 基本的な使い方
 
@@ -141,13 +158,13 @@ try {
 ## よく使うオプション
 
 ```html
-<agent-robot-avatar
+<boop-face
   size="160"
   color="#08090b"
   auto-sleep="30000"
   wake-on="activity"
   motion="auto">
-</agent-robot-avatar>
+</boop-face>
 ```
 
 | 属性 | 用途 |
@@ -181,7 +198,7 @@ avatar.setAntennaDrag(true);
 <img src="../assets/readme/skin-gallery.jpg" alt="スキンギャラリー：おすすめ、絞り込み、検索" width="100%">
 
 ```html
-<agent-robot-avatar skin="301"></agent-robot-avatar>
+<boop-face skin="301"></boop-face>
 ```
 
 ```js
@@ -191,25 +208,14 @@ avatar.setSkin(null); // 単色に戻す
 
 すべてのスキンと番号は[スキン一覧ページ](https://cx-artlab.github.io/boopface/materials/?lang=ja)で確認できます。
 
-| シリーズ | 番号 |
-| --- | --- |
-| グレーズ | 101–106 |
-| アイスガラス | 201–206 |
-| グミ | 301–312 |
-| キャンディガラス | 401–406 |
-| アクリル | 501–512 |
-| ゼリー | 601–612 |
-| グラデーション | 701–712 |
-| すりガラス | 801–806 |
-| メタル | 901–930 |
-| 宝石と陶磁器 | 1001–1012 |
-| 木 | 1101–1106 |
-| ボール | 1201–1210 |
-| 透明・きらめき | 1301–1305 |
-| 布と革 | 1401–1412 |
-| スイーツとフルーツ | 1501–1512 |
-| 自然 | 1601–1612 |
-| 柄とテック | 1701–1717 |
+| シリーズ | 番号 | シリーズ | 番号 | シリーズ | 番号 |
+| --- | --- | --- | --- | --- | --- |
+| グレーズ | 101–106 | アイスガラス | 201–206 | グミ | 301–312 |
+| キャンディガラス | 401–406 | アクリル | 501–512 | ゼリー | 601–612 |
+| グラデーション | 701–712 | すりガラス | 801–806 | メタル | 901–930 |
+| 宝石と陶磁器 | 1001–1012 | 木 | 1101–1106 | ボール | 1201–1210 |
+| 透明・きらめき | 1301–1305 | 布と革 | 1401–1412 | スイーツとフルーツ | 1501–1512 |
+| 自然 | 1601–1612 | 柄とテック | 1701–1717 |  |  |
 
 スキンの描画コードは初めてスキンを使うときに読み込まれ、スキンを使わないページでは読み込まれません。`await loadSkins()` で事前に読み込めます。`SKINS` は各スキンの中国語・英語名と色、`SKIN_SERIES` はシリーズ、`SKIN_NAMES` は全番号です。
 
@@ -229,7 +235,7 @@ ES Modules、Custom Elements、SVG、Pointer Events、Web Animations API、`Inte
 
 自動ブラウザテストは Chromium、Firefox、WebKit を対象にしています。
 
-## ハードウェア版の表情（開発中）
+## BoopFace Embedded（開発中）
 
 ロボットや開発ボードの画面にアバターの表情を表示する C++ 版（目だけを描画）を開発中です。まだリリースされていません。[ハードウェアガイド](https://github.com/CX-ArtLab/boopface/tree/main/embedded)をご覧ください。
 
@@ -239,17 +245,17 @@ Issue と Pull Request を歓迎します。変更を送る前に [`CONTRIBUTING
 
 ## プロジェクト状況
 
-**現在の公開バージョン：v0.7.2**
+**現在の公開バージョン：v0.8.0**
 
 公開 API は、将来の `1.0.0` における安定性コミットメントに向けて、意図的にコンパクトなまま慎重に進化させています。
 
-Agent Robot Avatar は独立して開発されたプロジェクトであり、いかなる AI プラットフォームやブランドとも提携・承認・公式な関係はありません。
+BoopFace は独立して開発されたプロジェクトであり、いかなる AI プラットフォームやブランドとも提携・承認・公式な関係はありません。
 
 ## キャラクターデザインとビジュアルアイデンティティ
 
-Agent Robot Avatar のキャラクター、ロボットの外観、ビジュアルアイデンティティは CX ArtLab によるオリジナルデザインです。
+BoopFace のキャラクター、ロボットの外観、ビジュアルアイデンティティは CX ArtLab によるオリジナルデザインです。
 
-MIT License はソフトウェアとソースコードに適用されます。アプリケーションの一部としてアバターを使用・変更・配布できますが、Agent Robot Avatar の名称、キャラクターアイデンティティ、ビジュアルアイデンティティの所有権を移転するものではなく、他者のオリジナルキャラクターや独立ブランドとして提示する権利を付与するものでもありません。
+MIT License はソフトウェアとソースコードに適用されます。アプリケーションの一部としてアバターを使用・変更・配布できますが、BoopFace の名称、キャラクターアイデンティティ、ビジュアルアイデンティティの所有権を移転するものではなく、他者のオリジナルキャラクターや独立ブランドとして提示する権利を付与するものでもありません。
 
 本プロジェクト内で言及する第三者製品名は、想定される使用例を説明するためのものであり、提携や承認を示すものではありません。
 

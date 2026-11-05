@@ -1,32 +1,30 @@
-# Agent Robot Avatar
+# BoopFace
 
 <p align="center">
-  <img src="./assets/readme/agent-robot-avatar-header.jpg" alt="Agent Robot Avatar">
+  <img src="./assets/readme/boopface-header.jpg" alt="BoopFace: a lightweight, expressive robot avatar component for AI bots, agents and interactive apps">
 </p>
 
-[English](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/README.md) | [简体中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-CN.md) | [Español](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.es.md) | [Русский](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ru.md) | [Français](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.fr.md) | [Português](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.pt.md) | [Deutsch](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.de.md) | [日本語](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ja.md) | [한국어](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ko.md) | [繁體中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-TW.md)
+[English](https://github.com/CX-ArtLab/boopface/blob/main/README.md) | [简体中文](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.zh-CN.md) | [Español](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.es.md) | [Русский](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.ru.md) | [Français](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.fr.md) | [Português](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.pt.md) | [Deutsch](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.de.md) | [日本語](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.ja.md) | [한국어](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.ko.md) | [繁體中文](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.zh-TW.md)
 
-![Version](https://img.shields.io/badge/version-v0.7.2-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](./LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
+![Version](https://img.shields.io/badge/version-v0.8.0-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](./LICENSE) [![CI](https://github.com/CX-ArtLab/boopface/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/boopface/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
 ![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square)
 
-A lightweight, expressive robot avatar Web Component for AI agents and interactive applications.
+BoopFace is a lightweight, expressive robot avatar component for AI bots, agents and interactive apps. Thinking, waiting, done or failed: every state of an agent can be shown as an expression.
 
-Suitable for AI assistant and agent interfaces, including products and experiences similar to ChatGPT, Claude, Codex, Cursor, Grok Bot, Gemini CLI, and OpenCode.
+Use it as the face and status feedback of AI assistants and agents: chat assistants like ChatGPT, Claude, Gemini, Grok and DeepSeek, coding agents like Codex, Claude Code, Cursor, Gemini CLI and OpenCode, and always-on agents like Grok Bot, ChatGPT dots, Meta Muse, OpenClaw and Hermes Agent.
 
-It can also be used for desktop pets, virtual pets, desktop companions, digital mascots, chatbot avatars, and other interactive character experiences.
+It also works for desktop companions, virtual pets, digital mascots, chatbot avatars and other interactive characters, or as a visual feedback layer for AG-UI-style agent interfaces.
 
-Agent Robot Avatar can also be used as a visual feedback layer for AG-UI-style agent interfaces.
-
-Built with SVG and vanilla JavaScript, it works as a native custom element with zero runtime dependencies.
+Built with SVG and vanilla JavaScript, it is a native Web Component with zero runtime dependencies, MIT licensed. 188 [skins](#skins--new-in-07) are ready to put on at any time.
 
 <p align="center">
-  <img src="./assets/demo/agent-robot-avatar-demo.gif" alt="Agent Robot Avatar interactive animation demo" width="560">
+  <img src="./assets/demo/boopface-demo.gif" alt="BoopFace interactive animation demo" width="560">
 </p>
 
 ## Live Demo
 
-[Open the interactive demo](https://cx-artlab.github.io/agent-robot-avatar/) · [Visit the Skin Gallery](https://cx-artlab.github.io/agent-robot-avatar/skins.html)
+[Open the interactive demo](https://cx-artlab.github.io/boopface/) · [Visit the Skin Gallery](https://cx-artlab.github.io/boopface/skins.html)
 
 ## Highlights
 
@@ -49,36 +47,55 @@ Built with SVG and vanilla JavaScript, it works as a native custom element with 
 ## Install
 
 ```bash
-npm install agent-robot-avatar
+npm install boopface
 ```
 
 ```js
-import 'agent-robot-avatar';
+import 'boopface';
 ```
 
-Or download `agent-robot-avatar-x.y.z.zip` from the [latest release](https://github.com/CX-ArtLab/agent-robot-avatar/releases/latest). It holds only the component, skins included. Unzip it next to your page:
+Or download `boopface-x.y.z.zip` from the [latest release](https://github.com/CX-ArtLab/boopface/releases/latest). It holds only the component, skins included. Unzip it next to your page:
 
 ```html
-<script type="module" src="./agent-robot-avatar/agent-robot-avatar.js"></script>
+<script type="module" src="./boopface/boopface.js"></script>
 ```
 
 Then add the component:
 
 ```html
-<agent-robot-avatar id="avatar"></agent-robot-avatar>
+<boop-face id="avatar"></boop-face>
 ```
 
 No initialization code is required. The avatar enters its default idle behavior automatically.
 
+### Upgrading from Agent Robot Avatar
+
+BoopFace was called Agent Robot Avatar before version 0.8. Features and usage are unchanged. To upgrade, switch the package name to `boopface`:
+
+```bash
+npm uninstall agent-robot-avatar
+npm install boopface
+```
+
+The old `<agent-robot-avatar>` tag keeps working until 1.0, so there is no rush to change your pages. The old npm package `agent-robot-avatar` gets no more updates; new versions are published only as `boopface`.
+
 ### Lite build
 
-For pages that never use skins, `agent-robot-avatar/lite` is the same avatar without any skin code:
+For pages that never use skins, `boopface/lite` is the same avatar without any skin code:
 
 ```js
-import 'agent-robot-avatar/lite';
+import 'boopface/lite';
 ```
 
 In the lite build the `skin` attribute is ignored, and the console notes that skins need the full build.
+
+Size comparison (transferred over the network, gzip-compressed):
+
+| Build | Size |
+| --- | --- |
+| Lite `boopface/lite` | about 45 KB |
+| Full, page uses no skins | about 56 KB; the skin painting code is not downloaded |
+| Full, with skins | about 113 KB; the extra part downloads the first time a skin is used |
 
 ## Basic usage
 
@@ -141,13 +158,13 @@ try {
 ## Common options
 
 ```html
-<agent-robot-avatar
+<boop-face
   size="160"
   color="#08090b"
   auto-sleep="30000"
   wake-on="activity"
   motion="auto">
-</agent-robot-avatar>
+</boop-face>
 ```
 
 | Attribute | Purpose |
@@ -181,7 +198,7 @@ Every skin is still pure SVG: no images, canvas or WebGL. All skins together are
 <img src="./assets/readme/skin-gallery.jpg" alt="Skin Gallery: featured skins, filters and search" width="100%">
 
 ```html
-<agent-robot-avatar skin="301"></agent-robot-avatar>
+<boop-face skin="301"></boop-face>
 ```
 
 ```js
@@ -189,27 +206,16 @@ avatar.setSkin(102);  // or '102'
 avatar.setSkin(null); // back to the flat color
 ```
 
-See every skin with its number on the [all skins page](https://cx-artlab.github.io/agent-robot-avatar/materials/).
+See every skin with its number on the [all skins page](https://cx-artlab.github.io/boopface/materials/).
 
-| Series | Numbers |
-| --- | --- |
-| Glaze | 101–106 |
-| Ice glass | 201–206 |
-| Gummy | 301–312 |
-| Candy glass | 401–406 |
-| Acrylic | 501–512 |
-| Jelly | 601–612 |
-| Gradient | 701–712 |
-| Frosted glass | 801–806 |
-| Metal | 901–930 |
-| Gems and ceramics | 1001–1012 |
-| Wood | 1101–1106 |
-| Balls | 1201–1210 |
-| Clear and shimmer | 1301–1305 |
-| Fabric and leather | 1401–1412 |
-| Sweets and fruit | 1501–1512 |
-| Nature | 1601–1612 |
-| Patterns and tech | 1701–1717 |
+| Series | Numbers | Series | Numbers | Series | Numbers |
+| --- | --- | --- | --- | --- | --- |
+| Glaze | 101–106 | Ice glass | 201–206 | Gummy | 301–312 |
+| Candy glass | 401–406 | Acrylic | 501–512 | Jelly | 601–612 |
+| Gradient | 701–712 | Frosted glass | 801–806 | Metal | 901–930 |
+| Gems and ceramics | 1001–1012 | Wood | 1101–1106 | Balls | 1201–1210 |
+| Clear and shimmer | 1301–1305 | Fabric and leather | 1401–1412 | Sweets and fruit | 1501–1512 |
+| Nature | 1601–1612 | Patterns and tech | 1701–1717 |  |  |
 
 Skin painters download the first time a skin is used, so a page without skins never loads them. `await loadSkins()` loads them in advance. `SKINS` holds each skin’s Chinese and English titles and colors, `SKIN_SERIES` the series, and `SKIN_NAMES` every number.
 
@@ -229,9 +235,9 @@ Designed for modern browsers with support for ES Modules, Custom Elements, SVG, 
 
 Automated browser tests cover Chromium, Firefox, and WebKit.
 
-## Hardware version (in development)
+## BoopFace Embedded (in development)
 
-A C++ version that shows the avatar's expressions on robot and dev-board screens (it draws only the eyes) is in development and not released yet. See the [hardware guide](https://github.com/CX-ArtLab/agent-robot-avatar/tree/main/embedded).
+A C++ version that shows the avatar's expressions on robot and dev-board screens (it draws only the eyes) is in development and not released yet. See the [hardware guide](https://github.com/CX-ArtLab/boopface/tree/main/embedded).
 
 ## Contributing
 
@@ -239,17 +245,17 @@ Issues and pull requests are welcome. See [`CONTRIBUTING.md`](./CONTRIBUTING.md)
 
 ## Project status
 
-**Current public version: v0.7.2**
+**Current public version: v0.8.0**
 
 The public API is intentionally kept compact while the project evolves toward a future `1.0.0` stability commitment.
 
-Agent Robot Avatar is independently developed and is not affiliated with, endorsed by, or representative of any AI platform or brand.
+BoopFace is independently developed and is not affiliated with, endorsed by, or representative of any AI platform or brand.
 
 ## Character design and visual identity
 
-The Agent Robot Avatar character, including its robot appearance and visual identity, is an original design by CX ArtLab.
+The BoopFace character, including its robot appearance and visual identity, is an original design by CX ArtLab.
 
-The MIT License applies to the software and source code. It allows the avatar to be used, modified, and distributed as part of applications, but it does not transfer ownership of the Agent Robot Avatar name, character identity, or visual identity, or grant the right to present them as another party's original character or standalone brand.
+The MIT License applies to the software and source code. It allows the avatar to be used, modified, and distributed as part of applications, but it does not transfer ownership of the BoopFace name, character identity, or visual identity, or grant the right to present them as another party's original character or standalone brand.
 
 Third-party product names mentioned in this project describe possible use cases only and do not indicate affiliation or endorsement.
 

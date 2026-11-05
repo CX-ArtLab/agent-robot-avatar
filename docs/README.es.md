@@ -1,27 +1,25 @@
-# Agent Robot Avatar
+# BoopFace
 
 <p align="center">
-  <img src="../assets/readme/agent-robot-avatar-header.jpg" alt="Agent Robot Avatar">
+  <img src="../assets/readme/boopface-header.jpg" alt="BoopFace: un componente de avatar robot ligero y expresivo para bots de IA, agentes y apps interactivas">
 </p>
 
 [English](https://github.com/CX-ArtLab/boopface/blob/main/README.md) | [简体中文](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.zh-CN.md) | [Español](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.es.md) | [Русский](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.ru.md) | [Français](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.fr.md) | [Português](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.pt.md) | [Deutsch](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.de.md) | [日本語](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.ja.md) | [한국어](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.ko.md) | [繁體中文](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.zh-TW.md)
 
-![Version](https://img.shields.io/badge/version-v0.7.2-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/boopface/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/boopface/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
+![Version](https://img.shields.io/badge/version-v0.8.0-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/boopface/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/boopface/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
 ![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square)
 
-Un Web Component de avatar robótico ligero y expresivo para agentes de IA y aplicaciones interactivas.
+BoopFace es un componente de avatar robot ligero y expresivo para bots de IA, agentes y apps interactivas. Pensando, esperando, terminado o con error: cada estado de un agente se puede mostrar con una expresión.
 
-Puede usarse en asistentes de IA, interfaces de agentes, compañeros de escritorio, mascotas virtuales, mascotas digitales, avatares de chatbots y otras experiencias con personajes interactivos.
+Úsalo como rostro y respuesta de estado de asistentes y agentes de IA: asistentes de chat como ChatGPT, Claude, Gemini, Grok y DeepSeek, agentes de programación como Codex, Claude Code, Cursor, Gemini CLI y OpenCode, y agentes siempre activos como Grok Bot, ChatGPT dots, Meta Muse, OpenClaw y Hermes Agent.
 
-Es adecuado para interfaces de asistentes de IA y agentes, incluidos productos y experiencias similares a ChatGPT, Claude, Codex, Cursor, Grok Bot, Gemini CLI y OpenCode.
+También sirve para compañeros de escritorio, mascotas virtuales, mascotas digitales de marca, avatares de chatbot y otros personajes interactivos, o como capa de respuesta visual para interfaces de agentes al estilo AG-UI.
 
-Está construido con SVG y JavaScript nativo, funciona como un Custom Element y no tiene dependencias en tiempo de ejecución.
-
-Agent Robot Avatar también puede utilizarse como capa de retroalimentación visual para interfaces de agentes de estilo AG-UI.
+Está hecho con SVG y JavaScript puro, es un Web Component nativo sin dependencias en tiempo de ejecución y tiene licencia MIT. Hay 188 [skins](#skins--novedad-en-07) listas para ponérselas en cualquier momento.
 
 <p align="center">
-  <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="Demostración animada interactiva de Agent Robot Avatar" width="560">
+  <img src="../assets/demo/boopface-demo.gif" alt="Demostración animada interactiva de BoopFace" width="560">
 </p>
 
 ## Demo en vivo
@@ -49,36 +47,55 @@ Agent Robot Avatar también puede utilizarse como capa de retroalimentación vis
 ## Instalación
 
 ```bash
-npm install agent-robot-avatar
+npm install boopface
 ```
 
 ```js
-import 'agent-robot-avatar';
+import 'boopface';
 ```
 
-O descarga `agent-robot-avatar-x.y.z.zip` desde la [última versión](https://github.com/CX-ArtLab/boopface/releases/latest). Contiene solo el componente, con las skins. Descomprímelo junto a tu página:
+O descarga `boopface-x.y.z.zip` desde la [última versión](https://github.com/CX-ArtLab/boopface/releases/latest). Contiene solo el componente, con las skins. Descomprímelo junto a tu página:
 
 ```html
-<script type="module" src="./agent-robot-avatar/agent-robot-avatar.js"></script>
+<script type="module" src="./boopface/boopface.js"></script>
 ```
 
 Después añade el componente:
 
 ```html
-<agent-robot-avatar id="avatar"></agent-robot-avatar>
+<boop-face id="avatar"></boop-face>
 ```
 
 No hace falta código de inicialización. El avatar entra automáticamente en su estado idle predeterminado.
 
+### Actualizar desde Agent Robot Avatar
+
+BoopFace se llamaba Agent Robot Avatar antes de la versión 0.8. Las funciones y el uso no cambian. Para actualizar, cambia el nombre del paquete a `boopface`:
+
+```bash
+npm uninstall agent-robot-avatar
+npm install boopface
+```
+
+La etiqueta antigua `<agent-robot-avatar>` sigue funcionando hasta la 1.0, así que no hay prisa por cambiar tus páginas. El paquete npm antiguo `agent-robot-avatar` ya no recibe actualizaciones; las nuevas versiones se publican solo como `boopface`.
+
 ### Versión ligera
 
-Para páginas que nunca usan skins, `agent-robot-avatar/lite` es el mismo avatar sin el código de los skins:
+Para páginas que nunca usan skins, `boopface/lite` es el mismo avatar sin el código de los skins:
 
 ```js
-import 'agent-robot-avatar/lite';
+import 'boopface/lite';
 ```
 
 La versión ligera ignora el atributo `skin` y avisa en la consola de que los skins necesitan la versión completa.
+
+Comparación de tamaño (transferencia por la red, con compresión gzip):
+
+| Versión | Tamaño |
+| --- | --- |
+| Ligera `boopface/lite` | unos 45 KB |
+| Completa, la página no usa skins | unos 56 KB; el código que dibuja las skins no se descarga |
+| Completa, con skins | unos 113 KB; la parte extra se descarga la primera vez que se usa una skin |
 
 ## Uso básico
 
@@ -141,13 +158,13 @@ try {
 ## Opciones comunes
 
 ```html
-<agent-robot-avatar
+<boop-face
   size="160"
   color="#08090b"
   auto-sleep="30000"
   wake-on="activity"
   motion="auto">
-</agent-robot-avatar>
+</boop-face>
 ```
 
 | Atributo | Uso |
@@ -181,7 +198,7 @@ Todas las skins siguen siendo SVG puro: sin imágenes, canvas ni WebGL. Todas la
 <img src="../assets/readme/skin-gallery.jpg" alt="Galería de skins: destacados, filtros y búsqueda" width="100%">
 
 ```html
-<agent-robot-avatar skin="301"></agent-robot-avatar>
+<boop-face skin="301"></boop-face>
 ```
 
 ```js
@@ -191,25 +208,14 @@ avatar.setSkin(null); // vuelve al color plano
 
 Consulta todos los skins con su número en la [página de todos los skins](https://cx-artlab.github.io/boopface/materials/?lang=es).
 
-| Serie | Números |
-| --- | --- |
-| Esmalte | 101–106 |
-| Vidrio hielo | 201–206 |
-| Gominola | 301–312 |
-| Vidrio caramelo | 401–406 |
-| Acrílico | 501–512 |
-| Gelatina | 601–612 |
-| Degradado | 701–712 |
-| Vidrio esmerilado | 801–806 |
-| Metal | 901–930 |
-| Gemas y cerámica | 1001–1012 |
-| Madera | 1101–1106 |
-| Pelotas | 1201–1210 |
-| Transparente y brillo | 1301–1305 |
-| Tela y cuero | 1401–1412 |
-| Dulces y fruta | 1501–1512 |
-| Naturaleza | 1601–1612 |
-| Estampados y tecnología | 1701–1717 |
+| Serie | Números | Serie | Números | Serie | Números |
+| --- | --- | --- | --- | --- | --- |
+| Esmalte | 101–106 | Vidrio hielo | 201–206 | Gominola | 301–312 |
+| Vidrio caramelo | 401–406 | Acrílico | 501–512 | Gelatina | 601–612 |
+| Degradado | 701–712 | Vidrio esmerilado | 801–806 | Metal | 901–930 |
+| Gemas y cerámica | 1001–1012 | Madera | 1101–1106 | Pelotas | 1201–1210 |
+| Transparente y brillo | 1301–1305 | Tela y cuero | 1401–1412 | Dulces y fruta | 1501–1512 |
+| Naturaleza | 1601–1612 | Estampados y tecnología | 1701–1717 |  |  |
 
 El código que pinta los skins se descarga la primera vez que se usa uno, así que una página sin skins nunca lo carga. `await loadSkins()` lo carga por adelantado. `SKINS` contiene los nombres en chino e inglés y los colores de cada skin, `SKIN_SERIES` las series y `SKIN_NAMES` todos los números.
 
@@ -229,7 +235,7 @@ Diseñado para navegadores modernos con soporte para ES Modules, Custom Elements
 
 Las pruebas automatizadas cubren Chromium, Firefox y WebKit.
 
-## Versión para hardware (en desarrollo)
+## BoopFace Embedded (en desarrollo)
 
 Una versión en C++ que muestra las expresiones del avatar en pantallas de robots y placas de desarrollo (solo dibuja los ojos) está en desarrollo y aún no se ha publicado. Consulta la [guía de hardware](https://github.com/CX-ArtLab/boopface/tree/main/embedded).
 
@@ -239,17 +245,17 @@ Se aceptan Issues y Pull Requests. Consulta [`CONTRIBUTING.md`](../CONTRIBUTING.
 
 ## Estado del proyecto
 
-**Versión pública actual: v0.7.2**
+**Versión pública actual: v0.8.0**
 
 La API pública se mantiene deliberadamente compacta mientras el proyecto evoluciona hacia un futuro compromiso de estabilidad `1.0.0`.
 
-Agent Robot Avatar se desarrolla de forma independiente y no está afiliado, respaldado ni representa a ninguna plataforma o marca de IA.
+BoopFace se desarrolla de forma independiente y no está afiliado, respaldado ni representa a ninguna plataforma o marca de IA.
 
 ## Diseño del personaje e identidad visual
 
-El personaje Agent Robot Avatar, incluido su aspecto robótico y su identidad visual, es un diseño original de CX ArtLab.
+El personaje BoopFace, incluido su aspecto robótico y su identidad visual, es un diseño original de CX ArtLab.
 
-La licencia MIT se aplica al software y al código fuente. Permite usar, modificar y distribuir el avatar como parte de aplicaciones, pero no transfiere la propiedad del nombre Agent Robot Avatar, la identidad del personaje o su identidad visual, ni concede el derecho a presentarlos como personaje original o marca independiente de otra parte.
+La licencia MIT se aplica al software y al código fuente. Permite usar, modificar y distribuir el avatar como parte de aplicaciones, pero no transfiere la propiedad del nombre BoopFace, la identidad del personaje o su identidad visual, ni concede el derecho a presentarlos como personaje original o marca independiente de otra parte.
 
 Los nombres de productos de terceros mencionados en este proyecto se usan únicamente para describir posibles casos de uso y no implican afiliación ni respaldo.
 
