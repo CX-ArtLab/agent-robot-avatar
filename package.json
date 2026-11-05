@@ -1,24 +1,24 @@
 {
-  "name": "agent-robot-avatar",
-  "version": "0.7.2",
-  "description": "A lightweight expressive robot avatar Web Component for AI agents and interactive applications.",
+  "name": "boopface",
+  "version": "0.8.0",
+  "description": "BoopFace (formerly Agent Robot Avatar): a lightweight, expressive robot avatar Web Component for AI bots, agents and interactive apps.",
   "type": "module",
-  "main": "./agent-robot-avatar.js",
-  "module": "./agent-robot-avatar.js",
+  "main": "./boopface.js",
+  "module": "./boopface.js",
   "types": "./index.d.ts",
-  "browser": "./agent-robot-avatar.js",
-  "unpkg": "./agent-robot-avatar.js",
-  "jsdelivr": "./agent-robot-avatar.js",
+  "browser": "./boopface.js",
+  "unpkg": "./boopface.js",
+  "jsdelivr": "./boopface.js",
   "exports": {
     ".": {
       "types": "./index.d.ts",
-      "import": "./agent-robot-avatar.js",
-      "default": "./agent-robot-avatar.js"
+      "import": "./boopface.js",
+      "default": "./boopface.js"
     },
     "./lite": {
       "types": "./lite.d.ts",
-      "import": "./agent-robot-avatar-lite.js",
-      "default": "./agent-robot-avatar-lite.js"
+      "import": "./boopface-lite.js",
+      "default": "./boopface-lite.js"
     }
   },
   "sideEffects": true,
@@ -37,8 +37,8 @@
     "test:pages": "node --test tests/pages-public.test.mjs"
   },
   "files": [
-    "agent-robot-avatar.js",
-    "agent-robot-avatar-lite.js",
+    "boopface.js",
+    "boopface-lite.js",
     "index.d.ts",
     "lite.d.ts",
     "src/",
@@ -47,6 +47,8 @@
     "LICENSE"
   ],
   "keywords": [
+    "boopface",
+    "agent-robot-avatar",
     "ai",
     "agent",
     "robot",
@@ -63,11 +65,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CX-ArtLab/agent-robot-avatar.git"
+    "url": "git+https://github.com/CX-ArtLab/boopface.git"
   },
-  "homepage": "https://github.com/CX-ArtLab/agent-robot-avatar#readme",
+  "homepage": "https://github.com/CX-ArtLab/boopface#readme",
   "bugs": {
-    "url": "https://github.com/CX-ArtLab/agent-robot-avatar/issues"
+    "url": "https://github.com/CX-ArtLab/boopface/issues"
   },
   "funding": {
     "type": "individual",

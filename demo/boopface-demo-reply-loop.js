@@ -208,7 +208,7 @@ const langObserver = new MutationObserver(() => {
 });
 langObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
 
-window.AgentRobotAvatarDemoReplyLoop = {
+window.BoopFaceDemoReplyLoop = {
   get state() { return loopState; },
   stop: () => stopReplyLoop(true),
 };

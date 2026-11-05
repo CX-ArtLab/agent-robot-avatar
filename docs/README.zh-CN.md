@@ -19,7 +19,7 @@ BoopFace 是一个轻量、富表现力的机器人头像组件，适用于 AI �
 使用 SVG 与原生 JavaScript 构建，是一个原生 Web Component，运行时零依赖，MIT 开源。另有 188 款[皮肤](#皮肤--07-新功能)可以随时换上。
 
 <p align="center">
-  <img src="../assets/demo/agent-robot-avatar-demo.gif" alt="BoopFace 交互动画演示" width="560">
+  <img src="../assets/demo/boopface-demo.gif" alt="BoopFace 交互动画演示" width="560">
 </p>
 
 <p align="center">

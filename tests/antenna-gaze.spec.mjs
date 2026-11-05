@@ -4,7 +4,7 @@ import { expect, test } from '@playwright/test';
 // whichever direction it is pulled, both eyes must stay inside the head.
 test('eyes stay inside the head while the antenna is pulled', async ({ page }) => {
   await page.goto('/examples/basic.html');
-  const avatar = page.locator('agent-robot-avatar');
+  const avatar = page.locator('boop-face');
   await expect.poll(() => avatar.evaluate(element => Boolean(element.shadowRoot?.querySelector('#antennaDot')))).toBe(true);
 
   const dot = await avatar.evaluate(element => {

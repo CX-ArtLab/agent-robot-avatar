@@ -1,5 +1,5 @@
-import AgentRobotAvatar, { registerAvatarExtension } from './agent-robot-avatar-extension-host.js';
-import { DEFAULT_HEAD_HEIGHT_SCALE, flattenHeadPoints } from './agent-robot-avatar-geometry.js';
+import BoopFace, { registerAvatarExtension } from './boopface-extension-host.js';
+import { DEFAULT_HEAD_HEIGHT_SCALE, flattenHeadPoints } from './boopface-geometry.js';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const ANTENNA_DEFAULTS = Object.freeze({
@@ -11,15 +11,15 @@ const ANTENNA_DEFAULTS = Object.freeze({
 });
 
 const runtimeWindow = typeof window !== 'undefined' ? window : null;
-const antennaConfig = (runtimeWindow?.AgentRobotAvatarAntennaConfig && typeof runtimeWindow.AgentRobotAvatarAntennaConfig === 'object')
-  ? runtimeWindow.AgentRobotAvatarAntennaConfig
+const antennaConfig = (runtimeWindow?.BoopFaceAntennaConfig && typeof runtimeWindow.BoopFaceAntennaConfig === 'object')
+  ? runtimeWindow.BoopFaceAntennaConfig
   : {};
 for (const [key, value] of Object.entries(ANTENNA_DEFAULTS)) {
   if (!Number.isFinite(Number(antennaConfig[key]))) antennaConfig[key] = value;
 }
 if (runtimeWindow) {
-  runtimeWindow.AgentRobotAvatarAntennaConfig = antennaConfig;
-  runtimeWindow.AgentRobotAvatarAntennaDefaults = ANTENNA_DEFAULTS;
+  runtimeWindow.BoopFaceAntennaConfig = antennaConfig;
+  runtimeWindow.BoopFaceAntennaDefaults = ANTENNA_DEFAULTS;
 }
 
 function configNumber(key, fallback, min, max) {
@@ -148,5 +148,5 @@ registerAvatarExtension({
   draw: drawAntenna,
 });
 
-export { AgentRobotAvatar, ANTENNA_DEFAULTS };
-export default AgentRobotAvatar;
+export { BoopFace, ANTENNA_DEFAULTS };
+export default BoopFace;

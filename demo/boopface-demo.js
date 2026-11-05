@@ -1,12 +1,12 @@
 try {
 if (document.body.dataset.page === 'skins') {
-  const { mountDemo } = await import('./agent-robot-avatar-demo-ui.js');
+  const { mountDemo } = await import('./boopface-demo-ui.js');
   await mountDemo(document.getElementById('demo-root'), Number(document.body.dataset.avatarSize) || 118);
 }
 
 
-  const { VERSION } = await import('../agent-robot-avatar.js');
-  window.AgentRobotAvatarDemoBuild = VERSION;
+  const { VERSION } = await import('../boopface.js');
+  window.BoopFaceDemoBuild = VERSION;
   const buildBadge = document.getElementById('agent-demo-build');
   if (buildBadge) buildBadge.textContent = `Demo ${VERSION}`;
 
@@ -173,14 +173,14 @@ if (document.body.dataset.page === 'skins') {
   });
   sendButton.addEventListener('click',sendMessage);
 
-  await import('./agent-robot-avatar-demo-controls.js');
-  await import('./agent-robot-avatar-demo-extras.js');
-  await import('./agent-robot-avatar-demo-roundness.js');
-  const { balanceControls, placeComposition } = await import('./agent-robot-avatar-demo-layout.js');
-  await import('./agent-robot-avatar-demo-dialog-i18n.js');
-  await import('./agent-robot-avatar-demo-chat-avatar-mode.js');
-  await import('./agent-robot-avatar-demo-reply-loop.js');
-  if (document.body.dataset.page !== 'skins') await import('./agent-robot-avatar-demo-skins.js');
+  await import('./boopface-demo-controls.js');
+  await import('./boopface-demo-extras.js');
+  await import('./boopface-demo-roundness.js');
+  const { balanceControls, placeComposition } = await import('./boopface-demo-layout.js');
+  await import('./boopface-demo-dialog-i18n.js');
+  await import('./boopface-demo-chat-avatar-mode.js');
+  await import('./boopface-demo-reply-loop.js');
+  if (document.body.dataset.page !== 'skins') await import('./boopface-demo-skins.js');
   // Apply the final language and row width before exposing interactive content.
   await document.fonts.ready;
   // Place the column again until its height holds for a frame, so a late

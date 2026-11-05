@@ -204,7 +204,7 @@ test('another action replaces random cleanly', async ({ page }) => {
 
 test('random config is exposed with defaults and bounds, and normalizes invalid input', async ({ page }) => {
   await page.addInitScript(() => {
-    window.AgentRobotAvatarRandomConfig = {
+    window.BoopFaceRandomConfig = {
       radius: '70',
       gap: 'not-a-number',
       squeeze: -4,
@@ -215,9 +215,9 @@ test('random config is exposed with defaults and bounds, and normalizes invalid 
   const avatar = await loadAvatar(page);
 
   const exposed = await page.evaluate(() => ({
-    defaults: window.AgentRobotAvatarRandomDefaults,
-    bounds: window.AgentRobotAvatarRandomBounds,
-    frozen: Object.isFrozen(window.AgentRobotAvatarRandomDefaults),
+    defaults: window.BoopFaceRandomDefaults,
+    bounds: window.BoopFaceRandomBounds,
+    frozen: Object.isFrozen(window.BoopFaceRandomDefaults),
   }));
   expect(exposed.frozen).toBe(true);
   for (const [key, value] of Object.entries(exposed.defaults)) {

@@ -167,7 +167,7 @@ test('invalid wake and unknown action preserve continuous waiting', async ({ pag
     };
   });
   expect(result.wakeReturnedSelf).toBe(true);
-  expect(result.unknown).toContain('Unknown Agent Robot Avatar action');
+  expect(result.unknown).toContain('Unknown BoopFace action');
   expect(result.waiting).toBe(true);
   expect(result.requested).toBe(true);
 
@@ -245,12 +245,12 @@ test('deprecated action names report the new canonical action and warn once each
     expect(await avatar.evaluate(element => element._testActionStates[0])).toBe(`${canonical}:start:api`);
   }
 
-  expect(warnings.filter(text => text.startsWith('agent-robot-avatar:'))).toEqual([
-    'agent-robot-avatar: action "send" is deprecated, use "affirm". Old names stop working in 1.0.',
-    'agent-robot-avatar: action "warning" is deprecated, use "wary". Old names stop working in 1.0.',
-    'agent-robot-avatar: action "error" is deprecated, use "refuse". Old names stop working in 1.0.',
-    'agent-robot-avatar: action "connection-error" is deprecated, use "refuse". Old names stop working in 1.0.',
-    'agent-robot-avatar: action "blocked" is deprecated, use "angry". Old names stop working in 1.0.',
+  expect(warnings.filter(text => text.startsWith('boopface:'))).toEqual([
+    'boopface: action "send" is deprecated, use "affirm". Old names stop working in 1.0.',
+    'boopface: action "warning" is deprecated, use "wary". Old names stop working in 1.0.',
+    'boopface: action "error" is deprecated, use "refuse". Old names stop working in 1.0.',
+    'boopface: action "connection-error" is deprecated, use "refuse". Old names stop working in 1.0.',
+    'boopface: action "blocked" is deprecated, use "angry". Old names stop working in 1.0.',
   ]);
 });
 
@@ -379,7 +379,7 @@ test('size accepts numeric pixels and px strings and rejects other input', async
 
 test('inspect preload config preserves valid values and normalizes invalid values', async ({ page }) => {
   await page.addInitScript(() => {
-    window.AgentRobotAvatarInspectConfig = {
+    window.BoopFaceInspectConfig = {
       aperture: 24,
       scanOffset: '18',
       close: 'not-a-number',
@@ -391,7 +391,7 @@ test('inspect preload config preserves valid values and normalizes invalid value
   await page.goto('/examples/basic.html');
   await page.clock.pauseAt(await page.evaluate(() => Date.now()) + 5000);
   const avatar = page.locator('#avatar');
-  expect(await page.evaluate(() => ({ ...window.AgentRobotAvatarInspectConfig }))).toMatchObject({
+  expect(await page.evaluate(() => ({ ...window.BoopFaceInspectConfig }))).toMatchObject({
     aperture: 24,
     scanOffset: 18,
     close: 220,
@@ -583,7 +583,7 @@ test('high-frequency pointer work is coalesced per frame for one and multiple in
 
   await page.evaluate(() => {
     for (let index = 0; index < 3; index += 1) {
-      const extra = document.createElement('agent-robot-avatar');
+      const extra = document.createElement('boop-face');
       extra.className = 'perf-extra';
       document.body.append(extra);
       extra._runtimePointerFlushCount = 0;
@@ -604,11 +604,11 @@ test('high-frequency pointer work is coalesced per frame for one and multiple in
 test('normal repeated ESM imports remain safe without hiding extension conflicts', async ({ page }) => {
   await page.goto('/examples/basic.html');
   const result = await page.evaluate(async () => {
-    const first = await import('/agent-robot-avatar.js?repeat=1');
-    const second = await import('/agent-robot-avatar.js?repeat=2');
+    const first = await import('/boopface.js?repeat=1');
+    const second = await import('/boopface.js?repeat=2');
     return {
-      sameConstructor: first.AgentRobotAvatar === second.AgentRobotAvatar,
-      registered: customElements.get('agent-robot-avatar') === first.AgentRobotAvatar,
+      sameConstructor: first.BoopFace === second.BoopFace,
+      registered: customElements.get('boop-face') === first.BoopFace,
     };
   });
   expect(result).toEqual({ sameConstructor: true, registered: true });

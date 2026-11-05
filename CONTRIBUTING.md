@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for helping improve Agent Robot Avatar.
+Thanks for helping improve BoopFace.
 
 ## Before opening an issue
 

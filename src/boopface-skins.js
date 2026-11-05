@@ -1,4 +1,4 @@
-import AgentRobotAvatar, { registerAvatarExtension } from './agent-robot-avatar-extension-host.js';
+import BoopFace, { registerAvatarExtension } from './boopface-extension-host.js';
 import { SKIN_CATALOG, SKIN_SERIES } from './skins/catalog.js';
 
 // The painters are large, so they load the first time a skin needs them. A page
@@ -23,7 +23,7 @@ function loadSkins() {
   return Promise.all([loadPainter('native'), loadPainter('material')]).then(() => undefined);
 }
 
-const proto = AgentRobotAvatar.prototype;
+const proto = BoopFace.prototype;
 const baseApplyColor = proto._applyColor;
 
 // Skins are numbered. The number is the permanent public name; the Chinese and
@@ -215,7 +215,7 @@ proto._applySkinAttribute = function() {
   const value = this.getAttribute('skin');
   this._skinAttributeApplied = value;
   if (normalizeSkin(value) === undefined) {
-    console.warn(`agent-robot-avatar: unknown skin "${value}". Use a skin number such as ${SKIN_NAMES[0]}, or none.`);
+    console.warn(`boopface: unknown skin "${value}". Use a skin number such as ${SKIN_NAMES[0]}, or none.`);
     this.setSkin(null);
   } else {
     this.setSkin(value);
@@ -224,7 +224,7 @@ proto._applySkinAttribute = function() {
 
 proto.setSkin = function(value = null) {
   const name = normalizeSkin(value);
-  if (name === undefined) throw new Error(`Unknown Agent Robot Avatar skin: ${value}`);
+  if (name === undefined) throw new Error(`Unknown BoopFace skin: ${value}`);
   this._skinName = name;
   render(this);
   this._resumeFrames?.();
@@ -253,5 +253,5 @@ registerAvatarExtension({
   },
 });
 
-export { AgentRobotAvatar, SKINS, SKIN_NAMES, SERIES as SKIN_SERIES, loadSkins };
-export default AgentRobotAvatar;
+export { BoopFace, SKINS, SKIN_NAMES, SERIES as SKIN_SERIES, loadSkins };
+export default BoopFace;

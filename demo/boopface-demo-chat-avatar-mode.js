@@ -22,7 +22,7 @@ let syncing = false;
 let openTimer = 0;
 
 try {
-  const saved = sessionStorage.getItem('agentRobotAvatarDemoAvatarMode');
+  const saved = sessionStorage.getItem('boopFaceDemoAvatarMode');
   if (saved === 'top' || saved === 'inline') mode = saved;
 } catch (_) {}
 
@@ -162,7 +162,7 @@ function syncPlacement(animate = true) {
 function setMode(next) {
   if (next !== 'top' && next !== 'inline') return;
   mode = next;
-  try { sessionStorage.setItem('agentRobotAvatarDemoAvatarMode', mode); } catch (_) {}
+  try { sessionStorage.setItem('boopFaceDemoAvatarMode', mode); } catch (_) {}
   syncPlacement(true);
 }
 
@@ -204,7 +204,7 @@ if (headerSlot) {
 const langObserver = new MutationObserver(updateSwitchLanguage);
 langObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
 
-window.AgentRobotAvatarDemoAvatarMode = {
+window.BoopFaceDemoAvatarMode = {
   get mode() { return mode; },
   setMode,
 };

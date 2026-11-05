@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Agent Robot Avatar — Basic Example</title>
+  <title>BoopFace — Basic Example</title>
   <style>
     html,body{height:100%;margin:0}
     body{display:grid;place-items:center;background:#f7f7f5;font-family:system-ui,sans-serif}
@@ -14,7 +14,7 @@
 </head>
 <body>
   <div class="example">
-    <agent-robot-avatar id="avatar" size="140"></agent-robot-avatar>
+    <boop-face id="avatar" size="140"></boop-face>
     <div class="actions">
       <button type="button" data-action="idle">Idle</button>
       <button type="button" data-action="success">Success</button>
@@ -26,7 +26,7 @@
   </div>
 
   <script type="module">
-    import '../agent-robot-avatar.js';
+    import '../boopface.js';
 
     const avatar = document.querySelector('#avatar');
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Agent Robot Avatar — Accessible Request Lifecycle</title>
+  <title>BoopFace — Accessible Request Lifecycle</title>
   <style>
     *{box-sizing:border-box}
     html,body{min-height:100%;margin:0}
@@ -23,7 +23,7 @@
 </head>
 <body>
   <main>
-    <agent-robot-avatar id="avatar" size="140"></agent-robot-avatar>
+    <boop-face id="avatar" size="140"></boop-face>
     <h1>Accessible request lifecycle</h1>
     <p>The host owns request success, failure, cancellation, and stale-result protection. The avatar only visualizes those decisions.</p>
     <div class="actions" aria-label="Request lifecycle controls">
@@ -41,7 +41,7 @@
   </main>
 
   <script type="module">
-    import '../agent-robot-avatar.js';
+    import '../boopface.js';
 
     const avatar = document.querySelector('#avatar');
     const status = document.querySelector('#agent-status');

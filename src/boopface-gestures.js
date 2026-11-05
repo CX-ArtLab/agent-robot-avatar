@@ -1,6 +1,6 @@
-import AgentRobotAvatar, { registerAvatarExtension } from './agent-robot-avatar-extension-host.js';
+import BoopFace, { registerAvatarExtension } from './boopface-extension-host.js';
 
-const proto=AgentRobotAvatar.prototype;
+const proto=BoopFace.prototype;
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const disabled=(face,key)=>face.getAttribute(key)==='false';
 const emit=(face,state)=>face.dispatchEvent(new CustomEvent('face-state',{detail:{state}}));
@@ -51,7 +51,7 @@ let warnedAntennaFlash=false;
 proto.setAntennaFlash=function(){
   if(!warnedAntennaFlash){
     warnedAntennaFlash=true;
-    console.warn('agent-robot-avatar: setAntennaFlash() was removed in 0.6 and does nothing. It will be deleted in 1.0.');
+    console.warn('boopface: setAntennaFlash() was removed in 0.6 and does nothing. It will be deleted in 1.0.');
   }
   return this;
 };

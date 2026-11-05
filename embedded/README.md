@@ -2,7 +2,7 @@
 
 [简体中文](README.zh-CN.md) · [Main project](../README.md)
 
-An **experimental**, portable C++11 implementation of the Agent Robot Avatar eye expressions. It renders eyes only, with no head, antenna, dragging, squeezing, pointer listeners, network client or AI model. The embedded package is independent of the SVG component and its Demo UI.
+An **experimental**, portable C++11 implementation of the BoopFace eye expressions. It renders eyes only, with no head, antenna, dragging, squeezing, pointer listeners, network client or AI model. The embedded package is independent of the SVG component and its Demo UI.
 
 The expression engine is independent of ESP32, Arduino and the display driver. ESP32 and Raspberry Pi Pico are reference integrations, not a promise of compatibility with every board or display. **Compilation and host tests do not certify physical hardware performance, wiring or visual fidelity.** No physical-board testing has been performed for this preview.
 

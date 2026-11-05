@@ -1,4 +1,4 @@
-const contextKey = 'agentRobotAvatarDemoAppearance';
+const contextKey = 'boopFaceDemoAppearance';
 const contextInputs = ['demoBgColor', 'demoHeadColor', 'demoEyeThrough', 'demoAntenna',
   'demoPointerFollow', 'demoHeadRoundnessUnlock', 'demoHeadRoundness'];
 export function restoreAppearance() {

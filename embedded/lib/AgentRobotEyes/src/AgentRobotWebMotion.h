@@ -3,7 +3,7 @@
 #pragma once
 #include <stdint.h>
 namespace agent_robot { namespace web_reference {
-static const char SOURCE_SHA256[] = "e13edb7cf33ebda4b6828bd77da4a5c8f67a770176a1e29310b9626927dfb348";
+static const char SOURCE_SHA256[] = "0d458cee9f10c2bfdc53e564c5d8654c77207958f2aa0c8a609c1b7a7f42ede5";
 struct Clip { const int16_t* values; uint16_t count; };
 static const int16_t ACTION_0[] = {
   4603,5000,2697,2899,0,-3600,3600,0,0,-100,11397,5000,2697,2899,0,-3600,3600,0,0,-100,

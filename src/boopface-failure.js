@@ -1,6 +1,6 @@
-import AgentRobotAvatar, { registerAvatarExtension } from './agent-robot-avatar-extension-host.js';
+import BoopFace, { registerAvatarExtension } from './boopface-extension-host.js';
 
-const proto = AgentRobotAvatar.prototype;
+const proto = BoopFace.prototype;
 
 const FAILURE_HEAD_DROP = 5.5;
 const FAILURE_EYE_DROP = 4.8;
@@ -127,5 +127,5 @@ registerAvatarExtension({
   draw: drawFailure,
 });
 
-export { AgentRobotAvatar };
-export default AgentRobotAvatar;
+export { BoopFace };
+export default BoopFace;

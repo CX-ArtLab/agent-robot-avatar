@@ -1,10 +1,10 @@
-import AgentRobotAvatar, { registerAvatarExtension } from './agent-robot-avatar-extension-host.js';
-import { WRAP_CYCLE, drawWrapWaiting } from './agent-robot-avatar-wrap.js';
+import BoopFace, { registerAvatarExtension } from './boopface-extension-host.js';
+import { WRAP_CYCLE, drawWrapWaiting } from './boopface-wrap.js';
 
 const WAITING_CYCLE = 3200;
 const WAVE_WAITING_CYCLE = 1100;
 const WAVE_WAITING_REPEATS = 3;
-const proto = AgentRobotAvatar.prototype;
+const proto = BoopFace.prototype;
 
 const clamp01 = value => Math.max(0, Math.min(1, value));
 const smooth = value => { const t = clamp01(value); return t * t * (3 - 2 * t); };
@@ -149,6 +149,6 @@ registerAvatarExtension({
   draw: drawWaiting,
 });
 
-export { AgentRobotAvatar, WAITING_CYCLE, WAVE_WAITING_CYCLE };
-export default AgentRobotAvatar;
+export { BoopFace, WAITING_CYCLE, WAVE_WAITING_CYCLE };
+export default BoopFace;
 

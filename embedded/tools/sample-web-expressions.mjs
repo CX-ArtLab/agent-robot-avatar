@@ -8,13 +8,13 @@ import { createHash } from 'node:crypto';
 const root=fileURLToPath(new URL('../../',import.meta.url));
 const sourceNames=['core','extension-host','actions','waiting','wrap','failure','inspect','love','random'];
 const hash=createHash('sha256');
-for(const name of sourceNames)hash.update(await readFile(join(root,`src/agent-robot-avatar-${name}.js`)));
+for(const name of sourceNames)hash.update(await readFile(join(root,`src/boopface-${name}.js`)));
 const sourceHash=hash.digest('hex');
 let clock=0;
 Object.defineProperty(globalThis,'performance',{value:{now:()=>clock},configurable:true});
 globalThis.CustomEvent=class {constructor(type,options){this.type=type;this.detail=options?.detail;}};
-const {default:Avatar}=await import('../../src/agent-robot-avatar-core.js');
-for(const name of ['actions','waiting','failure','inspect','love','random'])await import(`../../src/agent-robot-avatar-${name}.js`);
+const {default:Avatar}=await import('../../src/boopface-core.js');
+for(const name of ['actions','waiting','failure','inspect','love','random'])await import(`../../src/boopface-${name}.js`);
 const NEUTRAL={w:54,h:58,rx:27,topY:-36,bottomY:36,topAL:0,topAR:0,bottomAL:0,bottomAR:0,scale:1};
 class Node {
   attrs=new Map();style={};

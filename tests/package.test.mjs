@@ -29,25 +29,25 @@ test('package contains the complete runtime and excludes the demo', async () => 
   const [pack] = JSON.parse(output);
   const files = new Set(pack.files.map(file => file.path));
   const required = [
-    'agent-robot-avatar.js',
-    'agent-robot-avatar-lite.js',
+    'boopface.js',
+    'boopface-lite.js',
     'index.d.ts',
     'lite.d.ts',
-    'src/agent-robot-avatar-skins.js',
+    'src/boopface-skins.js',
     'src/skins/catalog.js',
-    'src/agent-robot-avatar-core.js',
-    'src/agent-robot-avatar-geometry.js',
-    'src/agent-robot-avatar-actions.js',
-    'src/agent-robot-avatar-antenna.js',
-    'src/agent-robot-avatar-extension-host.js',
-    'src/agent-robot-avatar-version.js',
-    'src/agent-robot-avatar-waiting.js',
-    'src/agent-robot-avatar-inspect.js',
-    'src/agent-robot-avatar-failure.js',
-    'src/agent-robot-avatar-love.js',
-    'src/agent-robot-avatar-random.js',
-    'src/agent-robot-avatar-head-roundness.js',
-    'src/agent-robot-avatar-runtime.js',
+    'src/boopface-core.js',
+    'src/boopface-geometry.js',
+    'src/boopface-actions.js',
+    'src/boopface-antenna.js',
+    'src/boopface-extension-host.js',
+    'src/boopface-version.js',
+    'src/boopface-waiting.js',
+    'src/boopface-inspect.js',
+    'src/boopface-failure.js',
+    'src/boopface-love.js',
+    'src/boopface-random.js',
+    'src/boopface-head-roundness.js',
+    'src/boopface-runtime.js',
   ];
 
   for (const file of required) assert.ok(files.has(file), `Missing package file: ${file}`);
@@ -59,23 +59,23 @@ test('package contains the complete runtime and excludes the demo', async () => 
   for (const file of required.filter(file => file.endsWith('.js'))) {
     const source = await readFile(path.join(root, file), 'utf8');
     assert.doesNotMatch(source, /from\s+['"][^'"]+\?v=/, `Cache query remains in ${file}`);
-    assert.doesNotMatch(source, /AgentRobotAvatarDemo/, `Demo global remains in ${file}`);
+    assert.doesNotMatch(source, /BoopFaceDemo/, `Demo global remains in ${file}`);
   }
 
   for (const file of [
-    'src/agent-robot-avatar-actions.js',
-    'src/agent-robot-avatar-antenna.js',
-    'src/agent-robot-avatar-waiting.js',
-    'src/agent-robot-avatar-inspect.js',
-    'src/agent-robot-avatar-failure.js',
-    'src/agent-robot-avatar-love.js',
-    'src/agent-robot-avatar-random.js',
+    'src/boopface-actions.js',
+    'src/boopface-antenna.js',
+    'src/boopface-waiting.js',
+    'src/boopface-inspect.js',
+    'src/boopface-failure.js',
+    'src/boopface-love.js',
+    'src/boopface-random.js',
   ]) {
     const source = await readFile(path.join(root, file), 'utf8');
     assert.doesNotMatch(source, /proto\.(play|reset|_draw)\s*=/, `Legacy method wrapper remains in ${file}`);
   }
 
-  const extensionHost = await readFile(path.join(root, 'src/agent-robot-avatar-extension-host.js'), 'utf8');
+  const extensionHost = await readFile(path.join(root, 'src/boopface-extension-host.js'), 'utf8');
   assert.match(extensionHost, /proto\.play\s*=/, 'Extension host must own play routing');
   assert.match(extensionHost, /proto\.reset\s*=/, 'Extension host must own reset routing');
   assert.match(extensionHost, /proto\._draw\s*=/, 'Extension host must own frame drawing');
@@ -83,19 +83,19 @@ test('package contains the complete runtime and excludes the demo', async () => 
 
 test('version is consistent across the package, runtime, and demo', async () => {
   const packageJson = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8'));
-  const runtime = await import(pathToFileURL(path.join(root, 'agent-robot-avatar.js')).href);
+  const runtime = await import(pathToFileURL(path.join(root, 'boopface.js')).href);
   const demo = await readFile(path.join(root, 'demo', 'index.html'), 'utf8');
-  const demoRuntime = await readFile(path.join(root, 'demo', 'agent-robot-avatar-demo.js'), 'utf8');
+  const demoRuntime = await readFile(path.join(root, 'demo', 'boopface-demo.js'), 'utf8');
 
   assert.equal(runtime.VERSION, packageJson.version);
   assert.match(packageJson.version, /^\d+\.\d+\.\d+(?:-rc\.\d+)?$/);
-  assert.match(demo, /<script type="module" src="\.\/agent-robot-avatar-demo\.js"><\/script>/);
-  assert.match(demoRuntime, /AgentRobotAvatarDemoBuild = VERSION/);
-  assert.doesNotMatch(demo, /agent-robot-avatar\.js\?v=|demoVersion/);
+  assert.match(demo, /<script type="module" src="\.\/boopface-demo\.js"><\/script>/);
+  assert.match(demoRuntime, /BoopFaceDemoBuild = VERSION/);
+  assert.doesNotMatch(demo, /boopface\.js\?v=|demoVersion/);
 });
 
 test('packed package installs and can be imported without browser globals', async () => {
-  const temporaryRoot = await mkdtemp(path.join(tmpdir(), 'agent-robot-avatar-'));
+  const temporaryRoot = await mkdtemp(path.join(tmpdir(), 'boop-face-'));
   const consumer = path.join(temporaryRoot, 'consumer');
   await mkdir(consumer);
   await writeFile(path.join(consumer, 'package.json'), '{"type":"module"}\n');
@@ -108,17 +108,17 @@ test('packed package installs and can be imported without browser globals', asyn
     const imported = run(process.execPath, [
       '--input-type=module',
       '--eval',
-      "import('agent-robot-avatar').then(module => console.log(Object.keys(module).sort().join(',')))",
+      "import('boopface').then(module => console.log(Object.keys(module).sort().join(',')))",
     ], { cwd: consumer });
-    assert.match(imported, /AgentRobotAvatar,SKINS,SKIN_NAMES,SKIN_SERIES,VERSION,default,loadSkins/);
+    assert.match(imported, /BoopFace,SKINS,SKIN_NAMES,SKIN_SERIES,VERSION,default,loadSkins/);
     const lite = run(process.execPath, [
       '--input-type=module',
       '--eval',
-      "import('agent-robot-avatar/lite').then(module => console.log(Object.keys(module).sort().join(',')))",
+      "import('boopface/lite').then(module => console.log(Object.keys(module).sort().join(',')))",
     ], { cwd: consumer });
-    assert.match(lite, /AgentRobotAvatar,VERSION,default/);
+    assert.match(lite, /BoopFace,VERSION,default/);
 
-    const packageJson = JSON.parse(await readFile(path.join(consumer, 'node_modules', 'agent-robot-avatar', 'package.json'), 'utf8'));
+    const packageJson = JSON.parse(await readFile(path.join(consumer, 'node_modules', 'boopface', 'package.json'), 'utf8'));
     assert.notEqual(packageJson.sideEffects, false);
     assert.equal(packageJson.types, './index.d.ts');
     assert.equal(packageJson.exports['.'].types, './index.d.ts');
@@ -136,13 +136,13 @@ test('packed package installs and can be imported without browser globals', asyn
 test('Pages build resolves both its component preload and import at the deployment root', async () => {
   run(process.execPath, ['scripts/build-pages.mjs']);
   const html = await readFile(path.join(root, '.pages-site', 'index.html'), 'utf8');
-  const demoRuntime = await readFile(path.join(root, '.pages-site', 'agent-robot-avatar-demo.js'), 'utf8');
-  assert.doesNotMatch(html, /\.\.\/agent-robot-avatar\.js/);
-  assert.doesNotMatch(demoRuntime, /\.\.\/agent-robot-avatar\.js/);
+  const demoRuntime = await readFile(path.join(root, '.pages-site', 'boopface-demo.js'), 'utf8');
+  assert.doesNotMatch(html, /\.\.\/boopface\.js/);
+  assert.doesNotMatch(demoRuntime, /\.\.\/boopface\.js/);
   const preloads = [...html.matchAll(/rel="modulepreload" href="([^"]+)"/g)].map(match => match[1]);
-  assert.ok(preloads.includes('./agent-robot-avatar.js'));
-  assert.match(html, /src="\.\/agent-robot-avatar-demo\.js"/);
-  assert.match(demoRuntime, /import\('\.\/agent-robot-avatar\.js'\)/);
+  assert.ok(preloads.includes('./boopface.js'));
+  assert.match(html, /src="\.\/boopface-demo\.js"/);
+  assert.match(demoRuntime, /import\('\.\/boopface\.js'\)/);
   for (const preload of preloads) {
     await readFile(path.join(root, '.pages-site', preload), 'utf8');
   }

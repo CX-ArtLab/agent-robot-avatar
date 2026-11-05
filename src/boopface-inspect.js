@@ -1,6 +1,6 @@
-import AgentRobotAvatar, { registerAvatarExtension } from './agent-robot-avatar-extension-host.js';
+import BoopFace, { registerAvatarExtension } from './boopface-extension-host.js';
 
-const proto = AgentRobotAvatar.prototype;
+const proto = BoopFace.prototype;
 
 const clamp01 = value => Math.max(0, Math.min(1, value));
 const lerp = (a, b, t) => a + (b - a) * t;
@@ -53,8 +53,8 @@ const INSPECT_BOUNDS = Object.freeze({
 });
 
 const runtimeWindow = typeof window !== 'undefined' ? window : null;
-const inspectConfig = (runtimeWindow?.AgentRobotAvatarInspectConfig && typeof runtimeWindow.AgentRobotAvatarInspectConfig === 'object')
-  ? runtimeWindow.AgentRobotAvatarInspectConfig
+const inspectConfig = (runtimeWindow?.BoopFaceInspectConfig && typeof runtimeWindow.BoopFaceInspectConfig === 'object')
+  ? runtimeWindow.BoopFaceInspectConfig
   : {};
 
 function normalizeConfigValue(key, value) {
@@ -69,8 +69,8 @@ for (const key of Object.keys(INSPECT_DEFAULTS)) {
   inspectConfig[key] = normalizeConfigValue(key, inspectConfig[key]);
 }
 if (runtimeWindow) {
-  runtimeWindow.AgentRobotAvatarInspectConfig = inspectConfig;
-  runtimeWindow.AgentRobotAvatarInspectDefaults = INSPECT_DEFAULTS;
+  runtimeWindow.BoopFaceInspectConfig = inspectConfig;
+  runtimeWindow.BoopFaceInspectDefaults = INSPECT_DEFAULTS;
 }
 
 function currentInspectConfig() {
@@ -238,5 +238,5 @@ registerAvatarExtension({
   draw: drawInspect,
 });
 
-export { AgentRobotAvatar, INSPECT_DEFAULTS };
-export default AgentRobotAvatar;
+export { BoopFace, INSPECT_DEFAULTS };
+export default BoopFace;

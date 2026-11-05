@@ -1,6 +1,6 @@
-import AgentRobotAvatar from './agent-robot-avatar-core.js';
+import BoopFace from './boopface-core.js';
 
-const proto = AgentRobotAvatar.prototype;
+const proto = BoopFace.prototype;
 const basePlay = proto.play;
 const baseReset = proto.reset;
 const baseDraw = proto._draw;
@@ -20,13 +20,13 @@ function registerAvatarExtension({
   draw,
 }) {
   if (!name || extensionNames.has(name)) {
-    throw new Error(`Agent Robot Avatar extension already registered: ${name || '(unnamed)'}`);
+    throw new Error(`BoopFace extension already registered: ${name || '(unnamed)'}`);
   }
   extensionNames.add(name);
 
   for (const [action, handler] of Object.entries(actions)) {
     if (actionHandlers.has(action)) {
-      throw new Error(`Agent Robot Avatar action already registered: ${action}`);
+      throw new Error(`BoopFace action already registered: ${action}`);
     }
     actionHandlers.set(action, handler);
   }
@@ -74,5 +74,5 @@ proto._draw = function(now) {
   for (const hook of drawHooks) hook.call(this, now);
 };
 
-export { AgentRobotAvatar, registerAvatarExtension };
-export default AgentRobotAvatar;
+export { BoopFace, registerAvatarExtension };
+export default BoopFace;

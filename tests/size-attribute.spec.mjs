@@ -4,7 +4,7 @@ test('size applies numeric and px values synchronously with one parser', async (
   await page.goto('/examples/basic.html');
 
   const observed = await page.evaluate(() => {
-    const avatar = document.createElement('agent-robot-avatar');
+    const avatar = document.createElement('boop-face');
     document.body.append(avatar);
 
     const read = () => avatar.style.getPropertyValue('--face-size');

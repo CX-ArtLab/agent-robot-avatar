@@ -15,7 +15,7 @@ test('color attributes update all head parts and remain isolated per instance', 
   page.on('pageerror', error => errors.push(error.message));
   await page.goto('/examples/basic.html');
   await page.evaluate(() => {
-    const other = document.createElement('agent-robot-avatar');
+    const other = document.createElement('boop-face');
     other.id = 'other-avatar';
     other.setAttribute('color', '#006699');
     document.body.append(other);

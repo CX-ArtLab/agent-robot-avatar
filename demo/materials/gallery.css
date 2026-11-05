@@ -24,7 +24,7 @@
 .catalog-content .stage::after{content:"";position:absolute;bottom:15%;left:30%;right:30%;height:6%;background:radial-gradient(ellipse,rgba(10,16,32,.16),transparent 70%);pointer-events:none}
 .catalog-content .avatar-slot{position:relative;z-index:1;display:grid;place-items:center;width:96px;height:96px}
 /* Clicks go to the card's link; the eyes follow the pointer from anywhere. */
-.catalog-content .avatar-slot img,.catalog-content .avatar-slot agent-robot-avatar{grid-area:1/1;width:96px;height:96px;pointer-events:none}
+.catalog-content .avatar-slot img,.catalog-content .avatar-slot boop-face{grid-area:1/1;width:96px;height:96px;pointer-events:none}
 .catalog-content .avatar-slot.is-live img{visibility:hidden}
 .catalog-content .caption{display:flex;align-self:stretch;align-items:center;gap:7px;padding:11px 64px 12px 12px;min-width:0}
 .catalog-content .swatch{flex-shrink:0;width:8px;height:8px;border-radius:50%}

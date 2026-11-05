@@ -4,9 +4,9 @@
   <img src="../assets/readme/agent-robot-avatar-header.jpg" alt="Agent Robot Avatar">
 </p>
 
-[English](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/README.md) | [简体中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-CN.md) | [Español](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.es.md) | [Русский](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ru.md) | [Français](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.fr.md) | [Português](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.pt.md) | [Deutsch](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.de.md) | [日本語](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ja.md) | [한국어](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.ko.md) | [繁體中文](https://github.com/CX-ArtLab/agent-robot-avatar/blob/main/docs/README.zh-TW.md)
+[English](https://github.com/CX-ArtLab/boopface/blob/main/README.md) | [简体中文](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.zh-CN.md) | [Español](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.es.md) | [Русский](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.ru.md) | [Français](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.fr.md) | [Português](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.pt.md) | [Deutsch](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.de.md) | [日本語](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.ja.md) | [한국어](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.ko.md) | [繁體中文](https://github.com/CX-ArtLab/boopface/blob/main/docs/README.zh-TW.md)
 
-![Version](https://img.shields.io/badge/version-v0.7.2-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/agent-robot-avatar/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
+![Version](https://img.shields.io/badge/version-v0.7.2-111111?style=flat-square) [![License](https://img.shields.io/badge/license-MIT-0A7EA4?style=flat-square)](../LICENSE) [![CI](https://github.com/CX-ArtLab/boopface/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/CX-ArtLab/boopface/actions/workflows/validate.yml) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/P0E625WIOI)
 
 ![Vanilla JavaScript](https://img.shields.io/badge/Vanilla-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000) ![Web Component](https://img.shields.io/badge/Web-Native%20Component-5A67D8?style=flat-square) ![SVG](https://img.shields.io/badge/Rendering-SVG-FFB13B?style=flat-square&logo=svg&logoColor=000) ![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-2EA44F?style=flat-square)
 
@@ -26,7 +26,7 @@ O Agent Robot Avatar também pode ser usado como camada de feedback visual para 
 
 ## Demo ao vivo
 
-[Abrir a demo interativa](https://cx-artlab.github.io/agent-robot-avatar/?lang=pt) · [Visite a galeria de skins](https://cx-artlab.github.io/agent-robot-avatar/skins.html?lang=pt)
+[Abrir a demo interativa](https://cx-artlab.github.io/boopface/?lang=pt) · [Visite a galeria de skins](https://cx-artlab.github.io/boopface/skins.html?lang=pt)
 
 ## Destaques
 
@@ -56,7 +56,7 @@ npm install agent-robot-avatar
 import 'agent-robot-avatar';
 ```
 
-Ou baixe `agent-robot-avatar-x.y.z.zip` da [versão mais recente](https://github.com/CX-ArtLab/agent-robot-avatar/releases/latest). Ele contém só o componente, com as skins. Descompacte-o ao lado da sua página:
+Ou baixe `agent-robot-avatar-x.y.z.zip` da [versão mais recente](https://github.com/CX-ArtLab/boopface/releases/latest). Ele contém só o componente, com as skins. Descompacte-o ao lado da sua página:
 
 ```html
 <script type="module" src="./agent-robot-avatar/agent-robot-avatar.js"></script>
@@ -189,7 +189,7 @@ avatar.setSkin(102);  // ou '102'
 avatar.setSkin(null); // volta à cor lisa
 ```
 
-Veja todos os skins com seus números na [página com todos os skins](https://cx-artlab.github.io/agent-robot-avatar/materials/?lang=pt).
+Veja todos os skins com seus números na [página com todos os skins](https://cx-artlab.github.io/boopface/materials/?lang=pt).
 
 | Série | Números |
 | --- | --- |
@@ -231,7 +231,7 @@ Os testes automatizados cobrem Chromium, Firefox e WebKit.
 
 ## Versão para hardware (em desenvolvimento)
 
-Uma versão em C++ que mostra as expressões do avatar em telas de robôs e placas de desenvolvimento (desenha apenas os olhos) está em desenvolvimento e ainda não foi lançada. Consulte o [guia de hardware](https://github.com/CX-ArtLab/agent-robot-avatar/tree/main/embedded).
+Uma versão em C++ que mostra as expressões do avatar em telas de robôs e placas de desenvolvimento (desenha apenas os olhos) está em desenvolvimento e ainda não foi lançada. Consulte o [guia de hardware](https://github.com/CX-ArtLab/boopface/tree/main/embedded).
 
 ## Contribuindo
 

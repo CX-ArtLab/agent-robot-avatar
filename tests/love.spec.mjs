@@ -139,7 +139,7 @@ test('another action replaces love cleanly', async ({ page }) => {
 
 test('love config is exposed with defaults and bounds, and normalizes invalid input', async ({ page }) => {
   await page.addInitScript(() => {
-    window.AgentRobotAvatarLoveConfig = {
+    window.BoopFaceLoveConfig = {
       rx: '35',
       ry: 'not-a-number',
       tilt: -5,
@@ -151,9 +151,9 @@ test('love config is exposed with defaults and bounds, and normalizes invalid in
   const avatar = await loadAvatar(page);
 
   const exposed = await page.evaluate(() => ({
-    defaults: window.AgentRobotAvatarLoveDefaults,
-    bounds: window.AgentRobotAvatarLoveBounds,
-    frozen: Object.isFrozen(window.AgentRobotAvatarLoveDefaults),
+    defaults: window.BoopFaceLoveDefaults,
+    bounds: window.BoopFaceLoveBounds,
+    frozen: Object.isFrozen(window.BoopFaceLoveDefaults),
   }));
   expect(exposed.frozen).toBe(true);
   for (const [key, value] of Object.entries(exposed.defaults)) {
@@ -195,7 +195,7 @@ test('reduced motion keeps a static heart without head motion or beating', async
   }
   expect(new Set(samples).size).toBe(1);
   // The finished heart is shown at once, not stuck at the start of the morph.
-  const defaultTilt = await page.evaluate(() => window.AgentRobotAvatarLoveDefaults.tilt);
+  const defaultTilt = await page.evaluate(() => window.BoopFaceLoveDefaults.tilt);
   expect((await eyeTilts(avatar)).right).toBeCloseTo(defaultTilt, 1);
 
   await avatar.evaluate(element => element.reset());

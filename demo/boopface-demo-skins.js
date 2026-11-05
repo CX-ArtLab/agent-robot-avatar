@@ -1,4 +1,4 @@
-import { restoreAppearance, saveAppearance } from './agent-robot-avatar-demo-appearance.js';
+import { restoreAppearance, saveAppearance } from './boopface-demo-appearance.js';
 import { t, settleNewDots } from './skins-i18n.js';
 const face = document.getElementById('face');
 const navigation = document.createElement('nav');

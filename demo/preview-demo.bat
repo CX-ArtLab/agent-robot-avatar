@@ -6,7 +6,7 @@ for /f %%P in ('powershell -NoProfile -Command "$p=Get-Random -Minimum 18000 -Ma
 
 where py >nul 2>nul
 if %errorlevel%==0 (
-  start "Agent Robot Avatar Demo" cmd /c "py -m http.server %PORT%"
+  start "BoopFace Demo" cmd /c "py -m http.server %PORT%"
   timeout /t 1 /nobreak >nul
   start "" "http://localhost:%PORT%/demo/"
   exit /b
@@ -14,7 +14,7 @@ if %errorlevel%==0 (
 
 where python >nul 2>nul
 if %errorlevel%==0 (
-  start "Agent Robot Avatar Demo" cmd /c "python -m http.server %PORT%"
+  start "BoopFace Demo" cmd /c "python -m http.server %PORT%"
   timeout /t 1 /nobreak >nul
   start "" "http://localhost:%PORT%/demo/"
   exit /b
@@ -22,7 +22,7 @@ if %errorlevel%==0 (
 
 where npx >nul 2>nul
 if %errorlevel%==0 (
-  start "Agent Robot Avatar Demo" cmd /c "npx --yes http-server -p %PORT%"
+  start "BoopFace Demo" cmd /c "npx --yes http-server -p %PORT%"
   timeout /t 2 /nobreak >nul
   start "" "http://localhost:%PORT%/demo/"
   exit /b

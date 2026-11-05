@@ -1,6 +1,6 @@
-import AgentRobotAvatar, { registerAvatarExtension } from './agent-robot-avatar-extension-host.js';
+import BoopFace, { registerAvatarExtension } from './boopface-extension-host.js';
 
-const proto = AgentRobotAvatar.prototype;
+const proto = BoopFace.prototype;
 
 const clamp01 = value => Math.max(0, Math.min(1, value));
 const lerp = (a, b, t) => a + (b - a) * t;
@@ -52,8 +52,8 @@ const LOVE_BOUNDS = Object.freeze({
 });
 
 const runtimeWindow = typeof window !== 'undefined' ? window : null;
-const loveConfig = (runtimeWindow?.AgentRobotAvatarLoveConfig && typeof runtimeWindow.AgentRobotAvatarLoveConfig === 'object')
-  ? runtimeWindow.AgentRobotAvatarLoveConfig
+const loveConfig = (runtimeWindow?.BoopFaceLoveConfig && typeof runtimeWindow.BoopFaceLoveConfig === 'object')
+  ? runtimeWindow.BoopFaceLoveConfig
   : {};
 
 function normalizeConfigValue(key, value) {
@@ -65,9 +65,9 @@ function normalizeConfigValue(key, value) {
 }
 
 if (runtimeWindow) {
-  runtimeWindow.AgentRobotAvatarLoveConfig = loveConfig;
-  runtimeWindow.AgentRobotAvatarLoveDefaults = LOVE_DEFAULTS;
-  runtimeWindow.AgentRobotAvatarLoveBounds = LOVE_BOUNDS;
+  runtimeWindow.BoopFaceLoveConfig = loveConfig;
+  runtimeWindow.BoopFaceLoveDefaults = LOVE_DEFAULTS;
+  runtimeWindow.BoopFaceLoveBounds = LOVE_BOUNDS;
 }
 
 function currentLoveConfig() {
@@ -222,5 +222,5 @@ registerAvatarExtension({
   draw: drawLove,
 });
 
-export { AgentRobotAvatar, LOVE_DEFAULTS };
-export default AgentRobotAvatar;
+export { BoopFace, LOVE_DEFAULTS };
+export default BoopFace;

@@ -1,6 +1,6 @@
-import AgentRobotAvatar, { registerAvatarExtension } from './agent-robot-avatar-extension-host.js';
+import BoopFace, { registerAvatarExtension } from './boopface-extension-host.js';
 
-const proto = AgentRobotAvatar.prototype;
+const proto = BoopFace.prototype;
 const clamp01 = value => Math.max(0, Math.min(1, value));
 const smooth = t => {
   t = clamp01(t);
@@ -59,8 +59,8 @@ const RANDOM_BOUNDS = Object.freeze({
 });
 
 const runtimeWindow = typeof window !== 'undefined' ? window : null;
-const randomConfig = (runtimeWindow?.AgentRobotAvatarRandomConfig && typeof runtimeWindow.AgentRobotAvatarRandomConfig === 'object')
-  ? runtimeWindow.AgentRobotAvatarRandomConfig
+const randomConfig = (runtimeWindow?.BoopFaceRandomConfig && typeof runtimeWindow.BoopFaceRandomConfig === 'object')
+  ? runtimeWindow.BoopFaceRandomConfig
   : {};
 
 function normalizeConfigValue(key, value) {
@@ -72,9 +72,9 @@ function normalizeConfigValue(key, value) {
 }
 
 if (runtimeWindow) {
-  runtimeWindow.AgentRobotAvatarRandomConfig = randomConfig;
-  runtimeWindow.AgentRobotAvatarRandomDefaults = RANDOM_DEFAULTS;
-  runtimeWindow.AgentRobotAvatarRandomBounds = RANDOM_BOUNDS;
+  runtimeWindow.BoopFaceRandomConfig = randomConfig;
+  runtimeWindow.BoopFaceRandomDefaults = RANDOM_DEFAULTS;
+  runtimeWindow.BoopFaceRandomBounds = RANDOM_BOUNDS;
 }
 
 function currentRandomConfig() {
@@ -268,5 +268,5 @@ registerAvatarExtension({
   draw: drawRandom,
 });
 
-export { AgentRobotAvatar, RANDOM_DEFAULTS };
-export default AgentRobotAvatar;
+export { BoopFace, RANDOM_DEFAULTS };
+export default BoopFace;

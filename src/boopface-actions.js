@@ -1,10 +1,10 @@
-import AgentRobotAvatar, { registerAvatarExtension } from './agent-robot-avatar-extension-host.js';
+import BoopFace, { registerAvatarExtension } from './boopface-extension-host.js';
 
-if (!AgentRobotAvatar) {
-  throw new Error('Agent Robot Avatar core failed to load.');
+if (!BoopFace) {
+  throw new Error('BoopFace core failed to load.');
 }
 
-const proto = AgentRobotAvatar.prototype;
+const proto = BoopFace.prototype;
 const baseUpdateLook = proto._updateLook;
 const baseOnPointerMove = proto._onPointerMove;
 
@@ -399,5 +399,5 @@ registerAvatarExtension({
   draw: drawWarning,
 });
 
-export { AgentRobotAvatar };
-export default AgentRobotAvatar;
+export { BoopFace };
+export default BoopFace;

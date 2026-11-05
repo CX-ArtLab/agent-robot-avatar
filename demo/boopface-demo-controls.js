@@ -63,7 +63,7 @@ const LANGUAGES = Object.freeze([
   ['fr', 'Français'],
 ]);
 
-const LANGUAGE_STORAGE_KEY = 'agentRobotAvatarDemoLanguage';
+const LANGUAGE_STORAGE_KEY = 'boopFaceDemoLanguage';
 
 function normalizeLanguage(value) {
   if (typeof value !== 'string' || !value.trim()) return null;
@@ -188,7 +188,7 @@ function mountDemoControls() {
   const title = document.querySelector('.title');
   if (title) {
     title.classList.add('demo-title');
-    title.innerHTML = '<span>Agent Robot Avatar</span><span>SVG + Vanilla JS</span><span>Web Component</span>';
+    title.innerHTML = '<span>BoopFace</span><span>SVG + Vanilla JS</span><span>Web Component</span>';
   }
 
   const status = document.getElementById('status');
@@ -300,7 +300,7 @@ function mountDemoControls() {
       history.replaceState(history.state, '', url);
     }
 
-    if (title) title.innerHTML = `<span>Agent Robot Avatar</span><span>SVG + Vanilla JS</span><span>${t.webComponent}</span>`;
+    if (title) title.innerHTML = `<span>BoopFace</span><span>SVG + Vanilla JS</span><span>${t.webComponent}</span>`;
 
     const paletteUI = PALETTE_UI[currentLanguage] || PALETTE_UI.en;
     colorPanelToggle.title = t.colorSettings;
@@ -348,7 +348,7 @@ function mountDemoControls() {
     updateStatus();
   }
 
-  window.AgentRobotAvatarApplyDemoLanguage = () => applyLanguage(currentLanguage);
+  window.BoopFaceApplyDemoLanguage = () => applyLanguage(currentLanguage);
 
   colorPanelToggle.addEventListener('click', () => setPanel(colorPanel.hidden ? 'color' : null));
   settingsPanelToggle.addEventListener('click', () => setPanel(settingsPanel.hidden ? 'settings' : null));
@@ -718,7 +718,7 @@ function mountDemoControls() {
     return {
       start() {
         face.addEventListener('face-state', onState);
-        const config = window.AgentRobotAvatarRandomConfig;
+        const config = window.BoopFaceRandomConfig;
         const saved = config && { speed: config.speed, spin: config.spin };
         if (config) Object.assign(config, INTRO_REEL);
         try { play('random'); } finally { if (saved) Object.assign(config, saved); }

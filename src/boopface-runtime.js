@@ -1,6 +1,6 @@
-import AgentRobotAvatar, { registerAvatarExtension } from './agent-robot-avatar-extension-host.js';
+import BoopFace, { registerAvatarExtension } from './boopface-extension-host.js';
 
-const proto = AgentRobotAvatar.prototype;
+const proto = BoopFace.prototype;
 const basePlay = proto.play;
 const baseNoteActivity = proto.noteActivity;
 const baseSleep = proto.sleep;
@@ -92,7 +92,7 @@ function warnDeprecatedAction(raw) {
   const replacement = DEPRECATED_ACTIONS[raw];
   if (!replacement || warnedDeprecations.has(raw)) return;
   warnedDeprecations.add(raw);
-  console.warn(`agent-robot-avatar: action "${raw}" is deprecated, use "${replacement}". Old names stop working in 1.0.`);
+  console.warn(`boopface: action "${raw}" is deprecated, use "${replacement}". Old names stop working in 1.0.`);
 }
 
 function normalizeAction(name) {
@@ -768,7 +768,7 @@ function prepareReplacement(instance, canonical) {
 proto.play = function(name) {
   ensureRuntime(this);
   const { canonical, implementation } = normalizeAction(name);
-  if (!canonical) throw new Error(`Unknown Agent Robot Avatar action: ${name}`);
+  if (!canonical) throw new Error(`Unknown BoopFace action: ${name}`);
   if (playNoOp(this, canonical)) return this;
   if (canonical === 'idle') return basePlay.call(this, implementation);
 
@@ -948,9 +948,9 @@ registerAvatarExtension({
 });
 
 export {
-  AgentRobotAvatar,
+  BoopFace,
   ACTION_ALIASES,
   DEFAULT_SIZE,
 };
-export default AgentRobotAvatar;
+export default BoopFace;
 

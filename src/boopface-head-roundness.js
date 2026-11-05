@@ -1,8 +1,8 @@
-import AgentRobotAvatar from './agent-robot-avatar-extension-host.js';
-import { flattenHeadPoints } from './agent-robot-avatar-geometry.js';
-import { VERSION } from './agent-robot-avatar-version.js';
+import BoopFace from './boopface-extension-host.js';
+import { flattenHeadPoints } from './boopface-geometry.js';
+import { VERSION } from './boopface-version.js';
 
-const proto = AgentRobotAvatar.prototype;
+const proto = BoopFace.prototype;
 const DEFAULT_ROUNDNESS = 50;
 
 function clamp(value, min, max) {
@@ -95,9 +95,9 @@ proto.getHeadRoundness = function() {
 };
 
 if (typeof window !== 'undefined') {
-  window.AgentRobotAvatarVersion = VERSION;
-  window.AgentRobotAvatarHeadRoundnessDefault = DEFAULT_ROUNDNESS;
+  window.BoopFaceVersion = VERSION;
+  window.BoopFaceHeadRoundnessDefault = DEFAULT_ROUNDNESS;
 }
 
-export { AgentRobotAvatar, DEFAULT_ROUNDNESS, VERSION };
-export default AgentRobotAvatar;
+export { BoopFace, DEFAULT_ROUNDNESS, VERSION };
+export default BoopFace;
