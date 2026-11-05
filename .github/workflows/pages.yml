@@ -25,7 +25,7 @@ concurrency:
 
 jobs:
   deploy:
-    if: github.repository == 'CX-ArtLab/boopface'
+    if: github.repository == 'CX-ArtLab/BoopFace'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

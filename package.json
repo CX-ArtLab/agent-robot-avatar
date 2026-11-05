@@ -65,11 +65,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CX-ArtLab/boopface.git"
+    "url": "git+https://github.com/CX-ArtLab/BoopFace.git"
   },
-  "homepage": "https://github.com/CX-ArtLab/boopface#readme",
+  "homepage": "https://github.com/CX-ArtLab/BoopFace#readme",
   "bugs": {
-    "url": "https://github.com/CX-ArtLab/boopface/issues"
+    "url": "https://github.com/CX-ArtLab/BoopFace/issues"
   },
   "funding": {
     "type": "individual",

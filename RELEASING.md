@@ -22,7 +22,7 @@ The `.github/workflows/publish-npm.yml` workflow publishes the matching release 
 After the workflow is merged into `main`, open the `boopface` package settings on npmjs.com and add a GitHub Actions trusted publisher:
 
 - Organization or user: `CX-ArtLab` (use this exact capitalization).
-- Repository: `boopface`.
+- Repository: `BoopFace` (case-sensitive).
 - Workflow filename: `publish-npm.yml` (filename only).
 - Environment name: leave blank; the workflow does not use a GitHub environment.
 - Allowed actions: enable direct publishing with `npm publish`.
