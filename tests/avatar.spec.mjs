@@ -171,6 +171,9 @@ test('demo falls back to the browser language', async ({ browser, baseURL }) => 
 
 test('looping waiting starts once and continues smoothly', async ({ page }) => {
   await page.goto('/demo/');
+  // The input exists before the asynchronously loaded controls attach their
+  // listeners. Programmatic events bypass the page's inert loading state.
+  await expect(page.locator('html')).toHaveAttribute('data-demo-ready', 'true');
   await page.locator('#demoLoop').evaluate(input => {
     input.checked = true;
     input.dispatchEvent(new Event('change', { bubbles: true }));
