@@ -1,4 +1,4 @@
-// Agent Robot Eyes on a 0.96" SSD1306 OLED (128 x 64, I2C address 0x3C).
+// BoopFace Embedded on a 0.96" SSD1306 OLED (128 x 64, I2C address 0x3C).
 //
 // Needs the "Adafruit SSD1306" library (Library Manager installs Adafruit GFX
 // with it). Wire the display to the board's default I2C pins: SDA/SCL, 3.3 V
@@ -10,13 +10,13 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
-#include <AgentRobotEyes.h>
+#include <BoopFace.h>
 
 const uint16_t WIDTH = 128;
 const uint16_t HEIGHT = 64;
 
 Adafruit_SSD1306 display(WIDTH, HEIGHT, &Wire, -1);
-agent_robot::Eyes eyes;
+boopface::Eyes eyes;
 uint8_t pixels[((WIDTH + 7) / 8) * HEIGHT];
 
 const char* const DEMO[] = {
@@ -36,12 +36,12 @@ void setup() {
     Serial.println("SSD1306 not found at 0x3C; check the wiring and address.");
     while (true) delay(1000);
   }
-  agent_robot::EyesConfig config;
+  boopface::EyesConfig config;
   config.width = WIDTH;
   config.height = HEIGHT;
   config.maxFps = 25;
   if (!eyes.begin(config, pixels, sizeof pixels, millis())) {
-    Serial.println("Agent Robot Eyes could not start.");
+    Serial.println("BoopFace Embedded could not start.");
     while (true) delay(1000);
   }
   Serial.println("Type an action (love, affirm, refuse, ...) or demo.");

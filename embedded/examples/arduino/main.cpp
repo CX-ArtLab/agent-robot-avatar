@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include <AgentRobotEyes.h>
+#include <BoopFace.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -28,7 +28,7 @@
 #define EYES_OFFSET_Y 0.0f
 #endif
 
-agent_robot::Eyes eyes;
+boopface::Eyes eyes;
 uint8_t bitmap[((WIDTH + 7) / 8) * HEIGHT];
 bool ready = false, cycle = false, commandOverflow = false;
 char command[48];
@@ -39,7 +39,7 @@ unsigned cycleIndex = 0;
 void present() { displayPresent(eyes); }
 
 void help() {
-  Serial.println("Agent Robot Eyes 0.1.0 (experimental)");
+  Serial.println("BoopFace Embedded 0.1.0 (experimental)");
   Serial.println("Commands: idle bored waiting-spin waiting-wrap waiting-wave input affirm");
   Serial.println("success failure wary inspect angry refuse surprise love random sleep wake");
   Serial.println("Also: reset | demo | gaze -1..1 -1..1 | help");
@@ -69,14 +69,14 @@ void executeCommand(uint32_t now) {
   if (reset || eyes.play(command, now)) {
     cycle = false;
     if (reset) eyes.reset(now);
-    Serial.println(agent_robot::Eyes::actionName(eyes.action()));
+    Serial.println(boopface::Eyes::actionName(eyes.action()));
   } else Serial.println("Unknown command; type help.");
 }
 
 void setup() {
   Serial.begin(115200);
   if (!displayBegin()) { Serial.println("Display initialization failed."); return; }
-  agent_robot::EyesConfig config;
+  boopface::EyesConfig config;
   config.width = WIDTH;
   config.height = HEIGHT;
   config.maxFps = EYES_MAX_FPS;
@@ -84,12 +84,12 @@ void setup() {
   config.transitionMs = EYES_TRANSITION_MS;
   ready = eyes.begin(config, bitmap, sizeof(bitmap), millis());
   if (!ready) { Serial.println("Eyes buffer/configuration is invalid."); return; }
-  agent_robot::EyesLayout layout;
-  layout.fit = EYES_FIT_COVER ? agent_robot::FitMode::Cover : agent_robot::FitMode::Contain;
+  boopface::EyesLayout layout;
+  layout.fit = EYES_FIT_COVER ? boopface::FitMode::Cover : boopface::FitMode::Contain;
   layout.zoom = EYES_ZOOM;
   layout.offsetX = EYES_OFFSET_X;
   layout.offsetY = EYES_OFFSET_Y;
-  if (ROUND) layout.shape = agent_robot::ScreenShape::Circle; // keep the eyes inside the round glass
+  if (ROUND) layout.shape = boopface::ScreenShape::Circle; // keep the eyes inside the round glass
   if (!eyes.setLayout(layout)) Serial.println("Layout settings are out of range; using defaults.");
   help();
 }
@@ -112,14 +112,14 @@ void loop() {
       else commandOverflow = true;
     }
   }
-  const uint32_t actionMs = agent_robot::Eyes::actionDuration(
-      static_cast<agent_robot::Action>(cycleIndex));
+  const uint32_t actionMs = boopface::Eyes::actionDuration(
+      static_cast<boopface::Action>(cycleIndex));
   const uint32_t cycleMs = actionMs + 500u > 4000u ? actionMs + 500u : 4000u;
   if (cycle && now - lastCycle >= cycleMs) {
-    cycleIndex = (cycleIndex + 1) % static_cast<unsigned>(agent_robot::Action::Count);
-    eyes.play(static_cast<agent_robot::Action>(cycleIndex), now);
+    cycleIndex = (cycleIndex + 1) % static_cast<unsigned>(boopface::Action::Count);
+    eyes.play(static_cast<boopface::Action>(cycleIndex), now);
     lastCycle = now;
-    Serial.println(agent_robot::Eyes::actionName(eyes.action()));
+    Serial.println(boopface::Eyes::actionName(eyes.action()));
   }
   if (eyes.update(now)) present();
   // No delay(): the host can handle sensors, audio or networking between frames.

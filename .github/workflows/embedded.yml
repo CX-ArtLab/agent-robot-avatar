@@ -67,8 +67,8 @@ jobs:
         run: python -m pip install platformio==6.1.19
       - name: Compile the library's Arduino IDE example (not a physical hardware test)
         run: |
-          pio ci "embedded/lib/AgentRobotEyes/examples/${{ matrix.example }}/${{ matrix.example }}.ino" \
-            --lib embedded/lib/AgentRobotEyes --board ${{ matrix.board }} \
+          pio ci "embedded/lib/BoopFace/examples/${{ matrix.example }}/${{ matrix.example }}.ino" \
+            --lib embedded/lib/BoopFace --board ${{ matrix.board }} \
             -O "platform=${{ matrix.platform }}" ${{ matrix.deps && format('-O "lib_deps={0}"', matrix.deps) || '' }}
 
   offline-preview:
@@ -91,7 +91,7 @@ jobs:
       - name: Rebuild self-contained preview
         run: |
           node embedded/tools/build-preview.mjs
-          git diff --exit-code -- embedded/preview/agent-robot-eyes-preview.html
+          git diff --exit-code -- embedded/preview/boopface-embedded-preview.html
       - name: Install browser test dependencies
         run: |
           npm ci
@@ -100,7 +100,7 @@ jobs:
       - name: Compare against the original Web expression SVGs
         run: |
           node embedded/tools/sample-web-expressions.mjs
-          git diff --exit-code -- embedded/lib/AgentRobotEyes/src/AgentRobotWebMotion.h embedded/tests/web-reference.json embedded/tests/web-visual-reference.json
+          git diff --exit-code -- embedded/lib/BoopFace/src/BoopFaceWebMotion.h embedded/tests/web-reference.json embedded/tests/web-visual-reference.json
           node embedded/tools/test-web-fidelity.mjs
       - name: Test local file offline in Chromium, Firefox and WebKit
         run: |
@@ -110,5 +110,5 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: offline-eyes-preview
-          path: embedded/preview/agent-robot-eyes-preview.html
+          path: embedded/preview/boopface-embedded-preview.html
 

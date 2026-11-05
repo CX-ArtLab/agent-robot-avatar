@@ -1,4 +1,4 @@
-# Agent Robot Eyes — embedded preview
+# BoopFace Embedded
 
 [简体中文](README.zh-CN.md) · [Main project](../README.md)
 
@@ -8,7 +8,7 @@ The expression engine is independent of ESP32, Arduino and the display driver. E
 
 ## Architecture and scope
 
-- `lib/AgentRobotEyes/`: standalone MIT C++11 library; no third-party runtime dependencies or heap allocations in the core.
+- `lib/BoopFace/`: standalone MIT C++11 library; no third-party runtime dependencies or heap allocations in the core.
 - `examples/arduino/`: display transport and serial command example using Adafruit drivers.
 - `platformio.ini`: pinned reference build configurations.
 - `tests/`: native engine tests, including framebuffer guards and 32-bit clock rollover.
@@ -18,7 +18,7 @@ The Web and embedded implementations share expression names and visual design. T
 
 ## Offline animation preview (no hardware)
 
-Download [`preview/agent-robot-eyes-preview.html`](preview/agent-robot-eyes-preview.html) as a raw file and open it in a current browser, or double-click it in a local checkout. No server, compiler, Python, Node.js, CDN or network is needed to run the built file. Saving GitHub's file-view page is not the same as downloading the raw HTML.
+Download [`preview/boopface-embedded-preview.html`](preview/boopface-embedded-preview.html) as a raw file and open it in a current browser, or double-click it in a local checkout. No server, compiler, Python, Node.js, CDN or network is needed to run the built file. Saving GitHub's file-view page is not the same as downloading the raw HTML.
 
 The preview runs **this exact embedded C++ engine compiled to WebAssembly**, not the separate Web avatar renderer. It offers 18 actions (17 original expressions plus the added waiting-wave variant), cycling/manual interruption, pause/step, playback speed, explicit gaze, blink/transition switches, and 32 screen presets in five groups (round, square, bar, dev kits and OLEDs) plus custom resolutions from 16 to 512 pixels per axis. Layout controls include aspect-preserving fit, crop-to-fill, zoom, offsets and circular clipping. Named presets use SVG front views of specific reference modules; see [artwork sources](preview/frames/README.md). TFT mode centers a 240×160 mask inside a 240×240 canvas, matching the Arduino example. OLED mode renders a 128×64 mask; it does not emulate the display driver's page conversion. Changing the screen restarts the simulation; timing, layout and display changes apply without restarting, and hidden tabs freeze its clock. This validates animation, not board performance or screen electronics. See [preview/README.md](preview/README.md) for rebuilding and tests.
 
@@ -40,7 +40,7 @@ Tune the eyes in the preview, then build the firmware with exactly those setting
 | `EYES_TURN` | Screen rotation 90°; if the eyes appear upside down, change `3` to `1` |
 | `EYES_FULL_PANEL` | On the 240×240 reference module, use the whole panel instead of the 240×160 strip |
 
-Without the file the firmware uses its defaults, and git ignores it. Gaze following needs a camera or distance sensor on the board, so it is not part of the export: the library's `GazeTracker` (`lib/AgentRobotEyes/src/AgentRobotGaze.h`) takes the target position your sensor reports.
+Without the file the firmware uses its defaults, and git ignores it. Gaze following needs a camera or distance sensor on the board, so it is not part of the export: the library's `GazeTracker` (`lib/BoopFace/src/BoopFaceGaze.h`) takes the target position your sensor reports.
 
 ## Reference configurations
 
@@ -129,17 +129,17 @@ reset
 
 ## Embed the engine in another product
 
-Copy `lib/AgentRobotEyes` into an Arduino `libraries` folder (or, once released, add its ZIP with *Sketch → Include Library → Add .ZIP Library*), or compile its source directory into your C++11 application. For non-Arduino projects, no Arduino library is needed.
+Copy `lib/BoopFace` into an Arduino `libraries` folder (or, once released, add its ZIP with *Sketch → Include Library → Add .ZIP Library*), or compile its source directory into your C++11 application. For non-Arduino projects, no Arduino library is needed.
 
-The library ships two Arduino IDE examples under *File → Examples → AgentRobotEyes*: **SerialEyes** draws the eyes as text in the Serial Monitor and needs no screen, and **OledSSD1306** runs them on a 0.96″ 128×64 I²C OLED (install *Adafruit SSD1306* first). Both take action names typed in the Serial Monitor. CI compiles them for ESP32 and RP2040.
+The library ships two Arduino IDE examples under *File → Examples → BoopFace Embedded*: **SerialEyes** draws the eyes as text in the Serial Monitor and needs no screen, and **OledSSD1306** runs them on a 0.96″ 128×64 I²C OLED (install *Adafruit SSD1306* first). Both take action names typed in the Serial Monitor. CI compiles them for ESP32 and RP2040.
 
 ```cpp
-#include <AgentRobotEyes.h>
-agent_robot::Eyes eyes;
+#include <BoopFace.h>
+boopface::Eyes eyes;
 uint8_t pixels[4800]; // 240 x 160, 1 bit per pixel
 
 bool initEyes(uint32_t nowMs) {
-  agent_robot::EyesConfig config;
+  boopface::EyesConfig config;
   if (!eyes.begin(config, pixels, sizeof pixels, nowMs)) return false;
   eyes.startWaiting(nowMs);
   return true;
@@ -190,8 +190,8 @@ The host test uses GCC/Clang address and undefined-behavior sanitizers. CI separ
 For a host-rendered frame:
 
 ```sh
-g++ -std=c++11 -I embedded/lib/AgentRobotEyes/src \
-  embedded/lib/AgentRobotEyes/src/AgentRobotEyes.cpp \
+g++ -std=c++11 -I embedded/lib/BoopFace/src \
+  embedded/lib/BoopFace/src/BoopFace.cpp \
   embedded/tools/render-frame.cpp -o /tmp/render-eyes
 /tmp/render-eyes love 900 > /tmp/love.pbm
 ```

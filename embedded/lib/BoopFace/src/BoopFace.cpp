@@ -1,10 +1,10 @@
-#include "AgentRobotEyes.h"
-#include "AgentRobotWebMotion.h"
+#include "BoopFace.h"
+#include "BoopFaceWebMotion.h"
 
 #include <math.h>
 #include <string.h>
 
-namespace agent_robot {
+namespace boopface {
 namespace {
 constexpr float PI = 3.14159265358979323846f;
 float clamp(float x, float low, float high) { return x < low ? low : (x > high ? high : x); }
@@ -355,5 +355,5 @@ void Eyes::render(const Pose& pose) {
   drawEye(pose.right, scale, ox, oy);
 }
 
-} // namespace agent_robot
+} // namespace boopface
 

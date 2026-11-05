@@ -2,7 +2,7 @@
 // Geometric parameters only; no bitmaps or external assets.
 #pragma once
 #include <stdint.h>
-namespace agent_robot { namespace web_reference {
+namespace boopface { namespace web_reference {
 static const char SOURCE_SHA256[] = "0d458cee9f10c2bfdc53e564c5d8654c77207958f2aa0c8a609c1b7a7f42ede5";
 struct Clip { const int16_t* values; uint16_t count; };
 static const int16_t ACTION_0[] = {

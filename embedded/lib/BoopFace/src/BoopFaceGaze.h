@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <math.h>
 
-namespace agent_robot {
+namespace boopface {
 
 // Host supplies the target position and a normalized proximity score. This
 // helper owns no camera or sensor; one selected target is supplied by the host.
@@ -64,4 +64,4 @@ class GazeTracker {
   uint32_t last_=0, seen_=0;
   bool active_=false;
 };
-} // namespace agent_robot
+} // namespace boopface

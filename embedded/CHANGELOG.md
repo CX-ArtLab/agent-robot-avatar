@@ -1,4 +1,4 @@
-# AgentRobotEyes changelog
+# BoopFace Embedded changelog
 
 Changes to the embedded eyes library for robot and dev-board screens. It is versioned and released separately from the Web component (`eyes-v*` tags, not published to npm).
 

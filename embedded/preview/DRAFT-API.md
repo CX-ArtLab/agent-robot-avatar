@@ -1,17 +1,17 @@
 # Draft layout and proximity API
 
-Development draft saved on the `dev/expressions` branch. No release, deployment or physical-board verification has been performed. The implementation lives in `embedded/`; the offline entry point is `embedded/preview/agent-robot-eyes-preview.html`. SVG component and color UI changes are maintained separately outside this directory.
+Development draft saved on the `dev/expressions` branch. No release, deployment or physical-board verification has been performed. The implementation lives in `embedded/`; the offline entry point is `embedded/preview/boopface-embedded-preview.html`. SVG component and color UI changes are maintained separately outside this directory.
 
 ## Layout
 
 ```cpp
-#include <AgentRobotEyes.h>
-agent_robot::EyesLayout layout;
+#include <BoopFace.h>
+boopface::EyesLayout layout;
 layout.x = 0;
 layout.y = 40;
 layout.width = 240;
 layout.height = 160;
-layout.fit = agent_robot::FitMode::Contain; // or Cover
+layout.fit = boopface::FitMode::Contain; // or Cover
 layout.zoom = 1; // valid 0.25..3
 layout.offsetX = layout.offsetY = 0; // valid -1..1
 eyes.setLayout(layout); // returns false on invalid configuration
@@ -22,9 +22,9 @@ The viewport must fit inside the framebuffer. Zero viewport dimensions use its r
 ## Configurable target gaze
 
 ```cpp
-#include <AgentRobotGaze.h>
-agent_robot::GazeTracker gaze;
-agent_robot::GazeConfig config;
+#include <BoopFaceGaze.h>
+boopface::GazeTracker gaze;
+boopface::GazeConfig config;
 config.enterThreshold = 0.5f;
 config.exitThreshold = 0.4f; // lower threshold avoids boundary flicker
 config.holdMs = 600;
@@ -33,7 +33,7 @@ config.movingOnly = false;
 gaze.begin(config, nowMs);
 
 // The host selects a target and supplies fresh observations.
-agent_robot::GazeTarget target;
+boopface::GazeTarget target;
 target.detected = true;
 target.x = 0.7f; target.y = -0.2f; // right and slightly above
 target.proximity = 0.8f; // normalized by the host's calibrated sensor range

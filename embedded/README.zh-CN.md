@@ -1,4 +1,4 @@
-# Agent Robot Eyes：嵌入式设备版
+# BoopFace Embedded 嵌入式设备版
 
 [English / 完整接口说明](README.md) · [返回主项目](../docs/README.zh-CN.md)
 
@@ -40,7 +40,7 @@
 
 ## 不用硬件，先在电脑上看效果
 
-下载并用浏览器打开 [`preview/agent-robot-eyes-preview.html`](preview/agent-robot-eyes-preview.html)。这是一个完整的离线文件，不需要服务器、开发板、Python、Node.js 或编译工具；请下载原始 HTML，而不是保存 GitHub 的文件查看页面。也可在克隆后的项目中直接双击这个文件。
+下载并用浏览器打开 [`preview/boopface-embedded-preview.html`](preview/boopface-embedded-preview.html)。这是一个完整的离线文件，不需要服务器、开发板、Python、Node.js 或编译工具；请下载原始 HTML，而不是保存 GitHub 的文件查看页面。也可在克隆后的项目中直接双击这个文件。
 
 它将**同一份嵌入式 C++ 源码编译成 WebAssembly**，不是原 Web Demo 或另一套 JavaScript 动画。支持 18 种动作（原有 17 种及新增波动等待）、自动轮播、暂停/逐帧、注视方向，以及 32 种屏幕预设（圆屏、方屏、长条屏、开发套件和 OLED 五组）和宽高 16–512 的自定义分辨率。可设置完整显示或裁切铺满、缩放、偏移与圆形裁切。命名预设使用对应参考模组的 SVG 外框，保留 PCB、玻璃、安装孔与排线的不同结构；横屏、竖屏整板旋转，自定义分辨率使用通用外框。打开「注视跟随」后，鼠标可模拟接近的物体；感应范围、只看移动物体、跟随速度和离开后的停留时间在库接口里设置，真正的摄像头或传感器接入由宿主程序提供。暂停只冻结时间，仍可切换动作；慢速播放可用于检查过渡。浏览器输出不能代替真机接线、驱动、刷新率和性能测试。重建和验证方法见 [模拟器说明](preview/README.md)。
 
@@ -62,7 +62,7 @@
 | `EYES_TURN` | 屏幕旋转 90°；如果眼睛上下颠倒，把 `3` 改成 `1` |
 | `EYES_FULL_PANEL` | 1.3 寸方形参考屏用整块屏，而不是中间 240×160 |
 
-没有这个文件时固件用默认设置；这个文件不会被提交到 git。注视跟随需要板子接摄像头或距离传感器，所以不在导出内容里：库里的 `GazeTracker`（`lib/AgentRobotEyes/src/AgentRobotGaze.h`）接收传感器给出的目标位置。
+没有这个文件时固件用默认设置；这个文件不会被提交到 git。注视跟随需要板子接摄像头或距离传感器，所以不在导出内容里：库里的 `GazeTracker`（`lib/BoopFace/src/BoopFaceGaze.h`）接收传感器给出的目标位置。
 
 ## 接线
 
@@ -121,9 +121,9 @@ pio device monitor -b 115200
 
 ## 接入自己的设备
 
-库在 `embedded/lib/AgentRobotEyes`。Arduino 用户可将这个目录复制到自己的 `libraries` 目录（正式发布后也可以下载压缩包，用“项目 → 导入库 → 添加 .ZIP 库”安装）；其他 C++11 平台可编译库的整个 `src` 目录。
+库在 `embedded/lib/BoopFace`。Arduino 用户可将这个目录复制到自己的 `libraries` 目录（正式发布后也可以下载压缩包，用“项目 → 导入库 → 添加 .ZIP 库”安装）；其他 C++11 平台可编译库的整个 `src` 目录。
 
-库里带两个 Arduino IDE 示例，在“文件 → 示例 → AgentRobotEyes”下：**SerialEyes** 在串口监视器里用字符画出眼睛，不需要屏幕；**OledSSD1306** 运行在 0.96 寸 128×64 I²C OLED 上（需先安装 Adafruit SSD1306 库）。两个示例都可以在串口监视器里输入动作名来播放。CI 会为 ESP32 和 RP2040 编译它们。
+库里带两个 Arduino IDE 示例，在“文件 → 示例 → BoopFace Embedded”下：**SerialEyes** 在串口监视器里用字符画出眼睛，不需要屏幕；**OledSSD1306** 运行在 0.96 寸 128×64 I²C OLED 上（需先安装 Adafruit SSD1306 库）。两个示例都可以在串口监视器里输入动作名来播放。CI 会为 ESP32 和 RP2040 编译它们。
 
 绘制核心不要求安装 Adafruit 库，例程中的显示驱动才需要它们。
 

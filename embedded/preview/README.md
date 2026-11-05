@@ -1,8 +1,8 @@
 # Offline eyes preview / 离线表情预览器
 
-Download **`agent-robot-eyes-preview.html`** and open it in a browser. The file contains its UI and compiled engine. No install or server is required to run it. On a phone, a file manager's preview may not execute HTML/WebAssembly: use a desktop browser if it only shows source or a static preview.
+Download **`boopface-embedded-preview.html`** and open it in a browser. The file contains its UI and compiled engine. No install or server is required to run it. On a phone, a file manager's preview may not execute HTML/WebAssembly: use a desktop browser if it only shows source or a static preview.
 
-下载 **`agent-robot-eyes-preview.html`**，在电脑上用浏览器打开即可，不用安装、不用联网。手机文件管理器的快速预览可能不执行脚本；遇到只能看源码或无法运行时，请在电脑浏览器中打开。
+下载 **`boopface-embedded-preview.html`**，在电脑上用浏览器打开即可，不用安装、不用联网。手机文件管理器的快速预览可能不执行脚本；遇到只能看源码或无法运行时，请在电脑浏览器中打开。
 
 ## Controls / 使用
 
@@ -42,7 +42,7 @@ This is a **renderer preview**, not a CPU/display emulator. Actual board speed, 
 
 ## One source of truth / 同源代码
 
-`bridge.cpp` exposes a small C ABI. The build compiles the checked-out `../lib/AgentRobotEyes/src/AgentRobotEyes.cpp`, its header and `AgentRobotGaze.h` with Zig 0.13.0 to WebAssembly. `ui.js` maps its MSB-first 1-bit mask to canvas and supplies simulated target observations; it has no expression geometry or smoothing implementation. `board.js` and `panel.js` only draw housings and panel appearance around that bitmap; the build inlines all three scripts. The footer SHA-256 covers the engine source/header, gaze header, generated Web motion header and bridge.
+`bridge.cpp` exposes a small C ABI. The build compiles the checked-out `../lib/BoopFace/src/BoopFace.cpp`, its header and `BoopFaceGaze.h` with Zig 0.13.0 to WebAssembly. `ui.js` maps its MSB-first 1-bit mask to canvas and supplies simulated target observations; it has no expression geometry or smoothing implementation. `board.js` and `panel.js` only draw housings and panel appearance around that bitmap; the build inlines all three scripts. The footer SHA-256 covers the engine source/header, gaze header, generated Web motion header and bridge.
 
 `bridge.cpp` 仅暴露接口；表情和时间逻辑来自开发板使用的原始 C++ 源文件，没有复制成 JavaScript。页面底部的源码指纹涵盖核心头文件、实现文件及桥接代码。
 

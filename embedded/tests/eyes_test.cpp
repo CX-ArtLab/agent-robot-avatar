@@ -1,6 +1,6 @@
-#include "AgentRobotEyes.h"
+#include "BoopFace.h"
 #include <algorithm>
-#include "AgentRobotGaze.h"
+#include "BoopFaceGaze.h"
 #include <assert.h>
 #include <cmath>
 #include <cstdio>
@@ -11,9 +11,9 @@
 #include <string>
 #include <vector>
 
-using agent_robot::Action;
-using agent_robot::Eyes;
-using agent_robot::EyesConfig;
+using boopface::Action;
+using boopface::Eyes;
+using boopface::EyesConfig;
 
 static unsigned lit(const Eyes& eyes) {
   unsigned count = 0;
@@ -283,16 +283,16 @@ static void layoutsAndProximity() {
   uint8_t pixels[7200];
   Eyes eyes;EyesConfig config;config.width=config.height=240;config.autoBlink=false;
   assert(eyes.begin(config,pixels,sizeof pixels,0));
-  agent_robot::EyesLayout layout;
+  boopface::EyesLayout layout;
   layout.y=40;layout.width=240;layout.height=160;
   assert(eyes.setLayout(layout));eyes.update(0);
   for(unsigned y=0;y<240;y++)if(y<40||y>=200)
     for(unsigned x=0;x<30;x++)assert(!pixels[y*30+x]);
   const uint32_t contain=hash(eyes);
-  layout.y=0;layout.height=240;layout.fit=agent_robot::FitMode::Cover;
+  layout.y=0;layout.height=240;layout.fit=boopface::FitMode::Cover;
   assert(eyes.setLayout(layout));eyes.update(1);assert(hash(eyes)!=contain);
   eyes.play("waiting",100);
-  layout.shape=agent_robot::ScreenShape::Circle;layout.zoom=3;
+  layout.shape=boopface::ScreenShape::Circle;layout.zoom=3;
   assert(eyes.setLayout(layout));eyes.update(500);assert(eyes.isWaiting());
   for(int y=0;y<240;y++)for(int x=0;x<240;x++) {
     const float dx=x+.5f-120,dy=y+.5f-120;
@@ -300,9 +300,9 @@ static void layoutsAndProximity() {
   }
   layout.x=240;assert(!eyes.setLayout(layout));
   layout.x=0;layout.zoom=NAN;assert(!eyes.setLayout(layout));
-  agent_robot::GazeTracker gaze;agent_robot::GazeConfig gc;
+  boopface::GazeTracker gaze;boopface::GazeConfig gc;
   assert(gaze.begin(gc,0));
-  agent_robot::GazeTarget target;target.detected=true;target.x=1;target.y=-1;target.proximity=.49f;
+  boopface::GazeTarget target;target.detected=true;target.x=1;target.y=-1;target.proximity=.49f;
   gaze.observe(target,0);gaze.update(100);assert(!gaze.tracking()&&gaze.x()==0);
   target.proximity=.6f;gaze.observe(target,100);gaze.update(140);
   assert(gaze.tracking()&&gaze.x()>0&&gaze.x()<1&&gaze.y()<0);
@@ -313,7 +313,7 @@ static void layoutsAndProximity() {
   gaze.update(2000);assert(gaze.x()<returning);
   target.proximity=.8f;target.x=NAN;gaze.observe(target,2100);assert(!gaze.tracking());
   gc.enterThreshold=.2f;gc.exitThreshold=.3f;assert(!gaze.begin(gc,0));
-  gc=agent_robot::GazeConfig();const uint32_t start=0xffffff00u;
+  gc=boopface::GazeConfig();const uint32_t start=0xffffff00u;
   assert(gaze.begin(gc,start));target.x=1;target.proximity=.8f;
   gaze.observe(target,start);gaze.update(start+100);assert(gaze.tracking());
   gaze.update(start+800);assert(!gaze.tracking());
@@ -354,10 +354,10 @@ static void gazeRanges() {
   EyesConfig config; config.width = 160; config.height = 100; config.autoBlink = false; config.maxFps = 60;
   std::vector<uint8_t> pixels(Eyes::requiredBytes(config.width,config.height));
   Eyes eyes; assert(eyes.begin(config,pixels.data(),pixels.size(),0));
-  assert(!eyes.setGazeRange(static_cast<agent_robot::GazeRange>(3)));
-  config.gazeRange = static_cast<agent_robot::GazeRange>(3);
+  assert(!eyes.setGazeRange(static_cast<boopface::GazeRange>(3)));
+  config.gazeRange = static_cast<boopface::GazeRange>(3);
   Eyes rejected; assert(!rejected.begin(config,pixels.data(),pixels.size(),0));
-  const agent_robot::GazeRange ranges[] = {agent_robot::GazeRange::Small, agent_robot::GazeRange::Medium, agent_robot::GazeRange::Large};
+  const boopface::GazeRange ranges[] = {boopface::GazeRange::Small, boopface::GazeRange::Medium, boopface::GazeRange::Large};
   uint32_t t = 0, centred = 0;
   Bounds rest = {}, reach[3] = {};
   for (unsigned i=0;i<3;++i) {
@@ -375,7 +375,7 @@ static void gazeRanges() {
   assert(reach[1].x1 - reach[1].x0 < restWidth);      // and narrows near the edge
   assert(reach[2].x1 < reach[1].x1);                  // large goes further still
   assert(reach[2].x1 - reach[2].x0 < reach[1].x1 - reach[1].x0);
-  assert(eyes.setGazeRange(agent_robot::GazeRange::Medium));
+  assert(eyes.setGazeRange(boopface::GazeRange::Medium));
   eyes.lookAt(0,-1); assert(eyes.update(t+=20));
   const Bounds up = leftEye(eyes);
   assert(up.y0 >= 1 && rest.y0 - up.y0 >= 15);        // vertical reach stays inside too

@@ -15,7 +15,7 @@
 // eyes library itself is the same for every board.
 
 #include <Arduino.h>
-#include <AgentRobotEyes.h>
+#include <BoopFace.h>
 
 // Settings exported from the hardware preview, if present next to main.cpp.
 #if defined(__has_include)
@@ -356,7 +356,7 @@ bool displayBegin() {
   M5.Display.fillScreen(BACKGROUND);
   return true;
 }
-void displayPresent(const agent_robot::Eyes& eyes) {
+void displayPresent(const boopface::Eyes& eyes) {
   M5.Display.drawBitmap(0, 0, eyes.data(), WIDTH, HEIGHT, INK, BACKGROUND);
 }
 
@@ -375,7 +375,7 @@ bool displayBegin() {
   Wire.setClock(400000);
   return true;
 }
-void displayPresent(const agent_robot::Eyes& eyes) {
+void displayPresent(const boopface::Eyes& eyes) {
   display.clearDisplay();
   display.drawBitmap(0, 0, eyes.data(), WIDTH, HEIGHT, SH110X_WHITE);
   display.display();
@@ -405,7 +405,7 @@ bool displayBegin() {
   Wire.setClock(400000);
   return true;
 }
-void displayPresent(const agent_robot::Eyes& eyes) {
+void displayPresent(const boopface::Eyes& eyes) {
   display.clearDisplay();
   display.drawBitmap(0, 0, eyes.data(), WIDTH, HEIGHT, SSD1306_WHITE);
   display.display();
@@ -421,7 +421,7 @@ constexpr uint16_t ROW_STEP = 2;
 constexpr uint16_t ROW_STEP = 1;
 #endif
 uint16_t rowPixels[WIDTH * ROW_STEP];
-void displayPresent(const agent_robot::Eyes& eyes) {
+void displayPresent(const boopface::Eyes& eyes) {
   for (uint16_t y = 0; y < HEIGHT; y += ROW_STEP) {
     for (uint16_t row = 0; row < ROW_STEP; ++row) {
       const uint8_t* source = eyes.data() + (y + row) * eyes.stride();
@@ -438,7 +438,7 @@ void displayPresent(const agent_robot::Eyes& eyes) {
 #if defined(EYES_ADAFRUIT_SPITFT)
 // Stream one RGB565 row at a time: no full-screen 16-bit framebuffer needed.
 uint16_t rowPixels[WIDTH];
-void displayPresent(const agent_robot::Eyes& eyes) {
+void displayPresent(const boopface::Eyes& eyes) {
   display.startWrite();
   display.setAddrWindow(0, OFFSET_Y, WIDTH, HEIGHT);
   for (uint16_t y = 0; y < HEIGHT; ++y) {

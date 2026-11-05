@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 // Portable C++11 core. No Arduino, ESP-IDF, browser, display or allocator dependency.
-namespace agent_robot {
+namespace boopface {
 
 enum class Action : uint8_t {
   Idle, Bored, WaitingSpin, WaitingWrap, Input, Affirm, Success, Failure,
@@ -105,5 +105,5 @@ class Eyes {
   bool crossfade_ = false;
 };
 
-} // namespace agent_robot
+} // namespace boopface
 

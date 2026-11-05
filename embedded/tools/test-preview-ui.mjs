@@ -18,7 +18,7 @@ const page = await context.newPage();
 const errors = [], external = [];
 page.on('pageerror', error => errors.push(error.message));
 page.on('request', request => { if (/^https?:/.test(request.url())) external.push(request.url()); });
-const file = pathToFileURL(resolve(root,'embedded/preview/agent-robot-eyes-preview.html')).href;
+const file = pathToFileURL(resolve(root,'embedded/preview/boopface-embedded-preview.html')).href;
 // Simulated time in seconds, as shown in the playback bar.
 const clock = async () => (await page.locator('#clock').textContent()).replace(/[^\d.]/g,'');
 const frame = () => page.locator('#screen').evaluate(canvas => {

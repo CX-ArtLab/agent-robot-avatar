@@ -1,15 +1,15 @@
-// Agent Robot Eyes in the Serial Monitor: no screen or wiring needed.
+// BoopFace Embedded in the Serial Monitor: no screen or wiring needed.
 //
 // Open the Serial Monitor at 115200 baud with "Newline" line endings. The eyes
 // are drawn as text a few times a second. Type an action and press Enter, for
 // example: love, affirm, refuse, waiting-spin, sleep, wake, idle.
 
-#include <AgentRobotEyes.h>
+#include <BoopFace.h>
 
 const uint16_t WIDTH = 48;   // characters per line
 const uint16_t HEIGHT = 24;  // lines per frame
 
-agent_robot::Eyes eyes;
+boopface::Eyes eyes;
 uint8_t pixels[((WIDTH + 7) / 8) * HEIGHT];  // 1 bit per pixel, rows padded to bytes
 char command[24];
 size_t commandSize = 0;
@@ -28,21 +28,21 @@ void printFrame() {
     Serial.println(line);
   }
   Serial.print("action: ");
-  Serial.println(agent_robot::Eyes::actionName(eyes.action()));
+  Serial.println(boopface::Eyes::actionName(eyes.action()));
 }
 
 void setup() {
   Serial.begin(115200);
-  agent_robot::EyesConfig config;
+  boopface::EyesConfig config;
   config.width = WIDTH;
   config.height = HEIGHT;
   config.maxFps = 4;  // text output is slow; a few frames a second is enough
   if (!eyes.begin(config, pixels, sizeof pixels, millis())) {
-    Serial.println("Agent Robot Eyes could not start.");
+    Serial.println("BoopFace Embedded could not start.");
     while (true) delay(1000);
   }
-  Serial.print("Agent Robot Eyes ");
-  Serial.println(agent_robot::Eyes::version());
+  Serial.print("BoopFace Embedded ");
+  Serial.println(boopface::Eyes::version());
   Serial.println("Type an action, e.g. love, affirm, refuse, waiting-spin, sleep, wake, idle.");
 }
 
